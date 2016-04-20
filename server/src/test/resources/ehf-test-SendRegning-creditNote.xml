@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type='text/xsl' href='EHF-kreditnota_små.xslt'?>
+<CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+            xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2 UBL-CreditNote-2.0.xsd">
+    <cbc:UBLVersionID>2.0</cbc:UBLVersionID>
+    <cbc:CustomizationID>urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.cenbii.eu:profile:biixx:ver1.0#urn:www.difi.no:ehf:kreditnota:ver1</cbc:CustomizationID>
+    <cbc:ProfileID>urn:www.cenbii.eu:profile:biixx:ver1.0</cbc:ProfileID>
+    <cbc:ID>2</cbc:ID>
+    <cbc:IssueDate>2013-03-12</cbc:IssueDate>
+    <cbc:DocumentCurrencyCode>NOK</cbc:DocumentCurrencyCode>
+    <cac:BillingReference>
+        <cac:InvoiceDocumentReference>
+            <cbc:ID>1</cbc:ID>
+        </cac:InvoiceDocumentReference>
+    </cac:BillingReference>
+    <cac:AccountingSupplierParty>
+        <cac:Party>
+            <cbc:EndpointID>9908:889330465</cbc:EndpointID>
+            <cac:PartyName>
+                <cbc:Name>andy</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>Addresse med å</cbc:StreetName>
+                <cbc:CityName>City</cbc:CityName>
+                <cbc:PostalZone>ZIP</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme>
+                <cbc:CompanyID schemeID="NO:VAT" schemeAgencyID="82"  schemeName="Foretaksregisteret" >889330465MVA</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>andy</cbc:RegistrationName>
+                <cbc:CompanyID schemeID="NO:VAT" schemeAgencyID="82"  schemeName="Foretaksregisteret" >889330465MVA</cbc:CompanyID>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:Telephone>Phone</cbc:Telephone>
+                <cbc:Telefax>Fax</cbc:Telefax>
+                <cbc:ElectronicMail>test1363088933043@balder.no</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingSupplierParty>
+    <cac:AccountingCustomerParty>
+        <cac:Party>
+            <cbc:EndpointID>9908:985420289</cbc:EndpointID>
+            <cac:PartyIdentification>
+                <cbc:ID>1</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>Juni test Tue Mar 12 12:48:55 CET 2013</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>Junit adr1</cbc:StreetName>
+                <cbc:CityName>OSLO</cbc:CityName>
+                <cbc:PostalZone>0976</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>Juni test Tue Mar 12 12:48:55 CET 2013</cbc:RegistrationName>
+                <cbc:CompanyID schemeID="NO:ORGNR" schemeAgencyID="82">985420289</cbc:CompanyID>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:ID>Bug - BIIRULE-T10-R010</cbc:ID>
+                <cbc:ElectronicMail>test@sendregning.no</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingCustomerParty>
+    <!-- Tax -->
+    <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="NOK">67.33</cbc:TaxAmount>
+
+        <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="NOK">448.87</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="NOK">67.33</cbc:TaxAmount>
+            <cac:TaxCategory>
+                <cbc:ID>H</cbc:ID>
+                <cbc:Percent>15.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:LegalMonetaryTotal>
+        <cbc:LineExtensionAmount currencyID="NOK">448.87</cbc:LineExtensionAmount>
+        <cbc:TaxExclusiveAmount currencyID="NOK">448.87</cbc:TaxExclusiveAmount>
+        <cbc:TaxInclusiveAmount currencyID="NOK">516.20</cbc:TaxInclusiveAmount>
+        <cbc:PayableRoundingAmount currencyID="NOK">0.00</cbc:PayableRoundingAmount>
+        <cbc:PayableAmount currencyID="NOK">516.20</cbc:PayableAmount>
+    </cac:LegalMonetaryTotal>
+    <!--
+            line 1 == 1 : 1.50 * 99.75 * 1+(15.00/100) =  154.86
+     -->
+    <cac:CreditNoteLine>
+        <cbc:ID>1</cbc:ID>
+        <cbc:CreditedQuantity unitCode="ZZ">1.50</cbc:CreditedQuantity>
+        <cbc:LineExtensionAmount currencyID="NOK">134.66</cbc:LineExtensionAmount>
+        <cac:Item>
+            <cbc:Name></cbc:Name>
+            <cac:ClassifiedTaxCategory>
+                <cbc:ID>H</cbc:ID>
+                <cbc:Percent>15.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="NOK">89.7733</cbc:PriceAmount>
+            <cac:AllowanceCharge>
+                <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+                <cbc:Amount currencyID="NOK">14.97</cbc:Amount>
+            </cac:AllowanceCharge>
+        </cac:Price>
+    </cac:CreditNoteLine>
+    <!--
+            line 2 == 2 : 3.50 * 99.75 * 1+(15.00/100) =  361.34
+     -->
+    <cac:CreditNoteLine>
+        <cbc:ID>2</cbc:ID>
+        <cbc:CreditedQuantity unitCode="ZZ">3.50</cbc:CreditedQuantity>
+        <cbc:LineExtensionAmount currencyID="NOK">314.21</cbc:LineExtensionAmount>
+        <cac:Item>
+            <cbc:Name></cbc:Name>
+            <cac:ClassifiedTaxCategory>
+                <cbc:ID>H</cbc:ID>
+                <cbc:Percent>15.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="NOK">89.7743</cbc:PriceAmount>
+            <cac:AllowanceCharge>
+                <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+                <cbc:Amount currencyID="NOK">34.92</cbc:Amount>
+            </cac:AllowanceCharge>
+        </cac:Price>
+    </cac:CreditNoteLine>
+</CreditNote>

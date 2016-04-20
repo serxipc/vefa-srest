@@ -1,0 +1,6 @@
+<directory-response version="1.0">
+        <accepted-document-transfer>
+           <DocumentID>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1::2.0</DocumentID>
+           <ProcessID>urn:www.peppol.eu:bis:peppol4a:ver1.0</ProcessID>
+        </accepted-document-transfer>
+</directory-response>

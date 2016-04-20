@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# This is the config file for the shell scripts
+
+# Test server
+#AP_ADDRESS=https://ringo-test.domain.com;
+
+# Production server
+AP_ADDRESS=https://ringo.domain.com;

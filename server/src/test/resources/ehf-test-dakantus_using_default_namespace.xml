@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns4:CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ns2="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:ns3="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:ns4="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2">
+    <UBLVersionID>2.1</UBLVersionID>
+    <CustomizationID>urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:kreditnota:ver2.0</CustomizationID>
+    <ProfileID>urn:www.cenbii.eu:profile:bii05:ver2.0</ProfileID>
+    <ID>15361</ID>
+    <IssueDate>2015-03-02</IssueDate>
+    <Note>Abonnementsavtale TorpedoAdm for 6 brukere fra 28-02-2015 til 28-08-2015.</Note>
+    <DocumentCurrencyCode listID="ISO4217">NOK</DocumentCurrencyCode>
+    <ns3:InvoicePeriod>
+        <StartDate>2015-02-28</StartDate>
+        <EndDate>2015-08-28</EndDate>
+    </ns3:InvoicePeriod>
+    <ns3:BillingReference>
+        <ns3:InvoiceDocumentReference>
+            <ID>15346</ID>
+        </ns3:InvoiceDocumentReference>
+    </ns3:BillingReference>
+    <ns3:AccountingSupplierParty>
+        <ns3:Party>
+            <EndpointID schemeID="NO:ORGNR">959913110</EndpointID>
+            <ns3:PartyIdentification>
+                <ID schemeID="NO:ORGNR">959913110</ID>
+            </ns3:PartyIdentification>
+            <ns3:PartyName>
+                <Name>Dakantus AS</Name>
+            </ns3:PartyName>
+            <ns3:PostalAddress>
+                <StreetName>Gaustadalléen 21</StreetName>
+                <CityName>Oslo</CityName>
+                <PostalZone>0349</PostalZone>
+                <ns3:Country>
+                    <IdentificationCode listID="ISO3166-1:Alpha2">NO</IdentificationCode>
+                </ns3:Country>
+            </ns3:PostalAddress>
+            <ns3:PartyTaxScheme>
+                <CompanyID schemeAgencyID="82" schemeID="NO:VAT">959913110MVA</CompanyID>
+                <ns3:TaxScheme>
+                    <ID>VAT</ID>
+                </ns3:TaxScheme>
+            </ns3:PartyTaxScheme>
+            <ns3:PartyLegalEntity>
+                <RegistrationName>Dakantus AS</RegistrationName>
+                <CompanyID schemeAgencyID="82" schemeID="NO:ORGNR" schemeName="Foretaksregisteret">959913110</CompanyID>
+            </ns3:PartyLegalEntity>
+            <ns3:Contact>
+                <ID>Maria Doroshenkova</ID>
+                <Name>Maria Doroshenkova</Name>
+                <Telephone>+4745690579</Telephone>
+                <ElectronicMail>maria@dakantus.no</ElectronicMail>
+            </ns3:Contact>
+        </ns3:Party>
+    </ns3:AccountingSupplierParty>
+    <ns3:AccountingCustomerParty>
+        <ns3:Party>
+            <EndpointID schemeID="NO:ORGNR">985814880</EndpointID>
+            <ns3:PartyIdentification>
+                <ID schemeID="ZZZ">18060</ID>
+            </ns3:PartyIdentification>
+            <ns3:PartyName>
+                <Name>Sivilingeniør Bård Sørensen AS</Name>
+            </ns3:PartyName>
+            <ns3:PostalAddress>
+                <StreetName>Postboks 28</StreetName>
+                <CityName>STOKMARKNES</CityName>
+                <PostalZone>8455</PostalZone>
+                <ns3:Country>
+                    <IdentificationCode listID="ISO3166-1:Alpha2">NO</IdentificationCode>
+                </ns3:Country>
+            </ns3:PostalAddress>
+            <ns3:PartyLegalEntity>
+                <RegistrationName>Sivilingeniør Bård Sørensen AS</RegistrationName>
+                <CompanyID schemeAgencyID="82" schemeID="NO:ORGNR">985814880</CompanyID>
+            </ns3:PartyLegalEntity>
+            <ns3:Contact>
+                <ID>18060</ID>
+            </ns3:Contact>
+        </ns3:Party>
+    </ns3:AccountingCustomerParty>
+    <ns3:Delivery>
+        <ActualDeliveryDate>2015-03-02</ActualDeliveryDate>
+        <ns3:DeliveryLocation>
+            <ns3:Address>
+                <StreetName>Postboks 28</StreetName>
+                <CityName>STOKMARKNES</CityName>
+                <PostalZone>8455</PostalZone>
+                <ns3:Country>
+                    <IdentificationCode listID="ISO3166-1:Alpha2">NO</IdentificationCode>
+                </ns3:Country>
+            </ns3:Address>
+        </ns3:DeliveryLocation>
+    </ns3:Delivery>
+    <ns3:TaxTotal>
+        <TaxAmount currencyID="NOK">1444.95</TaxAmount>
+        <ns3:TaxSubtotal>
+            <TaxableAmount currencyID="NOK">5779.80</TaxableAmount>
+            <TaxAmount currencyID="NOK">1444.95</TaxAmount>
+            <ns3:TaxCategory>
+                <ID schemeID="UNCL5305">S</ID>
+                <Percent>25.00</Percent>
+                <ns3:TaxScheme>
+                    <ID>VAT</ID>
+                </ns3:TaxScheme>
+            </ns3:TaxCategory>
+        </ns3:TaxSubtotal>
+    </ns3:TaxTotal>
+    <ns3:LegalMonetaryTotal>
+        <LineExtensionAmount currencyID="NOK">5779.80</LineExtensionAmount>
+        <TaxExclusiveAmount currencyID="NOK">5779.80</TaxExclusiveAmount>
+        <TaxInclusiveAmount currencyID="NOK">7224.75</TaxInclusiveAmount>
+        <PayableRoundingAmount currencyID="NOK">0.25</PayableRoundingAmount>
+        <PayableAmount currencyID="NOK">7225.00</PayableAmount>
+    </ns3:LegalMonetaryTotal>
+    <ns3:CreditNoteLine>
+        <ID>0</ID>
+        <CreditedQuantity unitCode="NAR" unitCodeListID="UNECERec20">6.00</CreditedQuantity>
+        <LineExtensionAmount currencyID="NOK">5779.80</LineExtensionAmount>
+        <ns3:InvoicePeriod>
+            <StartDate>2015-02-28</StartDate>
+            <EndDate>2015-08-28</EndDate>
+        </ns3:InvoicePeriod>
+        <ns3:AllowanceCharge>
+            <ChargeIndicator>true</ChargeIndicator>
+            <AllowanceChargeReason>5.00% rabatt</AllowanceChargeReason>
+            <Amount currencyID="NOK">-304.20</Amount>
+        </ns3:AllowanceCharge>
+        <ns3:Item>
+            <Name>Lisens for perioden 28.02.2015 - 28.08.2015</Name>
+            <ns3:SellersItemIdentification>
+                <ID>110</ID>
+            </ns3:SellersItemIdentification>
+            <ns3:ClassifiedTaxCategory>
+                <ID schemeID="UNCL5305">S</ID>
+                <Percent>25.00</Percent>
+                <ns3:TaxScheme>
+                    <ID>VAT</ID>
+                </ns3:TaxScheme>
+            </ns3:ClassifiedTaxCategory>
+        </ns3:Item>
+        <ns3:Price>
+            <PriceAmount currencyID="NOK">1014.00</PriceAmount>
+        </ns3:Price>
+    </ns3:CreditNoteLine>
+</ns4:CreditNote>

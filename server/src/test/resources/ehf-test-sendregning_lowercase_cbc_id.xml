@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type='text/xsl' href='https://ringo.domain.com/xslt/EHF-faktura_smaa.xslt'?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+         xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.0.xsd">
+    <cbc:UBLVersionID>2.0</cbc:UBLVersionID>
+    <cbc:CustomizationID>urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1</cbc:CustomizationID>
+    <cbc:ProfileID>urn:www.cenbii.eu:profile:bii04:ver1.0</cbc:ProfileID>
+    <cbc:id>test_invoice_no</cbc:id>
+    <cbc:IssueDate>2013-03-12</cbc:IssueDate>
+    <cbc:Note>invoiceText</cbc:Note>
+    <cbc:DocumentCurrencyCode>NOK</cbc:DocumentCurrencyCode>
+    <cac:AccountingSupplierParty>
+        <cac:Party>
+            <cbc:EndpointID>9908:891382529</cbc:EndpointID>
+            <cac:PartyName>
+                <cbc:Name>andy</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>Addresse med å</cbc:StreetName>
+                <cbc:CityName>City</cbc:CityName>
+                <cbc:PostalZone>ZIP</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme>
+                <cbc:CompanyID schemeID="NO:VAT" schemeAgencyID="82"  schemeName="Foretaksregisteret" >891382529MVA</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>andy</cbc:RegistrationName>
+                <cbc:CompanyID schemeID="NO:VAT" schemeAgencyID="82"  schemeName="Foretaksregisteret" >891382529MVA</cbc:CompanyID>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:Telephone>Phone</cbc:Telephone>
+                <cbc:Telefax>Fax</cbc:Telefax>
+                <cbc:ElectronicMail>test1363089138246@balder.no</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingSupplierParty>
+    <cac:AccountingCustomerParty>
+        <cac:Party>
+            <cbc:EndpointID>9908:985420289</cbc:EndpointID>
+            <cac:PartyIdentification>
+                <cbc:ID>1</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>Juni test Tue Mar 12 12:52:19 CET 2013</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>Junit adr1</cbc:StreetName>
+                <cbc:CityName>OSLO</cbc:CityName>
+                <cbc:PostalZone>0976</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>Juni test Tue Mar 12 12:52:19 CET 2013</cbc:RegistrationName>
+                <cbc:CompanyID schemeID="NO:ORGNR" schemeAgencyID="82">985420289</cbc:CompanyID>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:ID>Bug - BIIRULE-T10-RO18</cbc:ID>
+                <cbc:ElectronicMail>test@sendregning.no</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingCustomerParty>
+    <cac:Delivery>
+        <cbc:ActualDeliveryDate>2013-03-12</cbc:ActualDeliveryDate>
+        <cac:DeliveryLocation>
+            <cac:Address>
+                <cbc:StreetName>Junit adr1</cbc:StreetName>
+                <cbc:CityName>OSLO</cbc:CityName>
+                <cbc:PostalZone>0976</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:Address>
+        </cac:DeliveryLocation>
+    </cac:Delivery>
+    <cac:PaymentMeans>
+
+        <cbc:PaymentMeansCode>31</cbc:PaymentMeansCode>
+        <cbc:PaymentDueDate>2013-03-26</cbc:PaymentDueDate>
+        <cbc:PaymentID>007461050022579090</cbc:PaymentID>
+        <cac:PayeeFinancialAccount>
+            <cbc:ID schemeID="BBAN">63089138397</cbc:ID>
+        </cac:PayeeFinancialAccount>
+    </cac:PaymentMeans>
+    <!-- Tax -->
+    <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="NOK">99.12</cbc:TaxAmount>
+
+        <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="NOK">396.48</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="NOK">99.12</cbc:TaxAmount>
+            <cac:TaxCategory>
+                <cbc:ID>S</cbc:ID>
+                <cbc:Percent>25.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:LegalMonetaryTotal>
+        <cbc:LineExtensionAmount
+                currencyID="NOK">396.48</cbc:LineExtensionAmount>
+        <cbc:TaxExclusiveAmount
+                currencyID="NOK">396.48</cbc:TaxExclusiveAmount>
+        <cbc:TaxInclusiveAmount currencyID="NOK">495.60</cbc:TaxInclusiveAmount>
+        <cbc:PayableRoundingAmount
+                currencyID="NOK">0.00</cbc:PayableRoundingAmount>
+        <cbc:PayableAmount currencyID="NOK">495.60</cbc:PayableAmount>
+    </cac:LegalMonetaryTotal>
+    <!--
+        line 1 == 1 : 12.00 * 33.04 * 1+(25.00/100) =  495.60
+-->
+    <cac:InvoiceLine>
+        <cbc:ID>1</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="ZZ">12.00</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount
+                currencyID="NOK">396.48</cbc:LineExtensionAmount>
+        <cac:Item>
+            <cbc:Name>$item.getDescription()</cbc:Name>
+            <cac:ClassifiedTaxCategory>
+                <cbc:ID>S</cbc:ID>
+                <cbc:Percent>25.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="NOK">33.04</cbc:PriceAmount>
+        </cac:Price>
+    </cac:InvoiceLine>
+</Invoice>

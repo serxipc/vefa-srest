@@ -1,0 +1,27 @@
+<configuration>
+    <appender name="STDOUT"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <!--Daily rolling file appender -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>../logs/download.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>download.%d{yyyy-MM-dd}.log</FileNamePattern>
+        </rollingPolicy>
+
+        <encoder>
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <!-- do not dump logback messages -->
+    <logger name="ch.qos.logback" level="ERROR" />
+
+    <root level="info">
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type='text/xsl' href='https://ringo.domain.com/xslt/EHF-faktura_smaa.xslt'?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+         xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.0.xsd">
+    <cbc:UBLVersionID>2.0</cbc:UBLVersionID>
+    <cbc:CustomizationID>urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0</cbc:CustomizationID>
+    <cbc:ProfileID>urn:www.cenbii.eu:profile:bii04:ver1.0</cbc:ProfileID>
+    <cbc:ID>22</cbc:ID>
+    <cbc:IssueDate>2012-09-19</cbc:IssueDate>
+        <cbc:DocumentCurrencyCode>NOK</cbc:DocumentCurrencyCode>
+            <cac:OrderReference>
+            <cbc:ID>kl 1300</cbc:ID>
+        </cac:OrderReference>
+            <cac:AccountingSupplierParty>
+        <cac:Party>
+            <cbc:EndpointID>9908:955233298</cbc:EndpointID>
+            <cac:PartyName>
+                <cbc:Name>Midtløkken Kafeteria &amp; Catering</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>Kong Oscarsgate  15</cbc:StreetName>
+                                <cbc:CityName>TØNSBERG</cbc:CityName>
+                <cbc:PostalZone>3116</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme>
+                <cbc:CompanyID schemeID="NO:VAT" schemeAgencyID="82"  schemeName="Foretaksregisteret" >955233298MVA</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>Midtløkken Kafeteria &amp; Catering</cbc:RegistrationName>
+                <cbc:CompanyID schemeID="NO:VAT" schemeAgencyID="82"  schemeName="Foretaksregisteret" >955233298MVA</cbc:CompanyID>
+            </cac:PartyLegalEntity>
+                            <cac:Contact>
+                                    <cbc:ID>Lance</cbc:ID>
+                                                    <cbc:Telephone>33316952</cbc:Telephone>
+                                	    			<cbc:Telefax>33332224</cbc:Telefax>
+                                    				<cbc:ElectronicMail>post@midtlokken.no</cbc:ElectronicMail>
+                                </cac:Contact>
+                    </cac:Party>
+    </cac:AccountingSupplierParty>
+    <cac:AccountingCustomerParty>
+        <cac:Party>
+            <cbc:EndpointID>9908:974762501</cbc:EndpointID>
+                            <cac:PartyIdentification>
+                    <cbc:ID>3</cbc:ID>
+                </cac:PartyIdentification>
+                        <cac:PartyName>
+                <cbc:Name>Fylkesmannen i Vestfold  Kant. D 2790 Th</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>Fakturamottak SSØ</cbc:StreetName>
+                                    <cbc:AdditionalStreetName>Postboks 4104 </cbc:AdditionalStreetName>
+                                <cbc:CityName>HAMAR</cbc:CityName>
+                <cbc:PostalZone>2307</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>Fylkesmannen i Vestfold  Kant. D 2790 Th</cbc:RegistrationName>
+                <cbc:CompanyID schemeID="NO:ORGNR" schemeAgencyID="82">974762501</cbc:CompanyID>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:ID>Åste</cbc:ID>
+                            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingCustomerParty>
+    <cac:Delivery>
+        <cbc:ActualDeliveryDate>2012-09-19</cbc:ActualDeliveryDate>
+        <cac:DeliveryLocation>
+            <cac:Address>
+                <cbc:StreetName>Fakturamottak SSØ</cbc:StreetName>
+                                    <cbc:AdditionalStreetName>Postboks 4104 </cbc:AdditionalStreetName>
+                                <cbc:CityName>HAMAR</cbc:CityName>
+                <cbc:PostalZone>2307</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:Address>
+        </cac:DeliveryLocation>
+    </cac:Delivery>
+    <cac:PaymentMeans>
+    
+        <cbc:PaymentMeansCode>31</cbc:PaymentMeansCode>
+        <cbc:PaymentDueDate>2012-10-19</cbc:PaymentDueDate>
+                <cac:PayeeFinancialAccount>
+            <cbc:ID schemeID="BBAN">71760545095</cbc:ID>
+        </cac:PayeeFinancialAccount>
+    </cac:PaymentMeans>
+    <!-- Tax -->
+    <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="NOK">147.73</cbc:TaxAmount>
+
+
+                    <cac:TaxSubtotal>
+                <cbc:TaxableAmount currencyID="NOK">951.55</cbc:TaxableAmount>
+                <cbc:TaxAmount currencyID="NOK">142.73</cbc:TaxAmount>
+                <cac:TaxCategory>
+                    <cbc:ID>H</cbc:ID>
+                    <cbc:Percent>15.00</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cbc:ID>VAT</cbc:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubtotal>
+                    <cac:TaxSubtotal>
+                <cbc:TaxableAmount currencyID="NOK">20.00</cbc:TaxableAmount>
+                <cbc:TaxAmount currencyID="NOK">5.00</cbc:TaxAmount>
+                <cac:TaxCategory>
+                    <cbc:ID>S</cbc:ID>
+                    <cbc:Percent>25.00</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cbc:ID>VAT</cbc:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubtotal>
+            </cac:TaxTotal>
+    <cac:LegalMonetaryTotal>
+        <cbc:LineExtensionAmount
+                currencyID="NOK">971.55</cbc:LineExtensionAmount>
+        <cbc:TaxExclusiveAmount
+                currencyID="NOK">971.55</cbc:TaxExclusiveAmount>
+        <cbc:TaxInclusiveAmount currencyID="NOK">1119.28</cbc:TaxInclusiveAmount>
+        <cbc:PayableRoundingAmount
+                currencyID="NOK">0.00</cbc:PayableRoundingAmount>
+        <cbc:PayableAmount currencyID="NOK">1119.28</cbc:PayableAmount>
+    </cac:LegalMonetaryTotal>
+    <!--
+        line 1 == 1 : 29.00 * 33.04 * 1+(15.00/100) =  991.70
+-->
+    <cac:InvoiceLine>
+        <cbc:ID>1</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="ZZ">29.00</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount
+                currencyID="NOK">862.34</cbc:LineExtensionAmount>
+                    <cac:AllowanceCharge>
+                <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+                <cbc:Amount currencyID="NOK">95.82</cbc:Amount>
+            </cac:AllowanceCharge>
+                <cac:Item>
+            <cbc:Name>Baguette med ost og skinke</cbc:Name>
+                            <cac:SellersItemIdentification>
+                    <cbc:ID>1</cbc:ID>
+                </cac:SellersItemIdentification>
+                        <cac:ClassifiedTaxCategory>
+                <cbc:ID>H</cbc:ID>
+                <cbc:Percent>15.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="NOK">33.04</cbc:PriceAmount>
+        </cac:Price>
+    </cac:InvoiceLine>
+    <!--
+        line 2 == 2 : 2.00 * 33.04 * 1+(15.00/100) =  68.39
+-->
+    <cac:InvoiceLine>
+        <cbc:ID>2</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="ZZ">2.00</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount
+                currencyID="NOK">59.47</cbc:LineExtensionAmount>
+                    <cac:AllowanceCharge>
+                <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+                <cbc:Amount currencyID="NOK">6.61</cbc:Amount>
+            </cac:AllowanceCharge>
+                <cac:Item>
+            <cbc:Name>Baguette glutenfri ost og skinke</cbc:Name>
+                            <cac:SellersItemIdentification>
+                    <cbc:ID>9</cbc:ID>
+                </cac:SellersItemIdentification>
+                        <cac:ClassifiedTaxCategory>
+                <cbc:ID>H</cbc:ID>
+                <cbc:Percent>15.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="NOK">33.04</cbc:PriceAmount>
+        </cac:Price>
+    </cac:InvoiceLine>
+    <!--
+        line 3 == 3 : 1.00 * 33.04 * 1+(15.00/100) =  34.20
+-->
+    <cac:InvoiceLine>
+        <cbc:ID>3</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="ZZ">1.00</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount
+                currencyID="NOK">29.74</cbc:LineExtensionAmount>
+                    <cac:AllowanceCharge>
+                <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+                <cbc:Amount currencyID="NOK">3.30</cbc:Amount>
+            </cac:AllowanceCharge>
+                <cac:Item>
+            <cbc:Name>Baguette med ost</cbc:Name>
+                            <cac:SellersItemIdentification>
+                    <cbc:ID>18</cbc:ID>
+                </cac:SellersItemIdentification>
+                        <cac:ClassifiedTaxCategory>
+                <cbc:ID>H</cbc:ID>
+                <cbc:Percent>15.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="NOK">33.04</cbc:PriceAmount>
+        </cac:Price>
+    </cac:InvoiceLine>
+    <!--
+        line 4 == 4 : 1.00 * 20.00 * 1+(25.00/100) =  25.00
+-->
+    <cac:InvoiceLine>
+        <cbc:ID>4</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="ZZ">1.00</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount
+                currencyID="NOK">20.00</cbc:LineExtensionAmount>
+                <cac:Item>
+            <cbc:Name>Administrasjonsgebyr</cbc:Name>
+                            <cac:SellersItemIdentification>
+                    <cbc:ID>12</cbc:ID>
+                </cac:SellersItemIdentification>
+                        <cac:ClassifiedTaxCategory>
+                <cbc:ID>S</cbc:ID>
+                <cbc:Percent>25.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="NOK">20.00</cbc:PriceAmount>
+        </cac:Price>
+    </cac:InvoiceLine>
+</Invoice>
+
+

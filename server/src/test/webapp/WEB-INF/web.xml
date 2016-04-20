@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This web.xml file is not required when using Servlet 3.0 container, 
+     see implementation details http://jersey.java.net/nonav/documentation/latest/jax-rs.html#d4e194 -->
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <description>REST based API for the SendRegning PEPPOL access point</description>
+    <display-name>Ringo REST API server</display-name>
+
+    <filter>
+        <filter-name>Error Filter</filter-name>
+        <filter-class>no.sr.ringo.http.ErrorFilter</filter-class>
+    </filter>
+
+    <!-- All requests will be handled by the Error Filter -->
+    <filter-mapping>
+        <filter-name>Error Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <resource-ref>
+        <description>PEPPOL DataSource</description>
+        <res-ref-name>jdbc/oxalis</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>web-service</web-resource-name>
+            <url-pattern>/*</url-pattern>
+            <!--<url-pattern>/inbox/*</url-pattern>-->
+            <!--<url-pattern>/outbox/*</url-pattern>-->
+            <!--<url-pattern>/messages/*</url-pattern>-->
+            <!--<url-pattern>/directory/*</url-pattern>-->
+            <http-method>HEAD</http-method>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>PUT</http-method>
+            <http-method>DELETE</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>client</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <!-- Define the Login Configuration for this Application -->
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>SendRegning PEPPOL Access Point Web Services</realm-name>
+    </login-config>
+
+    <security-role>
+        <description>
+            The role required to access the restricted content defined
+            above in the security-constraint
+        </description>
+        <role-name>client</role-name>
+    </security-role>
+    <security-role>
+        <description>
+            Role required to access admin resource
+        </description>
+        <role-name>admin</role-name>
+    </security-role>
+
+</web-app>

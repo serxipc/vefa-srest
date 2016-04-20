@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+         xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.0.xsd">
+        <cac:AccountingSupplierParty>
+                <cac:Party>
+                    <cac:PartyLegalEntity>
+                        <cbc:CompanyID schemeAgencyID="82" schemeID="NO:VAT">NO540269750MVA</cbc:CompanyID>
+                    </cac:PartyLegalEntity>
+                </cac:Party>
+        </cac:AccountingSupplierParty>
+</Invoice>
+

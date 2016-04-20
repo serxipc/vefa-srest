@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="http://services.agresso.com/stylesheet/ABWEHF/EHF-faktura.xslt"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ccts="urn:un:unece:uncefact:documentation:2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.0.xsd">
+  <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+  <cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol04a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0</cbc:CustomizationID>
+  <cbc:ProfileID>urn:www.cenbii.eu:profile:bii05:ver2.0</cbc:ProfileID>
+  <cbc:ID>30300120</cbc:ID>
+  <cbc:IssueDate>2014-05-13</cbc:IssueDate>
+  <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+  <cbc:DocumentCurrencyCode>NOK</cbc:DocumentCurrencyCode>
+  <cac:AdditionalDocumentReference>
+    <cbc:ID>1 - 30300120 Faktura</cbc:ID>
+    <cbc:DocumentType>Commercial invoice</cbc:DocumentType>
+    <cac:Attachment>
+      <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf">JVBERi0xLjMNCiX/////MTI3NQ0KMSAwIG9iag0KPDwNCi9UeXBlIC9DYXRhbG9nDQovUGFnZXMgNCAwIFINCi9PdXRsaW5lcyAyIDAgUg0KPj4NCmVuZG9iag0KMiAwIG9iag0KPDwNCi9UeXBlIC9PdXRsaW5lcw0KL0NvdW50IDANCj4+DQplbmRvYmoNCjMgMCBvYmoNClsvUERGIC9UZXh0XQ0KZW5kb2JqDQo0IDAgb2JqDQo8PA0KL1R5cGUgL1BhZ2VzDQovQ291bnQgMQ0KL0tpZHMgWzkgMCBSXQ0KPj4NCmVuZG9iag0KNSAwIG9iag0KPDwNCi9UeXBlIC9Gb250DQovU3VidHlwZSAvVHJ1ZVR5cGUNCi9OYW1lIC9GMQ0KL0Jhc2VGb250IC9BcmlhbA0KL0ZpcnN0Q2hhciAzMg0KL0xhc3RDaGFyIDIyOQ0KL1dpZHRocyBbDQoyNzcgMjc3IDM1NCA1NTYgNTU2IDg4OSA2NjYgMTkwIDMzMyANCjMzMyAzODkgNTgzIDI3NyAzMzMgMjc3IDI3NyA1NTYgDQo1NTYgNTU2IDU1NiA1NTYgNTU2IDU1NiA1NTYgNTU2IA0KNTU2IDI3NyAyNzcgNTgzIDU4MyA1ODMgNTU2IDEwMTUgDQo2NjYgNjY2IDcyMiA3MjIgNjY2IDYxMCA3NzcgNzIyIA0KMjc3IDUwMCA2NjYgNTU2IDgzMyA3MjIgNzc3IDY2NiANCjc3NyA3MjIgNjY2IDYxMCA3MjIgNjY2IDk0MyA2NjYgDQo2NjYgNjEwIDI3NyAyNzcgMjc3IDQ2OSA1NTYgMzMzIA0KNTU2IDU1NiA1MDAgNTU2IDU1NiAyNzcgNTU2IDU1NiANCjIyMiAyMjIgNTAwIDIyMiA4MzMgNTU2IDU1NiA1NTYgDQo1NTYgMzMzIDUwMCAyNzcgNTU2IDUwMCA3MjIgNTAwIA0KNTAwIDUwMCAzMzMgMjU5IDMzMyA1ODMgNzUwIDU1NiANCjc1MCAyMjIgNTU2IDMzMyAxMDAwIDU1NiA1NTYgMzMzIA0KMTAwMCA2NjYgMzMzIDEwMDAgNzUwIDYxMCA3NTAgNzUwIA0KMjIyIDIyMiAzMzMgMzMzIDM1MCA1NTYgMTAwMCAzMzMgDQoxMDAwIDUwMCAzMzMgOTQzIDc1MCA1MDAgNjY2IDI3NyANCjMzMyA1NTYgNTU2IDU1NiA1NTYgMjU5IDU1NiAzMzMgDQo3MzYgMzcwIDU1NiA1ODMgMzMzIDczNiA1NTIgMzk5IA0KNTQ4IDMzMyAzMzMgMzMzIDU3NiA1MzcgMzMzIDMzMyANCjMzMyAzNjUgNTU2IDgzMyA4MzMgODMzIDYxMCA2NjYgDQo2NjYgNjY2IDY2NiA2NjYgNjY2IDEwMDAgNzIyIDY2NiANCjY2NiA2NjYgNjY2IDI3NyAyNzcgMjc3IDI3NyA3MjIgDQo3MjIgNzc3IDc3NyA3NzcgNzc3IDc3NyA1ODMgNzc3IA0KNzIyIDcyMiA3MjIgNzIyIDY2NiA2NjYgNjEwIDU1NiANCjU1NiA1NTYgNTU2IDU1NiA1NTYgXQ0KL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcNCi9Gb250RGVzY3JpcHRvciA2IDAgUg0KPj4NCmVuZG9iag0KNiAwIG9iag0KPDwNCi9UeXBlIC9Gb250RGVzY3JpcHRvcg0KL0ZvbnROYW1lIC9BcmlhbA0KL0ZsYWdzIDMyDQovRm9udEJCb3ggWyAtMTM2MSAtNjY1IDQxOTAgMjEyOSBdDQovSXRhbGljQW5nbGUgMA0KL0NhcEhlaWdodCAxMDI0DQovQXNjZW50IDE4NTQNCi9EZXNjZW50IDQzNA0KPj4NCmVuZG9iag0KNyAwIG9iag0KPDwNCi9UeXBlIC9Gb250DQovU3VidHlwZSAvVHJ1ZVR5cGUNCi9OYW1lIC9GMg0KL0Jhc2VGb250IC9BcmlhbCxCb2xkDQovRmlyc3RDaGFyIDMyDQovTGFzdENoYXIgMjE2DQovV2lkdGhzIFsNCjI3NyAzMzMgNDc0IDU1NiA1NTYgODg5IDcyMiAyMzcgMzMzIA0KMzMzIDM4OSA1ODMgMjc3IDMzMyAyNzcgMjc3IDU1NiANCjU1NiA1NTYgNTU2IDU1NiA1NTYgNTU2IDU1NiA1NTYgDQo1NTYgMzMzIDMzMyA1ODMgNTgzIDU4MyA2MTAgOTc1IA0KNzIyIDcyMiA3MjIgNzIyIDY2NiA2MTAgNzc3IDcyMiANCjI3NyA1NTYgNzIyIDYxMCA4MzMgNzIyIDc3NyA2NjYgDQo3NzcgNzIyIDY2NiA2MTAgNzIyIDY2NiA5NDMgNjY2IA0KNjY2IDYxMCAzMzMgMjc3IDMzMyA1ODMgNTU2IDMzMyANCjU1NiA2MTAgNTU2IDYxMCA1NTYgMzMzIDYxMCA2MTAgDQoyNzcgMjc3IDU1NiAyNzcgODg5IDYxMCA2MTAgNjEwIA0KNjEwIDM4OSA1NTYgMzMzIDYxMCA1NTYgNzc3IDU1NiANCjU1NiA1MDAgMzg5IDI3OSAzODkgNTgzIDc1MCA1NTYgDQo3NTAgMjc3IDU1NiA1MDAgMTAwMCA1NTYgNTU2IDMzMyANCjEwMDAgNjY2IDMzMyAxMDAwIDc1MCA2MTAgNzUwIDc1MCANCjI3NyAyNzcgNTAwIDUwMCAzNTAgNTU2IDEwMDAgMzMzIA0KMTAwMCA1NTYgMzMzIDk0MyA3NTAgNTAwIDY2NiAyNzcgDQozMzMgNTU2IDU1NiA1NTYgNTU2IDI3OSA1NTYgMzMzIA0KNzM2IDM3MCA1NTYgNTgzIDMzMyA3MzYgNTUyIDM5OSANCjU0OCAzMzMgMzMzIDMzMyA1NzYgNTU2IDMzMyAzMzMgDQozMzMgMzY1IDU1NiA4MzMgODMzIDgzMyA2MTAgNzIyIA0KNzIyIDcyMiA3MjIgNzIyIDcyMiAxMDAwIDcyMiA2NjYgDQo2NjYgNjY2IDY2NiAyNzcgMjc3IDI3NyAyNzcgNzIyIA0KNzIyIDc3NyA3NzcgNzc3IDc3NyA3NzcgNTgzIDc3NyANCl0NCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nDQovRm9udERlc2NyaXB0b3IgOCAwIFINCj4+DQplbmRvYmoNCjggMCBvYmoNCjw8DQovVHlwZSAvRm9udERlc2NyaXB0b3INCi9Gb250TmFtZSAvQXJpYWwNCi9GbGFncyAzMg0KL0ZvbnRCQm94IFsgLTEyODYgLTc3MSA0MDk2IDIxNjIgXQ0KL0l0YWxpY0FuZ2xlIDANCi9DYXBIZWlnaHQgMTAyNA0KL0FzY2VudCAxODU0DQovRGVzY2VudCA0MzQNCj4+DQplbmRvYmoNCjkgMCBvYmoNCjw8L1R5cGUvUGFnZS9QYXJlbnQgNCAwIFIvUmVzb3VyY2VzPDwvRm9udDw8L0YxIDUgMCBSL0YyIDcgMCBSPj4vUHJvY1NldCAzIDAgUj4+L01lZGlhQm94IFswIDAg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</cbc:EmbeddedDocumentBinaryObject>
+    </cac:Attachment>
+  </cac:AdditionalDocumentReference>
+  <cac:AdditionalDocumentReference>
+    <cbc:ID>21020076</cbc:ID>
+    <cbc:DocumentType>Ordrenummer</cbc:DocumentType>
+  </cac:AdditionalDocumentReference>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="NO:ORGNR">9908:910667831</cbc:EndpointID>
+      <cac:PartyName>
+        <cbc:Name>Agresso Demo Norge (NO)</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Postboks 4242, Nydalen</cbc:StreetName>
+        <cbc:CityName>OSLO</cbc:CityName>
+        <cbc:PostalZone>0401</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode>NO</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID schemeID="NO:VAT">910667831MVA</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>Agresso Demo Norge (NO)</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="NO:ORGNR" schemeName="Foretaksregisteret">910667831</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:ID>PIAE</cbc:ID>
+        <cbc:Telephone>+ 47 22588500</cbc:Telephone>
+        <cbc:Telefax>+ 47 22588557</cbc:Telefax>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="NO:ORGNR">9908:910667831</cbc:EndpointID>
+      <cac:PartyIdentification>
+        <cbc:ID>2081</cbc:ID>
+      </cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name>Intern fakturering Æ`Ø &amp; Å</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Gjerdrumsvei 4</cbc:StreetName>
+        <cbc:CityName>OSLO</cbc:CityName>
+        <cbc:PostalZone>0401</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode>NO</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>Intern fakturering Æ`Ø &amp; Å</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="NO:ORGNR">910667831</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:ID>210</cbc:ID>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:Delivery>
+    <cbc:ActualDeliveryDate>2014-05-13</cbc:ActualDeliveryDate>
+    <cac:DeliveryLocation>
+      <cac:Address>
+        <cbc:StreetName>Gjerdrumsvei 4</cbc:StreetName>
+        <cbc:CityName>OSLO</cbc:CityName>
+        <cbc:PostalZone>0401</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode>NO</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:Address>
+    </cac:DeliveryLocation>
+  </cac:Delivery>
+  <cac:PaymentMeans>
+    <cbc:PaymentMeansCode listID="UN/ECE 4461 Subset" listAgencyID="NES">31</cbc:PaymentMeansCode>
+    <cbc:PaymentDueDate>2014-06-12</cbc:PaymentDueDate>
+    <cbc:PaymentID>1020810303001209</cbc:PaymentID>
+    <cac:PayeeFinancialAccount>
+      <cbc:ID schemeID="BBAN">50841051308</cbc:ID>
+    </cac:PayeeFinancialAccount>
+  </cac:PaymentMeans>
+  <cac:PaymentMeans>
+    <cbc:PaymentMeansCode listID="UN/ECE 4461 Subset" listAgencyID="NES">31</cbc:PaymentMeansCode>
+    <cbc:PaymentDueDate>2014-06-12</cbc:PaymentDueDate>
+    <cbc:PaymentID>1020810303001209</cbc:PaymentID>
+    <cac:PayeeFinancialAccount>
+      <cbc:ID schemeID="IBAN">NO2305407656506</cbc:ID>
+      <cac:FinancialInstitutionBranch>
+        <cac:FinancialInstitution>
+          <cbc:ID schemeID="BIC">DNBANOKKXXX</cbc:ID>
+        </cac:FinancialInstitution>
+      </cac:FinancialInstitutionBranch>
+    </cac:PayeeFinancialAccount>
+  </cac:PaymentMeans>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="NOK">6867.19</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="NOK">27468.75</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="NOK">6867.19</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>25</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="NOK">27468.75</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="NOK">27468.75</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="NOK">34335.94</cbc:TaxInclusiveAmount>
+    <cbc:AllowanceTotalAmount currencyID="NOK">0.00</cbc:AllowanceTotalAmount>
+    <cbc:ChargeTotalAmount currencyID="NOK">0.00</cbc:ChargeTotalAmount>
+    <!--<cbc:PrepaidAmount currencyID=""></cbc:PrepaidAmount>-->
+    <cbc:PayableRoundingAmount currencyID="NOK">0</cbc:PayableRoundingAmount>
+    <cbc:PayableAmount currencyID="NOK">34335.94</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA">1</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="NOK">12000</cbc:LineExtensionAmount>
+    <cac:OrderLineReference>
+      <cbc:LineID>1</cbc:LineID>
+    </cac:OrderLineReference>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="NOK">3000</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Description>
+      </cbc:Description>
+      <cbc:Name>Skrivebord</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID>13000</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>25</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="NOK">12000</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>2</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA">1</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="NOK">15000</cbc:LineExtensionAmount>
+    <cac:OrderLineReference>
+      <cbc:LineID>2</cbc:LineID>
+    </cac:OrderLineReference>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="NOK">3750</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Description>
+      </cbc:Description>
+      <cbc:Name>Kontorstol</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID>13002</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>25</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="NOK">15000</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>3</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="KGM">25</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="NOK">468.75</cbc:LineExtensionAmount>
+    <cac:OrderLineReference>
+      <cbc:LineID>3</cbc:LineID>
+    </cac:OrderLineReference>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="NOK">117.19</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Description>
+      </cbc:Description>
+      <cbc:Name>Kaffe</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID>13005</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>25</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="NOK">18.75</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+</Invoice>

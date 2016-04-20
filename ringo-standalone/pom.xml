@@ -1,0 +1,127 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>ringo</artifactId>
+        <groupId>no.sr.ringo</groupId>
+        <version>1.1.28-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ringo-standalone</artifactId>
+
+    <packaging>jar</packaging>
+
+    <name>Ringo - Standalone App</name>
+    <description>Standalone app for sending queued outbound messages.</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>net.sf.jopt-simple</groupId>
+            <artifactId>jopt-simple</artifactId>
+            <version>4.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>no.sr.ringo</groupId>
+            <artifactId>ringo-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>no.sr.ringo</groupId>
+            <artifactId>ringo-domain</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>no.sr.ringo</groupId>
+            <artifactId>ringo-email-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>no.sr.ringo</groupId>
+            <artifactId>ringo-persistence-jdbc-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- oxalis -->
+
+        <dependency>
+            <groupId>no.difi.oxalis</groupId>
+            <artifactId>oxalis-outbound</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.difi.oxalis</groupId>
+            <artifactId>oxalis-sql</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.difi.oxalis</groupId>
+            <artifactId>oxalis-jdbc-dbcp</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+        </dependency>
+
+        <!-- Dynamic loading of the JDBC driver is outside the scope of this sample application -->
+        <!-- If your are using different JDBC driver, this is the dependency to change -->
+        <!-- You must supply a JDBC driver in order to make oxalis-statistics-dbcp work -->
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <!-- logging -->
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>package standalone</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- This is where the name of the artifact is determined -->
+                    <finalName>ringo-standalone</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <archive>
+                        <manifest>
+                            <mainClass>no.sr.ringo.Main</mainClass>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                    <descriptors>
+                        <descriptor>src/main/assembly/assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.0.xsd">
+<cbc:UBLVersionID>2.0</cbc:UBLVersionID>
+<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0</cbc:CustomizationID>
+<cbc:ProfileID>urn:www.cenbii.eu:profile:bii05:ver1.0</cbc:ProfileID>
+<cbc:ID>113225</cbc:ID>
+<cbc:IssueDate>2012-11-01</cbc:IssueDate>
+<cbc:DocumentCurrencyCode>NOK</cbc:DocumentCurrencyCode>
+<cac:OrderReference>
+<cbc:ID>111596</cbc:ID>
+</cac:OrderReference>
+<cac:AccountingSupplierParty>
+<cac:Party>
+<cac:PartyName>
+<cbc:Name>Fru Haugans Hotel AS</cbc:Name>
+</cac:PartyName>
+<cac:PostalAddress>
+<cbc:Postbox>81</cbc:Postbox>
+<cbc:CityName>Mosjøen</cbc:CityName>
+<cbc:PostalZone>8651</cbc:PostalZone>
+<cac:Country>
+<cbc:IdentificationCode>NO</cbc:IdentificationCode>
+</cac:Country>
+</cac:PostalAddress>
+<cac:PartyTaxScheme>
+<cbc:CompanyID>NO980634205MVA</cbc:CompanyID>
+<cac:TaxScheme>
+<cbc:ID schemeAgencyID="6" schemeID="UN/ECE 5153">VAT</cbc:ID>
+</cac:TaxScheme>
+</cac:PartyTaxScheme>
+<cac:PartyLegalEntity>
+<cbc:CompanyID schemeID="NO:ORGNR">980634205</cbc:CompanyID>
+</cac:PartyLegalEntity>
+<cac:Contact>
+<cbc:ID>Hilde Halvorsen</cbc:ID>
+</cac:Contact>
+</cac:Party>
+</cac:AccountingSupplierParty>
+<cac:AccountingCustomerParty>
+<cac:Party>
+<cac:PartyIdentification>
+<cbc:ID>432</cbc:ID>
+</cac:PartyIdentification>
+<cac:PartyName>
+<cbc:Name>Domstoladministrasjonen</cbc:Name>
+</cac:PartyName>
+<cac:PostalAddress>
+<cbc:Postbox>4104</cbc:Postbox>
+<cbc:CityName>Hamar</cbc:CityName>
+<cbc:PostalZone>2307</cbc:PostalZone>
+<cac:Country>
+<cbc:IdentificationCode>NO</cbc:IdentificationCode>
+</cac:Country>
+</cac:PostalAddress>
+<cac:PartyLegalEntity>
+<cbc:CompanyID schemeID="NO:ORGNR">984195796</cbc:CompanyID>
+</cac:PartyLegalEntity>
+<cac:Contact>
+<cbc:ID>1460ranf   </cbc:ID>
+<cbc:Telephone>77660035</cbc:Telephone>
+<cbc:Telefax>77660060</cbc:Telefax>
+<cbc:ElectronicMail>Irene.Holmen.Joachimsen@domstol.no</cbc:ElectronicMail>
+</cac:Contact>
+</cac:Party>
+</cac:AccountingCustomerParty>
+<cac:Delivery>
+<cbc:ActualDeliveryDate>2012-11-01</cbc:ActualDeliveryDate>
+<cac:DeliveryLocation>
+<cac:Address>
+<cbc:CityName>Mosjøen</cbc:CityName>
+<cbc:PostalZone>8651</cbc:PostalZone>
+<cac:Country>
+<cbc:IdentificationCode>NO</cbc:IdentificationCode>
+</cac:Country>
+</cac:Address>
+</cac:DeliveryLocation>
+</cac:Delivery>
+<cac:PaymentMeans>
+<cbc:PaymentMeansCode>31</cbc:PaymentMeansCode>
+<cbc:PaymentDueDate>2012-11-15</cbc:PaymentDueDate>
+<cac:PayeeFinancialAccount>
+<cbc:ID schemeID="BBAN">45300500688</cbc:ID>
+</cac:PayeeFinancialAccount>
+</cac:PaymentMeans>
+<cac:PaymentMeans>
+<cbc:PaymentMeansCode>31</cbc:PaymentMeansCode>
+<cbc:PaymentDueDate>2012-11-15</cbc:PaymentDueDate>
+<cbc:PaymentChannelCode>SW</cbc:PaymentChannelCode>
+<cac:PayeeFinancialAccount>
+<cbc:ID schemeID="IBAN">NO8345300500688</cbc:ID>
+<cac:FinancialInstitutionBranch>
+<cac:FinancialInstitution>
+<cbc:ID>DNBANOKK</cbc:ID>
+</cac:FinancialInstitution>
+</cac:FinancialInstitutionBranch>
+</cac:PayeeFinancialAccount>
+</cac:PaymentMeans>
+<cac:TaxTotal>
+<cbc:TaxAmount currencyID="NOK">1186.36</cbc:TaxAmount>
+<cac:TaxSubtotal>
+<cbc:TaxableAmount currencyID="NOK">3779.20</cbc:TaxableAmount>
+<cbc:TaxAmount currencyID="NOK">944.80</cbc:TaxAmount>
+<cac:TaxCategory>
+<cbc:ID>S</cbc:ID>
+<cbc:Percent>25.00</cbc:Percent>
+<cac:TaxScheme>
+<cbc:ID>VAT</cbc:ID>
+</cac:TaxScheme>
+</cac:TaxCategory>
+</cac:TaxSubtotal>
+<cac:TaxSubtotal>
+<cbc:TaxableAmount currencyID="NOK">3019.44</cbc:TaxableAmount>
+<cbc:TaxAmount currencyID="NOK">241.56</cbc:TaxAmount>
+<cac:TaxCategory>
+<cbc:ID>AA</cbc:ID>
+<cbc:Percent>8.00</cbc:Percent>
+<cac:TaxScheme>
+<cbc:ID>VAT</cbc:ID>
+</cac:TaxScheme>
+</cac:TaxCategory>
+</cac:TaxSubtotal>
+</cac:TaxTotal>
+<cac:LegalMonetaryTotal>
+<cbc:LineExtensionAmount currencyID="NOK">6798.64</cbc:LineExtensionAmount>
+<cbc:TaxExclusiveAmount currencyID="NOK">6798.64</cbc:TaxExclusiveAmount>
+<cbc:TaxInclusiveAmount currencyID="NOK">7985.00</cbc:TaxInclusiveAmount>
+<cbc:PayableAmount currencyID="NOK">7985.00</cbc:PayableAmount>
+</cac:LegalMonetaryTotal>
+<cac:InvoiceLine>
+<cbc:ID>1</cbc:ID>
+<cbc:InvoicedQuantity unitCode="NAR">1</cbc:InvoicedQuantity>
+<cbc:LineExtensionAmount currencyID="NOK">46.40</cbc:LineExtensionAmount>
+<cac:Delivery>
+<cbc:ActualDeliveryDate>2012-10-08</cbc:ActualDeliveryDate>
+</cac:Delivery>
+<cac:TaxTotal>
+<cbc:TaxAmount currencyID="NOK">11.60</cbc:TaxAmount>
+</cac:TaxTotal>
+<cac:Item>
+<cbc:Name>08.10 Frokost *Frokost</cbc:Name>
+<cac:SellersItemIdentification>
+<cbc:ID>220</cbc:ID>
+</cac:SellersItemIdentification>
+<cac:ClassifiedTaxCategory>
+<cbc:ID>S</cbc:ID>
+<cbc:Percent>25.00</cbc:Percent>
+<cac:TaxScheme>
+<cbc:ID>VAT</cbc:ID>
+</cac:TaxScheme>
+</cac:ClassifiedTaxCategory>
+</cac:Item>
+<cac:Price>
+<cbc:PriceAmount currencyID="NOK">46.40</cbc:PriceAmount>
+</cac:Price>
+</cac:InvoiceLine>
+<cac:InvoiceLine>
+<cbc:ID>2</cbc:ID>
+<cbc:InvoicedQuantity unitCode="NAR">1</cbc:InvoicedQuantity>
+<cbc:LineExtensionAmount currencyID="NOK">1006.48</cbc:LineExtensionAmount>
+<cac:Delivery>
+<cbc:ActualDeliveryDate>2012-10-08</cbc:ActualDeliveryDate>
+</cac:Delivery>
+<cac:TaxTotal>
+<cbc:TaxAmount currencyID="NOK">80.52</cbc:TaxAmount>
+</cac:TaxTotal>
+<cac:Item>
+<cbc:Name>08.10 Rom *Rom/Frokost</cbc:Name>
+<cac:SellersItemIdentification>
+<cbc:ID>100</cbc:ID>
+</cac:SellersItemIdentification>
+<cac:ClassifiedTaxCategory>
+<cbc:ID>AA</cbc:ID>
+<cbc:Percent>8.00</cbc:Percent>
+<cac:TaxScheme>
+<cbc:ID>VAT</cbc:ID>
+</cac:TaxScheme>
+</cac:ClassifiedTaxCategory>
+</cac:Item>
+<cac:Price>
+<cbc:PriceAmount currencyID="NOK">1006.48</cbc:PriceAmount>
+</cac:Price>
+</cac:InvoiceLine>
+<cac:InvoiceLine>
+<cbc:ID>3</cbc:ID>
+<cbc:InvoicedQuantity unitCode="NAR">1</cbc:InvoicedQuantity>
+<cbc:LineExtensionAmount currencyID="NOK">46.40</cbc:LineExtensionAmount>
+<cac:Delivery>
+<cbc:ActualDeliveryDate>2012-10-09</cbc:ActualDeliveryDate>
+</cac:Delivery>
+<cac:TaxTotal>
+<cbc:TaxAmount currencyID="NOK">11.60</cbc:TaxAmount>
+</cac:TaxTotal>
+<cac:Item>
+<cbc:Name>09.10 Frokost *Frokost</cbc:Name>
+<cac:SellersItemIdentification>
+<cbc:ID>220</cbc:ID>
+</cac:SellersItemIdentification>
+<cac:ClassifiedTaxCategory>
+<cbc:ID>S</cbc:ID>
+<cbc:Percent>25.00</cbc:Percent>
+<cac:TaxScheme>
+<cbc:ID>VAT</cbc:ID>
+</cac:TaxScheme>
+</cac:ClassifiedTaxCategory>
+</cac:Item>
+<cac:Price>
+<cbc:PriceAmount currencyID="NOK">46.40</cbc:PriceAmount>
+</cac:Price>
+</cac:InvoiceLine>
+<cac:InvoiceLine>
+<cbc:ID>4</cbc:ID>
+<cbc:InvoicedQuantity unitCode="NAR">1</cbc:InvoicedQuantity>
+<cbc:LineExtensionAmount currencyID="NOK">1006.48</cbc:LineExtensionAmount>
+<cac:Delivery>
+<cbc:ActualDeliveryDate>2012-10-09</cbc:ActualDeliveryDate>
+</cac:Delivery>
+<cac:TaxTotal>
+<cbc:TaxAmount currencyID="NOK">80.52</cbc:TaxAmount>
+</cac:TaxTotal>
+<cac:Item>
+<cbc:Name>09.10 Rom *Rom/Frokost</cbc:Name>
+<cac:SellersItemIdentification>
+<cbc:ID>100</cbc:ID>
+</cac:SellersItemIdentification>
+<cac:ClassifiedTaxCategory>
+<cbc:ID>AA</cbc:ID>
+<cbc:Percent>8.00</cbc:Percent>
+<cac:TaxScheme>
+<cbc:ID>VAT</cbc:ID>
+</cac:TaxScheme>
+</cac:ClassifiedTaxCategory>
+</cac:Item>
+<cac:Price>
+<cbc:PriceAmount currencyID="NOK">1006.48</cbc:PriceAmount>
+</cac:Price>
+</cac:InvoiceLine>
+<cac:InvoiceLine>
+<cbc:ID>5</cbc:ID>
+<cbc:InvoicedQuantity unitCode="NAR">1</cbc:InvoicedQuantity>
+<cbc:LineExtensionAmount currencyID="NOK">46.40</cbc:LineExtensionAmount>
+<cac:Delivery>
+<cbc:ActualDeliveryDate>2012-10-10</cbc:ActualDeliveryDate>
+</cac:Delivery>
+<cac:TaxTotal>
+<cbc:TaxAmount currencyID="NOK">11.60</cbc:TaxAmount>
+</cac:TaxTotal>
+<cac:Item>
+<cbc:Name>10.10 Frokost *Frokost</cbc:Name>
+<cac:SellersItemIdentification>
+<cbc:ID>220</cbc:ID>
+</cac:SellersItemIdentification>
+<cac:ClassifiedTaxCategory>
+<cbc:ID>S</cbc:ID>
+<cbc:Percent>25.00</cbc:Percent>
+<cac:TaxScheme>
+<cbc:ID>VAT</cbc:ID>
+</cac:TaxScheme>
+</cac:ClassifiedTaxCategory>
+</cac:Item>
+<cac:Price>
+<cbc:PriceAmount currencyID="NOK">46.40</cbc:PriceAmount>
+</cac:Price>
+</cac:InvoiceLine>
+<cac:InvoiceLine>
+<cbc:ID>6</cbc:ID>
+<cbc:InvoicedQuantity unitCode="NAR">1</cbc:InvoicedQuantity>
+<cbc:LineExtensionAmount currencyID="NOK">1006.48</cbc:LineExtensionAmount>
+<cac:Delivery>
+<cbc:ActualDeliveryDate>2012-10-10</cbc:ActualDeliveryDate>
+</cac:Delivery>
+<cac:TaxTotal>
+<cbc:TaxAmount currencyID="NOK">80.52</cbc:TaxAmount>
+</cac:TaxTotal>
+<cac:Item>
+<cbc:Name>10.10 Rom *Rom/Frokost</cbc:Name>
+<cac:SellersItemIdentification>
+<cbc:ID>100</cbc:ID>
+</cac:SellersItemIdentification>
+<cac:ClassifiedTaxCategory>
+<cbc:ID>AA</cbc:ID>
+<cbc:Percent>8.00</cbc:Percent>
+<cac:TaxScheme>
+<cbc:ID>VAT</cbc:ID>
+</cac:TaxScheme>
+</cac:ClassifiedTaxCategory>
+</cac:Item>
+<cac:Price>
+<cbc:PriceAmount currencyID="NOK">1006.48</cbc:PriceAmount>
+</cac:Price>
+</cac:InvoiceLine>
+<cac:InvoiceLine>
+<cbc:ID>7</cbc:ID>
+<cbc:InvoicedQuantity unitCode="NAR">3</cbc:InvoicedQuantity>
+<cbc:LineExtensionAmount currencyID="NOK">3600.00</cbc:LineExtensionAmount>
+<cac:Delivery>
+<cbc:ActualDeliveryDate>2012-11-01</cbc:ActualDeliveryDate>
+</cac:Delivery>
+<cac:TaxTotal>
+<cbc:TaxAmount currencyID="NOK">900.00</cbc:TaxAmount>
+</cac:TaxTotal>
+<cac:Item>
+<cbc:Name>01.11 Lokalleie Lokalleie 09., 10. og 11.10.12</cbc:Name>
+<cac:SellersItemIdentification>
+<cbc:ID>160</cbc:ID>
+</cac:SellersItemIdentification>
+<cac:ClassifiedTaxCategory>
+<cbc:ID>S</cbc:ID>
+<cbc:Percent>25.00</cbc:Percent>
+<cac:TaxScheme>
+<cbc:ID>VAT</cbc:ID>
+</cac:TaxScheme>
+</cac:ClassifiedTaxCategory>
+</cac:Item>
+<cac:Price>
+<cbc:PriceAmount currencyID="NOK">1200.00</cbc:PriceAmount>
+</cac:Price>
+</cac:InvoiceLine>
+<cac:InvoiceLine>
+<cbc:ID>8</cbc:ID>
+<cbc:InvoicedQuantity unitCode="NAR">1</cbc:InvoicedQuantity>
+<cbc:LineExtensionAmount currencyID="NOK">40.00</cbc:LineExtensionAmount>
+<cac:Delivery>
+<cbc:ActualDeliveryDate>2012-11-01</cbc:ActualDeliveryDate>
+</cac:Delivery>
+<cac:TaxTotal>
+<cbc:TaxAmount currencyID="NOK">10.00</cbc:TaxAmount>
+</cac:TaxTotal>
+<cac:Item>
+<cbc:Name>01.11 Ekspedisjonsgebyr</cbc:Name>
+<cac:SellersItemIdentification>
+<cbc:ID>880</cbc:ID>
+</cac:SellersItemIdentification>
+<cac:ClassifiedTaxCategory>
+<cbc:ID>S</cbc:ID>
+<cbc:Percent>25.00</cbc:Percent>
+<cac:TaxScheme>
+<cbc:ID>VAT</cbc:ID>
+</cac:TaxScheme>
+</cac:ClassifiedTaxCategory>
+</cac:Item>
+<cac:Price>
+<cbc:PriceAmount currencyID="NOK">40.00</cbc:PriceAmount>
+</cac:Price>
+</cac:InvoiceLine>
+</Invoice>

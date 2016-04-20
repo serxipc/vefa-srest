@@ -1,0 +1,24 @@
+<outbox-query-response version="1.0">
+    <message>
+      <self>https://localhost:8443/test/inbox/84</self>
+      <xml-document>https://localhost:8443/test/inbox/84/xml-document</xml-document>
+      <message-meta-data>
+        <msg-no>84</msg-no>
+        <accountId>
+          <id>1</id>
+        </accountId>
+        <direction>IN</direction>
+        <received>2012-01-23T08:29:55.234+01:00</received>
+        <uuid>1743866e-62e0-43e6-901a-3bc670823ee4</uuid>
+        <peppol-header>
+          <sender>9908:976098897</sender>
+          <receiver>9908:976098897</receiver>
+          <channel>CH-TEST</channel>
+            <document-id>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0::2.0</document-id>
+            <document-type>INVOICE</document-type>
+            <process-id>urn:www.cenbii.eu:profile:bii04:ver1.0</process-id>
+            <process-name>INVOICE_ONLY</process-name>
+        </peppol-header>
+      </message-meta-data>
+    </message>
+</outbox-query-response>

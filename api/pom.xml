@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <artifactId>ringo</artifactId>
+        <groupId>no.sr.ringo</groupId>
+        <version>1.1.28-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ringo-api</artifactId>
+
+    <packaging>jar</packaging>
+
+    <name>Ringo - External API</name>
+    <description>Common high level API</description>
+
+    <dependencies>
+
+        <!-- ISO8601 DateTime handling TODO replace with Java 8 LocalXxxxxx variants -->
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+
+        <!-- logging -->
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+</project>

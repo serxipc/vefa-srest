@@ -1,0 +1,66 @@
+/'
+This is a PlantUML diagram, viewable directly in your IDE as UML diagram when using the PlantUML plugin.
+Also viewable online, just paste this file into : http://plantuml.com/plantuml/
+
+Declaring participants, here are some types :
+    participant Foo0
+    actor Foo1
+    boundary Foo2
+    control Foo3
+    entity Foo4
+    database Foo5
+
+More usage info here : http://plantuml.com/sequence.html
+'/
+@startuml
+
+skinparam monochrome false
+
+actor "RingoClient" as c
+participant "RingoServer" as s
+participant "QueueSystem" as q
+participant "OxalisServer" as os
+participant "RingoStandalone" as rs
+database "DataStorage" as d
+participant "PEPPOL" as p
+
+'
+' this describes the OUTBOX functionality
+'
+c -> s : post:outbox
+activate s
+s -> d : persist message
+s --> q : async:schedule message
+activate q
+c <- s : status
+deactivate s
+q -> rs : listener:sendMessage
+activate rs
+rs -> d : get message details
+rs -> p : deliver message
+rs <-- p : status
+rs -> d : update message state
+q <-- rs : auto acknowledge
+deactivate rs
+deactivate q
+
+'
+' this describes the PEPPOL inbound
+'
+p -> os : receive message
+activate os
+os -> d : persist message
+p <-- os : status
+deactivate os
+
+'
+' this describes the INBOX functionality
+'
+c -> s : get:inbox
+activate s
+s -> d : read all messages
+c <- s : messagelist
+deactivate s
+
+
+@enduml
