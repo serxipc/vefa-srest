@@ -1,9 +1,17 @@
 # Overview of REST functionality
 
+Below are brief documentation of all REST resources and their supported actions.
 
-Documentation overview ...
+### General information
+
+- All REST functions needs basic authentication
+- Make sure your HTTP client library always send Authorization header (force preemptive auth)
+- Make sure your HTTPS client supports new certificates (high security, no-SSL, TLS v1.2+ etc).
+
+### Method overview
+
 ```
-method    uri       produce                 description
+verb    uri       produces                 description
           [information about input parameters that it consumes]
 ```
 
