@@ -31,10 +31,16 @@ public class RegisterUseCaseIntegrationTest {
     BillingRepository billingRepository;
 
     /**
-     * Test will create the account/customer but creating billing period will throw an exception, so account should be rolledback
+     * Test will create the account/customer but creating billing period will throw an exception, so account should be rolled back
      */
     @Test(groups = {"persistence"})
     public void testTransactionRollback() {
+
+        String transactionName = "TransactionName";
+
+        //test there's no account created for name "name"
+        boolean exists = accountRepository.accountExists(new UserName(transactionName));
+        assertFalse(exists);
 
         BillingRepository mockBillingRepository = createStrictMock(BillingRepository.class);
         registerUseCase.setBillingRepository(mockBillingRepository);
@@ -43,7 +49,6 @@ public class RegisterUseCaseIntegrationTest {
 
         replay(mockBillingRepository);
 
-        String transactionName = "TransactionName";
         RegistrationData rd = new RegistrationData(transactionName, "pass", "username", "add1", "add2", "zip", "city", "country", "contactPerson", "email", "phone", ORG_NUM_STR, "discountCode", true);
 
         try {
@@ -51,37 +56,12 @@ public class RegisterUseCaseIntegrationTest {
         } catch (IllegalStateException e) {
             assertEquals("Simulating exception",e.getMessage());
         }
-        finally {
-            registerUseCase.setBillingRepository(billingRepository);
-        }
 
         verify(mockBillingRepository);
 
         //test there's no account created for name "name"
-        boolean exists = accountRepository.accountExists(new UserName(transactionName));
-        assertFalse(exists);
-
-    }
-
-    /**
-     * Test will create the account/customer but registering with difi will fail (which does not cause an exception)
-     * So this tests the setRollbackOnly method in the transaction handler
-     */
-    @Test(groups = {"persistence"})
-    public void testTransactionRollbackWhenDifiRegistrationFails() {
-
-        String errorName = "errorTransaction";
-        RegistrationData rd = new RegistrationData(errorName, "pass", "username", "add1", "add2", "zip", "city", "country", "contactPerson", "email", "phone", ORG_NUM_STR, null, true);
-
-        final RegistrationProcessResult registrationProcessResult = registerUseCase.registerUser(rd);
-
-        assertFalse(registrationProcessResult.isSuccess());
-        assertEquals(registrationProcessResult.getSource(),"DIFI");
-        assertEquals(registrationProcessResult.getMessage(),"En feil oppstod med registreringen i adresseregisteret for EHF-regninger");
-
-        //test there's no account created for name "errorTransaction"
-        boolean exists = accountRepository.accountExists(new UserName(errorName));
-        assertFalse(exists);
+        boolean stillExists = accountRepository.accountExists(new UserName(transactionName));
+        assertFalse(stillExists);
 
     }
 
@@ -90,6 +70,9 @@ public class RegisterUseCaseIntegrationTest {
      */
     @Test(groups = {"persistence"})
     public void testSuccessfulRegistration() {
+
+        registerUseCase.setBillingRepository(billingRepository);
+
         String userName = "testUserName";
 
         //discount code is empty/null - default billing_scheme will be used to create billing_period
