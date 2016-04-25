@@ -283,14 +283,6 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- DIFI client -->
-
-        <dependency>
-            <groupId>no.sr.ringo</groupId>
-            <artifactId>difi-ws-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
     </dependencies>
 
     <properties>

@@ -60,6 +60,7 @@ Brief refactoring plan (remember to x out finished items).
 - [ ] Hardcoded ADMIN_USERNAME ("sr-admin") should be changes (used when logging in as other users)
 
 ### Other changes (unordered)
+- [x] Removed the SmpRegistrationClient that registered new accounts directly into ELMA
 - [ ] Remove as much as possible of apache + commons bloat
 - [ ] Make some persistence methods as user supplied components (provide default impl)
 - [ ] Ringo has it's own version of API classes from Oxalis (should just rely on Oxalis API)

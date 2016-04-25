@@ -2,7 +2,6 @@ package no.sr.ringo.resource;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
-import no.difi.ws.client.SmpRegistrationClient;
 import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.message.*;
 import no.sr.ringo.peppol.RingoUtils;
@@ -37,17 +36,15 @@ public class AdminResource extends AbstractMessageResource {
     private final PeppolMessageRepository peppolMessageRepository;
     private final RingoSmpLookup ringoSmpLookup;
     private final SendReportUseCase sendReportUseCase;
-    private final SmpRegistrationClient smpRegistrationClient;
 
     @Inject
-    public AdminResource(FetchMessagesUseCase fetchMessagesUseCase, RingoAccount ringoAccount, PeppolMessageRepository peppolMessageRepository, RingoSmpLookup ringoSmpLookup, SendReportUseCase sendReportUseCase, SmpRegistrationClient smpRegistrationClient) {
+    public AdminResource(FetchMessagesUseCase fetchMessagesUseCase, RingoAccount ringoAccount, PeppolMessageRepository peppolMessageRepository, RingoSmpLookup ringoSmpLookup, SendReportUseCase sendReportUseCase) {
         super();
         this.fetchMessagesUseCase = fetchMessagesUseCase;
         this.ringoAccount = ringoAccount;
         this.peppolMessageRepository = peppolMessageRepository;
         this.ringoSmpLookup = ringoSmpLookup;
         this.sendReportUseCase = sendReportUseCase;
-        this.smpRegistrationClient = smpRegistrationClient;
     }
 
     /**
@@ -60,7 +57,7 @@ public class AdminResource extends AbstractMessageResource {
 
         MessagesQueryResponse messagesQueryResponse = fetchMessagesUseCase.init(this, uriInfo).messagesWithoutAccountId().getMessages();
 
-        String entity = String.format("<status><is-production-server>%s</is-production-server><smp-lookup>%s</smp-lookup><difi-client>%s</difi-client>%s</status>", servletContext.getInitParameter("isProductionServer"), RingoUtils.encodePredefinedXmlEntities(ringoSmpLookup.getClass().getName()), smpRegistrationClient.getClass().getName(), messagesQueryResponse.asXml());
+        String entity = String.format("<status><is-production-server>%s</is-production-server><smp-lookup>%s</smp-lookup>%s</status>", servletContext.getInitParameter("isProductionServer"), RingoUtils.encodePredefinedXmlEntities(ringoSmpLookup.getClass().getName()), messagesQueryResponse.asXml());
         return SrResponse.ok().entity(entity).build();
     }
 
@@ -101,10 +98,8 @@ public class AdminResource extends AbstractMessageResource {
     @Path("/statistics")
     @Produces(RingoMediaType.APPLICATION_XML)
     public Response adminStatistics(){
-
         final RingoStatistics ringoStatistics = peppolMessageRepository.getAdminStatistics();
         return SrResponse.ok().entity(ringoStatistics.asXml()).build();
-
     }
 
 }

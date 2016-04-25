@@ -5,7 +5,6 @@ import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import eu.peppol.smp.*;
-import no.difi.ws.client.SmpRegistrationClient;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.message.FetchMessagesUseCase;
 import no.sr.ringo.usecase.ReceiveMessageFromClientUseCase;
@@ -102,8 +101,6 @@ public class RingoRestModule extends JerseyServletModule {
 
     private void bindSmpDependencies() {
         bind(RingoSmpLookup.class).toProvider(SmpLookupProvider.class);
-        bind(SmpRegistrationClient.class).toProvider(SmpRegistrationClientProvider.class).in(RequestScoped.class);
-        // bind(SmpRequestExecutor.class).in(Singleton.class); // not needed, inject will see the singleton annotation
     }
 
 }

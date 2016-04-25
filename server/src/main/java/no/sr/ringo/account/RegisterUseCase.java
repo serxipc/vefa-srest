@@ -5,8 +5,6 @@ import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import no.sr.ringo.email.EmailService;
 import eu.peppol.identifier.ParticipantId;
-import no.difi.ws.client.SmpRegistrationClient;
-import no.difi.ws.client.SmpRegistrationStatus;
 import no.sr.ringo.RingoConstant;
 import no.sr.ringo.billing.BillingRepository;
 import no.sr.ringo.billing.BillingScheme;
@@ -35,16 +33,14 @@ public class RegisterUseCase {
 
     private AccountRepository accountRepository;
     private BillingRepository billingRepository;
-    private SmpRegistrationClient smpRegistrationClient;
     private JdbcTxManager jdbcTxManager;
     private final EmailService emailService;
 
     @Inject
-    RegisterUseCase(AccountRepository accountRepository, SmpRegistrationClient smpRegistrationClient, BillingRepository billingRepository, JdbcTxManager jdbcTxManager, EmailService emailService) {
+    RegisterUseCase(AccountRepository accountRepository, BillingRepository billingRepository, JdbcTxManager jdbcTxManager, EmailService emailService) {
         this.jdbcTxManager = jdbcTxManager;
         this.accountRepository = accountRepository;
         this.billingRepository = billingRepository;
-        this.smpRegistrationClient = smpRegistrationClient;
         this.emailService = emailService;
     }
 
@@ -122,45 +118,15 @@ public class RegisterUseCase {
         //create billing period
         createBillingPeriod(registrationData.getDiscountCode(), new CustomerId(customer.getId()));
 
-
-        //FIX ME THE LOGIC HERE NEEDS TO BE FIXED
-
-        //REGISTER THE USER WITH THE ELMA
+        // FIXME add code here if you want to register party with SMP
         if (registrationData.isRegisterSmp()) {
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Trying to register %s, with orgNo %s at difi", registrationData.getName(), registrationData.getOrgNo()));
-            }
-            //register user in DIFI
-            SmpRegistrationStatus status = smpRegistrationClient.register(registrationData.getName(), registrationData.getOrgNo(), registrationData.getPhone(), registrationData.getEmail(), registrationData.getContactPerson());
-            switch (status) {
-                case ALREADY_REGISTERED:
-                    jdbcTxManager.setRollbackOnly();
-                    return new RegistrationProcessResult(RegistrationProcessResult.RegistrationSource.DIFI, false, MessageHelper.getMessage("difi.orgNo.registered"));
-                case INVALID_ORG_NO:
-                    jdbcTxManager.setRollbackOnly();
-                    return new RegistrationProcessResult(RegistrationProcessResult.RegistrationSource.DIFI, false, MessageHelper.getMessage("difi.orgNo.invalid"));
-                case ERROR:
-                    jdbcTxManager.setRollbackOnly();
-                    return new RegistrationProcessResult(RegistrationProcessResult.RegistrationSource.DIFI, false, MessageHelper.getMessage("difi.error.occurred"));
-                case OK:
-                    //that's what we expected
-                    if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Successfully registered %s, with orgNo %s at difi", registrationData.getName(), registrationData.getOrgNo()));
-                    }
-                    break;
-                default:
-                    jdbcTxManager.setRollbackOnly();
-                    return new RegistrationProcessResult(RegistrationProcessResult.RegistrationSource.DIFI, false, MessageHelper.getMessage("difi.reg.failed"));
-            }
+            logger.info(String.format("Registering %s, with orgNo %s at SMP is not implemented", registrationData.getName(), registrationData.getOrgNo()));
         } else {
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Not registering %s, with orgNo %s at difi", registrationData.getName(), registrationData.getOrgNo()));
-            }
+            logger.debug(String.format("Skipping registering %s, with orgNo %s at SMP", registrationData.getName(), registrationData.getOrgNo()));
         }
 
         //send info to sales department that new customer has been registered
         emailService.sendRegistrationNotification(account, registrationData.getDiscountCode());
-
 
         //if difi registration happened
         if (registrationData.isRegisterSmp()) {

@@ -50,7 +50,7 @@ public class AdminStatisticsResourceTest {
 
         replay(mockPeppolMessageRepository);
 
-        AdminResource statisticsResource = new AdminResource(null, testAccount,mockPeppolMessageRepository,null,null,null);
+        AdminResource statisticsResource = new AdminResource(null, testAccount,mockPeppolMessageRepository,null,null);
         final Response overview = statisticsResource.adminStatistics();
 
         final int status = overview.getStatus();

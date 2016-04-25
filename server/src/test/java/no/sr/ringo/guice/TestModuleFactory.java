@@ -3,8 +3,6 @@ package no.sr.ringo.guice;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.servlet.RequestScoped;
-import no.difi.ws.client.SmpRegistrationClient;
-import no.difi.ws.client.TestSmpRegistrationClientImpl;
 import no.sr.ringo.smp.RingoSmpLookup;
 import no.sr.ringo.smp.RingoSmpLookupImpl;
 import no.sr.ringo.smp.TestModeSmpLookupImpl;
@@ -64,9 +62,6 @@ public class TestModuleFactory implements IModuleFactory {
             } else {
                 bind(RingoSmpLookup.class).to(RingoSmpLookupImpl.class);
             }
-
-            //binds a fake version of SMP registering
-            bind(SmpRegistrationClient.class).to(TestSmpRegistrationClientImpl.class);
 
         }
 
