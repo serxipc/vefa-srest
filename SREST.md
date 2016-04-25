@@ -12,7 +12,7 @@ Below are brief documentation of all REST resources and their supported actions.
 
 ```
 verb    uri       produces                 description
-          [information about input parameters that it consumes]
+        [optional 2nd line with information about input parameters that it consumes]
 ```
 
 Start of a resource providing statistics over the inbox, outbox and messages
