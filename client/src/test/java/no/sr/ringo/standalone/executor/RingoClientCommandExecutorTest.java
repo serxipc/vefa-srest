@@ -178,6 +178,7 @@ public class RingoClientCommandExecutorTest  {
         RingoClientParams params = prepareParamsForOutbox();
         params.setSenderId(PeppolParticipantId.valueFor("9908:976098891"));
 
+        assertTrue(uploadFile.toString().endsWith(".xml"),"Ooops dow we have a threading problem?");
         expect(client.send(uploadFile, params.getChannelId(), params.getSenderId(), params.getRecipientId(), UploadMode.BATCH)).andReturn(mockUploadMessage);
         expect(mockUploadMessage.getMessageUUID()).andReturn(uuid);
 
@@ -208,7 +209,9 @@ public class RingoClientCommandExecutorTest  {
         expect(mockUploadMessage.getMessageUUID()).andReturn(uuid);
 
         mockStream.println("Upload failed for file: testFile.xml. Creating corresponding error file");
-        mockStream.println("Created error file: file:/tmp/upload/testFile.err");
+
+        File errorFile = new File(params.getOutboxPath(), FILENAME.replaceAll("(?i)" + ExecutorPathHelper.FILE_EXTENSION, ".err"));
+        mockStream.println("Created error file: " + errorFile.toURI());
         mockStream.println("Uploaded 0 file(s).");
         mockStream.println("Skipped 1 file(s). Information in .err files");
         mockStream.close();
@@ -223,18 +226,20 @@ public class RingoClientCommandExecutorTest  {
         assertFalse(archivedFile.exists());
 
         //verify that error file was created
-        errorFile = new File(UPLOAD_DIR, ERR_FILENAME);
-        assertTrue(errorFile.exists());
+        this.errorFile = new File(UPLOAD_DIR, ERR_FILENAME);
+        assertTrue(this.errorFile.exists());
 
         //check it's contents
-        FileInputStream fstream = new FileInputStream(errorFile);
+        try (FileInputStream fstream = new FileInputStream(this.errorFile)) {
 
-        DataInputStream in = new DataInputStream(fstream);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        String message = br.readLine();
-        assertEquals(errorMessage, message);
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String message = br.readLine();
+            assertEquals(errorMessage, message);
+        }
 
-
+        // Removes the error file to prevent other tests from failing
+        errorFile.delete();
     }
 
     @Test
@@ -268,7 +273,8 @@ public class RingoClientCommandExecutorTest  {
         expectLastCall();
 
         mockStream.println(String.format("Downloading message with UUID: %s", messageUUID.toString()));
-        mockStream.println("Downloaded 1 files to directory /tmp/download");
+
+        mockStream.println("Downloaded 1 files to directory " + new File(DOWNLOAD_DIR).toString());
         mockStream.close();
 
         replay(client, mockStream, mockInbox, mockDownloadMessage, mockMessages, mockIterator);
@@ -308,8 +314,8 @@ public class RingoClientCommandExecutorTest  {
         expect(mockIterator.hasNext()).andReturn(false);
 
         expect(mockDownloadMessage.getReceiver()).andReturn(participantId);
-        mockStream.println("File for receiver file:/tmp/download/9914_111111111 exists but it's not a directory");
-        mockStream.println("Downloaded 0 files to directory /tmp/download");
+        mockStream.println("File for receiver " + fileAsExpectedDir.toURI() + " exists but it's not a directory");
+        mockStream.println("Downloaded 0 files to directory " + params.getInboxPath());
         mockStream.close();
 
         replay(client, mockStream, mockInbox, mockDownloadMessage, mockMessages, mockIterator);
@@ -346,7 +352,7 @@ public class RingoClientCommandExecutorTest  {
         expect(mockDownloadMessage.getMessageSelfUri()).andReturn("http://ringo.domain.com/inbox/10");
 
         mockStream.println("Skipping message 'http://ringo.domain.com/inbox/10' because it has no messageID");
-        mockStream.println("Downloaded 0 files to directory /tmp/download");
+        mockStream.println("Downloaded 0 files to directory " + params.getInboxPath());
         mockStream.close();
 
         replay(client, mockStream, mockInbox, mockDownloadMessage, mockMessages, mockIterator);

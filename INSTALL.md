@@ -2,8 +2,18 @@
 
 ### Install MySQL with database oxalis_test
 - install mysql
-- create database oxalis_test with one user skrue using password vable
-- run the script in /server/src/main/sql/create-oxalis-dbms.sql
+- create database `oxalis_test` with one user `skrue` using password `vable`
+````
+    create database oxalis_test;
+    create user 'skrue' identified by 'vable';
+    use oxalis_test;
+    grant all on oxalis_test.* to 'skrue';
+````
+- run the script in `/server/src/main/sql/create-oxalis-dbms.sql`
+Given that your are located in the root source directory of the code, this
+MySQL command should do the trick:
+````
+source /server/src/main/sql/create-oxalis-dbms.sql
 
 ### Install Java and server
 - create new folder .../rest-server/

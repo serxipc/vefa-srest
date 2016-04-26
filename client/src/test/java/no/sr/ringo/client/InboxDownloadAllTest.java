@@ -20,6 +20,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -99,7 +103,12 @@ public class InboxDownloadAllTest {
         //expectations for the print stream
         mockStream.println("Downloading message with UUID: "+uuid);
         mockStream.println("Downloading message with UUID: "+uuid);
-        mockStream.println("Downloaded 2 files to directory /tmp/download");
+
+        Path path = Paths.get(FileSystems.getDefault().getSeparator(),"tmp", "download");
+        String s = path.toString();
+
+
+        mockStream.println("Downloaded 2 files to directory " + params.getInboxPath());
         replay(mocks.toArray());
 
         RingoClientCommandExecutor executor = new RingoClientCommandExecutor(mockStream, params, ringoClient);
@@ -143,7 +152,7 @@ public class InboxDownloadAllTest {
         //expectations for the print stream
         mockStream.println("Downloading message with UUID: "+uuid);
         mockStream.println(String.format("Message with UUID %s successfully downloaded, but marking as read failed.", uuid));
-        mockStream.println("Downloaded 0 files to directory /tmp/download");
+        mockStream.println("Downloaded 0 files to directory " + params.getInboxPath());
         replay(mocks.toArray());
 
         RingoClientCommandExecutor executor = new RingoClientCommandExecutor(mockStream, params, ringoClient);

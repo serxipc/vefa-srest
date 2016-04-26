@@ -21,7 +21,7 @@
             <!-- https://tomcat.apache.org/migration.html -->
             <groupId>org.apache.tomcat</groupId>
             <artifactId>catalina</artifactId>
-            <version>7.0.23</version>
+            <version>6.0.45</version>
             <scope>provided</scope>
         </dependency>
 

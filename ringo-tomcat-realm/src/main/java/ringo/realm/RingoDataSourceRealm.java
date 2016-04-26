@@ -70,7 +70,11 @@ public class RingoDataSourceRealm extends DataSourceRealm {
                     return null;
                 }
                 // continue the authentication procedure with the username and password we wanna log in as
-                return super.authenticate(con, username, password);
+                try {
+                    return super.authenticate(con, username, password);
+                } catch (SQLException e) {
+                    return null;
+                }
             } else {
                 // FAIL, hashed input password doesn't match the hashed password from the database
                 //containerLog.trace(sm.getString("dataSourceRealm.authenticateFailure", username));
