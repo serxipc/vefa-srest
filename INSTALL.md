@@ -14,6 +14,7 @@ Given that your are located in the root source directory of the code, this
 MySQL command should do the trick:
 ````
 source /server/src/main/sql/create-oxalis-dbms.sql
+````
 
 ### Install Java and server
 - create new folder .../rest-server/
