@@ -2,8 +2,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
+        <groupId>no.difi.ringo</groupId>
         <artifactId>ringo</artifactId>
-        <groupId>no.sr.ringo</groupId>
         <version>1.1.28-SNAPSHOT</version>
     </parent>
 
@@ -111,37 +111,37 @@
         <!-- Local dependencies -->
 
         <dependency>
-            <groupId>no.sr.ringo</groupId>
+            <groupId>no.difi.ringo</groupId>
             <artifactId>ringo-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>no.sr.ringo</groupId>
+            <groupId>no.difi.ringo</groupId>
             <artifactId>ringo-security</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>no.sr.ringo</groupId>
+            <groupId>no.difi.ringo</groupId>
             <artifactId>ringo-usecase</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>no.sr.ringo</groupId>
+            <groupId>no.difi.ringo</groupId>
             <artifactId>ringo-domain</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>no.sr.ringo</groupId>
+            <groupId>no.difi.ringo</groupId>
             <artifactId>ringo-email-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>no.sr.ringo</groupId>
+            <groupId>no.difi.ringo</groupId>
             <artifactId>ringo-persistence-jdbc-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -235,7 +235,7 @@
         <!-- Test dependencies -->
 
         <dependency>
-            <groupId>no.sr.ringo</groupId>
+            <groupId>no.difi.ringo</groupId>
             <artifactId>ringo-client</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
