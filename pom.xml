@@ -31,6 +31,7 @@
         <module>ringo-domain</module>
         <module>ringo-email-impl</module>
         <module>ringo-persistence-jdbc-impl</module>
+        <module>ringo-security</module>
         <module>ringo-standalone</module>
         <module>ringo-tomcat-realm</module>
         <module>ringo-usecase</module>

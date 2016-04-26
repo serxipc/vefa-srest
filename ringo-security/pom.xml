@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <artifactId>ringo</artifactId>
+        <groupId>no.sr.ringo</groupId>
+        <version>1.1.28-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ringo-security</artifactId>
+
+    <packaging>jar</packaging>
+
+    <name>Ringo - Security</name>
+    <description>Simple crypto library</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>no.sr.ringo</groupId>
+            <artifactId>ringo-domain</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.3</version>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
+</project>
