@@ -186,4 +186,4 @@ insert into customer (id, name, originator_id, org_no) values (1, 'SendRegning A
 insert into account (id, customer_id, name, username, password) values (1, 1, 'SendRegning User', 'sr', 'ringo');
 insert into account_role values ('sr', 'client');
 insert into account_receiver (participant_id, account_id) values ('9908:976098897', 1);
-insert into billing_scheme (id, code, price_invoice_send, price_invoice_receive, price_billing_cycle, start_price, billing_cycle, description) values (1, 'DEFAULT', 0.00, 0.00, 0.00, 0.00, 'YEARLY', 'Default pricing model');
+insert into billing_scheme (id, code, price_invoice_send, price_invoice_receive, price_billing_cycle, start_price, billing_cycle, description) values (1, 'DEFAULT', 0.00, 0.00, 9100.00, 3000.00, 'YEARLY', 'Default pricing model');
