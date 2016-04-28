@@ -6,8 +6,6 @@ import com.google.inject.servlet.RequestScoped;
 import no.sr.ringo.email.EmailService;
 import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.RingoConstant;
-import no.sr.ringo.billing.BillingRepository;
-import no.sr.ringo.billing.BillingScheme;
 import no.sr.ringo.common.MessageHelper;
 import no.sr.ringo.guice.jdbc.JdbcTxManager;
 import no.sr.ringo.guice.jdbc.Transactional;
@@ -32,15 +30,13 @@ public class RegisterUseCase {
     private static Logger logger = LoggerFactory.getLogger(RegisterUseCase.class);
 
     private AccountRepository accountRepository;
-    private BillingRepository billingRepository;
     private JdbcTxManager jdbcTxManager;
     private final EmailService emailService;
 
     @Inject
-    RegisterUseCase(AccountRepository accountRepository, BillingRepository billingRepository, JdbcTxManager jdbcTxManager, EmailService emailService) {
+    RegisterUseCase(AccountRepository accountRepository, JdbcTxManager jdbcTxManager, EmailService emailService) {
         this.jdbcTxManager = jdbcTxManager;
         this.accountRepository = accountRepository;
-        this.billingRepository = billingRepository;
         this.emailService = emailService;
     }
 
@@ -66,7 +62,9 @@ public class RegisterUseCase {
         if (message != null) {
             valid = false;
         }
+
         return new ValidationResult(valid, message);
+
     }
 
     @Transactional
@@ -115,9 +113,6 @@ public class RegisterUseCase {
         // update account entry with password
         accountRepository.updatePasswordOnAccount(stored.getId(), hash.toString());
 
-        //create billing period
-        createBillingPeriod(registrationData.getDiscountCode(), new CustomerId(customer.getId()));
-
         // FIXME add code here if you want to register party with SMP
         if (registrationData.isRegisterSmp()) {
             logger.info(String.format("Registering %s, with orgNo %s at SMP is not implemented", registrationData.getName(), registrationData.getOrgNo()));
@@ -126,7 +121,7 @@ public class RegisterUseCase {
         }
 
         //send info to sales department that new customer has been registered
-        emailService.sendRegistrationNotification(account, registrationData.getDiscountCode());
+        emailService.sendRegistrationNotification(account, registrationData.isRegisterSmp() ? "konto skal motta" : "konto skal kun sende");
 
         //if difi registration happened
         if (registrationData.isRegisterSmp()) {
@@ -136,29 +131,6 @@ public class RegisterUseCase {
         }
 
     }
-
-    /**
-     * If discount code:
-     * - is empty: DEFAULT scheme will be used in billing period
-     * - is not empty and exists in billing_scheme: it will be used in billing_period
-     * - is not empty and DOESN"T exist in billing_scheme - no billing_period will be created
-     *
-     * @param discountCode
-     * @param customerId
-     */
-    private void createBillingPeriod(String discountCode, CustomerId customerId) {
-        BillingScheme billingScheme = null;
-        if (discountCode != null && discountCode.trim().length() > 0) {
-            billingScheme = billingRepository.getBillingSchemeByCode(discountCode);
-        } else {
-            billingScheme = billingRepository.getDefaultBillingScheme();
-        }
-
-        if (billingScheme != null) {
-            billingRepository.createBillingPeriod(customerId, billingScheme.getId());
-        }
-    }
-
 
     private boolean isEmpty(String value) {
         return value == null || value.trim().length() == 0;
@@ -171,15 +143,6 @@ public class RegisterUseCase {
      */
     void setAccountRepository(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
-    }
-
-    /**
-     * package protected for tests
-     *
-     * @param billingRepository
-     */
-    void setBillingRepository(BillingRepository billingRepository) {
-        this.billingRepository = billingRepository;
     }
 
 }

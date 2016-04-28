@@ -62,8 +62,8 @@ Brief refactoring plan (remember to x out finished items).
 ### Other changes (unordered)
 - [x] Removed the SmpRegistrationClient that registered new accounts directly into ELMA
 - [x] Moved artifacts naming from no.sr.ringo to no.difi.ringo (to prevent further dependency conflicts)
-- [ ] Remove BILLING from scope (code, tests, sql)
-- [ ] Consider removing REST functionality that add users and do admin features
+- [x] Remove BILLING from scope (code, tests, sql)
+- [ ] Consider removing REST functionality that adds users, send mails and do other admin chores
 - [ ] Remove as much as possible of apache + commons bloat
 - [ ] Make some persistence methods as user supplied components (provide default impl)
 - [ ] Ringo has it's own version of API classes from Oxalis (should just rely on Oxalis API)

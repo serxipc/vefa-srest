@@ -1,6 +1,5 @@
 package no.sr.ringo.account;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,7 +26,6 @@ public class RegistrationData implements Serializable {
     private final String email;
     private final String phone;
     private final String orgNo;
-    private final String discountCode;
 
     private final Boolean registerSmp;
 
@@ -75,10 +73,6 @@ public class RegistrationData implements Serializable {
         return orgNo;
     }
 
-    public String getDiscountCode() {
-        return discountCode;
-    }
-
     public Boolean isRegisterSmp() {
         return registerSmp;
     }
@@ -87,7 +81,7 @@ public class RegistrationData implements Serializable {
         return contactPerson;
     }
 
-    public RegistrationData(String name, String password, String username, String address1, String address2, String zip, String city, String country, String contactPerson, String email, String phone, String orgNo, String discountCode, Boolean registerSmp) {
+    public RegistrationData(String name, String password, String username, String address1, String address2, String zip, String city, String country, String contactPerson, String email, String phone, String orgNo, Boolean registerSmp) {
         this.name = name;
         this.password = password;
         this.username = username;
@@ -100,14 +94,11 @@ public class RegistrationData implements Serializable {
         this.email = email;
         this.phone = phone;
         this.orgNo = orgNo;
-        this.discountCode = discountCode;
-        //this.registerSmp = registerSmp != null && registerSmp.toLowerCase().equals("true") ? true : false;
         this.registerSmp = registerSmp;
     }
 
     public static RegistrationData fromJson(String JSONString) throws JSONException {
         JSONObject object = new JSONObject(JSONString);
-
         String name = object.getString("name");
         String password = object.getString("password");
         String address1 = object.getString("address1");
@@ -120,10 +111,8 @@ public class RegistrationData implements Serializable {
         String phone = object.getString("phone");
         String username = object.getString("username");
         String orgNo = object.getString("orgNo");
-        String discountCode = object.getString("discountCode");
         Boolean registerSmp = object.getBoolean("registerSmp");
-
-        return new RegistrationData(name, password, username, address1, address2, zip, city, country, contactPerson, email, phone, orgNo, discountCode, registerSmp);
+        return new RegistrationData(name, password, username, address1, address2, zip, city, country, contactPerson, email, phone, orgNo, registerSmp);
     }
 
 
@@ -137,10 +126,8 @@ public class RegistrationData implements Serializable {
         if (address1 != null ? !address1.equals(that.address1) : that.address1 != null) return false;
         if (address2 != null ? !address2.equals(that.address2) : that.address2 != null) return false;
         if (city != null ? !city.equals(that.city) : that.city != null) return false;
-        if (contactPerson != null ? !contactPerson.equals(that.contactPerson) : that.contactPerson != null)
-            return false;
+        if (contactPerson != null ? !contactPerson.equals(that.contactPerson) : that.contactPerson != null) return false;
         if (country != null ? !country.equals(that.country) : that.country != null) return false;
-        if (discountCode != null ? !discountCode.equals(that.discountCode) : that.discountCode != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (orgNo != null ? !orgNo.equals(that.orgNo) : that.orgNo != null) return false;
@@ -167,7 +154,6 @@ public class RegistrationData implements Serializable {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (orgNo != null ? orgNo.hashCode() : 0);
-        result = 31 * result + (discountCode != null ? discountCode.hashCode() : 0);
         result = 31 * result + (registerSmp != null ? registerSmp.hashCode() : 0);
         return result;
     }
@@ -187,8 +173,8 @@ public class RegistrationData implements Serializable {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", orgNo='" + orgNo + '\'' +
-                ", discountCode='" + discountCode + '\'' +
                 ", registerSmp=" + registerSmp +
                 '}';
     }
+
 }

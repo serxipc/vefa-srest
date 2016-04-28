@@ -7,9 +7,6 @@ import no.sr.ringo.account.AccountId;
 import no.sr.ringo.account.AccountRepository;
 import no.sr.ringo.account.Customer;
 import no.sr.ringo.account.RingoAccount;
-import no.sr.ringo.billing.BillingCycle;
-import no.sr.ringo.billing.BillingPeriodId;
-import no.sr.ringo.billing.BillingSchemeId;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.guice.jdbc.JdbcTxManager;
@@ -22,7 +19,6 @@ import no.sr.ringo.queue.OutboundMessageQueueId;
 import no.sr.ringo.queue.QueuedOutboundMessageError;
 import org.testng.annotations.Guice;
 
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -294,77 +290,6 @@ public class DatabaseHelper {
         }
     }
 
-
-    public BillingSchemeId createBillingScheme(String code, BigDecimal sendPrice, BigDecimal receivePrice, BigDecimal cyclePrice, BigDecimal startPrice, BillingCycle billingCycle) {
-        Connection con = null;
-        String sql = "insert into billing_scheme (code, price_invoice_send, price_invoice_receive, price_billing_cycle, start_price, billing_cycle) values(?,?,?,?,?,?)";
-
-        try {
-            con = jdbcTxManager.getConnection();
-            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, code);
-            ps.setBigDecimal(2, sendPrice);
-            ps.setBigDecimal(3, receivePrice);
-            ps.setBigDecimal(4, cyclePrice);
-            ps.setBigDecimal(5, startPrice);
-            ps.setString(6, billingCycle.name());
-
-            ps.execute();
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                int schemeId = rs.getInt(1);
-
-                return new BillingSchemeId(schemeId);
-            } else {
-                throw new IllegalStateException("Unable to obtain generated key after insert.");
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException(sql + " failed " + e, e);
-        }
-    }
-
-    public void deleteBillingScheme(BillingSchemeId schemeId) {
-        if (schemeId == null) {
-            return;
-        }
-
-        Connection con = null;
-        String sql = "delete from billing_scheme where id = ?";
-
-        try {
-            con = jdbcTxManager.getConnection();
-
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, schemeId.toInteger());
-
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new IllegalStateException(sql + " failed " + e, e);
-        }
-    }
-
-    public void deleteBillingPeriod(BillingPeriodId billingPeriodId) {
-        if (billingPeriodId == null) {
-            return;
-        }
-
-        Connection con = null;
-        String sql = "delete from billing_period where id = ?";
-
-        try {
-            con = jdbcTxManager.getConnection();
-
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, billingPeriodId.toInteger());
-
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new IllegalStateException(sql + " failed " + e, e);
-        }
-    }
-
     /**
      * Deletes all data related to an account.
      *
@@ -372,28 +297,27 @@ public class DatabaseHelper {
      */
     public void deleteAccountData(String userName) {
         Connection con = null;
-        String sql = "delete from billing_period where id = ?";
+        String sql = "delete from account_role where username = ?";
 
         try {
             con = jdbcTxManager.getConnection();
 
-            PreparedStatement ps = con.prepareStatement("delete from account_role where username = ?");
+            PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, userName);
             ps.executeUpdate();
 
-            ps = con.prepareStatement("delete from account_receiver where account_id = (select id from account where username = ?)");
+            sql = "delete from account_receiver where account_id = (select id from account where username = ?)";
+            ps = con.prepareStatement(sql);
             ps.setString(1, userName);
             ps.executeUpdate();
 
-            ps = con.prepareStatement("delete from account where username = ?");
+            sql = "delete from account where username = ?";
+            ps = con.prepareStatement(sql);
             ps.setString(1, userName);
             ps.executeUpdate();
 
-            ps = con.prepareStatement("delete from billing_period where customer_id = (select id from customer where name = ?)");
-            ps.setString(1, userName);
-            ps.executeUpdate();
-
-            ps = con.prepareStatement("delete from customer where name = ?");
+            sql = "delete from customer where name = ?";
+            ps = con.prepareStatement(sql);
             ps.setString(1, userName);
             ps.executeUpdate();
 
@@ -448,31 +372,6 @@ public class DatabaseHelper {
             }
         } catch (SQLException e) {
             throw new IllegalStateException(String.format("%s failed with orgNo: %s", sql, orgNo), e);
-        }
-    }
-
-    public boolean defauktBillingPeriodExists(Integer id) {
-        Integer default_billing_scheme_id = 1;
-
-        Connection con = null;
-        String sql = "select count(*) from billing_period where customer_id = ? and billing_scheme_id = ?";
-
-        try {
-            con = jdbcTxManager.getConnection();
-
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, id);
-            ps.setInt(2, default_billing_scheme_id);
-
-
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            } else {
-                return false;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException(String.format("%s failed with customer_id: %s", sql, id), e);
         }
     }
 

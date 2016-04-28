@@ -2,13 +2,11 @@
 package no.sr.ringo.account;
 
 import com.google.inject.Inject;
-import no.sr.ringo.billing.BillingRepository;
 import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
 import static org.testng.Assert.*;
 
 @Guice(moduleFactory = TestModuleFactory.class)
@@ -27,9 +25,6 @@ public class RegisterUseCaseIntegrationTest {
         this.databaseHelper = databaseHelper;
     }
 
-    @Inject
-    BillingRepository billingRepository;
-
     /**
      * Test will create the account/customer but creating billing period will throw an exception, so account should be rolled back
      */
@@ -42,22 +37,13 @@ public class RegisterUseCaseIntegrationTest {
         boolean exists = accountRepository.accountExists(new UserName(transactionName));
         assertFalse(exists);
 
-        BillingRepository mockBillingRepository = createStrictMock(BillingRepository.class);
-        registerUseCase.setBillingRepository(mockBillingRepository);
-
-        expect(mockBillingRepository.getBillingSchemeByCode("discountCode")).andThrow(new IllegalStateException("Simulating exception"));
-
-        replay(mockBillingRepository);
-
-        RegistrationData rd = new RegistrationData(transactionName, "pass", "username", "add1", "add2", "zip", "city", "country", "contactPerson", "email", "phone", ORG_NUM_STR, "discountCode", true);
+        RegistrationData rd = new RegistrationData(transactionName, "pass", "username", "add1", "add2", "zip", "city", "country", "contactPerson", "email", "phone", ORG_NUM_STR, true);
 
         try {
             registerUseCase.registerUser(rd);
         } catch (IllegalStateException e) {
             assertEquals("Simulating exception",e.getMessage());
         }
-
-        verify(mockBillingRepository);
 
         //test there's no account created for name "name"
         boolean stillExists = accountRepository.accountExists(new UserName(transactionName));
@@ -71,14 +57,10 @@ public class RegisterUseCaseIntegrationTest {
     @Test(groups = {"persistence"})
     public void testSuccessfulRegistration() {
 
-        registerUseCase.setBillingRepository(billingRepository);
-
         String userName = "testUserName";
 
-        //discount code is empty/null - default billing_scheme will be used to create billing_period
-        String discountCode = "";
-
         try {
+
             String password = "pass";
             String add1 = "add1";
             String add2 = "add2";
@@ -89,7 +71,7 @@ public class RegisterUseCaseIntegrationTest {
             String email = "email";
             String phone = "phone";
 
-            RegistrationData rd = new RegistrationData(userName, password, userName, add1, add2, zip, city, country, contactPerson, email, phone, ORG_NUM_STR, discountCode, true);
+            RegistrationData rd = new RegistrationData(userName, password, userName, add1, add2, zip, city, country, contactPerson, email, phone, ORG_NUM_STR, true);
             RegistrationProcessResult result = registerUseCase.registerUser(rd);
             assertTrue(result.isSuccess(), result.getMessage());
 
@@ -116,9 +98,6 @@ public class RegisterUseCaseIntegrationTest {
             assertEquals(contactPerson, customer.getContactPerson());
             assertEquals(email, customer.getEmail());
             assertEquals(phone, customer.getPhone());
-
-            //check billing period has been created
-            assertTrue(databaseHelper.defauktBillingPeriodExists(customer.getId()));
 
         } finally {
             databaseHelper.deleteAccountData(userName);

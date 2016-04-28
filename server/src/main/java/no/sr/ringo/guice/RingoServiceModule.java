@@ -7,8 +7,6 @@ import no.sr.ringo.email.*;
 import eu.peppol.smp.*;
 import no.sr.ringo.account.AccountRepository;
 import no.sr.ringo.account.AccountRepositoryImpl;
-import no.sr.ringo.billing.BillingRepository;
-import no.sr.ringo.billing.BillingRepositoryImpl;
 import no.sr.ringo.common.IsProductionServer;
 import no.sr.ringo.document.*;
 import no.sr.ringo.message.PeppolMessageRepository;
@@ -31,14 +29,11 @@ public class RingoServiceModule extends AbstractModule {
      */
     @Override
     protected void configure() {
-
         bind(IsProductionServer.class).toProvider(IsProductionServerProvider.class);
-
         bindSmpLookup();
         bindRepositories();
         bindPeppolDocumentFactories();
         bindEmailService();
-
     }
 
     private void bindSmpLookup() {
@@ -52,7 +47,6 @@ public class RingoServiceModule extends AbstractModule {
         bind(PeppolMessageRepository.class).to(PeppolMessageRepositoryImpl.class).in(Singleton.class);
         bind(QueueRepository.class).to(QueueRepositoryImpl.class).in(Singleton.class);
         bind(ReportRepository.class).to(ReportRepositoryImpl.class).in(Singleton.class);
-        bind(BillingRepository.class).to(BillingRepositoryImpl.class).in(Singleton.class);
         bind(DocumentRepository.class).to(DocumentRepositoryImpl.class).in(RequestScoped.class);
     }
 

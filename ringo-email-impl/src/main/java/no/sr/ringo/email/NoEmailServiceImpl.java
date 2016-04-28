@@ -20,8 +20,8 @@ public class NoEmailServiceImpl implements EmailService {
     }
 
     @Override
-    public SentEmailResult sendRegistrationNotification(RingoAccount ringoAccount, String billingCode) {
-        log.error("Mail not implemented - no mail was sent to sales department for account {} and billingCode {}", ringoAccount.getUserName().stringValue(), billingCode);
+    public SentEmailResult sendRegistrationNotification(RingoAccount ringoAccount, String info) {
+        log.error("Mail not implemented - no mail was sent to sales department for account {} and info {}", ringoAccount.getUserName().stringValue(), info);
         return null;
     }
 
