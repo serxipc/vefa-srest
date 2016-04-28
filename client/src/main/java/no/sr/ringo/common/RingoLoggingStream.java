@@ -31,13 +31,12 @@ public class RingoLoggingStream extends PrintStream {
      * @param e the exception which caused the error
      */
     public void error(Throwable e) {
-        //only log the stack trace if debug is enabled
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug(e.getMessage(), e);
-        }
-        else {
+        } else {
             log.error(e.getMessage());
         }
         super.println(e.getMessage());
     }
+
 }

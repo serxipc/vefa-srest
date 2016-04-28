@@ -9,8 +9,6 @@ import no.sr.ringo.document.PeppolDocument;
 import no.sr.ringo.message.*;
 import no.sr.ringo.response.MessagesQueryResponse;
 import no.sr.ringo.usecase.ReceiveMessageFromClientUseCase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -28,8 +26,6 @@ import javax.ws.rs.core.UriInfo;
 @RequestScoped
 public class MessagesResource extends AbstractMessageResource {
 
-    private static Logger logger = LoggerFactory.getLogger(MessagesResource.class);
-
     final PeppolMessageRepository peppolMessageRepository;
     private final FetchDocumentUseCase fetchDocumentUseCase;
     final RingoAccount ringoAccount;
@@ -46,7 +42,6 @@ public class MessagesResource extends AbstractMessageResource {
         this.ringoAccount = ringoAccount;
     }
 
-
     /**
      * Retrieves all messaged from /inbox and /outbox
      */
@@ -54,7 +49,6 @@ public class MessagesResource extends AbstractMessageResource {
     @Produces(RingoMediaType.APPLICATION_XML)
     @Path("/")
     public Response getMessages(@Context UriInfo uriInfo, @QueryParam("sent") String sent, @QueryParam("sender") String sender, @QueryParam("receiver") String receiver, @QueryParam("direction") String direction, @QueryParam("index") String index) {
-
 
             MessagesQueryResponse messagesQueryResponse = fetchMessagesUseCase.init(this, uriInfo)
                     .messagesFor(ringoAccount.getId())
@@ -110,6 +104,7 @@ public class MessagesResource extends AbstractMessageResource {
 
         PeppolDocument xmlDocument = fetchDocumentUseCase.execute(ringoAccount, msgNo);
         return SrResponse.ok().entity(xmlDocument.getXml()).build();
+
     }
 
     /**
@@ -132,6 +127,7 @@ public class MessagesResource extends AbstractMessageResource {
 
         PeppolDocument xmlDocument = fetchDocumentUseCase.executeWithDecoration(ringoAccount, msgNo);
         return SrResponse.ok().entity(xmlDocument.getXml()).build();
+
     }
 
     @GET
@@ -141,6 +137,7 @@ public class MessagesResource extends AbstractMessageResource {
 
         Integer count = peppolMessageRepository.getInboxCount(ringoAccount.getId());
         return SrResponse.ok().entity(count.toString()).build();
+
     }
 
 }

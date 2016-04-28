@@ -9,8 +9,6 @@ import no.sr.ringo.document.PeppolDocument;
 import no.sr.ringo.message.*;
 import no.sr.ringo.response.InboxQueryResponse;
 import no.sr.ringo.response.SingleInboxResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -27,8 +25,6 @@ import javax.ws.rs.core.UriInfo;
 @RequestScoped
 public class InboxResource extends AbstractMessageResource {
 
-    private static Logger logger = LoggerFactory.getLogger(InboxResource.class);
-
     private final RingoAccount ringoAccount;
     private final PeppolMessageRepository peppolMessageRepository;
     private final FetchMessagesUseCase fetchMessagesUseCase;
@@ -43,7 +39,6 @@ public class InboxResource extends AbstractMessageResource {
         this.fetchDocumentUseCase = fetchDocumentUseCase;
     }
 
-
     /**
      * Retrieves the unread messages from the /inbox
      */
@@ -55,14 +50,11 @@ public class InboxResource extends AbstractMessageResource {
         InboxQueryResponse inboxQueryResponse = fetchMessagesUseCase.init(this, uriInfo)
                 .messagesFor(ringoAccount.getId())
                 .getInbox();
+
         String entity = inboxQueryResponse.asXml();
-
-        //logger.debug("Returning:\n" + entity);
-
         return SrResponse.ok().entity(entity).build();
 
     }
-
 
     /**
      * Retreives the message header for the supplied message number.
@@ -90,6 +82,7 @@ public class InboxResource extends AbstractMessageResource {
         if (!messageMetaDataWithLocators.getTransferDirection().equals(TransferDirection.IN)) {
             return SrResponse.status(Response.Status.NOT_FOUND, "Inbound message number " + msgNoString + " not found");
         }
+
         return createSingleInboxResponse(uriInfo, messageMetaDataWithLocators);
 
     }
@@ -104,12 +97,10 @@ public class InboxResource extends AbstractMessageResource {
 
     }
 
-
     /**
      * Retrieves the PEPPOL XML Document in XML format, without the header stuff.
      *
      * @param msgNoString identifies the message to which the xml document is associated.
-     * @return
      */
     @GET
     @Produces(RingoMediaType.APPLICATION_XML)
@@ -126,8 +117,8 @@ public class InboxResource extends AbstractMessageResource {
         PeppolDocument xmlDocument = fetchDocumentUseCase.execute(ringoAccount, msgNo);
 
         return SrResponse.ok().entity(xmlDocument.getXml()).build();
-    }
 
+    }
 
     @POST
     @Path("/{message_no}/read")
@@ -150,6 +141,7 @@ public class InboxResource extends AbstractMessageResource {
         peppolMessageRepository.markMessageAsRead(msgNo.toInt());
 
         return createSingleMessageResponse(uriInfo, messageMetaDataWithLocators);
+
     }
 
     /**
@@ -173,6 +165,7 @@ public class InboxResource extends AbstractMessageResource {
 
         // Shoves the URI of this message into the HTTP header "Location" and supplies the XML response as the entity
         return SrResponse.ok().entity(entity).build();
+
     }
 
 }

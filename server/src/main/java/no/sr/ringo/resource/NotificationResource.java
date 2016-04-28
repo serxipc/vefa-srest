@@ -4,8 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.account.RingoAccount;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -19,8 +17,6 @@ import javax.ws.rs.core.*;
 @RequestScoped
 public class NotificationResource {
 
-    private static Logger logger = LoggerFactory.getLogger(NotificationResource.class);
-
     private final RingoAccount ringoAccount;
     private final EmailService emailService;
 
@@ -30,7 +26,6 @@ public class NotificationResource {
         this.ringoAccount = ringoAccount;
         this.emailService = emailService;
     }
-
 
     @POST
     @Path("/batchUploadError")

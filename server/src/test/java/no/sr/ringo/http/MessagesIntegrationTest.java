@@ -24,12 +24,7 @@ import java.util.UUID;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
-/**
- * @author Adam Mscisz adam@sendregning.no
- */
-//@Guice(modules = {TestDataSourceModule.class,RingoServiceModule.class})
 @Guice(moduleFactory = TestModuleFactory.class)
-
 public class MessagesIntegrationTest extends AbstractHttpClientServerTest {
 
     @Inject
@@ -67,7 +62,7 @@ public class MessagesIntegrationTest extends AbstractHttpClientServerTest {
     }
 
 
-    @Test(groups = {"slow","integration"})
+    @Test(groups = {"slow", "integration"})
     public void testIteration() throws Exception {
         //We have inserted 27 messages in the setup
         Messagebox messagebox = ringoRestClientImpl.getMessageBox();

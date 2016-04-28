@@ -8,8 +8,6 @@ import no.sr.ringo.account.RegistrationProcessResult;
 import no.sr.ringo.account.ValidationResult;
 import org.json.JSONException;
 import org.json.JSONStringer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -30,8 +28,6 @@ import java.io.Serializable;
 @RequestScoped
 public class RegisterResource extends AbstractMessageResource {
 
-    private static Logger logger = LoggerFactory.getLogger(RegisterResource.class);
-
     private final RegisterUseCase registerUseCase;
 
     @Inject
@@ -43,7 +39,6 @@ public class RegisterResource extends AbstractMessageResource {
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public String post(String regDataJSON) {
-
 
         try {
             RegistrationData registrationData = RegistrationData.fromJson(regDataJSON);
@@ -63,12 +58,14 @@ public class RegisterResource extends AbstractMessageResource {
         } catch (JSONException e) {
             throw new IllegalArgumentException("Wrong data from form", e);
         }
+
     }
 
     /**
      * The response of the registration.
      */
     private class RegistrationResponse implements Serializable{
+
         private String status;
         private String message;
         private String source;
@@ -82,31 +79,7 @@ public class RegisterResource extends AbstractMessageResource {
         public String toJSON() throws JSONException {
             return new JSONStringer().object().key("status").value(this.status).key("message").value(this.message).key("source").value(this.source).endObject().toString();
         }
+
     }
+
 }
-
-/*
-   When I try to use JSON as consumes
-   it works fine when using
-   curl -i -X POST -H 'Content-Type: application/json' -d '{"name":"adam","password":"ttt"}' http://localhost:8080/register
-   but when I try to do:
-               $.ajax({
-                   type: 'POST',
-                   contentType: 'application/json',
-                   dataType: "json",
-                   url: "http://localhost:8080/register"..
-
-                   it doesn't work without any error message, just some INFO about JAXB in console...
-
-
-*/
-//    @POST
-//    @Consumes({"application/xml", "application/json"})
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public String post(RegistrationData registrationData) {
-//
-//        System.out.println("Name : " + registrationData.getName());
-//
-//        return "{\"status\":\"ok\"}";
-//
-//    }

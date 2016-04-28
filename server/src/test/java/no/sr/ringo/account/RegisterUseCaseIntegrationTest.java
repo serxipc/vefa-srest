@@ -4,6 +4,7 @@ package no.sr.ringo.account;
 import com.google.inject.Inject;
 import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 
@@ -12,11 +13,12 @@ import static org.testng.Assert.*;
 @Guice(moduleFactory = TestModuleFactory.class)
 public class RegisterUseCaseIntegrationTest {
 
-    final RegisterUseCase registerUseCase;
-    final AccountRepository accountRepository;
-    final DatabaseHelper databaseHelper;
+    private final RegisterUseCase registerUseCase;
+    private final AccountRepository accountRepository;
+    private final DatabaseHelper databaseHelper;
 
     private final String ORG_NUM_STR = "222222222";
+    private final String userName = "UserName";
 
     @Inject
     public RegisterUseCaseIntegrationTest(RegisterUseCase registerUseCase, AccountRepository accountRepository, DatabaseHelper databaseHelper) {
@@ -26,28 +28,33 @@ public class RegisterUseCaseIntegrationTest {
     }
 
     /**
+     * Make sure we always remove the created user after running these tests
+     */
+    @AfterMethod
+    public void removeTestUser() {
+        databaseHelper.deleteAccountData(userName);
+    }
+
+    /**
      * Test will create the account/customer but creating billing period will throw an exception, so account should be rolled back
      */
     @Test(groups = {"persistence"})
     public void testTransactionRollback() {
 
-        String transactionName = "TransactionName";
+        boolean exists = accountRepository.accountExists(new UserName(userName));
+        assertFalse(exists, "The username was already found in the database, test cannot be started");
 
-        //test there's no account created for name "name"
-        boolean exists = accountRepository.accountExists(new UserName(transactionName));
-        assertFalse(exists);
-
-        RegistrationData rd = new RegistrationData(transactionName, "pass", "username", "add1", "add2", "zip", "city", "country", "contactPerson", "email", "phone", ORG_NUM_STR, true);
+        RegistrationData rd = new RegistrationData(userName, "pass", "username", "add1", "add2", "ZipTooLong", "city", "country", "contactPerson", "email", "phone", ORG_NUM_STR, true);
 
         try {
             registerUseCase.registerUser(rd);
+            fail("User seems to have been registered, that should not have happened");
         } catch (IllegalStateException e) {
-            assertEquals("Simulating exception",e.getMessage());
+            assertEquals("Data truncation: Data too long for column 'zip' at row 1", e.getMessage());
         }
 
-        //test there's no account created for name "name"
-        boolean stillExists = accountRepository.accountExists(new UserName(transactionName));
-        assertFalse(stillExists);
+        boolean shouldStillBeFalse = accountRepository.accountExists(new UserName(userName));
+        assertFalse(shouldStillBeFalse, "The test was not supposed to create an account with the given username, it was supposed to fail an rollback");
 
     }
 
@@ -57,51 +64,43 @@ public class RegisterUseCaseIntegrationTest {
     @Test(groups = {"persistence"})
     public void testSuccessfulRegistration() {
 
-        String userName = "testUserName";
+        String password = "pass";
+        String add1 = "add1";
+        String add2 = "add2";
+        String zip = "zip";
+        String city = "city";
+        String country = "country";
+        String contactPerson = "contactPerson";
+        String email = "email";
+        String phone = "phone";
 
-        try {
+        RegistrationData rd = new RegistrationData(userName, password, userName, add1, add2, zip, city, country, contactPerson, email, phone, ORG_NUM_STR, true);
+        RegistrationProcessResult result = registerUseCase.registerUser(rd);
+        assertTrue(result.isSuccess(), result.getMessage());
 
-            String password = "pass";
-            String add1 = "add1";
-            String add2 = "add2";
-            String zip = "zip";
-            String city = "city";
-            String country = "country";
-            String contactPerson = "contactPerson";
-            String email = "email";
-            String phone = "phone";
+        //check that account exists
+        RingoAccount account = accountRepository.findAccountByUsername(new UserName(userName));
+        assertNotNull(account);
 
-            RegistrationData rd = new RegistrationData(userName, password, userName, add1, add2, zip, city, country, contactPerson, email, phone, ORG_NUM_STR, true);
-            RegistrationProcessResult result = registerUseCase.registerUser(rd);
-            assertTrue(result.isSuccess(), result.getMessage());
+        //check account_role 'client' has been created
+        assertTrue(databaseHelper.hasClientRole(userName));
 
-            //check that account exists
-            RingoAccount account = accountRepository.findAccountByUsername(new UserName(userName));
-            assertNotNull(account);
+        //check there's account receiver
+        assertTrue(databaseHelper.accountReceiverExists(account.getId(), ORG_NUM_STR));
 
-            //check account_role 'client' has been created
-            assertTrue(databaseHelper.hasClientRole(userName));
-
-            //check there's account receiver
-            assertTrue(databaseHelper.accountReceiverExists(account.getId(), ORG_NUM_STR));
-
-            //check customer
-            Customer customer = accountRepository.findCustomerById(account.getCustomer().getId());
-            assertNotNull(customer);
-            assertEquals(ORG_NUM_STR, customer.getOrgNo());
-            assertEquals(add1, customer.getAddress1());
-            assertEquals(add2, customer.getAddress2());
-            assertEquals(email, customer.getEmail());
-            assertEquals(zip, customer.getZip());
-            assertEquals(city, customer.getCity());
-            assertEquals(country, customer.getCountry());
-            assertEquals(contactPerson, customer.getContactPerson());
-            assertEquals(email, customer.getEmail());
-            assertEquals(phone, customer.getPhone());
-
-        } finally {
-            databaseHelper.deleteAccountData(userName);
-        }
+        //check customer
+        Customer customer = accountRepository.findCustomerById(account.getCustomer().getId());
+        assertNotNull(customer);
+        assertEquals(ORG_NUM_STR, customer.getOrgNo());
+        assertEquals(add1, customer.getAddress1());
+        assertEquals(add2, customer.getAddress2());
+        assertEquals(email, customer.getEmail());
+        assertEquals(zip, customer.getZip());
+        assertEquals(city, customer.getCity());
+        assertEquals(country, customer.getCountry());
+        assertEquals(contactPerson, customer.getContactPerson());
+        assertEquals(email, customer.getEmail());
+        assertEquals(phone, customer.getPhone());
 
     }
 
