@@ -16,11 +16,19 @@ MySQL command should do the trick:
 source /server/src/main/sql/create-oxalis-dbms.sql
 ````
 
-### Install Java and Tomcat 9
+### Install Java 8 and Tomcat 9
 - create new folder .../rest-server/
 - unzip JDK 8 in that folder .../rest-server/jdk1.8.0_66
 - unzip Tomcat 9 in that folder .../rest-server/apache-tomcat-9.0.0.M4
 - make start / stop scripts runnable chmod +x .../rest-server/apache-tomcat-9.0.0.M4/bin/*.sh
+- create .../rest-server/apache-tomcat-9.0.0.M4/bin/setenv.sh file pointing to your local JDK
+```
+# Linux put this in setenv.sh
+export JAVA_HOME=.../rest-server/jdk1.8.0_66
+
+# Windows put this is setenv.bat
+set JAVA_HOME=C:/.../rest-server/jdk1.8.0_66
+```
 
 ### Compile code
 - mvn clean test            <== unit tests
