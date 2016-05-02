@@ -1,4 +1,3 @@
-/* Created by steinar on 01.01.12 at 17:39 */
 package no.sr.ringo.guice;
 
 import com.google.inject.AbstractModule;
@@ -9,14 +8,9 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 /**
- * The Jndi data source is provided by this module
+ * The DataSource provided by this module is used in standalone Ringo without any JNDI.
  *
  * @author Steinar Overbeck Cook
- *         <p/>
- *         Created by
- *         User: steinar
- *         Date: 01.01.12
- *         Time: 17:39
  */
 public class RingoDataSourceGuiceModule extends AbstractModule {
 
@@ -34,13 +28,12 @@ public class RingoDataSourceGuiceModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        /* nothing */
     }
 
     @Provides
     public DataSource provideDataSource() throws NamingException {
-
         BasicDataSource dataSource = new BasicDataSource();
-
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUsername(user);
         dataSource.setPassword(pass);
@@ -49,7 +42,6 @@ public class RingoDataSourceGuiceModule extends AbstractModule {
         dataSource.setMaxIdle(5);
         dataSource.setInitialSize(5);
         dataSource.setValidationQuery("SELECT 1");
-
         return dataSource;
     }
 
