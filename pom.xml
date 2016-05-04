@@ -266,6 +266,9 @@
             </dependency>
 
             <dependency>
+                <!-- consider removing apache commons libs that have built-in variants, codec is
+                     only used for Base64 (Hex) from ringo-security and tomcat-realm-tests modules.
+                     Java 8 has java.util.Base64 as standard functionality -->
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>1.10</version>
