@@ -31,10 +31,10 @@ GET   /inbox/count                          TEXT_PLAIN           Returns number 
 
 Represents the "outbox" resource, which allows clients to POST outboundMesssageMetaData messages destined for a recipient in the
 ```
-@GET  /outbox                               APPLICATION_XML         Retrieves the queued messages in the outbox
-@GET  /outbox /{message_no}/                APPLICATION_XML         Retreives the message header for the supplied message number.
-@GET  /outbox /{message_no}/xml-document    APPLICATION_XML         Retrieves the PEPPOL XML Document in XML format, without the header stuff
-@POST /outbox                               APPLICATION_XML         Sends a new message to specified receiver
+GET  /outbox                               APPLICATION_XML         Retrieves the queued messages in the outbox
+GET  /outbox /{message_no}/                APPLICATION_XML         Retreives the message header for the supplied message number.
+GET  /outbox /{message_no}/xml-document    APPLICATION_XML         Retrieves the PEPPOL XML Document in XML format, without the header stuff
+POST /outbox                               APPLICATION_XML         Sends a new message to specified receiver
       MULTIPART_FORM_DATA
 ```
 
@@ -45,6 +45,7 @@ GET   /messages/{message_no}/                           APPLICATION_XML        R
 GET   /messages/{message_no}/xml-document               APPLICATION_XML        Retrieves the PEPPOL XML Document in XML format, without the header stuff.
 GET   /messages/{message_no}/xml-document-decorated     APPLICATION_XML        Retrieves the PEPPOL XML Document in XML format, with added stylesheet (intended for web viewing on our site).
 GET   /messages/count                                   TEXT_PLAIN             Returns number of messages in inbox
+GET   /messages/{message_no}/rem                        APPLICATION_XML        Returns REM evidence, if available (TODO)
 ```
 
 Represents the "directory" resource, which allows clients to check whether participant is registered in peppol network.

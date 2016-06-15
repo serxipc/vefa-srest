@@ -89,9 +89,14 @@ Brief refactoring plan (remember to x out finished items).
 - [ ] Add Swagger 2.0 API (JAX-RS 2.0 Swagger will automatically create up to date runtime documentation)
 - [ ] Consider running whole server on wildfly-swarm or similar microservice plattform
 - [ ] Consider rest-assured for testing REST (instead of hand coded httpclient tests)
-- [ ] Consider ringo-email-impl as component (provide a default impl and let user provide their own)
+- [ ] Implement notification service to be used by `NotificationResource.java`. Replace Email-service with generic notification service. 
 - [ ] ? Add some kind of GUI mode to Ringo Client (swing / javafx / web)
 - [ ] ? Does it make sense to add GUI mode to Ringo Standalone
 - [ ] ? Add the REST version of the validator as a module (and use it in code)
 
-Copyright (c) 2012 SendRegning AS, all rights reserved.
+### Notes from meeting June 14th, 2016
+- [ ] REM evidence resource and (JDBC) implementation.
+- [ ] Support transmission of files wrapped in SBDH and ASiC archives with internal SBDH.
+- [ ] Implement persistent queue system for inbound messages, shared between vefa-srest and Oxalis.
+- [ ] All references to "Ringo" should be renamed to whatever name we decide upon.
+

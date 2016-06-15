@@ -6,9 +6,8 @@
     </encoder>
   </appender>
 
-  <logger name="ch.qos.logback" level="ERROR" />
 
-  <root level="warn">
+  <root level="info">
     <appender-ref ref="STDOUT" />
   </root>
 </configuration>
