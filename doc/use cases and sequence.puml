@@ -1,0 +1,65 @@
+@startuml
+participant "ringo-client" as ringo_client <<standalone>>
+participant "ringo-server" as ringo_server <<web server>>
+participant "ringo-standalone" as ringo_standalone <<standalone>>
+database "/outbound" as outbound <<filesystem>>
+database "/inbound" as inbound <<filesystem>>
+database "/archive" as archive <<filesystem>>
+database "meta data" as meta_data <<SQL>>
+participant "oxalis-inbound" as oxalis_inbound <<web server>>
+participant "PEPPOL AP" as peppol_ap
+
+== Recieve outbound messages from end point ==
+ringo_client -> ringo_server : POST /outbound
+activate ringo_server
+ringo_server -> outbound : persist
+ringo_server -> meta_data : persist
+ringo_client <-- ringo_server : receipt (REM?)
+deactivate ringo_server
+
+== Transmits outbound messages to PEPPOL AP ==
+ringo_standalone -> outbound : read new message
+note over ringo_standalone
+Uses oxlis-outbound for
+the actual transmission
+end note
+ringo_standalone -> peppol_ap : send message
+ringo_standalone -> outbound : delete message
+ringo_standalone -> archive : archive message
+ringo_standalone -> meta_data : update meta info
+
+== Receives inbound message from PEPPOL AP ==
+peppol_ap -> oxalis_inbound : send message
+activate oxalis_inbound
+oxalis_inbound -> oxalis_inbound: parse message
+oxalis_inbound -> inbound : save message
+oxalis_inbound -> inbound : save meta data
+oxalis_inbound -> inbound : REM
+peppol_ap <-- oxalis_inbound : Signed NRR (AS2 MDN)
+deactivate oxalis_inbound
+
+== Client retrieves new messages ==
+ringo_client -> ringo_server : GET /inbound
+activate ringo_server
+ringo_server -> inbound : retrieve new messages
+ringo_client <-- ringo_server : return list of new messages
+deactivate ringo_server
+
+ringo_client -> ringo_server : GET /inbound/{message_no}
+activate ringo_server
+ringo_server -> inbound : read message
+ringo_client <-- ringo_server : return message
+deactivate ringo_server
+
+ringo_client -> ringo_server : POST /inbound/{msg_no}/read
+activate ringo_server
+ringo_server -> archive : write message with metadata
+ringo_server -> inbound : delete message and metadata
+deactivate ringo_server
+
+== Client requests REM ==
+ringo_client -> ringo_server : GET /messages/{msg_no}/rem/C{2|3}
+activate ringo_server
+ringo_server -> outbound : get REM C2 | C3
+ringo_client <-- ringo_server : REM evidence
+@enduml

@@ -1,0 +1,43 @@
+@startuml
+
+database "Statistics" as odb
+database account
+
+database repo {
+    component "/inbound" as inbound
+    component "/outbound" as outbound
+    component "/archive" as archive
+    inbound -> archive
+    outbound -> archive
+}
+
+package "Spiralis" {
+    component "ringo-server" as rs
+    rs - HTTPS
+    rs ..> account
+
+    component "ringo-standalone" as s
+    s ..> outbound : reads from
+    s ..> archive  : moves to
+
+    rs ..> inbound : reads from
+    rs ..> outbound : writes to
+    rs ..> archive : moves to
+}
+
+package "Oxalis" {
+    component "oxalis-inbound" as oxalis_inbound <<web app>>
+    component "oxalis-outbound" as ob <<jar>>
+    s ..> ob
+    oxalis_inbound ..> odb
+
+}
+    frame "Inbound messages" as mr {
+        [payload]
+        [rem]
+        [meta data]
+    }
+
+oxalis_inbound ..> mr
+oxalis_inbound ..> inbound : writes to
+@enduml
