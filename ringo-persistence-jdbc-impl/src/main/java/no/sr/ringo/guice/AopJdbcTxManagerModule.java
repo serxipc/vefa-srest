@@ -21,12 +21,13 @@ public class AopJdbcTxManagerModule extends AbstractModule {
         //creates the transactional method interceptor which handles methods annotated with @Transactional
         final TransactionalMethodInterceptor transactionalMethodInterceptor = new TransactionalMethodInterceptor();
 
-        //Creates the transactional method interceptor which handles methods annotated with @Transactional
+        // Creates the  method interceptor which handles methods annotated with @Repository
         final RepositoryConnectionMethodInterceptor repositoryConnectionMethodInterceptor = new RepositoryConnectionMethodInterceptor();
 
-        //injects the JdbcTxManager into the method interceptor.
+        //injects the JdbcTxManager into the method interceptor for methods annotated with @Transactional.
         requestInjection(transactionalMethodInterceptor);
-        //injects the JdbcTxManager into the method interceptor.
+
+        //injects the JdbcTxManager into the method interceptor for methods annotated with @Repository
         requestInjection(repositoryConnectionMethodInterceptor);
 
         //makes individual methods in a class transactional.

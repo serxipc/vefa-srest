@@ -1,0 +1,59 @@
+@startuml
+
+
+interface JdbcTxManager {
+    boolean isTransaction()
+    boolean isConnection()
+    void newConnection(boolean autoCommit)
+    void commit()
+    void rollback()
+    Connection getConnection()
+}
+
+class JdbxTxManagerImpl {
+    - ThreadLocal<JdbcTransaction> : thrdLocalJdbcTx
+    - DataSource : datasource
+    - {static} int : instances = 0
+    isTransaction()
+    isConnection()
+    newConnection(boolean autoCommit)
+    commit()
+    rollback()
+    cleanUp()
+    getConnection()
+    setRollbackOnly()
+}
+
+JdbcTxManager <|.. JdbxTxManagerImpl
+
+interface Repository <<annotation>>
+
+class  RepositoryConnectionMethodInterceptor {
+    JdbcTxManager : jdbcTxManager
+}
+
+interface MethodInterceptor <|.. RepositoryConnectionMethodInterceptor
+
+note bottom of RepositoryConnectionMethodInterceptor
+Looks for all @Repository annotations
+and makes a database connection
+available to the methods within the repository.
+end note
+
+interface Transactional <<annotation>>
+
+class TransactionalMethodInterceptor {
+}
+
+MethodInterceptor <|.. TransactionalMethodInterceptor
+note bottom of TransactionalMethodInterceptor
+          Looks for all @Transactional
+          annotations and injects code
+          for starting and stopping
+          transactions.
+end note
+
+class AopJdbcTxManagerModule
+
+
+@enduml

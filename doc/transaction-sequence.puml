@@ -1,0 +1,25 @@
+@startuml
+participant Test
+participant DatabaseHelper
+participant RepositoryConnectionMethodInterceptor AS I
+participant JdbcTxManagerImpl
+participant DataSource
+participant Connection
+
+Test -> I: :DatabaseHelper.createMessage()
+activate I
+I -> I : invoke
+I -> JdbcTxManagerImpl : newConnection(autoCommit)
+activate JdbcTxManagerImpl
+JdbcTxManagerImpl -> DataSource: getConnection()
+JdbcTxManagerImpl -> JdbcTransaction: new JdbcTransaction(connection)
+JdbcTxManagerImpl -> JdbcTxManagerImpl: threadLocalJdbcTransaction.set(jdbcTransaction)
+
+deactivate JdbcTxManagerImpl
+
+I -> I: invocation.proceed()
+I -> DatabaseHelper: createMessage()
+deactivate I
+DatabaseHelper -> JdbcTxManagerImpl: getConnection()
+
+@enduml
