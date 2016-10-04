@@ -80,7 +80,7 @@ Brief refactoring plan (remember to x out finished items).
 - [ ] Replace json and rest implementations with standard alternatives (JSON-B, JSON-P, JAX-RS part of JEE7/8)
 - [ ] Update direct usage of jersey and jackson to JAX-RS 2.0 (standard JEE7 spec)
 - [ ] Example : com.sun.jersey.spi.container.ResourceFilters => javax.ws.rs.container.ContainerRequestContext
-- [ ] Update Guice version and use standard CDI annotations (standard JEE7 spec)
+- [ ] Update Guice version and use standard Java / CDI annotations (standard JEE7 spec)
 - [ ] Example : com.google.inject.servlet.RequestScope => javax.enterprise.context.RequestScoped
 - [ ] No need to manually concat XML (JAXB provides XML & JSON when using JAX-RS2 for free)
 - [ ] Make sure maven project still compiles and tests well
@@ -95,7 +95,8 @@ Brief refactoring plan (remember to x out finished items).
 - [ ] ? Add the REST version of the validator as a module (and use it in code)
 
 ### Notes from meeting June 14th, 2016
-- [ ] REM evidence resource and (JDBC) implementation.
+- [x] Added Oxalis-Persistence module (MessageRepository installed in Oxalis, will persist into Ringo database tables)
+- [ ] REM evidence resource and (JDBC) implementation (this need upgrade to Oxalis v4)
 - [ ] Support transmission of files wrapped in SBDH and ASiC archives with internal SBDH.
 - [ ] Implement persistent queue system for inbound messages, shared between vefa-srest and Oxalis.
 - [ ] All references to "Ringo" should be renamed to whatever name we decide upon.
