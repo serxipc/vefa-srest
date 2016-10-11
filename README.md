@@ -57,7 +57,7 @@ Brief refactoring plan (remember to x out finished items).
 - [ ] Verify inbound messages belonging to us (receiver connected to account)
 - [ ] Verify outbound messages parameters actually matching what's specified in the document
 - [ ] Validate messages both inbound and outbound
-- [ ] Hardcoded ADMIN_USERNAME ("sr-admin") should be changes (used when logging in as other users)
+- [ ] Hardcoded ADMIN_USERNAME ("sr-admin") should be changed (used when logging in as other users)
 
 ### Other changes (unordered)
 - [x] Removed the SmpRegistrationClient that registered new accounts directly into ELMA

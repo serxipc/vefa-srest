@@ -50,7 +50,7 @@ public class RegisterUseCaseIntegrationTest {
             registerUseCase.registerUser(rd);
             fail("User seems to have been registered, that should not have happened");
         } catch (IllegalStateException e) {
-            assertEquals("Data truncation: Data too long for column 'zip' at row 1", e.getMessage());
+            assertTrue(e.getMessage().contains("too long for column"));
         }
 
         boolean shouldStillBeFalse = accountRepository.accountExists(new UserName(userName));

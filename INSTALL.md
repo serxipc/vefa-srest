@@ -41,16 +41,18 @@ Command                     | Comment
 --------------------------- | ---------------------------
 `mvn clean test`            | unit tests
 `mvn clean verify`          | integration tests (needs database and network)
-`mvn clean install -Pprod`  | build runnable artifacts for production
-`mvn clean install -Ptest`  | build runnable artifacts for test (fake SMP lookup)
+`mvn clean install -Pprod`  | build runnable artifacts for production in `server/target/ROOT.war`
+`mvn clean install -Ptest`  | build runnable artifacts for test (fake SMP lookup) in `server/target/test.war`.
+`mvn clean install`         | same as above
+
 
 ### Install build artifacts for REST interface
-1. Copy ROOT.war to tomcat/webapps as `ROOT.war`
-1. Copy MySQL jdbc driver file mysql-connector-java-5.1.38-bin.jar to tomcat/lib
-1. Copy Ringo Realm file ringo-tomcat-realm-1.1.28-SNAPSHOT-jar-with-dependencies.jar to tomcat/lib
-1. Add the jdbc datasource resource into `<GlobalNamingResources>` in tomcat/conf/server.xml:
 
-  ```xml
+1. Copy `server/target/ROOT.war` to $TOMCAT_HOME/webapps as `ROOT.war`
+1. Copy MySQL jdbc driver file mysql-connector-java-5.1.38-bin.jar to `tomcat/lib`
+1. Copy Ringo Realm file ringo-tomcat-realm-1.1.28-SNAPSHOT-jar-with-dependencies.jar to `tomcat/lib`
+1. Add the jdbc datasource resource into `<GlobalNamingResources>` in `tomcat/conf/server.xml`:
+   ```xml
   <Resource name="jdbc/oxalis"
         auth="Container"
         type="javax.sql.DataSource"
@@ -67,17 +69,23 @@ Command                     | Comment
         validationQuery="select now()"
     />
   ```
-1. Configure security realm in `tomcat/conf/server.xml` inside the `<Engine>` element:
+1. Configure security realm in `tomcat/conf/server.xml` inside the `<Engine>` element, below the `UserDatabaseRealm` (nested inside the `LockOutRealm`):
 
   ```xml
-  <Realm className="ringo.realm.RingoDataSourceRealm"
-        dataSourceName="jdbc/oxalis"
-        userTable="account"
-        userNameCol="username"
-        userCredCol="password"
-        userRoleTable="account_role"
-        roleNameCol="role_name"
-    />
+  <Engine name="Catalina" defultHost="localhost">
+
+        <Realm className="org.apache.catalina.realm.LockOutRealm">
+
+            <Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase" />
+    
+                  <Realm className="ringo.realm.RingoDataSourceRealm"
+                        dataSourceName="jdbc/oxalis"
+                        userTable="account"
+                        userNameCol="username"
+                        userCredCol="password"
+                        userRoleTable="account_role"
+                        roleNameCol="role_name"
+                    />
 ```
 1. Add resource link from GlobalNamingResources to the WebApp Context in `${TOMCAT_HOME}/conf/context.xml`:
 
@@ -92,6 +100,8 @@ Command                     | Comment
   ```
   curl -i http://localhost:8080/vefa/statistics -u username:password
   ```
+  TODO: Verify the context name. "vefa" seems to be wrong, should be removed?
+  
 1. Stop Tomcat: `${TOMCAT_HOME}/bin/shutdown.sh`
 1. Tweak `${TOMCAT_HOME}/conf/server.xml` to optimize further,  
   turn off 8443 redirects, turn off "https", "ajp" etc

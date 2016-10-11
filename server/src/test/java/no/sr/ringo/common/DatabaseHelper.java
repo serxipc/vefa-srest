@@ -57,8 +57,9 @@ public class DatabaseHelper {
                 ps.setObject(1, null);
             }
             ps.setString(2, direction.name());
+
             if (received == null) {
-                ps.setNull(3, Types.TIMESTAMP);
+                ps.setTimestamp(3, new Timestamp(new Date().getTime()));
             } else {
                 ps.setTimestamp(3, new Timestamp(received.getTime()));
             }

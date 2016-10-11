@@ -78,11 +78,17 @@
         <!-- If your are using different JDBC driver, this is the dependency to change -->
         <!-- You must supply a JDBC driver in order to make oxalis-statistics-dbcp work -->
 
+<!--
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-
+-->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
         <!-- logging -->
 
         <dependency>

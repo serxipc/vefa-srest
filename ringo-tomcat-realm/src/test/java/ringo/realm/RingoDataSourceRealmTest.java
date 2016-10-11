@@ -3,6 +3,7 @@ package ringo.realm;
 import no.sr.ringo.security.HashedPassword;
 import no.sr.ringo.security.Hasher;
 import no.sr.ringo.security.SaltData;
+import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 
 import java.io.UnsupportedEncodingException;
@@ -140,8 +141,8 @@ public class RingoDataSourceRealmTest {
 
     private Connection getConnection(String host, String dbName, String username, String password) {
         Connection conn = null;
-        String url = "jdbc:mysql://"+host+":3306/";
-        String driver = "com.mysql.jdbc.Driver";
+        String url = "jdbc:h2:~/.oxalis/ap;AUTO_SERVER=TRUE";
+        String driver = "org.h2.Driver";
 
         try {
             Class.forName(driver).newInstance();

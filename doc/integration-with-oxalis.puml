@@ -1,9 +1,13 @@
 @startuml
 
 database "Statistics" as odb
-database account
+database account <<SQL DBMS>> {
+    rectangle "user acount"
+    rectangle "customer"
+    rectangle message
+}
 
-database repo {
+node "Message payload repository" as r <<File system>> {
     component "/inbound" as inbound
     component "/outbound" as outbound
     component "/archive" as archive

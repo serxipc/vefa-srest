@@ -17,7 +17,18 @@ import no.sr.ringo.peppol.PeppolParticipantId;
 import no.sr.ringo.utils.SbdhUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,10 +88,37 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             ps.setString(7, profileId);
 
             // Converts the XML Document into something which may be persisted into the database
+/*
             SQLXML sqlxml = con.createSQLXML();
             DOMResult domResult = sqlxml.setResult(DOMResult.class);
             domResult.setNode(peppolMessage.getXmlMessage());
             ps.setSQLXML(8, sqlxml);
+*/
+
+
+            try {
+                Clob clob = con.createClob();
+                Writer clobWriter = clob.setCharacterStream(1);// Starts writing at the beginning
+
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                StreamResult streamResult = new StreamResult(clobWriter);
+                DOMSource domSource = new DOMSource(peppolMessage.getXmlMessage());
+                transformer.transform(domSource, streamResult);
+
+                clobWriter.close();
+                ps.setClob(8, clob);
+
+            } catch (TransformerConfigurationException e) {
+                throw new IllegalStateException("Unable to create XML transformer; " + e.getMessage(), e);
+            } catch (TransformerException e) {
+                throw new IllegalStateException("Unable to transform XML DOM document into CLOB; " + e.getMessage(), e);
+            } catch (IOException e) {
+                throw new IllegalStateException("Unable to close CLOB writer ", e);
+            }
+
+
+
 
             /* Converts the XML Document into String which may be persisted into the database
             DOMSource domSource = new DOMSource(peppolMessage.getXmlMessage());
@@ -425,12 +463,12 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
 
     @Override
     public boolean isSenderAndReceiverAccountTheSame(Integer messageNo) {
-        String query = "select IF(" +
+        String query = "select" +
                 "        EXISTS" +
                 "                (select 1 from account_receiver ar, message m" +
                 "                        where m.msg_no = ?" +
                 "                        and m.receiver = ar.participant_id" +
-                "                        and m.account_id = ar.account_id), true, false)" +
+                "                        and m.account_id = ar.account_id)" +
                 "                 as same_account;";
         Connection con;
         Boolean same_account;
@@ -462,22 +500,22 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         try {
             Connection con = dataSource.getConnection();
             final String selectSql = "SELECT " +
-                    "    SUM(message.msg_no IS NOT NULL) AS 'total', " +
+                    "    SUM(message.msg_no IS NOT NULL) AS \"total\", " +
                     "    SUM(message.msg_no IS NOT NULL " +
-                    "        AND message.direction='OUT') AS 'out', " +
+                    "        AND message.direction='OUT') AS \"out\", " +
                     "    SUM(msg_no IS NOT NULL " +
                     "        AND message.direction='OUT' " +
-                    "        AND message.delivered IS NULL) AS 'undelivered out', " +
-                    "    outLatest.delivered AS 'last sent', " +
-                    "    outLatest.received AS 'last received out', " +
+                    "        AND message.delivered IS NULL) AS \"undelivered out\", " +
+                    "    outLatest.delivered AS \"last sent\", " +
+                    "    outLatest.received AS \"last received out\", " +
                     "    SUM(message.msg_no IS NOT NULL " +
-                    "        AND message.direction='IN' ) AS 'in', " +
+                    "        AND message.direction='IN' ) AS \"in\", " +
                     "    SUM(message.msg_no IS NOT NULL " +
                     "        AND message.direction='IN' " +
-                    "        AND message.delivered IS NULL) AS 'undelivered in', " +
-                    "    inLatest.delivered AS 'last downloaded', " +
-                    "    inLatest.received AS 'last received in', " +
-                    "    inOldestUndelivered.received AS 'oldest undelivered in', " +
+                    "        AND message.delivered IS NULL) AS \"undelivered in\", " +
+                    "    inLatest.delivered AS \"last downloaded\", " +
+                    "    inLatest.received AS \"last received in\", " +
+                    "    inOldestUndelivered.received AS \"oldest undelivered in\", " +
                     "    a.id , " +
                     "    a.name,  " +
                     "    c.contact_email " +
@@ -695,7 +733,8 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
                 sql = sql.concat(" and receiver = '" + searchParams.getReceiver().stringValue() + "'");
             }
             if (searchParams.getSent() != null && searchParams.getDateCondition() != null) {
-                sql = sql.concat(" and Date(received) " + searchParams.getDateCondition().getValue() + "'" + searchParams.getSent() + "'");
+                // Mysql:  sql = sql.concat(" and Date(received) " + searchParams.getDateCondition().getValue() + "'" + searchParams.getSent() + "'");
+                sql = sql.concat(" and FORMATDATETIME(received,'yyyy-MM-dd') " + searchParams.getDateCondition().getValue() + "'" + searchParams.getSent() + "'");
             }
             return sql;
         }

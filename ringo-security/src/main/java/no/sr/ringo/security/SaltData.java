@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Object holding origiantorId and registrationDate retrieved from db.
+ * Object holding accountId and registrationDate retrieved from db.
  * Provides method to create salt
  * @author adam
  *

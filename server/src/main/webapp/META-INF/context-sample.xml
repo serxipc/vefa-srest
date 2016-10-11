@@ -1,0 +1,44 @@
+<Context copyXML="true">
+
+    <!-- Sample contex.xml file, which may be copied to for instance -->
+    <!-- $TOMCAT_HOME/conf/Catalina/localhost/vefa-srest.xml -->
+
+
+    <!--  Establishes a JNDI DataSource made available in java:comp/env as jdbc/oxalis -->
+    <Resource name="jdbc/oxalis"
+              auth="Container"
+              type="javax.sql.DataSource"
+              maxActive="100"
+              maxIdle="30"
+              maxWait="10000"
+              username="sa"
+              password=""
+              driverClassName="org.h2.Driver"
+              url="jdbc:h2:~/.oxalis/ap;AUTO_SERVER=true"
+              removeAbandoned="true"
+              removeAbandonedTimeout="60"
+              logAbandoned="true"
+              validationQuery="select now()"
+    />
+
+    <!-- Allows basic authentication using a database for the usernames and passwords -->
+    <!-- References the JNDI DataSource declared above -->
+    <Realm className="org.apache.catalina.realm.DataSourceRealm"
+           dataSourceName="jdbc/oxalis"
+           localDataSource="true"
+           userTable="account"
+           userNameCol="username"
+           userCredCol="password"
+           userRoleTable="account_role"
+           roleNameCol="role_name">
+
+        <!-- The latest and greatest technique for prevention of password cracking/hacking/guessing etc. -->
+        <!-- Use bin/digest.sh or bin/digest.bat to generate passwords to be stored in the database -->
+        <CredentialHandler className="org.apache.catalina.realm.SecretKeyCredentialHandler"
+                           algorithm="PBKDF2WithHmacSHA1"
+                           keyLength="160"
+                           saltLength="32"
+                           iterations="20000"
+        />
+    </Realm>
+</Context>

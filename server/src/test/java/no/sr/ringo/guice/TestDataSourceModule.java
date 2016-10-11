@@ -2,8 +2,8 @@ package no.sr.ringo.guice;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import no.sr.ringo.common.DatabaseHelper;
+import org.h2.jdbcx.JdbcDataSource;
 
 import javax.sql.DataSource;
 
@@ -24,13 +24,26 @@ public class TestDataSourceModule extends AbstractModule {
         bind(DatabaseHelper.class);
     }
 
+    /** Use with Mysql */
+    public DataSource provideMysqlDataSource() {
+        DataSource dataSource = null;
+        /*
+        dataSource = new MysqlDataSource();
+        dataSource.setURL("jdbc:mysql://localhost/oxalis_test");
+        dataSource.setUser("skrue");
+        dataSource.setPassword("vable");
+        */
+        return dataSource;
+    }
+
     @Provides
-    public DataSource provideDataSource() {
-        MysqlDataSource mysqlDataSource = new MysqlDataSource();
-        mysqlDataSource.setURL("jdbc:mysql://localhost/oxalis_test");
-        mysqlDataSource.setUser("skrue");
-        mysqlDataSource.setPassword("vable");
-        return mysqlDataSource;
+    public DataSource provideH2DataSource() {
+        JdbcDataSource dataSource = new JdbcDataSource();
+        dataSource.setURL("jdbc:h2:~/.oxalis/ap;AUTO_SERVER=TRUE");
+        dataSource.setUser("sa");
+        dataSource.setPassword("");
+
+        return dataSource;
     }
 
 }

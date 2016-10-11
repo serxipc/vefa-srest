@@ -282,11 +282,11 @@ public class AccountRepositoryImpl implements AccountRepository {
             if (rs.next()) {
                 final AccountId accountId = AccountId.valueOf(rs.getString("id"));
                 final String password = rs.getString("password");
-                final Date created_ts = new Date(rs.getTimestamp("a.created_ts").getTime());
+                final Date created_ts = new Date(rs.getTimestamp("account.created_ts").getTime());
 
                 final UserName username = new UserName(rs.getString("username"));
 
-                final int id = rs.getInt("c.id");
+                final int id = rs.getInt("customer.id");
                 final String name = rs.getString("name");
                 final Date created = new Date(rs.getTimestamp("c_ts").getTime());
                 final String email = rs.getString("contact_email");

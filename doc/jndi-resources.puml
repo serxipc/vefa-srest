@@ -1,0 +1,32 @@
+@startuml
+
+title Configuration of data sources in Tomcat
+
+
+folder "$CATALINA_BASE/" as CB {
+    folder "server.xml" {
+        rectangle "Server/GlobalNamingResources/Resource" as GlobalJNDI
+    }
+
+    folder "context.xml" {
+        rectangle "Context/ResourceLink" as RL
+    }
+    RL -> GlobalJNDI
+}
+
+folder "WEB-INF/" as web_inf {
+    folder web.xml {
+        rectangle "<resource-ref>" as RF
+    }
+
+    folder context.xml as LocalContext {
+        rectangle "<Resource>" as LocalResource
+    }
+
+    RF -> LocalResource : per\napplication\nonly
+}
+
+RF -> RL : Global reference
+
+
+@enduml

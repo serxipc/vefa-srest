@@ -5,8 +5,8 @@
     <New class="org.eclipse.jetty.plus.jndi.EnvEntry">
         <Arg>jdbc/oxalis</Arg>
         <Arg>
-            <New class="com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource">
-                <Set name="Url">jdbc:mysql://localhost/oxalis_test?characterEncoding=utf8</Set>
+            <New class="org.h2.jdbcx.JdbcDataSource">
+                <Set name="Url">jdbc:h2:~/.oxalis/ap;AUTO_SERVER=TRUE</Set>
                 <Set name="User">skrue</Set>
                 <Set name="Password">vable</Set>
             </New>
