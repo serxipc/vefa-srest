@@ -3,6 +3,8 @@ package no.sr.ringo.guice;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.servlet.RequestScoped;
+import no.sr.ringo.security.CredentialHandler;
+import no.sr.ringo.security.SecretKeyCredentialHandler;
 import no.sr.ringo.smp.RingoSmpLookup;
 import no.sr.ringo.smp.RingoSmpLookupImpl;
 import no.sr.ringo.smp.TestModeSmpLookupImpl;
@@ -47,6 +49,7 @@ public class TestModuleFactory implements IModuleFactory {
             bindScope(RequestScoped.class, new FakeScope(mockSmp));
             bind(ServletContext.class).toInstance(new FakeServletContext());
 
+            bind(CredentialHandler.class).to(SecretKeyCredentialHandler.class);
             //set up the repositories and transaction handling
             Binder binder = binder();
 

@@ -4,6 +4,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.account.RingoAccountProvider;
+import no.sr.ringo.security.CredentialHandler;
+import no.sr.ringo.security.SecretKeyCredentialHandler;
 
 import java.security.Principal;
 
@@ -21,6 +23,8 @@ public class RingoAccountModule extends AbstractModule {
         bind(Principal.class).toProvider(PrincipalProvider.class);
         //Makes the account provider available to objects, which do not have request scope.
         bind(RingoAccountProvider.class);
+
+        bind(CredentialHandler.class).to(SecretKeyCredentialHandler.class);
     }
 
     /**

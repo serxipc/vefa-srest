@@ -38,7 +38,7 @@ public class RingoGuiceContextListener extends GuiceServletContextListener {
 
 
         return Guice.createInjector(
-                // enable Guice access to Principal and injection of RingoAccount
+                // enable Guice access to Principal and injection of RingoAccount and CredentialHandler
                 new RingoAccountModule(),
                 //the ringo web app
                 new RingoWebServletModule(),

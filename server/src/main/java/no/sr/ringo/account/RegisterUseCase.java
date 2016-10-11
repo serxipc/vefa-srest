@@ -10,6 +10,7 @@ import no.sr.ringo.common.MessageHelper;
 import no.sr.ringo.guice.jdbc.JdbcTxManager;
 import no.sr.ringo.guice.jdbc.Transactional;
 import no.sr.ringo.peppol.PeppolParticipantId;
+import no.sr.ringo.security.CredentialHandler;
 import no.sr.ringo.security.HashedPassword;
 import no.sr.ringo.security.Hasher;
 import no.sr.ringo.security.SaltData;
@@ -32,12 +33,14 @@ public class RegisterUseCase {
     private AccountRepository accountRepository;
     private JdbcTxManager jdbcTxManager;
     private final EmailService emailService;
+    private final CredentialHandler credentialHandler;
 
     @Inject
-    RegisterUseCase(AccountRepository accountRepository, JdbcTxManager jdbcTxManager, EmailService emailService) {
+    RegisterUseCase(AccountRepository accountRepository, JdbcTxManager jdbcTxManager, EmailService emailService, CredentialHandler credentialHandler) {
         this.jdbcTxManager = jdbcTxManager;
         this.accountRepository = accountRepository;
         this.emailService = emailService;
+        this.credentialHandler = credentialHandler;
     }
 
     public ValidationResult validateData(RegistrationData registrationData) {
@@ -97,23 +100,13 @@ public class RegisterUseCase {
         ParticipantId participantId = registrationData.isRegisterSmp() ? new ParticipantId(RingoConstant.PEPPOL_PARTICIPANT_PREFIX + registrationData.getOrgNo()) : null;
         RingoAccount stored = accountRepository.createAccount(account, participantId);
 
-        // calculate password hash
-        SaltData salt = new SaltData(stored.getId().toInteger(), stored.getCreated());
-
-        Hasher hasher = new Hasher();
-        HashedPassword hash = null;
-        try {
-            hash = hasher.hash(registrationData.getPassword(), salt.getSalt());
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("Error occurred while trying to calculate password");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("Error occurred while trying to calculate password");
-        }
+        // Encrypts/hashes the password
+        String mutatedPassword = credentialHandler.mutate(registrationData.getPassword());
 
         // update account entry with password
-        accountRepository.updatePasswordOnAccount(stored.getId(), hash.toString());
+        accountRepository.updatePasswordOnAccount(stored.getId(), mutatedPassword);
 
-        // FIXME add code here if you want to register party with SMP
+        // FIXME: add code here if you want to register party with SMP
         if (registrationData.isRegisterSmp()) {
             logger.info(String.format("Registering %s, with orgNo %s at SMP is not implemented", registrationData.getName(), registrationData.getOrgNo()));
         } else {
