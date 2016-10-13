@@ -39,6 +39,7 @@ import java.net.URI;
  * 1. Setting up jetty and starting it before tests are run.
  * 2. Creating the client for accessing the rest service.
  * 3. Converting responses
+ *
  * @author Steinar Overbeck Cook steinar@sendregning.no
  */
 public class AbstractHttpClientServerTest {
@@ -82,8 +83,6 @@ public class AbstractHttpClientServerTest {
         // Consult jetty-env.xml to see the details
         System.setProperty("java.naming.factory.url.pkgs", "org.eclipse.jetty.jndi");
         System.setProperty("java.naming.factory.initial", "org.eclipse.jetty.jndi.InitialContextFactory");
-
-
 
         // Start the server
         server.start();
@@ -157,7 +156,7 @@ public class AbstractHttpClientServerTest {
 
     static HashLoginService getHashLoginService() {
 
-        // create the login service, assign the realm and read the user credentials
+        // creates the login service, assigns the realm and reads the user credentials
         // from the file /tmp/realm.properties.
         HashLoginService hls = new HashLoginService();
         hls.setName(REALM);

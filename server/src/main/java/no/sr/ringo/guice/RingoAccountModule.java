@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.account.RingoAccountProvider;
+import no.sr.ringo.account.SrAccountNotFoundException;
 import no.sr.ringo.security.CredentialHandler;
 import no.sr.ringo.security.SecretKeyCredentialHandler;
 
@@ -36,7 +37,11 @@ public class RingoAccountModule extends AbstractModule {
      */
     @Provides
     public RingoAccount getRingoAccount(Principal principal, RingoAccountProvider ringoAccountProvider){
-        return ringoAccountProvider.getAccount(principal);
+        try {
+            return ringoAccountProvider.getAccount(principal);
+        } catch (SrAccountNotFoundException e) {
+            throw new IllegalStateException("Unable to find account for " + principal);
+        }
     }
 
 }

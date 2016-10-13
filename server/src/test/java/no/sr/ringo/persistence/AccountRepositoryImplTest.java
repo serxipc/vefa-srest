@@ -116,7 +116,7 @@ public class AccountRepositoryImplTest {
     }
 
     @Test(groups = {"persistence"})
-    public void testUpdatePasswordOnAccount() {
+    public void testUpdatePasswordOnAccount() throws SrAccountNotFoundException {
         AccountId id = new AccountId(1);
         String currentPass = accountRepository.findAccountById(id).getPassword();
         String pass = "testPassword";
@@ -130,7 +130,7 @@ public class AccountRepositoryImplTest {
     }
 
     @Test(groups = {"persistence"})
-    public void testValidateFlag() {
+    public void testValidateFlag() throws SrAccountNotFoundException {
         assertFalse(adamsAccount.isValidateUpload());
 
         databaseHelper.updateValidateFlagOnAccount(adamsAccount.getId(), true);

@@ -3,10 +3,7 @@ package no.sr.ringo.common;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
-import no.sr.ringo.account.AccountId;
-import no.sr.ringo.account.AccountRepository;
-import no.sr.ringo.account.Customer;
-import no.sr.ringo.account.RingoAccount;
+import no.sr.ringo.account.*;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.guice.jdbc.JdbcTxManager;
@@ -17,6 +14,8 @@ import no.sr.ringo.peppol.*;
 import no.sr.ringo.queue.OutboundMessageQueueErrorId;
 import no.sr.ringo.queue.OutboundMessageQueueId;
 import no.sr.ringo.queue.QueuedOutboundMessageError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Guice;
 
 import java.sql.*;
@@ -34,6 +33,7 @@ import java.util.List;
 @Repository
 public class DatabaseHelper {
 
+    public static final Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
     private final AccountRepository accountRepository;
     private final JdbcTxManager jdbcTxManager;
 
@@ -294,9 +294,14 @@ public class DatabaseHelper {
     /**
      * Deletes all data related to an account.
      *
-     * @param userName - it's both account.username and customer.name
+     * @param userNameToBeDeleted - it's both account.username and customer.name
      */
-    public void deleteAccountData(String userName) {
+    public void deleteAccountData(UserName userNameToBeDeleted) {
+
+        String userName = userNameToBeDeleted.stringValue();
+
+        CustomerId customerIdToBeDeleted = null;
+
         Connection con = null;
         String sql = "delete from account_role where username = ?";
 
@@ -312,15 +317,28 @@ public class DatabaseHelper {
             ps.setString(1, userName);
             ps.executeUpdate();
 
+            sql = "select customer_id from account where username = ?";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, userName);
+            ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                customerIdToBeDeleted = new CustomerId(resultSet.getInt(1));
+            }
+
             sql = "delete from account where username = ?";
             ps = con.prepareStatement(sql);
             ps.setString(1, userName);
             ps.executeUpdate();
 
-            sql = "delete from customer where name = ?";
-            ps = con.prepareStatement(sql);
-            ps.setString(1, userName);
-            ps.executeUpdate();
+            if (customerIdToBeDeleted != null) {
+                log.info("Removing customer account with id=" + customerIdToBeDeleted.toString());
+                sql = "delete from customer where id = ?";
+                ps = con.prepareStatement(sql);
+                ps.setInt(1, customerIdToBeDeleted.toInteger());
+                ps.executeUpdate();
+            } else {
+                log.info("No customer entry for username " + userName);
+            }
 
         } catch (SQLException e) {
             throw new IllegalStateException(sql + " failed " + e, e);
@@ -330,7 +348,7 @@ public class DatabaseHelper {
     /**
      * @return true if account has client role in account_role table
      */
-    public boolean hasClientRole(String userName) {
+    public boolean hasClientRole(UserName userName) {
 
         Connection con = null;
         String sql = "select count(*) from account_role where username like ? and role_name ='client'";
@@ -339,7 +357,7 @@ public class DatabaseHelper {
             con = jdbcTxManager.getConnection();
 
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, userName);
+            ps.setString(1, userName.stringValue());
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -452,7 +470,7 @@ public class DatabaseHelper {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                result.add(new QueuedOutboundMessageError(new OutboundMessageQueueErrorId(rs.getInt("id")), new OutboundMessageQueueId(rs.getInt("queue_id")), null,  rs.getString("message"), rs.getString("details"), rs.getString("stacktrace"), rs.getTimestamp("create_dt"), "1"));
+                result.add(new QueuedOutboundMessageError(new OutboundMessageQueueErrorId(rs.getInt("id")), new OutboundMessageQueueId(rs.getInt("queue_id")), null, rs.getString("message"), rs.getString("details"), rs.getString("stacktrace"), rs.getTimestamp("create_dt"), "1"));
             }
             return result;
         } catch (SQLException e) {

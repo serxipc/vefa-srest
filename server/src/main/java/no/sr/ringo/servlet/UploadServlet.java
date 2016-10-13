@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.account.RingoAccountProvider;
+import no.sr.ringo.account.SrAccountNotFoundException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -36,7 +37,11 @@ public class UploadServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         // Retrieves the SrAccount for the authenticated user and stuffs it into the request context.
-        request.setAttribute(RingoAccount.class.getSimpleName(), ringoAccountProvider.getAccount(request.getUserPrincipal()));
+        try {
+            request.setAttribute(RingoAccount.class.getSimpleName(), ringoAccountProvider.getAccount(request.getUserPrincipal()));
+        } catch (SrAccountNotFoundException e) {
+            throw new IllegalStateException("No account for user " + request.getUserPrincipal());
+        }
 
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/pages/upload.jsp");
         requestDispatcher.forward(request, response);

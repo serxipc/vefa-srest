@@ -25,7 +25,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public RingoAccount findAccountById(final AccountId id) {
+    public RingoAccount findAccountById(final AccountId id) throws SrAccountNotFoundException {
         RingoAccount ringoAccount = findAccountWithWhereClause("a.id=?", new String[]{id.toString()});
         if (ringoAccount == null) {
             throw new SrAccountNotFoundException(id);
@@ -106,7 +106,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public RingoAccount findAccountByUsername(final UserName username) {
+    public RingoAccount findAccountByUsername(final UserName username) throws SrAccountNotFoundException {
         RingoAccount ringoAccount = findAccountWithWhereClause("a.username=?", new String[]{username.stringValue()});
         if (ringoAccount == null) {
             throw new SrAccountNotFoundException(username);
@@ -139,7 +139,12 @@ public class AccountRepositoryImpl implements AccountRepository {
             ps.execute();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
-                result = findAccountById(new AccountId(rs.getInt(1)));
+                try {
+                    AccountId id = new AccountId(rs.getInt(1));
+                    result = findAccountById(id);
+                } catch (SrAccountNotFoundException e) {
+                    throw new IllegalStateException("Unable to find account by Id after creating it. username=" + account.getUserName().stringValue());
+                }
             } else {
                 throw new IllegalStateException("Unable to obtain generated key after insert.");
             }
@@ -254,7 +259,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         try {
 
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, username.stringValue().toLowerCase());
+            ps.setString(1, username.stringValue());
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {

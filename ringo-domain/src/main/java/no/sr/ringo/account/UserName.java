@@ -16,7 +16,7 @@ public class UserName {
         if (username == null) {
             throw new IllegalArgumentException("username required");
         }
-        this.username = username;
+        this.username = username.toLowerCase();
     }
 
 

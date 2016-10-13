@@ -28,10 +28,10 @@ public class RingoAccountProvider {
      * @param principal the Principal from the request can be found using the PrincipalProvider
      * @return the RingoAccount associated with the given principal
      */
-    public RingoAccount getAccount(Principal principal) {
+    public RingoAccount getAccount(Principal principal) throws SrAccountNotFoundException {
         final UserName userName = new UserName(principal.getName());
         log.info("Processing request from " + userName);
         return accountRepository.findAccountByUsername(userName);
     }
-
 }
+

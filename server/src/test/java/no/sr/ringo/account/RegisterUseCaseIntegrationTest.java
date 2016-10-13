@@ -32,7 +32,7 @@ public class RegisterUseCaseIntegrationTest {
      */
     @AfterMethod
     public void removeTestUser() {
-        databaseHelper.deleteAccountData(userName);
+        databaseHelper.deleteAccountData(new UserName(userName));
     }
 
     /**
@@ -62,7 +62,7 @@ public class RegisterUseCaseIntegrationTest {
      * Tests that all data is there, account, customer, account_receiver and account_role
      */
     @Test(groups = {"persistence"})
-    public void testSuccessfulRegistration() {
+    public void testSuccessfulRegistration() throws SrAccountNotFoundException {
 
         String password = "pass";
         String add1 = "add1";
@@ -74,16 +74,19 @@ public class RegisterUseCaseIntegrationTest {
         String email = "email";
         String phone = "phone";
 
+
+        removeAccountIfExists();
+
         RegistrationData rd = new RegistrationData(userName, password, userName, add1, add2, zip, city, country, contactPerson, email, phone, ORG_NUM_STR, true);
         RegistrationProcessResult result = registerUseCase.registerUser(rd);
         assertTrue(result.isSuccess(), result.getMessage());
 
-        //check that account exists
+        // check that account exists
         RingoAccount account = accountRepository.findAccountByUsername(new UserName(userName));
         assertNotNull(account);
 
         //check account_role 'client' has been created
-        assertTrue(databaseHelper.hasClientRole(userName));
+        assertTrue(databaseHelper.hasClientRole(new UserName(userName)));
 
         //check there's account receiver
         assertTrue(databaseHelper.accountReceiverExists(account.getId(), ORG_NUM_STR));
@@ -102,6 +105,14 @@ public class RegisterUseCaseIntegrationTest {
         assertEquals(email, customer.getEmail());
         assertEquals(phone, customer.getPhone());
 
+    }
+
+    private void removeAccountIfExists() throws SrAccountNotFoundException {
+        UserName username = new UserName(userName);
+        if (accountRepository.accountExists(username)) {
+            RingoAccount accountByUsername = accountRepository.findAccountByUsername(username);
+            accountRepository.deleteAccount(accountByUsername.getId());
+        }
     }
 
 }

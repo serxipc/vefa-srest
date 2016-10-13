@@ -6,6 +6,7 @@ import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
 import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.http.AbstractHttpClientServerTest;
+import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
@@ -81,4 +82,5 @@ public class ClientObjectMother {
         Assert.assertNotNull(url, "Test file ehf-test-SendRegning.xml not found in class path");
         return new File(url.toURI());
     }
+
 }

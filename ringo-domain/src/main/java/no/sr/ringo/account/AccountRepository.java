@@ -13,11 +13,19 @@ import no.sr.ringo.message.MessageNumber;
  */
 public interface AccountRepository {
 
-    public RingoAccount findAccountById(final AccountId id);
+    public RingoAccount findAccountById(final AccountId id) throws SrAccountNotFoundException;
 
     RingoAccount findAccountByParticipantId(final ParticipantId participantId);
 
-    RingoAccount findAccountByUsername(final UserName username);
+    /**
+     * Locates an account, which you expect to exist by the username.
+     *
+     * @param username
+     * @return a reference to the account if found, null otherwise
+     *
+     * @see #accountExists(UserName) to figure out whether an account exists or not.
+     */
+    RingoAccount findAccountByUsername(final UserName username) throws SrAccountNotFoundException;
 
     /**
      * Creates an account with the provided details. if the account already
@@ -44,6 +52,14 @@ public interface AccountRepository {
      */
     void deleteAccount(AccountId accountId);
 
+    /**
+     * Inspects the repository to see if an account identified by username exists or not.
+     *
+     * @param username
+     * @return true if account exists, false otherwise.
+     *
+     * @see #findAccountByUsername(UserName)
+     */
     boolean accountExists(final UserName username);
 
     Customer findCustomerById(final Integer id);

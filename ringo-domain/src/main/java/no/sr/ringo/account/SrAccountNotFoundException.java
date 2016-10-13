@@ -11,7 +11,8 @@ import eu.peppol.identifier.ParticipantId;
  *         Date: 31.12.11
  *         Time: 17:19
  */
-public class SrAccountNotFoundException extends RuntimeException {
+public class SrAccountNotFoundException extends Exception {
+
     public SrAccountNotFoundException(AccountId id) {
         super("SR Account " + id + " not found");
     }
