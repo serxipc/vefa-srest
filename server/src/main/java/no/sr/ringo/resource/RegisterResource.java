@@ -10,11 +10,9 @@ import org.json.JSONException;
 import org.json.JSONStringer;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.Serializable;
 
 /**
@@ -45,33 +43,37 @@ public class RegisterResource extends AbstractMessageResource {
 
             ValidationResult validation = registerUseCase.validateData(registrationData);
             if (!validation.isValid()) {
-                RegistrationResponse result = new RegistrationResponse("error", validation.getMessage(), RegistrationProcessResult.RegistrationSource.RINGO.name());
-                return result.toJSON();
+                RegistrationResponse result = new RegistrationResponse(validation.isValid(), validation.getMessage(), RegistrationProcessResult.RegistrationSource.RINGO.name());
+
+                throw new InvalidUserInputWebException(result.toJSON());
             }
 
             RegistrationProcessResult registrationProcessResult = registerUseCase.registerUser(registrationData);
 
-            String status = registrationProcessResult.isSuccess() ? "ok" : "error";
-            RegistrationResponse result = new RegistrationResponse(status, registrationProcessResult.getMessage(), registrationProcessResult.getSource());
 
-            return result.toJSON();
+            RegistrationResponse result = new RegistrationResponse(registrationProcessResult.isSuccess(), registrationProcessResult.getMessage(), registrationProcessResult.getSource());
+            if (!registrationProcessResult.isSuccess()) {
+                throw new InvalidUserInputWebException(registrationProcessResult.getMessage());
+            } else {
+                return result.toJSON();
+            }
+
         } catch (JSONException e) {
-            throw new IllegalArgumentException("Wrong data from form", e);
+            throw new WebApplicationException(e);
         }
-
     }
 
     /**
      * The response of the registration.
      */
-    private class RegistrationResponse implements Serializable{
+    private static class RegistrationResponse implements Serializable{
 
-        private String status;
+        private RegistrationStatus status;
         private String message;
         private String source;
 
-        RegistrationResponse(String status, String message, String source) {
-            this.status = status;
+        RegistrationResponse(Boolean status, String message, String source) {
+            this.status = status ? RegistrationStatus.OK : RegistrationStatus.ERROR;
             this.message = message;
             this.source = source;
         }
@@ -80,6 +82,9 @@ public class RegisterResource extends AbstractMessageResource {
             return new JSONStringer().object().key("status").value(this.status).key("message").value(this.message).key("source").value(this.source).endObject().toString();
         }
 
+        static enum  RegistrationStatus {
+            OK, ERROR
+        }
     }
 
 }

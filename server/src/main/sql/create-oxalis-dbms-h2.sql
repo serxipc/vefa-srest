@@ -49,7 +49,7 @@ CREATE TABLE `account_role` (
   `role_name`  varchar(16) NOT NULL DEFAULT 'client',
   PRIMARY KEY (`username`,`role_name`),
   constraint unique_roles check(role_name in ('client','admin')),
-  CONSTRAINT `account_role_ibfk_1` FOREIGN KEY (`username`) REFERENCES `account` (`username`)
+  CONSTRAINT `account_role_ibfk_1` FOREIGN KEY (`username`) REFERENCES `account` (`username`) ON DELETE CASCADE
 ) ;
 
 /** Which PEPPOL participantid belong to which account */

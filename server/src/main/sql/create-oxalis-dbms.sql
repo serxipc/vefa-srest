@@ -35,7 +35,7 @@ CREATE TABLE `account` (
   `customer_id` int(11) NOT NULL COMMENT 'FK to customer',
   `name` varchar(128) NOT NULL COMMENT 'Name of account',
   `username` varchar(128) NOT NULL COMMENT 'Username used for logging in',
-  `password` varchar(64) DEFAULT NULL COMMENT 'Password used for Basic Authentication',
+  `password` varchar(128) DEFAULT NULL COMMENT 'Password used for Basic Authentication',
   `created_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `validate_upload` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Should invoices be validated',
   `send_notification` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Should email notifications be sent',

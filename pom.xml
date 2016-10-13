@@ -20,7 +20,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <slf4j.version>1.7.2</slf4j.version>
         <oxalis.version>3.2.0-SNAPSHOT</oxalis.version>
-        <jersey.version>1.11</jersey.version>
+        <jersey.version>1.19.2</jersey.version>
         <guice.version>3.0</guice.version>
         <jetty.version>7.6.16.v20140903</jetty.version>
     </properties>

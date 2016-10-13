@@ -1,5 +1,7 @@
 # vefa-srest
 
+Install MySQL or use the supplied H2 database. Follow the instructions below.
+
 ### Install MySQL with database oxalis_test
 - install mysql
 - create database `oxalis_test` with one user `skrue` using password `vable`
@@ -17,6 +19,7 @@ MySQL command should do the trick:
   ```sql
   source /server/src/main/sql/create-oxalis-dbms.sql
   ```
+
 
 ### Install Java 8 and Tomcat 9
 - create new folder .../rest-server/
@@ -94,13 +97,12 @@ Command                     | Comment
   ```
   
 1. Start Tomcat using `${TOMCAT_HOME}/bin/startup.sh`
-1. Make sure there are no errors in tocat/logs/catalina.out
-1. Verify REST response using a browser or command line curl:
+1. Make sure there are no errors in `$TOMCAT_HOME/logs/catalina.out`
+1. Verify REST response using a browser or command line _curl_:
 
   ```
-  curl -i http://localhost:8080/vefa/statistics -u username:password
+  curl -i http://localhost:8080/vefa-srest/statistics -u username:password
   ```
-  TODO: Verify the context name. "vefa" seems to be wrong, should be removed?
   
 1. Stop Tomcat: `${TOMCAT_HOME}/bin/shutdown.sh`
 1. Tweak `${TOMCAT_HOME}/conf/server.xml` to optimize further,  

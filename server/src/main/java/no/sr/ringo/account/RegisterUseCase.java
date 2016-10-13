@@ -113,8 +113,8 @@ public class RegisterUseCase {
             logger.debug(String.format("Skipping registering %s, with orgNo %s at SMP", registrationData.getName(), registrationData.getOrgNo()));
         }
 
-        //send info to sales department that new customer has been registered
-        emailService.sendRegistrationNotification(account, registrationData.isRegisterSmp() ? "konto skal motta" : "konto skal kun sende");
+        // send info to sales department that new customer has been registered
+        emailService.sendRegistrationNotification(account, registrationData.isRegisterSmp() ? "account will receive" : "account will only transmit");
 
         //if difi registration happened
         if (registrationData.isRegisterSmp()) {

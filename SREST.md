@@ -2,13 +2,13 @@
 
 Below are brief documentation of all REST resources and their supported actions.
 
-### General information
+## General information
 
 - All REST functions needs basic authentication
 - Make sure your HTTP client library always send Authorization header (force preemptive auth)
 - Make sure your HTTPS client supports new certificates (high security, no-SSL, TLS v1.2+ etc).
 
-### Method overview
+## Method overview
 
 ```
 verb    uri       produces                 description
@@ -75,3 +75,42 @@ Register a new user (customer account) in the system.
 ```
 POST  /register     APPLICATION_JSON        Returns RegistrationData in JSON format as TEXT_PLAIN
 ```
+
+### Registration
+
+This is an example showing how to register a new account. I.e entries will be created in the database tables `customer` and `account`:
+
+ 1. Create a file in JSON syntax holding the data to be registered:
+    ``` 
+    {
+      "name" : "Difi",
+      "address1" : "Business Address 1",
+      "address2" : "Business Address 2",
+      "zip" : "0494",
+      "city" : "Oslo",
+      "country" : "Norway",
+      "contactPerson" : "The Boss",
+      "email" : "boss@business.com",
+      "phone" : "111222333",
+      "username" : "newbusiness",
+      "password" : "topsecret123",
+      "orgNo" : "991825827",
+      "registerSmp" : false
+    }
+    ```
+    Note! The organisation number must be valid and previously unknown in the system
+ 
+ 1. Execute the registration by performing an http POST using any tool you like. Here is how you would do it using `curl`, given the data being present in 
+    a file named `/tmp/register.json`:
+    ```
+    curl -i -H "Content-Type: text/plain" -H "Accept: application/json" -X POST \ 
+        --data @/tmp/register.json http://localhost:8080/vefa-srest/register/
+    ```
+ 
+ 1. Upon successful completion you should see something like this:
+    ```
+    HTTP/1.1 200 
+    Content-Type: application/json
+    Transfer-Encoding: chunked
+    Date: Wed, 12 Oct 2016 15:16:06 GMT
+    ```
