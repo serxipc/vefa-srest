@@ -66,7 +66,7 @@ public class FetchMessagesUseCase {
         List<MessageWithLocations> messageWithLocationsList = fetchMessagesWithLocation(searchParams);
         final MessagesQueryResponse messagesQueryResponse = new MessagesQueryResponse(messageWithLocationsList);
 
-        //add navigation links if possible
+        // add navigation links if possible
         if (searchParams != null) {
             messagesQueryResponse.setNavigation(getNavigation(searchParams));
         }

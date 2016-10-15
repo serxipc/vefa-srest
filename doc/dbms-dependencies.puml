@@ -1,0 +1,68 @@
+@startuml
+
+Title Overview of dependencies related to SQL DBMS SChema
+
+skinparam componentStyle uml2
+
+/'
+database "Access Point DBMS" as ap_dbms <<SQL>> {
+    node schema
+}
+'/
+
+
+
+
+package "Oxalis" <<GitHub repo>> {
+    component "oxalis-inbound" as oxalis_inbound <<webapp (war)>>
+    component "oxalis-api" as oxalis_api <<jar>>
+    component "oxalis-sql" as oxalis_sql <<jar>> {
+        rectangle "raw-stats-*.sql" as raw_stats_script <<SQL schema>>
+        rectangle JdbcHelper <<Class>>
+        rectangle RawStatisticsRepositoryXxxxImpl <<Class>>
+        rectangle RawStatisticsRepositoryFactoryJdbcImpl <<Class>>
+        RawStatisticsRepositoryFactoryJdbcImpl ..> RawStatisticsRepositoryXxxxImpl
+        RawStatisticsRepositoryXxxxImpl .> raw_stats_script
+    }
+
+    component "oxalis-jdbcp-dbcp" as oxalis_jdbc_dbcp <<jar>>
+    component "oxalis-jdbcp-jndi" as oxalis_jdbc_jndi <<jar>>
+    component "oxalis-outbound" as oxalis_outbound <<jar>>
+    component "oxalis-commons" as oxalis_commons <<jar>>
+
+    oxalis_jdbc_dbcp ..|> oxalis_api
+    oxalis_inbound ..|> oxalis_api
+    oxalis_inbound ..> oxalis_sql
+}
+
+package "Ringo" <<GiHub repo>> {
+    component "ringo-server" as ringo_server <<webapp (war)>>{
+        rectangle "create-dbms.sql" as create_dbms_script <<SQL schema>>
+        rectangle "monthlyReport.sql" as monthly_report_script <<SQL schema>>
+        rectangle ReportRepositoryImpl
+        ReportRepositoryImpl .> monthly_report_script
+    }
+    ringo_server ..> oxalis_api
+    ringo_server ..> oxalis_outbound
+    ringo_server ..> oxalis_commons
+
+    component "ringo-persistence-jdbc-impl" as ringo_persistence_jdbc_impl {
+        rectangle XxxxxxRepositoryImpl
+    }
+
+    component "oxalis-persistence" as oxalis_persistence
+
+}
+
+
+
+/'
+database schema
+schema ..> create_dbms_script
+schema ..> raw_stats_script
+schema ..> monthly_report_script
+'/
+ringo_persistence_jdbc_impl ..> create_dbms_script
+oxalis_inbound ..> oxalis_persistence : <<dynamic, runtime>>
+oxalis_persistence ..> create_dbms_script
+@enduml

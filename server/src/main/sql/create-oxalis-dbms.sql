@@ -90,7 +90,7 @@ CREATE TABLE `message` (
 CREATE TABLE `outbound_message_queue` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',
   `msg_no` int(11) DEFAULT NULL COMMENT 'FK to message table',
-  `state` enum('QUEUED','IN_PROGRESS','EXTERNAL','OK','AOD','CBU','CBO') DEFAULT NULL,
+  `state` enum('QUEUED','IN_PROGRESS','EXTERNAL','OK','AOD') DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_omk_2_msg` (`msg_no`),
   CONSTRAINT `outbound_message_queue_ibfk_1` FOREIGN KEY (`msg_no`) REFERENCES `message` (`msg_no`) ON DELETE CASCADE

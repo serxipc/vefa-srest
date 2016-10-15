@@ -30,6 +30,7 @@ public class OutboxResourceTest {
     private FetchMessagesUseCase mockFetchMessageUseCase;
     private OutboxResource outboxResource;
     private FetchDocumentUseCase mockFetchDocumentUseCase;
+
     @BeforeMethod
     public void setUp() throws Exception {
 

@@ -1,0 +1,69 @@
+@startuml
+
+Title Refactored persistence and sql schema stuff to prevent circular dependencies
+left to right direction
+
+skinparam componentStyle uml2
+
+
+
+package "Oxalis" <<GitHub repo>> {
+    component "oxalis-inbound" as oxalis_inbound <<webapp (war)>>
+    component "oxalis-api" as oxalis_api <<jar>>
+    component "oxalis-sql" as oxalis_sql <<jar>> {
+    rectangle "raw-stats-*.sql" as raw_stats_script <<SQL schema>>
+    rectangle JdbcHelper <<Class>>
+    rectangle RawStatisticsRepositoryXxxxImpl <<Class>>
+    rectangle RawStatisticsRepositoryFactoryJdbcImpl <<Class>>
+
+    RawStatisticsRepositoryFactoryJdbcImpl ..> RawStatisticsRepositoryXxxxImpl
+    RawStatisticsRepositoryXxxxImpl .> raw_stats_script
+    }
+
+    component "oxalis-jdbcp-dbcp" as oxalis_jdbc_dbcp <<jar>>
+    component "oxalis-jdbcp-jndi" as oxalis_jdbc_jndi <<jar>>
+    component "oxalis-outbound" as oxalis_outbound <<jar>>
+    component "oxalis-commons" as oxalis_commons <<jar>>
+
+    oxalis_jdbc_dbcp ..|> oxalis_api
+    oxalis_inbound ..|> oxalis_api
+    oxalis_inbound ..> oxalis_sql
+}
+
+package "Ringo" <<GiHub repo>> {
+    component "ringo-server" as ringo_server <<webapp (war)>>{
+        rectangle "monthlyReport.sql" as monthly_report_script <<SQL schema>>
+        rectangle ReportRepositoryImpl
+
+        ReportRepositoryImpl .> monthly_report_script
+    }
+
+    ringo_server ..> oxalis_api
+    ringo_server ..> oxalis_outbound
+    ringo_server ..> oxalis_commons
+    ringo_server ..> oxalis_persistence_api
+}
+
+
+package "oxalis-persistence" <<Github Repo>> {
+
+    component "oxalis-persistence-api" as oxalis_persistence_api {
+        rectangle XxxxxRepositoryFactoryImpl
+    }
+
+    component "oxalis-persistence-h2" {
+        rectangle "create-dbms-h2.sql"
+    }
+
+    component "oxalis-persistence-mysql" {
+        rectangle "create-dbms-mysql.sql"
+    }
+
+    component "oxalis-persistence-sql-server" {
+        rectangle "create-dbms-sql-server.sql"
+    }
+
+}
+
+oxalis_inbound ..> oxalis_persistence_api : <<dynamic, runtime>>
+@enduml

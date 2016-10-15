@@ -1,0 +1,27 @@
+@startuml
+
+interface "PEPPOL API" as PEPPOL
+component Oxalis
+folder "Inbound messages" as Inbound
+Oxalis - PEPPOL
+Oxalis -down- Inbound : persist\ninbound
+
+component Buster
+interface "Persistence" as P <<REST>>
+Buster -up- P
+
+component Ringo
+interface "Backend API" as B <<REST>>
+folder "Outbound messages" as Outbound
+Ringo -left- B
+Ringo -down- Outbound : persist\noutbound
+
+
+Oxalis ..> P
+Ringo ..> P
+
+database "DBMS" as D
+Buster -down->  D
+D ..> Inbound : <<references>>
+D ..> Outbound : <<references>>
+@enduml
