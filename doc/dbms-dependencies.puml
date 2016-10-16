@@ -47,7 +47,11 @@ package "Ringo" <<GiHub repo>> {
     ringo_server ..> oxalis_commons
 
     component "ringo-persistence-jdbc-impl" as ringo_persistence_jdbc_impl {
-        rectangle XxxxxxRepositoryImpl
+        rectangle XxxxxxRepositoryImpl as XR
+        note left of XR
+            Repositories for account,
+            customer, message etc.
+        end note
     }
 
     component "oxalis-persistence" as oxalis_persistence

@@ -28,7 +28,6 @@
     <modules>
         <module>api</module>
         <module>client</module>
-        <module>oxalis-persistence</module>
         <module>ringo-domain</module>
         <module>ringo-email-impl</module>
         <module>ringo-persistence-jdbc-impl</module>
