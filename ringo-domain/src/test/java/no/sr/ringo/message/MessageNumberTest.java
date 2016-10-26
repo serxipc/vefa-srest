@@ -30,7 +30,7 @@ public class MessageNumberTest {
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testInValidMessageNumberNull() throws Exception {
-        MessageNumber.create(null);
+        MessageNumber.create((Long)null);
     }
 
     @Test

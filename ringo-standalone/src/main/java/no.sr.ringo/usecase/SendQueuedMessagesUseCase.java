@@ -173,10 +173,10 @@ public class SendQueuedMessagesUseCase {
 
         // when we pass here the queued message has state IN_PROGRESS
 
-        String xmlMessage = messageRepository.findDocumentByMessageNoWithoutAccountCheck(message.getMsgNo());
+        String xmlMessage = messageRepository.findDocumentByMessageNoWithoutAccountCheck(message.getMsgNo().longValue());
         logger.debug("Attempting to send message #" + message.getMsgNo());
         final PeppolDocumentSender.TransmissionReceipt transmissionReceipt = documentSender.sendDocument(message, xmlMessage);
-        messageRepository.updateOutBoundMessageDeliveryDateAndUuid(message.getMsgNo(), transmissionReceipt.getRemoteAccessPoint(), transmissionReceipt.getMessageId(), transmissionReceipt.getDate());
+        messageRepository.updateOutBoundMessageDeliveryDateAndUuid(message.getMsgNo().longValue(), transmissionReceipt.getRemoteAccessPoint(), transmissionReceipt.getMessageId(), transmissionReceipt.getDate());
 
         // we got this far so delivery was ok
 
@@ -201,7 +201,7 @@ public class SendQueuedMessagesUseCase {
         logger.error(String.format("Unable to process queue item %d with messageNo %d sent; %s", queuedOutboundMessage.getOutboundQueueId().toInt(), queuedOutboundMessage.getMessageNumber().toInt(), message), e);
 
         RingoAccount ringoAccount = accountRepository.findAccountAsOwnerOfMessage(queuedOutboundMessage.getMessageNumber());
-        emailService.sendProcessingErrorNotification(ringoAccount, message, queuedOutboundMessage.getMessageNumber(), queuedOutboundMessage.getInvoiceNo());
+        emailService.sendProcessingErrorNotification(ringoAccount, message, queuedOutboundMessage.getMessageNumber());
 
     }
 

@@ -44,6 +44,7 @@ public class RingoServiceModule extends AbstractModule {
 
     private void bindRepositories() {
         bind(AccountRepository.class).to(AccountRepositoryImpl.class).in(Singleton.class);
+        // The main workhorse
         bind(PeppolMessageRepository.class).to(PeppolMessageRepositoryImpl.class).in(Singleton.class);
         bind(QueueRepository.class).to(QueueRepositoryImpl.class).in(Singleton.class);
         bind(ReportRepository.class).to(ReportRepositoryImpl.class).in(Singleton.class);

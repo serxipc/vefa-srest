@@ -3,10 +3,6 @@ package no.sr.ringo.message;
 import no.sr.ringo.account.AccountId;
 import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.message.statistics.RingoStatistics;
-import no.sr.ringo.queue.OutboundMessageQueueErrorId;
-import no.sr.ringo.queue.OutboundMessageQueueId;
-import no.sr.ringo.queue.QueuedOutboundMessage;
-import no.sr.ringo.queue.QueuedOutboundMessageError;
 
 import java.util.Date;
 import java.util.List;
@@ -25,22 +21,20 @@ public interface PeppolMessageRepository {
      *
      * @param ringoAccountId
      * @param peppolMessage
-     * @param invoiceNo
      * @return the surrogate primary key of the persisted message.
      */
-    MessageWithLocations persistOutboundMessage(RingoAccount ringoAccountId, PeppolMessage peppolMessage, String invoiceNo);
+    MessageWithLocations persistOutboundMessage(RingoAccount ringoAccountId, PeppolMessage peppolMessage);
 
     /**
      * Persists the supplied PeppolMessage for the account and supply additional reception data
      *
      * @param ringoAccount
      * @param peppolMessage
-     * @param invoiceNo
      * @param remoteHost
      * @param apName
      * @return the surrogate primary key of the persisted message.
      */
-    MessageWithLocations persistInboundMessage(RingoAccount ringoAccount, PeppolMessage peppolMessage, String invoiceNo, String remoteHost, String apName);
+    MessageWithLocations persistInboundMessage(RingoAccount ringoAccount, PeppolMessage peppolMessage, String remoteHost, String apName);
 
     /**
      * Retrieves message by primary key
@@ -57,7 +51,7 @@ public interface PeppolMessageRepository {
      * @return
      * @throws PeppolMessageNotFoundException
      */
-    MessageMetaData findMessageByMessageNo(RingoAccount ringoAccount, Integer messageNo) throws PeppolMessageNotFoundException;
+    MessageMetaData findMessageByMessageNo(RingoAccount ringoAccount, Long messageNo) throws PeppolMessageNotFoundException;
 
     /**
      * Gives the count of messages in the inbox for the supplied account
@@ -113,7 +107,7 @@ public interface PeppolMessageRepository {
      * Marks message as read which means it simply updates deliveder date to current timestamp
      * @param messageNo
      */
-    void markMessageAsRead(Integer messageNo);
+    void markMessageAsRead(Long messageNo);
 
 
     /**
@@ -131,7 +125,7 @@ public interface PeppolMessageRepository {
      * Updates delivered and uuid fields on outbound message
      *
      */
-    public void updateOutBoundMessageDeliveryDateAndUuid(Integer msgNo, String remoteAP, String uuid, Date delivered);
+    public void updateOutBoundMessageDeliveryDateAndUuid(Long msgNo, String remoteAP, String uuid, Date delivered);
 
     /**
      * Creates inbound message as copy of outbound one with delivered being null
@@ -141,7 +135,7 @@ public interface PeppolMessageRepository {
      * @param uuid
      * @return
      */
-    public int copyOutboundMessageToInbound(Integer outMsgNo, String uuid);
+    public Long copyOutboundMessageToInbound(Long outMsgNo, String uuid);
 
     /**
      * Retrieves xml document from given message not checking the account_id
@@ -149,7 +143,7 @@ public interface PeppolMessageRepository {
      * @return
      * @throws PeppolMessageNotFoundException
      */
-    public String findDocumentByMessageNoWithoutAccountCheck(Integer messageNo) throws PeppolMessageNotFoundException;
+    public String findDocumentByMessageNoWithoutAccountCheck(Long messageNo) throws PeppolMessageNotFoundException;
 
 
     /**
@@ -157,7 +151,7 @@ public interface PeppolMessageRepository {
      * @param messageNo
      * @return
      */
-    public boolean isSenderAndReceiverAccountTheSame(Integer messageNo);
+    public boolean isSenderAndReceiverAccountTheSame(Long messageNo);
 
     /**
      * Fetches the statistics for the provided account

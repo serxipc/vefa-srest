@@ -59,7 +59,7 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
     public void testIfAMessageIsNotFoundTheExceptionIsLeftToPropagate() throws Exception {
         MessageNumber msgNo = MessageNumber.valueOf("10");
 
-        expect(mockDocumentRepository.getPeppolDocument(ringoAccount, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo.toInt()));
+        expect(mockDocumentRepository.getPeppolDocument(ringoAccount, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo.toLong()));
         replayAllMocks();
 
         fetchDocumentUseCase.execute(ringoAccount, msgNo);

@@ -3,6 +3,7 @@ package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.cenbiimeta.ProfileId;
@@ -41,12 +42,10 @@ public class QueueRepositoryImplIntegrationTest {
     private RingoAccount account = ObjectMother.getTestAccount();
     private ParticipantId participantId = ObjectMother.getTestParticipantIdForSMPLookup();
 
-    private int messageId;
-    private int messageOut;
+    private Long messageId;
+    private Long messageOut;
 
-    private int msgIdInvoice;
-
-    private String invoiceNo = "1";
+    private Long msgIdInvoice;
 
 
     @Inject
@@ -67,7 +66,7 @@ public class QueueRepositoryImplIntegrationTest {
     public void deleteSample() throws SQLException {
         databaseHelper.deleteMessage(messageId);
         databaseHelper.deleteMessage(messageOut);
-        databaseHelper.deleteMessage(msgIdInvoice);
+        // databaseHelper.deleteMessage((long) msgIdInvoice);
         databaseHelper.deleteAllMessagesForAccount(account);
     }
 
@@ -76,7 +75,7 @@ public class QueueRepositoryImplIntegrationTest {
         PeppolMessage peppolMessage = PeppolMessageTestdataGenerator.outboxPostRequest();
         peppolMessage.getPeppolHeader().setProfileId(ProfileId.valueOf("urn:www.cenbii.eu:profile:bii05:ver1.0"));
 
-        MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage, invoiceNo);
+        MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage);
         OutboundMessageQueueId queueId = queueRepository.putMessageOnQueue(messageWithLocations.getMsgNo());
         assertNotNull(queueId);
 
@@ -92,7 +91,7 @@ public class QueueRepositoryImplIntegrationTest {
         PeppolMessage peppolMessage = PeppolMessageTestdataGenerator.outboxPostRequest();
         peppolMessage.getPeppolHeader().setProfileId(ProfileId.valueOf("urn:www.cenbii.eu:profile:bii05:ver1.0"));
 
-        MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage, invoiceNo);
+        MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage);
         OutboundMessageQueueId queueId = queueRepository.putMessageOnQueue(messageWithLocations.getMsgNo());
         assertNotNull(queueId);
 
@@ -149,7 +148,7 @@ public class QueueRepositoryImplIntegrationTest {
         PeppolMessage peppolMessage = PeppolMessageTestdataGenerator.outboxPostRequest();
         peppolMessage.getPeppolHeader().setProfileId(ProfileId.valueOf("urn:www.cenbii.eu:profile:bii05:ver1.0"));
 
-        MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage, invoiceNo);
+        MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage);
         return  queueRepository.putMessageOnQueue(messageWithLocations.getMsgNo());
     }
 
@@ -160,7 +159,9 @@ public class QueueRepositoryImplIntegrationTest {
         //creates an outbound message
         final int accountId = 1;
 
-        msgIdInvoice = databaseHelper.createMessage(PeppolDocumentTypeId.EHF_INVOICE, invoiceXml, accountId, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), null, null, new Date());
+        msgIdInvoice = databaseHelper.createMessage(PeppolDocumentTypeId.EHF_INVOICE,
+                PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
+                invoiceXml, accountId, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), null, null, new Date());
         Integer queueId = databaseHelper.putMessageOnQueue(msgIdInvoice);
         final boolean lockOk = queueRepository.lockQueueItemForDelivery(new OutboundMessageQueueId(queueId));
 
@@ -174,7 +175,9 @@ public class QueueRepositoryImplIntegrationTest {
         String invoiceXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"text/xsl\" href=\"xxx.xslt\"?><Invoice>invoice</Invoice>";
         //creates an outbound message
         final int accountId = 1;
-        msgIdInvoice = databaseHelper.createMessage(PeppolDocumentTypeId.EHF_INVOICE, invoiceXml, accountId, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), null, new Date(), new Date());
+        msgIdInvoice = databaseHelper.createMessage(PeppolDocumentTypeId.EHF_INVOICE,
+                PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
+                invoiceXml, accountId, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), null, new Date(), new Date());
         assertNotNull(msgIdInvoice);
         Integer queueId = databaseHelper.putMessageOnQueue(msgIdInvoice);
 

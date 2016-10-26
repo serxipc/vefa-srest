@@ -3,7 +3,11 @@ package no.sr.ringo.guice;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Provides;
 import com.google.inject.servlet.GuiceServletContextListener;
+import eu.peppol.persistence.guice.RepositoryModule;
+import eu.peppol.smp.SmlHost;
+import eu.peppol.util.OperationalMode;
 import no.sr.ringo.common.PropertyHelper;
 
 import javax.servlet.ServletContext;
@@ -12,7 +16,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * This is where the whole Ringo application is wired together :)
+ * This is where the whole Ringo server application is wired together :)
  *
  * @author Steinar Overbeck Cook
  */
@@ -49,7 +53,9 @@ public class RingoGuiceContextListener extends GuiceServletContextListener {
                 // the transaction manager
                 new AopJdbcTxManagerModule(),
                 //the Jndi datasource
-                new RingoJndiDataSourceGuiceModule(jndiName)
+                new RingoJndiDataSourceGuiceModule(jndiName),
+                // Repositories from oxalis-persistence
+                new RepositoryModule()
         );
     }
 
@@ -73,16 +79,17 @@ public class RingoGuiceContextListener extends GuiceServletContextListener {
     }
 
     private void setUpExternalServices(ServletContext servletContext) {
-        //determines if this is the production server
+        // determines if this is the production server
         String isProductionServer = servletContext.getInitParameter("isProductionServer");
 
         if ("true".equalsIgnoreCase(isProductionServer)) {
             servletContext.setAttribute("mockSmp", Boolean.FALSE);
-            servletContext.setAttribute("mockDifi", Boolean.FALSE);
+            servletContext.setAttribute("mockDifi", Boolean.FALSE); // What is this used for?
         }
         else {
             servletContext.setAttribute("mockSmp",Boolean.TRUE);
             servletContext.setAttribute("mockDifi", Boolean.TRUE);
         }
     }
+
 }

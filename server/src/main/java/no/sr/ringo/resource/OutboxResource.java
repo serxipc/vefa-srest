@@ -92,7 +92,7 @@ public class OutboxResource extends AbstractMessageResource {
             msgNo = parseMsgNo(msgNoString);
         }
 
-        MessageMetaData messageMetaData = fetchMessagesUseCase.findOutBoundMessageByMessageNo(ringoAccount, msgNo.toInt());
+        MessageMetaData messageMetaData = fetchMessagesUseCase.findOutBoundMessageByMessageNo(ringoAccount, msgNo.toLong());
         return createSingleOutboxResponse(uriInfo, messageMetaData);
     }
 

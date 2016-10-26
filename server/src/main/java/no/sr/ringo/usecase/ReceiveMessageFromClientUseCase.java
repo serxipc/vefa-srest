@@ -116,9 +116,8 @@ public class ReceiveMessageFromClientUseCase {
             throw new IllegalStateException("Tried to persist message which doesn't exist.");
         }
 
-        String invoiceNo = extractInvoiceNoFromDocument(peppolMessage.getXmlMessage());
         // Saves the message into the database
-        return messageRepository.persistOutboundMessage(account, peppolMessage, invoiceNo);
+        return messageRepository.persistOutboundMessage(account, peppolMessage);
     }
 
     /**

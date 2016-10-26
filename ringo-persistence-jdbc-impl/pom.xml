@@ -15,6 +15,17 @@
 
     <dependencies>
 
+
+        <dependency>
+            <groupId>no.difi.oxalis</groupId>
+            <artifactId>oxalis-persistence-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.difi.oxalis</groupId>
+            <artifactId>oxalis-api</artifactId>
+        </dependency>
+
+
         <dependency>
             <groupId>no.difi.ringo</groupId>
             <artifactId>ringo-domain</artifactId>
@@ -26,6 +37,32 @@
             <artifactId>guice</artifactId>
         </dependency>
 
+
+        <!-- jitpack.io -->
+        <dependency>
+            <groupId>com.github.difi.vefa-peppol</groupId>
+            <artifactId>peppol-sbdh</artifactId>
+            <version>8766112a1c</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>no.difi.vefa</groupId>
+                    <artifactId>peppol-common</artifactId>
+                </exclusion>
+            </exclusions>
+
+        </dependency>
+        <dependency>
+            <groupId>com.github.difi.vefa-peppol</groupId>
+            <artifactId>peppol-common</artifactId>
+            <version>8766112a1c</version>
+        </dependency>
+
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 </project>

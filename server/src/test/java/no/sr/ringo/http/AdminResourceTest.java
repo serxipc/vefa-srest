@@ -20,7 +20,9 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -42,7 +44,7 @@ public class AdminResourceTest extends AbstractHttpClientServerTest {
     @Inject
     PeppolMessageRepository peppolMessageRepository;
 
-    private List<Integer> messageIds = new ArrayList<Integer>();
+    private List<Long> messageIds = new ArrayList<>();
     private RingoAccount testAccount = ObjectMother.getTestAccount();
 
     /**
@@ -103,7 +105,7 @@ public class AdminResourceTest extends AbstractHttpClientServerTest {
         databaseHelper.deleteAllMessagesForAccount(testAccount);
         //creates 2 messages
         for (int i = 0; i <= 1; i++) {
-            final int message = databaseHelper.createMessage(testAccount.getId().toInteger(), TransferDirection.OUT, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), null, null);
+            final Long message = databaseHelper.createMessage(testAccount.getId().toInteger(), TransferDirection.OUT, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), new Date());
             messageIds.add(message);
         }
     }

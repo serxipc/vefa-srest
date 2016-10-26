@@ -1,10 +1,12 @@
 package no.sr.ringo.guice;
 
+import com.google.inject.Provides;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import eu.peppol.smp.*;
+import eu.peppol.util.OperationalMode;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.message.FetchMessagesUseCase;
 import no.sr.ringo.usecase.ReceiveMessageFromClientUseCase;
@@ -17,7 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Creates the REST bindings for the Server at the given WebContexts
+ * Creates the REST bindings for the Server at the given WebContexts.
+ *
+ * This module is only used in Production
  *
  * @author andy
  * @author thore
@@ -102,5 +106,16 @@ public class RingoRestModule extends JerseyServletModule {
     private void bindSmpDependencies() {
         bind(RingoSmpLookup.class).toProvider(SmpLookupProvider.class);
     }
+
+    @Provides
+    OperationalMode getOperationalMode() {
+        return OperationalMode.PRODUCTION;
+    }
+
+    @Provides
+    SmlHost getSmlHost() {
+        return SmlHost.PRODUCTION_SML;
+    }
+
 
 }

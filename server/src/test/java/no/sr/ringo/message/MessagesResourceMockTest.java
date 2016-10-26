@@ -89,7 +89,7 @@ public class MessagesResourceMockTest {
     @Test(expectedExceptions = PeppolMessageNotFoundException.class)
     public void testMessageNotFoundException() throws Exception {
 
-        expect(mockFetchDocumentUseCase.execute(ringoAccount, MessageNumber.create(1))).andThrow(new PeppolMessageNotFoundException(1));
+        expect(mockFetchDocumentUseCase.execute(ringoAccount, MessageNumber.create(1))).andThrow(new PeppolMessageNotFoundException(1L));
         replayAllMocks();
 
         messagesResource.getXmlDocument("1");

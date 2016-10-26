@@ -32,7 +32,7 @@ public class SameMessageSenderAndReceiverIntegrationTest {
     private RingoAccount account = ObjectMother.getTestAccount();
     private ParticipantId participantId = ObjectMother.getTestParticipantId();
 
-    private int messageOut;
+    private Long messageOut;
     private Integer accountReceiverId;
 
 

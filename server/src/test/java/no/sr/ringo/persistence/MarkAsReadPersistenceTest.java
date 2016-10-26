@@ -33,7 +33,7 @@ public class MarkAsReadPersistenceTest {
     private final DatabaseHelper databaseHelper;
     private final PeppolMessageRepository peppolMessageRepository;
 
-    private Integer messageNo;
+    private Long messageNo;
     private String receiver1 = "9908:976098898";
     private RingoAccount ringoAccount;
     private ParticipantId sender;

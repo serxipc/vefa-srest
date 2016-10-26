@@ -47,7 +47,7 @@ public class DownloadXmlDocumentIntegrationTest extends AbstractHttpClientServer
     @Inject
     DatabaseHelper databaseHelper;
 
-    private Integer messageNumber;
+    private Long messageNumber;
 
     @BeforeMethod(groups = {"integration"})
     public void setUp() throws Exception {
@@ -57,10 +57,6 @@ public class DownloadXmlDocumentIntegrationTest extends AbstractHttpClientServer
         messageNumber = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantId().stringValue(), receiver1, uuid, null);
     }
 
-    @AfterMethod(groups = {"integration"})
-    public void cleanUp() throws Exception {
-        databaseHelper.deleteMessage(messageNumber);
-    }
 
     /**
      * Tests downloading of messages from the inbox and marking them all as read.

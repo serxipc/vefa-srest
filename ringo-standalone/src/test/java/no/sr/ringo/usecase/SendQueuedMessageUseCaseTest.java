@@ -55,7 +55,7 @@ public class SendQueuedMessageUseCaseTest {
 
         //Tests the all ok path for sending a document
 
-        final int msgNo = 1;
+        final Long msgNo = 1L;
         final OutboundMessageQueueId queueId = new OutboundMessageQueueId(10);
 
         String message = "a fancy invoice";
@@ -93,7 +93,7 @@ public class SendQueuedMessageUseCaseTest {
     public void testSendDocumentViaPeppolLockedMessage() throws Exception {
 
         //Tests that  path when a message is already locked for sending a document
-        final int msgNo = 1;
+        final Long msgNo = 1L;
         final OutboundMessageQueueId queueId = new OutboundMessageQueueId(10);
 
         SendQueuedMessagesUseCase useCase = new SendQueuedMessagesUseCase(mockDocumentSender, mockMessageRepository, mockQueueRepository, mockEmailService, mockAccountRepository);
@@ -125,7 +125,7 @@ public class SendQueuedMessageUseCaseTest {
     public void testHandleSingleMessageOk() throws Exception {
 
         //Tests that  path when a message is already locked for sending a document
-        final MessageNumber msgNo = MessageNumber.create(1);
+        final MessageNumber msgNo = MessageNumber.create(1L);
         final OutboundMessageQueueId queueId = new OutboundMessageQueueId(10);
         QueuedOutboundMessage mockQueue = createMock("QueuedOutboundMessage", QueuedOutboundMessage.class);
         MessageMetaData mockMessage = EasyMock.createMock(MessageMetaData.class);
@@ -133,10 +133,10 @@ public class SendQueuedMessageUseCaseTest {
 
         SendQueuedMessagesUseCase useCase = new SendQueuedMessagesUseCase(mockDocumentSender, mockMessageRepository, mockQueueRepository, mockEmailService, mockAccountRepository);
 
-        expectationsForQueueAndMessage(msgNo, queueId, mockQueue, mockMessage, "testInvoiceNo");
+        expectationsForQueueAndMessage(msgNo, queueId, mockQueue, mockMessage);
 
         String messageXml = "<xml>message</xml>";
-        expect(mockMessageRepository.findDocumentByMessageNoWithoutAccountCheck(msgNo.toInt())).andStubReturn(messageXml);
+        expect(mockMessageRepository.findDocumentByMessageNoWithoutAccountCheck(msgNo.toLong())).andStubReturn(messageXml);
 
         //set up expectations for messageRepo
         expect(mockQueueRepository.lockQueueItemForDelivery(queueId)).andStubReturn(true);
@@ -145,7 +145,7 @@ public class SendQueuedMessageUseCaseTest {
         expect(mockDocumentSender.sendDocument(mockMessage, messageXml)).andStubReturn(new PeppolDocumentSender.TransmissionReceipt("uuid", new URL("http://ringo.domain.com/"), new Date()));
 
         // update message to delivered
-        mockMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(EasyMock.eq(msgNo.toInt()), EasyMock.eq("http://ringo.domain.com/"), EasyMock.eq("uuid"), isA(Date.class));
+        mockMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(EasyMock.eq(msgNo.toLong()), EasyMock.eq("http://ringo.domain.com/"), EasyMock.eq("uuid"), isA(Date.class));
         expectLastCall();
 
         // update state to OK
@@ -183,10 +183,10 @@ public class SendQueuedMessageUseCaseTest {
 
         SendQueuedMessagesUseCase useCase = new SendQueuedMessagesUseCase(mockDocumentSender, mockMessageRepository, mockQueueRepository, mockEmailService, mockAccountRepository);
 
-        expectationsForQueueAndMessage(msgNo, queueId, mockQueue, mockMessage, "testInvoiceNo");
+        expectationsForQueueAndMessage(msgNo, queueId, mockQueue, mockMessage);
 
         String messageXml = "<xml>message</xml>";
-        expect(mockMessageRepository.findDocumentByMessageNoWithoutAccountCheck(msgNo.toInt())).andStubReturn(messageXml);
+        expect(mockMessageRepository.findDocumentByMessageNoWithoutAccountCheck(msgNo.toLong())).andStubReturn(messageXml);
 
         //set up expectations for messageRepo
         expect(mockQueueRepository.lockQueueItemForDelivery(queueId)).andStubReturn(true);
@@ -199,7 +199,7 @@ public class SendQueuedMessageUseCaseTest {
 
         //send error notification
         expect(mockAccountRepository.findAccountAsOwnerOfMessage(msgNo)).andReturn(mockAccount);
-        expect(mockEmailService.sendProcessingErrorNotification(mockAccount, "Exception simulation", msgNo, "testInvoiceNo")).andReturn(null);
+        expect(mockEmailService.sendProcessingErrorNotification(mockAccount, "Exception simulation", msgNo)).andReturn(null);
 
         // new entry in error table
         expect(mockQueueRepository.logOutboundError(isA(QueuedOutboundMessageError.class))).andReturn(new OutboundMessageQueueErrorId(1));
@@ -227,15 +227,14 @@ public class SendQueuedMessageUseCaseTest {
     }
 
 
-    private void expectationsForQueueAndMessage(MessageNumber msgNo, OutboundMessageQueueId queueId, QueuedOutboundMessage mockQueue, MessageMetaData mockMessage, String invoiceNo) {
+    private void expectationsForQueueAndMessage(MessageNumber msgNo, OutboundMessageQueueId queueId, QueuedOutboundMessage mockQueue, MessageMetaData mockMessage) {
         expect(mockQueue.getMessageNumber()).andStubReturn(msgNo);
-        expect(mockQueue.getInvoiceNo()).andStubReturn(invoiceNo);
 
         expect(mockQueueRepository.getQueuedMessageById(queueId)).andStubReturn(mockQueue);
         expect(mockMessageRepository.findMessageByMessageNo(msgNo)).andStubReturn(mockMessage);
 
         //set up expectations for message and queue
-        expect(mockMessage.getMsgNo()).andStubReturn(msgNo.toInt());
+        expect(mockMessage.getMsgNo()).andStubReturn(msgNo.toLong());
         expect(mockMessage.getDelivered()).andStubReturn(null); // message cannot be delivered
         expect(mockMessage.getPeppolHeader()).andStubReturn(getSimplePeppolHeader());
         expect(mockQueue.getOutboundQueueId()).andStubReturn(queueId);

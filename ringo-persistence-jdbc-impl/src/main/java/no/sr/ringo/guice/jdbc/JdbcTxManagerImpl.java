@@ -167,6 +167,13 @@ public class JdbcTxManagerImpl implements JdbcTxManager {
             trace(message);
             throw new IllegalStateException(message);
         }
+        try {
+            if (connection.isClosed()) {
+                throw new IllegalStateException("Connection is closed!");
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Unable to inspect connection: " + e.getMessage(), e);
+        }
         return connection;
     }
 

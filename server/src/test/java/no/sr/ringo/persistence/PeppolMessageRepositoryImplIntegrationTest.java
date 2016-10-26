@@ -2,6 +2,8 @@ package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.Header;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.cenbiimeta.ProfileId;
@@ -53,11 +55,11 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     private RingoAccount account = ObjectMother.getTestAccount();
     private ParticipantId participantId = ObjectMother.getTestParticipantIdForSMPLookup();
 
-    private int messageId;
-    private int messageOut;
-    private int messageIn;
-
-    private String invoiceNo = "1";
+    private Long messageId;
+    private Long messageOut;
+    private Long messageIn;
+    private String messageInUuid;
+    private String messageOutUuid;
 
     @Inject
     public PeppolMessageRepositoryImplIntegrationTest(PeppolMessageRepository peppolMessageRepository, DocumentRepository documentRepository, DatabaseHelper databaseHelper) {
@@ -69,8 +71,10 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     @BeforeMethod(groups = {"persistence"})
     public void insertSample() throws SQLException {
         databaseHelper.deleteAllMessagesForAccount(account);
-        messageId = databaseHelper.createMessage(1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null);
-        messageOut = databaseHelper.createMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), null, null);
+        messageInUuid = UUID.randomUUID().toString();
+        messageId = databaseHelper.createMessage(1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), messageInUuid, null);
+        messageOutUuid = UUID.randomUUID().toString();
+        messageOut = databaseHelper.createMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), messageOutUuid, null);
     }
 
     @AfterMethod(groups = {"persistence"})
@@ -85,11 +89,11 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     public void checkPeppolHeaderForPersistedOutboundMessage() {
         PeppolMessage peppolMessage = PeppolMessageTestdataGenerator.outboxPostRequest();
 
-        MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage, invoiceNo);
-        MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, messageWithLocations.getMsgNo());
+        MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage);
+        MessageMetaData messageMetaData = peppolMessageRepository.findMessageByMessageNo(account, messageWithLocations.getMsgNo().longValue());
 
         PeppolHeader peppolHeader = peppolMessage.getPeppolHeader();
-        PeppolHeader persistedPeppolHeader = messageByMessageNo.getPeppolHeader();
+        PeppolHeader persistedPeppolHeader = messageMetaData.getPeppolHeader();
 
         assertEquals(peppolHeader,persistedPeppolHeader);
 
@@ -124,8 +128,8 @@ public class PeppolMessageRepositoryImplIntegrationTest {
                 System.out.println("Element : " + n.getNodeName() + " = " + n.getTextContent());
             }
         }
-        MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage, invoiceNo);
-        MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, messageWithLocations.getMsgNo());
+        MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage);
+        MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, messageWithLocations.getMsgNo().longValue());
         PeppolDocument docFromDatabase = documentRepository.getPeppolDocument(account, MessageNumber.create(messageByMessageNo.getMsgNo()));
         // System.out.println(doc.getXml());
         assertTrue(!docFromDatabase.getXml().contains("xmlns=\"\""), "We should not have added xmlns=\"\" anywhere in the message");
@@ -136,8 +140,8 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         PeppolMessage peppolMessage = PeppolMessageTestdataGenerator.outboxPostRequest();
         peppolMessage.getPeppolHeader().setProfileId(ProfileId.valueOf("urn:www.cenbii.eu:profile:bii05:ver1.0"));
 
-        MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage, invoiceNo);
-        MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, messageWithLocations.getMsgNo());
+        MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage);
+        MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, Long.valueOf(messageWithLocations.getMsgNo()));
 
         PeppolHeader peppolHeader = peppolMessage.getPeppolHeader();
         PeppolHeader persistedPeppolHeader = messageByMessageNo.getPeppolHeader();
@@ -148,6 +152,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
 
     @Test(groups = {"persistence"})
     public void testFindUndeliveredOutboundMessagesByAccount() throws Exception {
+
         List<MessageMetaData> messages = peppolMessageRepository.findUndeliveredOutboundMessagesByAccount(account.getId());
         assertNotNull(messages, "Null object returned when querying DBMS for undelivered outbound messages");
 
@@ -236,9 +241,10 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         assertEquals(cal.get(Calendar.MONTH), c2.get(Calendar.MONTH));
         assertEquals(cal.get(Calendar.DAY_OF_MONTH), c2.get(Calendar.DAY_OF_MONTH));
 
-        String uuid = "testUUID";
-        //copy from out to in
-        messageIn = peppolMessageRepository.copyOutboundMessageToInbound(this.messageOut, uuid);
+        String newUuid = UUID.randomUUID().toString();
+
+        //copy from out to in while assigning a new UUID
+        messageIn = peppolMessageRepository.copyOutboundMessageToInbound(this.messageOut, newUuid);
 
         MessageMetaData messageInbound = peppolMessageRepository.findMessageByMessageNo(account, messageIn);
         assertNull(messageInbound.getDelivered());
@@ -248,7 +254,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         assertEquals(messageOutbound.getPeppolHeader().getPeppolChannelId(), messageInbound.getPeppolHeader().getPeppolChannelId());
         assertEquals(messageOutbound.getPeppolHeader().getPeppolDocumentTypeId(), messageInbound.getPeppolHeader().getPeppolDocumentTypeId());
         assertEquals(messageOutbound.getPeppolHeader().getProfileId(), messageInbound.getPeppolHeader().getProfileId());
-        assertEquals(messageOutbound.getUuid(), messageInbound.getUuid());
+        assertEquals(newUuid, messageInbound.getUuid());
         assertEquals(messageOutbound.getReceived(), messageInbound.getReceived());
 
         String xmlOut = peppolMessageRepository.findDocumentByMessageNoWithoutAccountCheck(messageOut);

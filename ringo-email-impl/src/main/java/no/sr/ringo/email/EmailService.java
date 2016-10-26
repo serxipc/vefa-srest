@@ -36,7 +36,7 @@ public interface EmailService {
     /**
      * Alerts the REST API customer that there we were unable to deliver the message
      */
-    SentEmailResult sendProcessingErrorNotification(RingoAccount ringoAccount, String errorMessage, MessageNumber messageNumber, String invoiceNumber);
+    SentEmailResult sendProcessingErrorNotification(RingoAccount ringoAccount, String errorMessage, MessageNumber messageNumber);
 
     /**
      * Alerts the Ringo Client customer that there we were trouble uploading one or more files

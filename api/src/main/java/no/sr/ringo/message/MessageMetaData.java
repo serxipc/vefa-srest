@@ -20,11 +20,8 @@ public interface MessageMetaData {
 
     PeppolHeader getPeppolHeader();
 
-    Integer getMsgNo();
+    Long getMsgNo();
 
     String getUuid();
-
-    String getInvoiceNo();
-
 
 }

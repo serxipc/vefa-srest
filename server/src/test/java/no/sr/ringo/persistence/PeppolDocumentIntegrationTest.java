@@ -3,6 +3,7 @@ package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.cenbiimeta.ProfileId;
@@ -22,6 +23,7 @@ import org.testng.annotations.Test;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,13 +53,6 @@ public class PeppolDocumentIntegrationTest {
         account = ObjectMother.getTestAccount();
         participantId = ObjectMother.getTestParticipantIdForSMPLookup();
         messagesToDelete = new ArrayList<MessageNumber>();
-    }
-
-    @AfterMethod(groups = {"persistence"})
-    public void tearDown() throws SQLException {
-        for (MessageNumber messageNumber : messagesToDelete) {
-            databaseHelper.deleteMessage(messageNumber.toInt());
-        }
     }
 
     @Test(groups = {"persistence"})
@@ -109,8 +104,10 @@ public class PeppolDocumentIntegrationTest {
                 CustomizationIdentifier.valueOf(TransactionIdentifier.Predefined.T010_INVOICE_V1 + ":#" + ProfileId.Predefined.PEPPOL_4A_INVOICE_ONLY + "#" + ProfileId.Predefined.EHF_INVOICE),
                 "2.0");
 
-        int message = databaseHelper.createMessage(invoiceDocumentType, invoiceXml, 1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null, null);
-        return registerForDeletion(MessageNumber.create(message));
+        Long message = databaseHelper.createMessage(invoiceDocumentType,
+                PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
+                invoiceXml, 1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), new Date(), new Date());
+        return MessageNumber.create(message);
     }
 
     private MessageNumber createMessageWithCreditNoteDocument() {
@@ -121,8 +118,10 @@ public class PeppolDocumentIntegrationTest {
                 CustomizationIdentifier.valueOf(TransactionIdentifier.Predefined.T014_CREDIT_NOTE_V1 + ":#" + ProfileId.Predefined.PROPOSED_BII_XX + "#" + ProfileId.Predefined.EHF_CREDIT_NOTE),
                 "2.0");
 
-        int messageNumber = databaseHelper.createMessage(creditNoteDocumentType, creditXml, 1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null, null);
-        return registerForDeletion(MessageNumber.create(messageNumber));
+        Long messageNumber = databaseHelper.createMessage(creditNoteDocumentType,
+                PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
+                creditXml, 1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), new Date(), new Date());
+        return MessageNumber.create(messageNumber);
     }
 
     private String invoiceAsXml() {
@@ -131,11 +130,6 @@ public class PeppolDocumentIntegrationTest {
 
     private String creditNoteAsXml() {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"text/xsl\" href=\"xxx.xslt\"?><CreditInvoice>invoice</CreditInvoice>";
-    }
-
-    private MessageNumber registerForDeletion(final MessageNumber messageNumber) {
-        messagesToDelete.add(messageNumber);
-        return messageNumber;
     }
 
 }

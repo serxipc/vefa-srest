@@ -78,7 +78,7 @@ public class InboxResource extends AbstractMessageResource {
         }
 
         MessageMetaData messageMetaDataWithLocators = null;
-        messageMetaDataWithLocators = peppolMessageRepository.findMessageByMessageNo(ringoAccount, msgNo.toInt());
+        messageMetaDataWithLocators = peppolMessageRepository.findMessageByMessageNo(ringoAccount, msgNo.toLong());
         if (!messageMetaDataWithLocators.getTransferDirection().equals(TransferDirection.IN)) {
             return SrResponse.status(Response.Status.NOT_FOUND, "Inbound message number " + msgNoString + " not found");
         }
@@ -133,12 +133,12 @@ public class InboxResource extends AbstractMessageResource {
         }
 
         MessageMetaData messageMetaDataWithLocators = null;
-        messageMetaDataWithLocators = peppolMessageRepository.findMessageByMessageNo(ringoAccount, msgNo.toInt());
+        messageMetaDataWithLocators = peppolMessageRepository.findMessageByMessageNo(ringoAccount, msgNo.toLong());
         if (!messageMetaDataWithLocators.getTransferDirection().equals(TransferDirection.IN)) {
             return SrResponse.status(Response.Status.NOT_FOUND, "Inbound message number " + msgNoString + " not found");
         }
 
-        peppolMessageRepository.markMessageAsRead(msgNo.toInt());
+        peppolMessageRepository.markMessageAsRead(msgNo.toLong());
 
         return createSingleMessageResponse(uriInfo, messageMetaDataWithLocators);
 

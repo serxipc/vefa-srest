@@ -43,9 +43,9 @@ public class DummySender implements PeppolDocumentSender {
         TransmissionReceipt result = transmissionReceipt == null ? new TransmissionReceipt("uuid:" + UUID.randomUUID().toString(), new Date()) : transmissionReceipt;
 
         //if sending to yourself
-        if (messageRepository.isSenderAndReceiverAccountTheSame(message.getMsgNo())){
+        if (messageRepository.isSenderAndReceiverAccountTheSame(message.getMsgNo().longValue())){
             //duplicate out to in message without msg_id and delivered
-            messageRepository.copyOutboundMessageToInbound(message.getMsgNo(), result.getMessageId());
+            messageRepository.copyOutboundMessageToInbound(message.getMsgNo().longValue(), result.getMessageId());
         }
 
         return result;

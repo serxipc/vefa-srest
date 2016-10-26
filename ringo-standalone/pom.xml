@@ -53,16 +53,11 @@
             <groupId>no.difi.oxalis</groupId>
             <artifactId>oxalis-outbound</artifactId>
         </dependency>
-
         <dependency>
             <groupId>no.difi.oxalis</groupId>
-            <artifactId>oxalis-sql</artifactId>
+            <artifactId>oxalis-persistence-impl</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>no.difi.oxalis</groupId>
-            <artifactId>oxalis-jdbc-dbcp</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>commons-lang</groupId>

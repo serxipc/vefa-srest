@@ -38,9 +38,9 @@ public class InboxWithMessageWithoutUUIDTest {
     private final DatabaseHelper databaseHelper;
     private final PeppolMessageRepository peppolMessageRepository;
 
-    private Integer messageNo;
-    private Integer messageNo2;
-    private Integer messageNo3;
+    private Long messageNo;
+    private Long messageNo2;
+    private Long messageNo3;
     private String receiver1 = "9908:976098898";
     private RingoAccount ringoAccount;
     private ParticipantId sender;
@@ -65,13 +65,13 @@ public class InboxWithMessageWithoutUUIDTest {
         //uuid = ''
         messageNo3 = databaseHelper.createMessage(ringoAccount.getId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, "", null);
 
-        //we expect to have only one message
+        // We used to expect only a single message as message_uuid was required to be null in order to be deemed in the /inbox
         Integer inboxCount = peppolMessageRepository.getInboxCount(ringoAccount.getId());
-        assertEquals((Integer) 1, inboxCount);
+        assertEquals(inboxCount,(Integer) 3);
 
         //we expect to have only one message
         List<MessageMetaData> undeliveredInboundMessagesByAccount = peppolMessageRepository.findUndeliveredInboundMessagesByAccount(ringoAccount.getId());
-        assertEquals(1, undeliveredInboundMessagesByAccount.size());
+        assertEquals(undeliveredInboundMessagesByAccount.size(),3);
 
     }
 

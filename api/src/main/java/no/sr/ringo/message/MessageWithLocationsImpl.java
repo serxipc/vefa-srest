@@ -64,16 +64,12 @@ public class MessageWithLocationsImpl implements MessageWithLocations {
         return messageMetaData.getPeppolHeader();
     }
 
-    public Integer getMsgNo() {
+    public Long getMsgNo() {
         return messageMetaData.getMsgNo();
     }
 
     public String getUuid() {
         return messageMetaData.getUuid();
-    }
-
-    public String getInvoiceNo() {
-        return messageMetaData.getInvoiceNo();
     }
 
     public void setMessageMetaData(MessageMetaData messageMetaData) {

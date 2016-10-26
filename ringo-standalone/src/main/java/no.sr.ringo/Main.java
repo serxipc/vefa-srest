@@ -2,7 +2,6 @@ package no.sr.ringo;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import eu.peppol.outbound.transmission.TransmissionModule;
 import eu.peppol.smp.SmpModule;
 import no.sr.ringo.guice.AopJdbcTxManagerModule;
 import no.sr.ringo.guice.RingoDataSourceGuiceModule;
@@ -39,10 +38,10 @@ public class Main {
 
         Injector injector = Guice.createInjector(
                 new AopJdbcTxManagerModule(),
+                // Needs to be modified
                 new RingoDataSourceGuiceModule(params.getDbHost(),params.getDbUser(),params.getDbPass(), params.getDbName()),
                 new RingoServiceModule(params.isProduction()),
                 new SmpModule(),
-                new TransmissionModule(),
                 new SmpModule()
             );
 

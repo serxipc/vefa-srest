@@ -18,8 +18,9 @@ public interface QueueRepository {
      * Creates an entry in outbound_message_queue
      *
      * @return primary_key
+     * @param msgNo
      */
-    OutboundMessageQueueId putMessageOnQueue(Integer msgNo);
+    OutboundMessageQueueId putMessageOnQueue(Long msgNo);
 
     /**
      * Grabs the next bulk of messages waiting in the oubound queue.

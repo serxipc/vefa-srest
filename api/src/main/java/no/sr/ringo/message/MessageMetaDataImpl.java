@@ -11,14 +11,13 @@ import java.util.Date;
  */
 public class MessageMetaDataImpl implements MessageMetaData {
 
-    private Integer msgNo;
+    private Long msgNo;
 
     private AccountId accountId;
     private TransferDirection transferDirection;
     private Date received = new Date();
     private Date delivered;
     private String uuid;
-    private String invoiceNo;
 
     private PeppolHeader peppolHeader;
 
@@ -69,25 +68,17 @@ public class MessageMetaDataImpl implements MessageMetaData {
     }
 
 
-    public Integer getMsgNo() {
+    public Long getMsgNo() {
         return msgNo;
     }
 
-    public void setMsgNo(Integer msgNo) {
+    public void setMsgNo(Long msgNo) {
         this.msgNo = msgNo;
     }
 
 
     public String getUuid() {
         return uuid;
-    }
-
-    public String getInvoiceNo() {
-        return invoiceNo;
-    }
-
-    public void setInvoiceNo(String invoiceNo) {
-        this.invoiceNo = invoiceNo;
     }
 
     public void setUuid(String uuid) {
@@ -103,7 +94,6 @@ public class MessageMetaDataImpl implements MessageMetaData {
 
         if (accountId != null ? !accountId.equals(that.accountId) : that.accountId != null) return false;
         if (delivered != null ? !delivered.equals(that.delivered) : that.delivered != null) return false;
-        if (invoiceNo != null ? !invoiceNo.equals(that.invoiceNo) : that.invoiceNo != null) return false;
         if (msgNo != null ? !msgNo.equals(that.msgNo) : that.msgNo != null) return false;
         if (peppolHeader != null ? !peppolHeader.equals(that.peppolHeader) : that.peppolHeader != null) return false;
         if (received != null ? !received.equals(that.received) : that.received != null) return false;
@@ -121,7 +111,6 @@ public class MessageMetaDataImpl implements MessageMetaData {
         result = 31 * result + (received != null ? received.hashCode() : 0);
         result = 31 * result + (delivered != null ? delivered.hashCode() : 0);
         result = 31 * result + (uuid != null ? uuid.hashCode() : 0);
-        result = 31 * result + (invoiceNo != null ? invoiceNo.hashCode() : 0);
         result = 31 * result + (peppolHeader != null ? peppolHeader.hashCode() : 0);
         return result;
     }
@@ -135,7 +124,6 @@ public class MessageMetaDataImpl implements MessageMetaData {
                 ", received=" + received +
                 ", delivered=" + delivered +
                 ", uuid='" + uuid + '\'' +
-                ", invoiceNo='" + invoiceNo + '\'' +
                 ", peppolHeader=" + peppolHeader +
                 '}';
     }

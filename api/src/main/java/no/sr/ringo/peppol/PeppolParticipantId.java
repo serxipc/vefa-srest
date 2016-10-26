@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
  * Value object for a Peppol Participant id.
  * Date: 1/31/12
  * Time: 2:32 PM
+ *
+ * @deprecated use the ParticipantId from oxalis-api or vefa-peppol
  */
 public class PeppolParticipantId implements Serializable {
 
@@ -101,7 +103,7 @@ public class PeppolParticipantId implements Serializable {
 
         }
         catch (IllegalArgumentException e) {
-            logMessage(log, String.format("Unable to parse peppol participant id '%s'", text), e);
+            log.warn("Unable to parse peppol participant id " + text);
         }
         return null;
     }

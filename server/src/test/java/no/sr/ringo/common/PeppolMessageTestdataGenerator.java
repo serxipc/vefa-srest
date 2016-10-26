@@ -1,5 +1,6 @@
 package no.sr.ringo.common;
 
+import eu.peppol.persistence.ChannelProtocol;
 import no.sr.ringo.account.AccountId;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.message.*;
@@ -53,7 +54,7 @@ public class PeppolMessageTestdataGenerator {
         MessageWithLocationsImpl m = new MessageWithLocationsImpl();
 
         MessageMetaDataImpl metaData = new MessageMetaDataImpl();
-        metaData.setMsgNo(42);
+        metaData.setMsgNo(42L);
         metaData.setReceived(new Date());
         metaData.setTransferDirection(transferDirection);
         metaData.setAccountId(new AccountId(1));
@@ -95,7 +96,7 @@ public class PeppolMessageTestdataGenerator {
     public static PeppolMessage outboxPostRequest() {
 
         PeppolMessage peppolMessage = new PeppolMessage();
-        peppolMessage.getPeppolHeader().setPeppolChannelId(new PeppolChannelId("CH1"));
+        peppolMessage.getPeppolHeader().setPeppolChannelId(new PeppolChannelId(ChannelProtocol.SREST.name()));
         peppolMessage.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.EHF_INVOICE);
         peppolMessage.getPeppolHeader().setProfileId(new ProfileId(PeppolProcessIdAcronym.INVOICE_ONLY.stringValue()));
         peppolMessage.getPeppolHeader().setReceiver(SR_PPID);

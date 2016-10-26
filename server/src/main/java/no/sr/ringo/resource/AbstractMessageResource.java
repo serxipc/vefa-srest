@@ -43,7 +43,7 @@ public abstract class AbstractMessageResource implements UriLocationAware {
         return resourceUriBuilder.build();
     }
 
-    protected URI computeXmlDocumentUri(UriInfo uriInfo, Integer msgNo) {
+    protected URI computeXmlDocumentUri(UriInfo uriInfo, Long msgNo) {
         // https....../oubox
         UriBuilder uriBuilder = getUriBuilderForResource(uriInfo, MessagesResource.class);
 
@@ -54,7 +54,7 @@ public abstract class AbstractMessageResource implements UriLocationAware {
         return documentUri;
     }
 
-    protected URI computeUriForSelf(UriInfo uriInfo, Integer msgNo) {
+    protected URI computeUriForSelf(UriInfo uriInfo, Long msgNo) {
 
         // https....../oubox
         UriBuilder uriBuilder = getUriBuilderForResource(uriInfo, this.getClass());

@@ -32,7 +32,7 @@ public class NoEmailServiceImpl implements EmailService {
     }
 
     @Override
-    public SentEmailResult sendProcessingErrorNotification(RingoAccount ringoAccount, String errorMessage, MessageNumber messageNumber, String invoiceNumber) {
+    public SentEmailResult sendProcessingErrorNotification(RingoAccount ringoAccount, String errorMessage, MessageNumber messageNumber) {
         log.error("Mail not implemented - no processing error notification was sent to user {} for message number {} and error {}", ringoAccount.getUserName().stringValue(), messageNumber.getValue(), errorMessage);
         return null;
     }

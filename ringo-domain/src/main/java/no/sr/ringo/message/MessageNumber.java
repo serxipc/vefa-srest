@@ -11,15 +11,15 @@ public class MessageNumber implements Serializable, Comparable<MessageNumber> {
 
     private static final long serialVersionUID = 2009L;
 
-    private final Integer messageNo;
+    private final Long messageNo;
 
-    private MessageNumber(Integer messageNo) {
+    private MessageNumber(Long messageNo) {
         if (messageNo == null)
             throw new IllegalArgumentException("Message number can not be null");
         this.messageNo = messageNo;
     }
 
-    public static MessageNumber create(Integer messageNo){
+    public static MessageNumber create(Long messageNo){
         if (messageNo == null) {
             throw new IllegalArgumentException("Message number cannot be null");
         } else if (messageNo < 1) {
@@ -28,10 +28,26 @@ public class MessageNumber implements Serializable, Comparable<MessageNumber> {
         return new MessageNumber(messageNo);
     }
 
+
+    /**
+     *
+     * @deprecated use the Long constructor
+     */
+    @Deprecated
+    public static MessageNumber create(Integer messageNo){
+        if (messageNo == null) {
+            throw new IllegalArgumentException("Message number cannot be null");
+        } else if (messageNo < 1) {
+            throw new IllegalArgumentException("Message number cannot be < 0");
+        }
+        return new MessageNumber(new Long(messageNo));
+    }
+
+
     public static MessageNumber valueOf(String s) {
         try {
-            Integer intValue = Integer.valueOf(s);
-            return create(intValue);
+            Long longValue = Long.valueOf(s);
+            return create(longValue);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(String.format("%s is not a valid message number.", s));
 
@@ -42,8 +58,9 @@ public class MessageNumber implements Serializable, Comparable<MessageNumber> {
         return messageNo == null ? "" : messageNo.toString();
     }
     public Integer toInt(){
-        return messageNo;
+        return messageNo.intValue();
     }
+    public Long toLong() { return messageNo; }
 
     @Override
     public boolean equals(Object o) {

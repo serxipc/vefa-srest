@@ -16,11 +16,21 @@ import no.sr.ringo.queue.QueueRepositoryImpl;
 
 /**
  * Bindings for our service objects as used in RingoStandalone.
+ *
+ *
  * e.g.
  * Repositories
  * Stateless UseCases
  * Services
  * Email services etc
+ * <p>
+ * Configured for production or test through the constructor.
+ * </p>
+ *
+ * <p>TODO: This class should be refactored as it violates Google Guice best practice by introducing conditional logic.
+ * This could be fixed by creating an abstract Ringo service module with two decendant classes; one for production and one for non-production.
+ * </p>
+ *
  * @author andy
  * @author thore
  */

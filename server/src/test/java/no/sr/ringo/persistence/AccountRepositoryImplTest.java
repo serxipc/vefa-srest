@@ -142,7 +142,7 @@ public class AccountRepositoryImplTest {
 
     @Test(groups = {"persistence"})
     public void findMessageOwner(){
-        int messageNumber = databaseHelper.createMessage(adamsAccount.getId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null);
+        Long messageNumber = databaseHelper.createMessage(adamsAccount.getId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null);
         assertEquals(adamsAccount, accountRepository.findAccountAsOwnerOfMessage(MessageNumber.create(messageNumber)));
 
     }

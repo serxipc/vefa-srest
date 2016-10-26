@@ -32,7 +32,7 @@ public class HttpStatusCodeIntegrationTest extends AbstractHttpClientServerTest 
     @Inject
     DatabaseHelper databaseHelper;
 
-    private Integer messageId;
+    private Long messageId;
 
     @Test(groups = {"integration"})
     /**

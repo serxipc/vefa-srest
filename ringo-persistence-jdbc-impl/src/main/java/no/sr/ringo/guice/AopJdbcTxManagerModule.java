@@ -14,7 +14,7 @@ public class AopJdbcTxManagerModule extends AbstractModule {
     @Override
     protected void configure() {
 
-        //The tx Manager needs to be a singleton so that the same reference to the threadlocal containing the connection is shared amongst repositories etc.
+        // The tx Manager needs to be a singleton so that the same reference to the threadlocal containing the connection is shared amongst repositories etc.
         bind(JdbcTxManagerImpl.class).in(Scopes.SINGLETON);
         bind(JdbcTxManager.class).to(JdbcTxManagerImpl.class);
 

@@ -250,7 +250,7 @@ public class FetchMessagesUseCase {
         return new Navigation(previous, next);
     }
 
-    public MessageMetaData findOutBoundMessageByMessageNo(RingoAccount ringoAccount, Integer msgNo) {
+    public MessageMetaData findOutBoundMessageByMessageNo(RingoAccount ringoAccount, Long msgNo) {
         MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(ringoAccount, msgNo);
         if (outgoingMessage(messageByMessageNo)) {
             return messageByMessageNo;

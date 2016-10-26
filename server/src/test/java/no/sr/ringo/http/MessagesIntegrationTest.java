@@ -30,7 +30,7 @@ public class MessagesIntegrationTest extends AbstractHttpClientServerTest {
     @Inject
     DatabaseHelper databaseHelper;
 
-    private List<Integer> messageIds = new ArrayList<Integer>();
+    private List<Long> messageIds = new ArrayList<>();
 
     /**
      * Retrieves all messages from both inbox and outbox
@@ -85,14 +85,14 @@ public class MessagesIntegrationTest extends AbstractHttpClientServerTest {
     public void insertSample() throws SQLException {
         final RingoAccount account = ObjectMother.getTestAccount();
         for (int i = 0; i <= 26; i++) {
-            final int message = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), null);
+            final Long message = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), null);
             messageIds.add(message);
         }
     }
 
     @AfterMethod(groups = {"slow"})
     public void deleteSample() throws SQLException {
-        for (Integer messageId : messageIds) {
+        for (Long messageId : messageIds) {
             databaseHelper.deleteMessage(messageId);
         }
     }

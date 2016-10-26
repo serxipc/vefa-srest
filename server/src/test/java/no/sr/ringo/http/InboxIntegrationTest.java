@@ -7,6 +7,9 @@ import no.sr.ringo.client.Message;
 import no.sr.ringo.client.Messages;
 import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.message.MessageMetaData;
+import no.sr.ringo.message.MessageNumber;
+import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.message.TransferDirection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,14 +31,16 @@ import static org.testng.Assert.assertTrue;
  * @author Steinar Overbeck Cook steinar@sendregning.no
  */
 @Guice(moduleFactory = TestModuleFactory.class)
-
 public class InboxIntegrationTest extends AbstractHttpClientServerTest {
 
     static final Logger log = LoggerFactory.getLogger(InboxIntegrationTest.class);
-    private int messageId;
+    private Long messageId;
 
     @Inject
     DatabaseHelper databaseHelper;
+
+    @Inject
+    PeppolMessageRepository peppolMessageRepository;
 
     /**
      * Retrieves messages from inbox
@@ -73,6 +78,8 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
     public void insertSample() throws SQLException {
         final RingoAccount account = ObjectMother.getTestAccount();
         messageId = databaseHelper.createMessage(1, TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), null);
+        MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(MessageNumber.create(messageId));
+
     }
 
     @AfterMethod(groups = {"integration"})

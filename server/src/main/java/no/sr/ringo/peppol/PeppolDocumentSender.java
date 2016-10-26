@@ -1,7 +1,6 @@
 package no.sr.ringo.peppol;
 
 import no.sr.ringo.message.MessageMetaData;
-import org.w3._2009._02.ws_tra.FaultMessage;
 
 import java.util.Date;
 
@@ -19,7 +18,7 @@ public interface PeppolDocumentSender {
      * @param xmlMessage
      * @return a Recipient containing the UUID and the TimeStamp for the delivery
      */
-    TransmissionReceipt sendDocument(MessageMetaData message, String xmlMessage) throws FaultMessage;
+    TransmissionReceipt sendDocument(MessageMetaData message, String xmlMessage) ;
 
 
     /**

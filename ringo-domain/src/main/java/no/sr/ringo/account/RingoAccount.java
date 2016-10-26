@@ -3,6 +3,8 @@ package no.sr.ringo.account;
 import java.util.Date;
 
 /**
+ * Represents a Ringo user account
+ *
  * @author Steinar Overbeck Cook
  *         <p/>
  *         Created by
@@ -12,8 +14,8 @@ import java.util.Date;
  */
 public class RingoAccount {
 
-    private final Customer customer;
     private final AccountId id;
+    private final Customer customer;
     private final String password;
     private final Date created;
     private final UserName username;

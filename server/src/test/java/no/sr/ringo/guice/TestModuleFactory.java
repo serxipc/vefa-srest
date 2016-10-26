@@ -8,6 +8,8 @@ import no.sr.ringo.security.SecretKeyCredentialHandler;
 import no.sr.ringo.smp.RingoSmpLookup;
 import no.sr.ringo.smp.RingoSmpLookupImpl;
 import no.sr.ringo.smp.TestModeSmpLookupImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.IModuleFactory;
 import org.testng.ITestContext;
 
@@ -34,6 +36,7 @@ public class TestModuleFactory implements IModuleFactory {
     private class TestModule extends TestDataSourceModule {
 
         private final boolean mockSmp;
+        public  final Logger log = LoggerFactory.getLogger(TestModule.class);
 
         public TestModule(boolean mockSmp) {
             this.mockSmp = mockSmp;
@@ -50,23 +53,31 @@ public class TestModuleFactory implements IModuleFactory {
             bind(ServletContext.class).toInstance(new FakeServletContext());
 
             bind(CredentialHandler.class).to(SecretKeyCredentialHandler.class);
-            //set up the repositories and transaction handling
+
+            // Grabs the current binder being configured in order for us to wire upt the other modules in the same binder,
+            // like an "include" statement
             Binder binder = binder();
 
+
             //set up the transaction handler
-            new AopJdbcTxManagerModule().configure(binder);
+            binder.install(new AopJdbcTxManagerModule());
 
             //set up the repositories email service etc.
-            new RingoServiceModule().configure(binder);
+            binder.install(new RingoServiceModule());
+
+            binder.install(new SmpInTestModeModule());
 
             //sets up either the real smp lookup or the fake one
             if (mockSmp) {
+                System.err.println("Binding to TestModeSmpLookupImpl");
                 bind(RingoSmpLookup.class).to(TestModeSmpLookupImpl.class);
             } else {
                 bind(RingoSmpLookup.class).to(RingoSmpLookupImpl.class);
             }
 
         }
+
+
 
     }
 

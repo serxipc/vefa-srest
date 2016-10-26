@@ -1,5 +1,8 @@
 package no.sr.ringo.document;
 
+import no.difi.vefa.peppol.sbdh.SbdReader;
+import no.difi.vefa.peppol.sbdh.lang.SbdhException;
+import no.difi.vefa.peppol.sbdh.util.XMLStreamUtils;
 import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.guice.jdbc.JdbcTxManager;
 import no.sr.ringo.guice.jdbc.Repository;
@@ -9,10 +12,18 @@ import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.utils.SbdhUtils;
 
 import javax.inject.Inject;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.sql.*;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
 
 @Repository
 public class DocumentRepositoryImpl implements DocumentRepository {
@@ -29,6 +40,7 @@ public class DocumentRepositoryImpl implements DocumentRepository {
     @Override
     public PeppolDocument getPeppolDocument(RingoAccount ringoAccount, MessageNumber msgNo) {
         try {
+
             return fetchPeppolDocument(ringoAccount, msgNo);
         } catch (SQLException e) {
             throw new IllegalStateException("Unable to retrieve xml document for message no: " + msgNo, e);
@@ -44,7 +56,7 @@ public class DocumentRepositoryImpl implements DocumentRepository {
         if (documentFound(rs)) {
             return extractPeppolDocumentFromResultSet(rs);
         } else {
-            throw new PeppolMessageNotFoundException(msgNo.toInt());
+            throw new PeppolMessageNotFoundException(msgNo.toLong());
         }
     }
 
@@ -59,16 +71,53 @@ public class DocumentRepositoryImpl implements DocumentRepository {
     }
 
     private PeppolDocument extractPeppolDocumentFromResultSet(ResultSet rs) throws SQLException {
-        String documentId = rs.getString("document_id");
-        String xmlMessage = SbdhUtils.removeSbdhEnvelope(rs.getString("xml_message"));
+        String documentId = rs.getString("document_id");  // Document type id
+
+        String payloadUrl = rs.getString("payload_url");
+
+
+        // Loads all the lines from the file and joins them with NL
+        String xmlMessage = null;
+        try (
+            Stream<String> stringStream = Files.lines(Paths.get(URI.create(payloadUrl)), Charset.forName("UTF-8"))){
+            xmlMessage = stringStream.collect(joining(System.lineSeparator()));
+            // Removes the SBDH if there is one.
+            xmlMessage = SbdhUtils.removeSbdhEnvelope(xmlMessage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+/*
+        String xmlMessage;
+        try (SbdReader sbdReader = SbdReader.newInstance(Files.newInputStream(Paths.get(URI.create(payloadUrl)))) ) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            XMLStreamUtils.copy(sbdReader.xmlReader(), baos);
+            xmlMessage = new String(baos.toString("UTF-8"));
+        } catch (SbdhException | IOException | XMLStreamException e) {
+            throw new IllegalStateException("Unable to read payload from " + payloadUrl + "\n" + e.getMessage(),e);
+        }
+*/
+
         return documentFactory.makePeppolDocument(PeppolDocumentTypeId.valueFor(documentId), xmlMessage);
     }
 
     private PreparedStatement prepareSelect(RingoAccount ringoAccount, MessageNumber msgNo, Connection con) throws SQLException {
-        PreparedStatement ps = con.prepareStatement("select document_id, xml_message from message where msg_no=? and account_id = ?");
+        // dumpDbmsMetaData(con);
+
+        PreparedStatement ps = con.prepareStatement("select document_id, payload_url from message where msg_no=? and account_id = ?");
         ps.setInt(1, msgNo.toInt());
         ps.setInt(2, ringoAccount.getId().toInteger());
         return ps;
+    }
+
+    private void dumpDbmsMetaData(Connection con) throws SQLException {
+        ResultSet rs = con.getMetaData().getTables(null, null, null, null);
+        while (rs.next()) {
+            ResultSetMetaData metaData = rs.getMetaData();
+            for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                System.out.println(metaData.getColumnLabel(i) + " :" + rs.getString(i));
+            }
+            System.out.println();
+        }
     }
 
 }

@@ -12,13 +12,11 @@ public class QueuedOutboundMessage {
     private final OutboundMessageQueueId outboundQueueID;
     private final MessageNumber messageNumber;
     private final OutboundMessageQueueState state;
-    private final String invoiceNo;
 
-    public QueuedOutboundMessage(OutboundMessageQueueId outboundQueueID, MessageNumber messageNumber, OutboundMessageQueueState state, String invoiceNo) {
+    public QueuedOutboundMessage(OutboundMessageQueueId outboundQueueID, MessageNumber messageNumber, OutboundMessageQueueState state) {
         this.outboundQueueID = outboundQueueID;
         this.messageNumber = messageNumber;
         this.state = state;
-        this.invoiceNo = invoiceNo;
     }
 
     public OutboundMessageQueueId getOutboundQueueId() {
@@ -33,9 +31,6 @@ public class QueuedOutboundMessage {
         return state;
     }
 
-    public String getInvoiceNo() {
-        return invoiceNo;
-    }
 
     @Override
     public boolean equals(Object o) {

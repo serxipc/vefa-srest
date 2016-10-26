@@ -100,7 +100,7 @@ public class MessageXmlSpec implements XmlSpecification<MessageWithLocations> {
 
         messageMetaData.setDelivered(RingoUtils.getDateTimeFromISO8601String(delivered));
         messageMetaData.setUuid(uuid);
-        messageMetaData.setMsgNo(Integer.parseInt(messageNo));
+        messageMetaData.setMsgNo(Long.parseLong(messageNo));
         messageMetaData.setReceived(RingoUtils.getDateTimeFromISO8601String(received));
         messageMetaData.setTransferDirection(TransferDirection.valueOf(transferDirection));
         messageMetaData.setPeppolHeader(peppolHeader);

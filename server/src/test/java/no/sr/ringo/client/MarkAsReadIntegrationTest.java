@@ -14,6 +14,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 
+import java.util.Date;
 import java.util.UUID;
 
 import static org.testng.Assert.assertFalse;
@@ -43,7 +44,6 @@ public class MarkAsReadIntegrationTest extends AbstractHttpClientServerTest {
     @Inject
     DatabaseHelper databaseHelper;
 
-    private Integer msgNo;
     private RingoAccount account;
 
     private String receiver1 = "9908:976098897";
@@ -51,12 +51,11 @@ public class MarkAsReadIntegrationTest extends AbstractHttpClientServerTest {
     @BeforeTest(groups = {"persistence"})
     public void setUp() throws Exception {
         account = accountRepository.findAccountByParticipantId(ObjectMother.getTestParticipantId());
-        msgNo = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), receiver1, UUID.randomUUID().toString(), null);
+        databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), receiver1, UUID.randomUUID().toString(), new Date());
     }
 
     @AfterTest(groups = {"persistence"})
     public void cleanUp() throws Exception {
-        databaseHelper.deleteMessage(msgNo);
     }
 
     /**
@@ -75,7 +74,7 @@ public class MarkAsReadIntegrationTest extends AbstractHttpClientServerTest {
                 assertTrue(message.markAsRead());
             }
         }
-        //get the messages again
+        // get the messages again
         Messages messages = inbox.getMessages();
 
         //there should be no messages

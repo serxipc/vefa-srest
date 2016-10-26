@@ -172,20 +172,20 @@ public class FetchMessagesUseCaseTest {
 
     @Test
     public void testFindOutboundMessage() throws Exception {
-        expect(mockPeppolMessageRepository.findMessageByMessageNo(ringoAccount,1)).andStubReturn(validOutboundMessage());
+        expect(mockPeppolMessageRepository.findMessageByMessageNo(ringoAccount,1L)).andStubReturn(validOutboundMessage());
         replayMocks();
 
-        MessageMetaData outBoundMessageByMessageNo = useCase.findOutBoundMessageByMessageNo(ringoAccount, 1);
+        MessageMetaData outBoundMessageByMessageNo = useCase.findOutBoundMessageByMessageNo(ringoAccount, 1L);
 
         assertNotNull(outBoundMessageByMessageNo);
     }
 
     @Test(expectedExceptions = PeppolMessageNotFoundException.class)
     public void testFindOutboundMessageException() throws Exception {
-        expect(mockPeppolMessageRepository.findMessageByMessageNo(ringoAccount,1)).andStubReturn(invalidOutboundMessage());
+        expect(mockPeppolMessageRepository.findMessageByMessageNo(ringoAccount,1L)).andStubReturn(invalidOutboundMessage());
         replayMocks();
 
-        MessageMetaData outBoundMessageByMessageNo = useCase.findOutBoundMessageByMessageNo(ringoAccount, 1);
+        MessageMetaData outBoundMessageByMessageNo = useCase.findOutBoundMessageByMessageNo(ringoAccount, 1L);
 
         assertNotNull(outBoundMessageByMessageNo);
     }

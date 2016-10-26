@@ -3,6 +3,7 @@ package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.WellKnownParticipant;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.AccountRepository;
 import no.sr.ringo.account.RingoAccount;
@@ -12,6 +13,7 @@ import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.message.SearchParams;
 import no.sr.ringo.message.TransferDirection;
+import no.sr.ringo.peppol.PeppolParticipantId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -42,10 +44,10 @@ public class MessageSearchPersistenceTest {
 
     private RingoAccount ringoAccount;
     private ParticipantId participantId;
-    private Integer firstMessageNo;
-    private Integer secondMessageNo;
-    String receiver1 = "9908:976098898";
-    String receiver2 = "9908:976098899";
+    private Long firstMessageNo;
+    private Long secondMessageNo;
+    String receiver1 = WellKnownParticipant.DIFI.stringValue();
+    String receiver2 = WellKnownParticipant.DIFI_TEST.stringValue();
 
     @Inject
     public MessageSearchPersistenceTest(AccountRepository accountRepository, PeppolMessageRepository peppolMessageRepository, DatabaseHelper databaseHelper) {
@@ -219,6 +221,9 @@ public class MessageSearchPersistenceTest {
         participantId = ObjectMother.getAdamsParticipantId();
         ringoAccount = accountRepository.createAccount(ObjectMother.getAdamsAccount(), participantId);
         final String sender = participantId.stringValue();
+
+        boolean validNorwegianOrgNum = PeppolParticipantId.isValidNorwegianOrgNum(receiver1);
+
         firstMessageNo = databaseHelper.createMessage(ringoAccount.getId().toInteger(), TransferDirection.IN, sender, receiver1, UUID.randomUUID().toString(), null);
         secondMessageNo = databaseHelper.createMessage(ringoAccount.getId().toInteger(), TransferDirection.OUT, sender, receiver2, UUID.randomUUID().toString(), null);
     }

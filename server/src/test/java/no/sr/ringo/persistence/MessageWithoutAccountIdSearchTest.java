@@ -49,6 +49,8 @@ public class MessageWithoutAccountIdSearchTest {
 
     @AfterMethod
     public void tearDown() throws Exception {
+        List<MessageMetaData> messagesWithoutAccountId = peppolMessageRepository.findMessagesWithoutAccountId();
+
         databaseHelper.deleteAllMessagesWithoutAccountId();
     }
 }

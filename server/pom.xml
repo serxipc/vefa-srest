@@ -215,6 +215,12 @@
             <artifactId>oxalis-outbound</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.difi.oxalis</groupId>
+            <artifactId>oxalis-persistence-impl</artifactId>
+        </dependency>
+
+
         <!-- Logging -->
 
         <dependency>

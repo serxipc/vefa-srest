@@ -2,10 +2,13 @@
 package no.sr.ringo.common;
 
 import com.google.inject.Inject;
+import eu.peppol.identifier.MessageId;
+import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.PeppolProcessTypeId;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
+import eu.peppol.persistence.*;
 import no.sr.ringo.account.*;
 import no.sr.ringo.cenbiimeta.ProfileId;
-import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.guice.jdbc.JdbcTxManager;
 import no.sr.ringo.guice.jdbc.Repository;
 import no.sr.ringo.message.OutboundMessageQueueState;
@@ -16,9 +19,16 @@ import no.sr.ringo.queue.OutboundMessageQueueId;
 import no.sr.ringo.queue.QueuedOutboundMessageError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.Guice;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +39,6 @@ import java.util.List;
  *
  * @author Adam Mscisz adam@sendregning.no
  */
-@Guice(moduleFactory = TestModuleFactory.class)
 @Repository
 public class DatabaseHelper {
 
@@ -37,83 +46,77 @@ public class DatabaseHelper {
     private final AccountRepository accountRepository;
     private final JdbcTxManager jdbcTxManager;
 
+    // General persistence layer
+    private final MessageRepository messageRepository;
+
     @Inject
-    public DatabaseHelper(AccountRepository accountRepository, JdbcTxManager jdbcTxManager) {
+    public DatabaseHelper(AccountRepository accountRepository, JdbcTxManager jdbcTxManager, MessageRepository messageRepository) {
         this.accountRepository = accountRepository;
         this.jdbcTxManager = jdbcTxManager;
+        this.messageRepository = messageRepository;
     }
 
 
-    public int createMessage(PeppolDocumentTypeId documentId, String message, Integer accountId, TransferDirection direction, String senderValue, String receiverValue, final String uuid, Date delivered, Date received) {
-        Connection con = null;
-        String sql = "insert into message (account_id, direction,received, delivered, sender, receiver, channel, message_uuid, document_id, process_id, xml_message) values(?,?,?,?,?,?,?,?,?,?,?)";
+    public Long createMessage(PeppolDocumentTypeId documentId, PeppolProcessTypeId processTypeId, String message, Integer accountId, TransferDirection direction,
+                              String senderValue, String receiverValue,
+                              final String uuid, Date delivered, Date received) {
+
+        if (received == null) {
+            throw new IllegalArgumentException("received date is required");
+        }
+
+        MessageMetaData.Builder builder = new MessageMetaData.Builder(Direction.valueOf(direction.name()),
+                new ParticipantId(senderValue), new ParticipantId(receiverValue), eu.peppol.identifier.PeppolDocumentTypeId.valueOf(documentId.stringValue()),
+                ChannelProtocol.SREST);
+
+        if (uuid != null && uuid.trim().length() > 0) {
+            builder.messageId(new MessageId(uuid));
+        }
+        if (delivered != null) {
+            builder.delivered(LocalDateTime.ofInstant(delivered.toInstant(), ZoneId.systemDefault()));
+        }
+        if (received != null) {
+            builder.received(LocalDateTime.ofInstant(received.toInstant(), ZoneId.systemDefault()));
+        }
+        if (processTypeId != null) {
+            builder.processTypeId(processTypeId);
+        }
+
+        if (accountId != null) {
+            builder.accountId(accountId);
+        }
+        MessageMetaData messageMetaData = builder.build();
 
         try {
-            con = jdbcTxManager.getConnection();
-            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            if (accountId != null) {
-                ps.setInt(1, accountId);
-            } else {
-                ps.setObject(1, null);
-            }
-            ps.setString(2, direction.name());
-
-            if (received == null) {
-                ps.setTimestamp(3, new Timestamp(new Date().getTime()));
-            } else {
-                ps.setTimestamp(3, new Timestamp(received.getTime()));
-            }
-            if (delivered == null) {
-                ps.setNull(4, Types.TIMESTAMP);
-            } else {
-                ps.setTimestamp(4, new Timestamp(delivered.getTime()));
-            }
-
-            ps.setString(5, senderValue);
-            ps.setString(6, receiverValue);
-            ps.setString(7, "CH-TEST");
-            if (uuid == null) {
-                ps.setNull(8, Types.VARCHAR);
-            } else {
-                ps.setString(8, uuid);
-            }
-            ps.setString(9, documentId.stringValue());
-            ps.setString(10, PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId().toString());
-            ps.setString(11, message);
-
-            ps.execute();
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                int msgNo = rs.getInt(1);
-
-                return msgNo;
-            } else {
-                throw new IllegalStateException("Unable to obtain generated key after insert.");
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException(sql + " failed " + e, e);
+            return messageRepository.saveInboundMessage(messageMetaData, new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8"))));
+        } catch (OxalisMessagePersistenceException e) {
+            throw new IllegalStateException("Unable to save message " + e.getMessage());
         }
+
     }
 
     /**
      * Helper method creating simple message
      */
-    public int createMessage(Integer accountId, TransferDirection direction, String senderValue, String receiverValue, final String uuid, Date delivered) {
+    public Long createMessage(Integer accountId, TransferDirection direction, String senderValue, String receiverValue, final String uuid, Date delivered) {
         PeppolDocumentTypeId invoiceDocumentType = new PeppolDocumentTypeId(
                 RootNameSpace.INVOICE,
                 LocalName.Invoice,
                 CustomizationIdentifier.valueOf(TransactionIdentifier.Predefined.T010_INVOICE_V1 + ":#" + ProfileId.Predefined.PEPPOL_4A_INVOICE_ONLY + "#" + ProfileId.Predefined.EHF_INVOICE),
                 "2.0");
-        return createMessage(invoiceDocumentType, "<test>\u00E5</test>", accountId, direction, senderValue, receiverValue, uuid, delivered, new Date());
+        PeppolProcessTypeId processTypeId = PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId();
+
+        return createMessage(invoiceDocumentType, processTypeId, "<test>\u00E5</test>", accountId, direction, senderValue, receiverValue, uuid, delivered, new Date());
     }
 
-    public int createMessage(Integer accountId, TransferDirection direction, String senderValue, String receiverValue, final String uuid, Date delivered, Date received) {
+    public Long createMessage(Integer accountId, TransferDirection direction, String senderValue, String receiverValue, final String uuid, Date delivered, Date received) {
         PeppolDocumentTypeId invoiceDocumentType = new PeppolDocumentTypeId(
                 RootNameSpace.INVOICE,
                 LocalName.Invoice,
                 CustomizationIdentifier.valueOf(TransactionIdentifier.Predefined.T010_INVOICE_V1 + ":#" + ProfileId.Predefined.PEPPOL_4A_INVOICE_ONLY + "#" + ProfileId.Predefined.EHF_INVOICE),
                 "2.0");
-        return createMessage(invoiceDocumentType, "<test>\u00E5</test>", accountId, direction, senderValue, receiverValue, uuid, delivered, received);
+        PeppolProcessTypeId processTypeId = PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId();
+        return createMessage(invoiceDocumentType, processTypeId, "<test>\u00E5</test>", accountId, direction, senderValue, receiverValue, uuid, delivered, received);
     }
 
 
@@ -123,7 +126,7 @@ public class DatabaseHelper {
      * @param msgNo
      */
 
-    public void deleteMessage(Integer msgNo) {
+    public void deleteMessage(Long msgNo) {
 
         if (msgNo == null) {
             return;
@@ -136,7 +139,7 @@ public class DatabaseHelper {
             con = jdbcTxManager.getConnection();
 
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, msgNo);
+            ps.setLong(1, msgNo);
 
             ps.executeUpdate();
 
@@ -151,7 +154,7 @@ public class DatabaseHelper {
      * @param date
      * @param msgNo
      */
-    public void updateMessageDate(Date date, Integer msgNo) {
+    public void updateMessageDate(Date date, Long msgNo) {
         Connection con = null;
         String sql = "update message set received = ? where msg_no = ?";
 
@@ -160,7 +163,7 @@ public class DatabaseHelper {
 
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setTimestamp(1, new Timestamp(date.getTime()));
-            ps.setInt(2, msgNo);
+            ps.setLong(2, msgNo);
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -180,7 +183,14 @@ public class DatabaseHelper {
         try {
             con = jdbcTxManager.getConnection();
 
-            PreparedStatement ps = con.prepareStatement(sql);
+            // Delete artifacts first.
+            PreparedStatement ps = con.prepareStatement("select * from message where account_id = ?");
+            ps.setInt(1, account.getId().toInteger());
+            ResultSet rs = ps.executeQuery();
+            deleteArtifacts(rs);
+            ps.close();
+
+            ps = con.prepareStatement(sql);
             ps.setInt(1, account.getId().toInteger());
 
             ps.executeUpdate();
@@ -196,8 +206,13 @@ public class DatabaseHelper {
 
         try {
             con = jdbcTxManager.getConnection();
+            // Delete artifacts first.
+            PreparedStatement ps = con.prepareStatement("select * from message where account_id is null");
+            ResultSet rs = ps.executeQuery();
+            deleteArtifacts(rs);
+            ps.close();
 
-            PreparedStatement ps = con.prepareStatement(sql);
+            ps = con.prepareStatement(sql);
 
             ps.executeUpdate();
 
@@ -206,7 +221,27 @@ public class DatabaseHelper {
         }
     }
 
-    public void updateMessageReceiver(int msgNo, String receiver) {
+    private void deleteIfExists(String payloadUrl) throws IOException {
+        if (payloadUrl != null) {
+            Files.deleteIfExists(Paths.get(URI.create(payloadUrl)));
+        }
+    }
+
+    private void deleteArtifacts(ResultSet rs) {
+        try {
+            while (rs.next()) {
+                deleteIfExists(rs.getString("payload_url"));
+                deleteIfExists(rs.getString("native_evidence_url"));
+                deleteIfExists(rs.getString("generic_evidence_url"));
+
+            }
+        } catch (IOException | SQLException e) {
+            throw new IllegalStateException("Error while deleting artifacts" + e, e);
+        }
+
+    }
+
+    public void updateMessageReceiver(Long msgNo, String receiver) {
 
         Connection con = null;
         String sql = "update message set receiver = ? where msg_no = ?";
@@ -216,7 +251,7 @@ public class DatabaseHelper {
 
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, receiver);
-            ps.setInt(2, msgNo);
+            ps.setLong(2, msgNo);
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -409,7 +444,7 @@ public class DatabaseHelper {
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new QueuedMessage(rs.getInt("id"), rs.getInt("msg_no"), OutboundMessageQueueState.valueOf(rs.getString("state")));
+                return new QueuedMessage(rs.getInt("id"), rs.getLong("msg_no"), OutboundMessageQueueState.valueOf(rs.getString("state")));
             }
         } catch (SQLException e) {
             throw new IllegalStateException("error fetching fault messages", e);
@@ -417,18 +452,18 @@ public class DatabaseHelper {
         return null;
     }
 
-    public QueuedMessage getQueuedMessageByMsgNo(Integer msgNo) {
+    public QueuedMessage getQueuedMessageByMsgNo(Long msgNo) {
         Connection con = null;
         String sql = "select * from outbound_message_queue where msg_no = ?";
 
         try {
             con = jdbcTxManager.getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, msgNo);
+            ps.setLong(1, msgNo);
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new QueuedMessage(rs.getInt("id"), rs.getInt("msg_no"), OutboundMessageQueueState.valueOf(rs.getString("state")));
+                return new QueuedMessage(rs.getInt("id"), rs.getLong("msg_no"), OutboundMessageQueueState.valueOf(rs.getString("state")));
             }
         } catch (SQLException e) {
             throw new IllegalStateException("error fetching fault messages", e);
@@ -436,14 +471,14 @@ public class DatabaseHelper {
         return null;
     }
 
-    public Integer putMessageOnQueue(int msgId) {
+    public Integer putMessageOnQueue(Long msgId) {
         Connection con = null;
         String sql = "insert into outbound_message_queue (msg_no, state) values (?,?)";
 
         try {
             con = jdbcTxManager.getConnection();
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, msgId);
+            ps.setLong(1, msgId);
             ps.setString(2, OutboundMessageQueueState.QUEUED.name());
 
             ps.execute();
@@ -513,16 +548,16 @@ public class DatabaseHelper {
 
     public class QueuedMessage {
         private final Integer queueId;
-        private final Integer msgNo;
+        private final Long msgNo;
         private final OutboundMessageQueueState status;
 
-        public QueuedMessage(Integer queueId, Integer msgNo, OutboundMessageQueueState status) {
+        public QueuedMessage(Integer queueId, Long msgNo, OutboundMessageQueueState status) {
             this.queueId = queueId;
             this.msgNo = msgNo;
             this.status = status;
         }
 
-        public Integer getMsgNo() {
+        public Long getMsgNo() {
             return msgNo;
         }
 

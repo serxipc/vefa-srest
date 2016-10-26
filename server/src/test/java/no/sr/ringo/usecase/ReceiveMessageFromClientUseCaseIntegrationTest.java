@@ -75,8 +75,8 @@ public class ReceiveMessageFromClientUseCaseIntegrationTest {
         assertEquals(message.getMsgNo(), queuedMessage.getMsgNo());
         assertEquals(OutboundMessageQueueState.QUEUED, queuedMessage.getState());
 
-        MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(MessageNumber.create(message.getMsgNo()));
-        assertNotNull(messageByMessageNo.getInvoiceNo());
+        MessageMetaData metaData = peppolMessageRepository.findMessageByMessageNo(MessageNumber.create(message.getMsgNo()));
+        assertNotNull(metaData);
 
     }
 

@@ -23,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static org.testng.Assert.*;
 
@@ -101,10 +102,10 @@ public class PeppolMessageRepositoryImplStatisticsIntegrationTest {
     }
 
     private void createTestMessages() {
-        databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), "test", sentDate, receivedDate);
-        databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), "test", downloadedDate, receivedDate);
-        databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), null, null, oldestUndeliveredDate);
-        databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), null, null, oldestUndeliveredDate);
+        databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), sentDate, receivedDate);
+        databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), downloadedDate, receivedDate);
+        databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null, oldestUndeliveredDate);
+        databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null, oldestUndeliveredDate);
     }
 
     /**

@@ -2,9 +2,15 @@ package no.sr.ringo.guice;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import eu.peppol.persistence.MessageRepository;
+import eu.peppol.persistence.jdbc.MessageRepositoryH2Impl;
+import eu.peppol.persistence.jdbc.util.InMemoryDatabaseHelper;
 import no.sr.ringo.common.DatabaseHelper;
 import org.h2.jdbcx.JdbcDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 /**
@@ -19,9 +25,11 @@ import javax.sql.DataSource;
  */
 public class TestDataSourceModule extends AbstractModule {
 
+    public static final Logger log = LoggerFactory.getLogger(TestDataSourceModule.class);
     @Override
     protected void configure() {
         bind(DatabaseHelper.class);
+        bind(MessageRepository.class).to(MessageRepositoryH2Impl.class);
     }
 
     /** Use with Mysql */
@@ -37,13 +45,12 @@ public class TestDataSourceModule extends AbstractModule {
     }
 
     @Provides
+    @Singleton
     public DataSource provideH2DataSource() {
-        JdbcDataSource dataSource = new JdbcDataSource();
-        dataSource.setURL("jdbc:h2:~/.oxalis/ap;AUTO_SERVER=TRUE");
-        dataSource.setUser("sa");
-        dataSource.setPassword("");
+        log.warn("Creating in memory database and populating the schema. This should happen only once!");
+        return InMemoryDatabaseHelper.createInMemoryDatabase();
 
-        return dataSource;
     }
+
 
 }

@@ -2,27 +2,14 @@
 package no.sr.ringo.queue;
 
 import com.google.inject.Inject;
-import no.sr.ringo.account.AccountId;
-import no.sr.ringo.account.RingoAccount;
-import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.guice.jdbc.JdbcTxManager;
 import no.sr.ringo.guice.jdbc.Repository;
 import no.sr.ringo.message.*;
-import no.sr.ringo.message.statistics.InboxStatistics;
-import no.sr.ringo.message.statistics.OutboxStatistics;
-import no.sr.ringo.message.statistics.RingoAccountStatistics;
-import no.sr.ringo.message.statistics.RingoStatistics;
-import no.sr.ringo.peppol.PeppolChannelId;
-import no.sr.ringo.peppol.PeppolDocumentTypeId;
-import no.sr.ringo.peppol.PeppolHeader;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.transform.dom.DOMResult;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,26 +21,26 @@ public class QueueRepositoryImpl implements QueueRepository {
 
     static final Logger log = LoggerFactory.getLogger(QueueRepositoryImpl.class);
 
-    final JdbcTxManager dataSource;
+    final JdbcTxManager jdbcTxManager;
 
     @Inject
     public QueueRepositoryImpl(JdbcTxManager jdbcTxManager) {
-        this.dataSource = jdbcTxManager;
+        this.jdbcTxManager = jdbcTxManager;
     }
 
     @Override
-    public OutboundMessageQueueId putMessageOnQueue(Integer msgNo) {
+    public OutboundMessageQueueId putMessageOnQueue(Long msgNo) {
         Connection con = null;
         if (msgNo == null) {
             throw new IllegalStateException("Msg_no required for message to be queued");
         }
 
         try {
-            con = dataSource.getConnection();
+            con = jdbcTxManager.getConnection();
             PreparedStatement ps = con.prepareStatement("insert into outbound_message_queue (msg_no, state) " +
                     " values (?,?) ", Statement.RETURN_GENERATED_KEYS);
 
-            ps.setInt(1, msgNo);
+            ps.setLong(1, msgNo);
             ps.setString(2, OutboundMessageQueueState.QUEUED.name());
 
             ps.execute();
@@ -76,11 +63,11 @@ public class QueueRepositoryImpl implements QueueRepository {
 
         List<QueuedOutboundMessage> result = new ArrayList<QueuedOutboundMessage>();
 
-        String sql = "select q.id, q.msg_no, q.state, m.invoice_no from outbound_message_queue q join message m on (q.msg_no = m.msg_no) where state = ?";
+        String sql = "select q.id, q.msg_no, q.state from outbound_message_queue q join message m on (q.msg_no = m.msg_no) where state = ?";
         if (returnLimit > 0) sql = sql + " limit " + returnLimit;
 
         try {
-            Connection con = dataSource.getConnection();
+            Connection con = jdbcTxManager.getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, OutboundMessageQueueState.QUEUED.name());
             ResultSet rs = ps.executeQuery();
@@ -89,9 +76,8 @@ public class QueueRepositoryImpl implements QueueRepository {
                 OutboundMessageQueueId id = new OutboundMessageQueueId(rs.getInt("id"));
                 MessageNumber messageNumber = MessageNumber.create(rs.getInt("msg_no"));
                 OutboundMessageQueueState state = OutboundMessageQueueState.valueOf(rs.getString("state"));
-                String invoiceNo = rs.getString("invoice_no");
 
-                result.add(new QueuedOutboundMessage(id, messageNumber, state, invoiceNo));
+                result.add(new QueuedOutboundMessage(id, messageNumber, state));
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Unable to get queued messages", e);
@@ -103,9 +89,9 @@ public class QueueRepositoryImpl implements QueueRepository {
     @Override
     public QueuedOutboundMessage getQueuedMessageById(OutboundMessageQueueId outboundQueueID) {
 
-        String sql = "select q.id, q.msg_no, q.state, m.invoice_no from outbound_message_queue q join message m on (q.msg_no = m.msg_no) where state = ? and id = ?";
+        String sql = "select q.id, q.msg_no, q.state from outbound_message_queue q join message m on (q.msg_no = m.msg_no) where state = ? and id = ?";
         try {
-            Connection con = dataSource.getConnection();
+            Connection con = jdbcTxManager.getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, OutboundMessageQueueState.QUEUED.name());
             ps.setInt(2, outboundQueueID.toInt());
@@ -115,9 +101,8 @@ public class QueueRepositoryImpl implements QueueRepository {
                 OutboundMessageQueueId id = new OutboundMessageQueueId(rs.getInt("id"));
                 MessageNumber messageNumber = MessageNumber.create(rs.getInt("msg_no"));
                 OutboundMessageQueueState state = OutboundMessageQueueState.valueOf(rs.getString("state"));
-                String  invoiceNo = rs.getString("invoice_no");
 
-                return new QueuedOutboundMessage(id, messageNumber, state, invoiceNo);
+                return new QueuedOutboundMessage(id, messageNumber, state);
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Unable to get queued messages", e);
@@ -133,7 +118,7 @@ public class QueueRepositoryImpl implements QueueRepository {
         String sql = "update outbound_message_queue set state = ? where id = ?";
 
         try {
-            con = dataSource.getConnection();
+            con = jdbcTxManager.getConnection();
 
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, state.name());
@@ -153,7 +138,7 @@ public class QueueRepositoryImpl implements QueueRepository {
         String sql = "insert into outbound_message_queue_error (queue_id, details, message, stacktrace) values (?, ?, ?, ?);";
 
         try {
-            con = dataSource.getConnection();
+            con = jdbcTxManager.getConnection();
 
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, error.getOutboundQueueId().toInt());
@@ -180,7 +165,7 @@ public class QueueRepositoryImpl implements QueueRepository {
         String sql = "update outbound_message_queue set state = ? where id = ? and state = ?";
 
         try {
-            con = dataSource.getConnection();
+            con = jdbcTxManager.getConnection();
 
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, OutboundMessageQueueState.IN_PROGRESS.name());
