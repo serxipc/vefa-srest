@@ -2,9 +2,9 @@ package no.sr.ringo.guice;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.SrAccountNotFoundException;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.account.RingoAccountProvider;
-import no.sr.ringo.account.SrAccountNotFoundException;
 import no.sr.ringo.security.CredentialHandler;
 import no.sr.ringo.security.SecretKeyCredentialHandler;
 
@@ -36,7 +36,7 @@ public class RingoAccountModule extends AbstractModule {
      * @return
      */
     @Provides
-    public RingoAccount getRingoAccount(Principal principal, RingoAccountProvider ringoAccountProvider){
+    public Account getRingoAccount(Principal principal, RingoAccountProvider ringoAccountProvider){
         try {
             return ringoAccountProvider.getAccount(principal);
         } catch (SrAccountNotFoundException e) {

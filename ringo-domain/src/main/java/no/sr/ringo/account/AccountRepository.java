@@ -1,6 +1,11 @@
 package no.sr.ringo.account;
 
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.persistence.api.SrAccountNotFoundException;
+import eu.peppol.persistence.api.UserName;
+import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.api.account.Customer;
 import no.sr.ringo.message.MessageNumber;
 
 /**
@@ -13,9 +18,9 @@ import no.sr.ringo.message.MessageNumber;
  */
 public interface AccountRepository {
 
-    public RingoAccount findAccountById(final AccountId id) throws SrAccountNotFoundException;
+    public Account findAccountById(final AccountId id) throws SrAccountNotFoundException;
 
-    RingoAccount findAccountByParticipantId(final ParticipantId participantId);
+    Account findAccountByParticipantId(final ParticipantId participantId);
 
     /**
      * Locates an account, which you expect to exist by the username.
@@ -25,7 +30,7 @@ public interface AccountRepository {
      *
      * @see #accountExists(UserName) to figure out whether an account exists or not.
      */
-    RingoAccount findAccountByUsername(final UserName username) throws SrAccountNotFoundException;
+    Account findAccountByUsername(final UserName username) throws SrAccountNotFoundException;
 
     /**
      * Creates an account with the provided details. if the account already
@@ -34,11 +39,11 @@ public interface AccountRepository {
      * Default client role will be added
      *
      * If participantId is not null, account_receiver entry will also be created
-     * @param ringoAccount
+     * @param account
      * @param participantId if not null will be used in account_receiver
      * @return
      */
-    RingoAccount createAccount(final RingoAccount ringoAccount,final ParticipantId participantId);
+    Account createAccount(final Account account,final ParticipantId participantId);
 
     /**
      * Persists new customer
@@ -66,5 +71,5 @@ public interface AccountRepository {
 
     void updatePasswordOnAccount(final AccountId id, final String hash);
 
-    RingoAccount findAccountAsOwnerOfMessage(MessageNumber messageNumber);
+    Account findAccountAsOwnerOfMessage(MessageNumber messageNumber);
 }

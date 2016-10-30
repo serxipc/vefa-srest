@@ -1,6 +1,6 @@
 package no.sr.ringo.message;
 
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.ProfileIdResolver;
 import no.sr.ringo.common.RingoConstants;
@@ -30,13 +30,13 @@ public class PeppolMessageCreator {
     static final Logger log = LoggerFactory.getLogger(PeppolMessageCreator.class);
 
     RingoSmpLookup ringoSmpLookup;
-    RingoAccount ringoAccount;
+    Account account;
     PeppolMessage peppolMessage;
     OutboundPostParams postParams;
 
-    public PeppolMessageCreator(RingoSmpLookup ringoSmpLookup, RingoAccount ringoAccount, OutboundPostParams postParams) {
+    public PeppolMessageCreator(RingoSmpLookup ringoSmpLookup, Account account, OutboundPostParams postParams) {
         this.ringoSmpLookup = ringoSmpLookup;
-        this.ringoAccount = ringoAccount;
+        this.account = account;
         this.peppolMessage = new PeppolMessage();
         this.postParams = postParams;
     }

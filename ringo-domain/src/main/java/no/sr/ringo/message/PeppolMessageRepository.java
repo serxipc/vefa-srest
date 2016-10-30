@@ -1,7 +1,7 @@
 package no.sr.ringo.message;
 
-import no.sr.ringo.account.AccountId;
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountId;
 import no.sr.ringo.message.statistics.RingoStatistics;
 
 import java.util.Date;
@@ -23,18 +23,7 @@ public interface PeppolMessageRepository {
      * @param peppolMessage
      * @return the surrogate primary key of the persisted message.
      */
-    MessageWithLocations persistOutboundMessage(RingoAccount ringoAccountId, PeppolMessage peppolMessage);
-
-    /**
-     * Persists the supplied PeppolMessage for the account and supply additional reception data
-     *
-     * @param ringoAccount
-     * @param peppolMessage
-     * @param remoteHost
-     * @param apName
-     * @return the surrogate primary key of the persisted message.
-     */
-    MessageWithLocations persistInboundMessage(RingoAccount ringoAccount, PeppolMessage peppolMessage, String remoteHost, String apName);
+    MessageWithLocations persistOutboundMessage(Account ringoAccountId, PeppolMessage peppolMessage);
 
     /**
      * Retrieves message by primary key
@@ -46,12 +35,12 @@ public interface PeppolMessageRepository {
 
     /**
      * Retrieves message by primary key
-     * @param ringoAccount -  account_id in message
+     * @param account -  account_id in message
      * @param messageNo - primary key in message table
      * @return
      * @throws PeppolMessageNotFoundException
      */
-    MessageMetaData findMessageByMessageNo(RingoAccount ringoAccount, Long messageNo) throws PeppolMessageNotFoundException;
+    MessageMetaData findMessageByMessageNo(Account account, Long messageNo) throws PeppolMessageNotFoundException;
 
     /**
      * Gives the count of messages in the inbox for the supplied account

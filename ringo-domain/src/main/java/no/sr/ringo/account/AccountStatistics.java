@@ -1,6 +1,6 @@
 package no.sr.ringo.account;
 
-import no.sr.ringo.message.TransferDirection;
+import eu.peppol.persistence.TransferDirection;
 
 import java.util.Date;
 

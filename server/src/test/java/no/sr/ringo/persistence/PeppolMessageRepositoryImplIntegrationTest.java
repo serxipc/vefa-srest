@@ -2,10 +2,9 @@ package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
-import no.difi.vefa.peppol.common.model.Header;
-import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.common.PeppolMessageTestdataGenerator;
@@ -52,7 +51,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     private final DocumentRepository documentRepository;
     private final DatabaseHelper databaseHelper;
 
-    private RingoAccount account = ObjectMother.getTestAccount();
+    private Account account = ObjectMother.getTestAccount();
     private ParticipantId participantId = ObjectMother.getTestParticipantIdForSMPLookup();
 
     private Long messageId;

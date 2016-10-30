@@ -3,6 +3,11 @@ package no.sr.ringo.account;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.persistence.api.UserName;
+import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.api.account.Customer;
+import eu.peppol.persistence.api.account.CustomerId;
 import no.sr.ringo.RingoConstant;
 import no.sr.ringo.common.MessageHelper;
 import no.sr.ringo.guice.TestModuleFactory;
@@ -95,9 +100,9 @@ public class RegisterUseCaseTest {
         Customer customer = new Customer(customerId.toInteger(), "name", new Date(), null, "email", "phone", "country", "add1", "add2", "zip", "city", orgNo);
 
         expect(mockAccountRepository.createCustomer("name", "email", "phone", "country", "contactPerson", "add1", "add2", "zip", "city", orgNo)).andReturn(customer);
-        RingoAccount ra = new RingoAccount(customer, new UserName("username"), new Date(), "password", new AccountId(1), false, true);
+        Account ra = new Account(customer, new UserName("username"), new Date(), "password", new AccountId(1), false, true);
 
-        expect(mockAccountRepository.createAccount(isA(RingoAccount.class), EasyMock.<ParticipantId>isNull())).andReturn(ra);
+        expect(mockAccountRepository.createAccount(isA(Account.class), EasyMock.<ParticipantId>isNull())).andReturn(ra);
 
         mockAccountRepository.updatePasswordOnAccount(isA(AccountId.class), isA(String.class));
         expectLastCall();

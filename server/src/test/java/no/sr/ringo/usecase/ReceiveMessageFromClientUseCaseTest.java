@@ -1,10 +1,10 @@
 package no.sr.ringo.usecase;
 
+import eu.peppol.persistence.api.UserName;
+import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.api.account.Customer;
 import no.sr.ringo.email.EmailService;
-import no.sr.ringo.account.AccountId;
-import no.sr.ringo.account.Customer;
-import no.sr.ringo.account.RingoAccount;
-import no.sr.ringo.account.UserName;
 import no.sr.ringo.common.UploadMode;
 import no.sr.ringo.message.OutboundPostParams;
 import no.sr.ringo.message.PeppolMessageRepository;
@@ -25,7 +25,7 @@ import static org.easymock.EasyMock.*;
  */
 public class ReceiveMessageFromClientUseCaseTest {
 
-    private RingoAccount ringoAccount;
+    private Account account;
     private PeppolMessageRepository mockMessageRepository;
     private QueueRepository mockQueueRepository;
     private RingoSmpLookup mockSmpLookup;
@@ -33,7 +33,7 @@ public class ReceiveMessageFromClientUseCaseTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        this.ringoAccount = new RingoAccount(createCustomer(), new UserName("test"), new Date(), "pass", new AccountId(1), true, true);
+        this.account = new Account(createCustomer(), new UserName("test"), new Date(), "pass", new AccountId(1), true, true);
         this.mockMessageRepository = createStrictMock(PeppolMessageRepository.class);
         this.mockQueueRepository = createStrictMock(QueueRepository.class);
         this.mockSmpLookup = createStrictMock(RingoSmpLookup.class);
@@ -43,8 +43,8 @@ public class ReceiveMessageFromClientUseCaseTest {
     @Test(expectedExceptions = InvalidUserInputWebException.class)
     public void testValidationErrorSendsNotification() {
 
-        ReceiveMessageFromClientUseCase useCase = new ReceiveMessageFromClientUseCase(ringoAccount, mockMessageRepository, mockQueueRepository, mockSmpLookup, mockEmailService);
-        expect(mockEmailService.sendUploadErrorNotification(ringoAccount, "Wrong recipientId value: invalidRecipientId", null)).andReturn(null);
+        ReceiveMessageFromClientUseCase useCase = new ReceiveMessageFromClientUseCase(account, mockMessageRepository, mockQueueRepository, mockSmpLookup, mockEmailService);
+        expect(mockEmailService.sendUploadErrorNotification(account, "Wrong recipientId value: invalidRecipientId", null)).andReturn(null);
 
         replay(mockEmailService, mockMessageRepository, mockQueueRepository, mockSmpLookup);
         useCase.handleMessage(createParams());

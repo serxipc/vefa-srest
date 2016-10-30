@@ -1,8 +1,8 @@
 /* Created by steinar on 04.01.12 at 22:20 */
 package no.sr.ringo.http;
 
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.client.RingoClientImpl;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.common.TestFileHelper;
@@ -21,6 +21,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.security.Credential;
+import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebInfConfiguration;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
@@ -44,8 +45,8 @@ import java.net.URI;
  */
 public class AbstractHttpClientServerTest {
 
-    protected static final RingoAccount TEST_ACCOUNT = ObjectMother.getTestAccount();
-    protected static final String REALM = "test-realm";
+    protected static final Account TEST_ACCOUNT = ObjectMother.getTestAccount();
+    protected static final String REALM = "PEPPOL AP";
     protected static final String WEB_CONTEXT_NAME = "ringo";
 
     /** Holds the name of the URI path segment, which represents all Jersey resources */
@@ -100,6 +101,15 @@ public class AbstractHttpClientServerTest {
         webAppContext.setResourceBase(TestFileHelper.sourcePath("src/main/webapp").toString());
         webAppContext.setSecurityHandler(getSecurityHandler());
         webAppContext.setConfigurations(new org.eclipse.jetty.webapp.Configuration[]{new WebInfConfiguration(), envConfiguration, new WebXmlConfiguration()});
+
+        // Set the ContainerIncludeJarPattern so that jetty examines these
+        // container-path jars for tlds, web-fragments etc.
+        // If you omit the jar that contains the jstl .tlds, the jsp engine will
+        // scan for them instead.
+        webAppContext.setAttribute(
+                "org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
+                ".*/[^/]*servlet-api-[^/]*\\.jar$|.*/javax.servlet.jsp.jstl-.*\\.jar$|.*/[^/]*taglibs.*\\.jar$" );
+
     }
 
     private static EnvConfiguration getEnvironmentConfiguration() throws MalformedURLException {
@@ -162,15 +172,8 @@ public class AbstractHttpClientServerTest {
         hls.setName(REALM);
 
         // Note: user name must not contain ':'
-        hls.putUser(TEST_ACCOUNT.getUserName().stringValue(), new Credential() {
-            @Override
-            public boolean check(Object credentials) {
-                if (credentials != null && credentials instanceof String) {
-                    String password = (String) credentials;
-                    return password.equals(TEST_ACCOUNT.getPassword());
-                } else return false;
-            }
-        }, new String[]{"client", "superadmin"});
+        hls.putUser(TEST_ACCOUNT.getUserName().stringValue(), Credential.getCredential(TEST_ACCOUNT.getPassword()),
+                new String[]{"client", "superadmin"});
 
         hls.setRefreshInterval(0);
         return hls;

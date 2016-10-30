@@ -2,7 +2,7 @@ package no.sr.ringo.resource;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.message.*;
 import no.sr.ringo.peppol.RingoUtils;
 import no.sr.ringo.message.statistics.RingoStatistics;
@@ -31,17 +31,17 @@ public class AdminResource extends AbstractMessageResource {
 
     private static Logger logger = LoggerFactory.getLogger(AdminResource.class);
 
-    private final RingoAccount ringoAccount;
+    private final Account account;
     private final FetchMessagesUseCase fetchMessagesUseCase;
     private final PeppolMessageRepository peppolMessageRepository;
     private final RingoSmpLookup ringoSmpLookup;
     private final SendReportUseCase sendReportUseCase;
 
     @Inject
-    public AdminResource(FetchMessagesUseCase fetchMessagesUseCase, RingoAccount ringoAccount, PeppolMessageRepository peppolMessageRepository, RingoSmpLookup ringoSmpLookup, SendReportUseCase sendReportUseCase) {
+    public AdminResource(FetchMessagesUseCase fetchMessagesUseCase, Account account, PeppolMessageRepository peppolMessageRepository, RingoSmpLookup ringoSmpLookup, SendReportUseCase sendReportUseCase) {
         super();
         this.fetchMessagesUseCase = fetchMessagesUseCase;
-        this.ringoAccount = ringoAccount;
+        this.account = account;
         this.peppolMessageRepository = peppolMessageRepository;
         this.ringoSmpLookup = ringoSmpLookup;
         this.sendReportUseCase = sendReportUseCase;

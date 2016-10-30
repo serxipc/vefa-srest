@@ -1,7 +1,7 @@
 package no.sr.ringo.statistics;
 
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.message.statistics.InboxStatistics;
 import no.sr.ringo.message.statistics.OutboxStatistics;
@@ -38,7 +38,7 @@ public class AdminStatisticsResourceTest {
     @Test
     public void testStatisticsResource() throws Exception {
 
-        final RingoAccount testAccount = ObjectMother.getTestAccount();
+        final Account testAccount = ObjectMother.getTestAccount();
         List<RingoAccountStatistics> accountStatistics = new ArrayList<RingoAccountStatistics>();
         final Date date = new Date();
         InboxStatistics inboxStatistics = new InboxStatistics(1, 1, date, date, date);

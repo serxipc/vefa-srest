@@ -2,8 +2,8 @@ package no.sr.ringo.resource;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.email.EmailService;
-import no.sr.ringo.account.RingoAccount;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -17,13 +17,13 @@ import javax.ws.rs.core.*;
 @RequestScoped
 public class NotificationResource {
 
-    private final RingoAccount ringoAccount;
+    private final Account account;
     private final EmailService emailService;
 
     @Inject
-    public NotificationResource(RingoAccount ringoAccount, EmailService emailService) {
+    public NotificationResource(Account account, EmailService emailService) {
         super();
-        this.ringoAccount = ringoAccount;
+        this.account = account;
         this.emailService = emailService;
     }
 
@@ -33,8 +33,8 @@ public class NotificationResource {
     @Produces(RingoMediaType.APPLICATION_XML)
     public Response batchUploadError(@FormParam("commandLine") String commandLine, @FormParam("errorMessage") String errorMessage, @Context UriInfo uriInfo) {
 
-        if (ringoAccount != null && ringoAccount.isSendNotification()) {
-            emailService.sendClientBatchUploadErrorNotification(ringoAccount, commandLine, errorMessage);
+        if (account != null && account.isSendNotification()) {
+            emailService.sendClientBatchUploadErrorNotification(account, commandLine, errorMessage);
         }
         return SrResponse.ok().build();
 
@@ -46,8 +46,8 @@ public class NotificationResource {
     @Produces(RingoMediaType.APPLICATION_XML)
     public Response downloadError(@FormParam("commandLine") String commandLine, @FormParam("errorMessage") String errorMessage, @Context UriInfo uriInfo) {
 
-        if (ringoAccount != null && ringoAccount.isSendNotification()) {
-            emailService.sendClientDownloadErrorNotification(ringoAccount, commandLine, errorMessage);
+        if (account != null && account.isSendNotification()) {
+            emailService.sendClientDownloadErrorNotification(account, commandLine, errorMessage);
         }
 
         return SrResponse.ok().build();

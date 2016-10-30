@@ -1,7 +1,7 @@
 package no.sr.ringo.common;
 
 import eu.peppol.persistence.ChannelProtocol;
-import no.sr.ringo.account.AccountId;
+import eu.peppol.persistence.TransferDirection;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.message.*;
 import no.sr.ringo.peppol.*;
@@ -16,6 +16,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import eu.peppol.persistence.api.account.AccountId;
 
 import static org.testng.Assert.assertNotNull;
 

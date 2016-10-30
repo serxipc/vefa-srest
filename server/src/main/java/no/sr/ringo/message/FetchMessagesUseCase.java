@@ -1,8 +1,9 @@
 package no.sr.ringo.message;
 
 import com.google.inject.Inject;
-import no.sr.ringo.account.AccountId;
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountId;
 import no.sr.ringo.resource.UriLocationAware;
 import no.sr.ringo.response.InboxQueryResponse;
 import no.sr.ringo.response.MessagesQueryResponse;
@@ -20,7 +21,7 @@ import java.util.List;
  * Useage..
  *
  *  MessagesQueryResponse messagesQueryResponse = fetchMessagesForClientUseCase.init(this,uriInfo)
- * .messagesFor(ringoAccount.getId())
+ * .messagesFor(account.getId())
  * .getMessages(new SearchParams(direction, receiver, sender, sent, index));
  *
  * @author andy
@@ -250,8 +251,8 @@ public class FetchMessagesUseCase {
         return new Navigation(previous, next);
     }
 
-    public MessageMetaData findOutBoundMessageByMessageNo(RingoAccount ringoAccount, Long msgNo) {
-        MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(ringoAccount, msgNo);
+    public MessageMetaData findOutBoundMessageByMessageNo(Account account, Long msgNo) {
+        MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, msgNo);
         if (outgoingMessage(messageByMessageNo)) {
             return messageByMessageNo;
         }

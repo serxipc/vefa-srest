@@ -3,10 +3,9 @@ package no.sr.ringo.client;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.http.AbstractHttpClientServerTest;
-import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
@@ -32,7 +31,7 @@ public class ClientObjectMother {
      * @param receiver person that shall receiver document
      * @return
      */
-    public static HttpPost createOutboxPostRequest(RingoAccount account,ParticipantId receiver, ParticipantId sender) {
+    public static HttpPost createOutboxPostRequest(Account account, ParticipantId receiver, ParticipantId sender) {
         try {
             HttpPost httpPost = new HttpPost(AbstractHttpClientServerTest.PEPPOL_BASE_REST_URL + "/outbox/");
             MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);

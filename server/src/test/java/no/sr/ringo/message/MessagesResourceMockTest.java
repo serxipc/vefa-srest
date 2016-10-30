@@ -1,9 +1,9 @@
 package no.sr.ringo.message;
 
 import com.sun.jersey.api.uri.UriBuilderImpl;
+import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountId;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.account.AccountId;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.document.DefaultPeppolDocument;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.resource.MessagesResource;
@@ -34,7 +34,7 @@ public class MessagesResourceMockTest {
     PeppolMessageRepository mockPeppolMessageRepository;
     UriInfo mockUriInfo;
 
-    RingoAccount ringoAccount;
+    Account account;
 
     @BeforeMethod
     public void setup() {
@@ -44,9 +44,9 @@ public class MessagesResourceMockTest {
         mockReceiveMessageFromClientUseCase = createStrictMock(ReceiveMessageFromClientUseCase.class);
 
         fetchMessagesUseCase = new FetchMessagesUseCase(mockPeppolMessageRepository);
-        ringoAccount = ObjectMother.getTestAccount();
+        account = ObjectMother.getTestAccount();
 
-        messagesResource = new MessagesResource(mockReceiveMessageFromClientUseCase, fetchMessagesUseCase, mockPeppolMessageRepository, mockFetchDocumentUseCase, ringoAccount);
+        messagesResource = new MessagesResource(mockReceiveMessageFromClientUseCase, fetchMessagesUseCase, mockPeppolMessageRepository, mockFetchDocumentUseCase, account);
     }
 
 
@@ -77,7 +77,7 @@ public class MessagesResourceMockTest {
     @Test
     public void testGetXmlDocument() throws Exception {
 
-        expect(mockFetchDocumentUseCase.execute(ringoAccount, MessageNumber.create(1))).andReturn(new DefaultPeppolDocument("An xml document"));
+        expect(mockFetchDocumentUseCase.execute(account, MessageNumber.create(1))).andReturn(new DefaultPeppolDocument("An xml document"));
         replayAllMocks();
 
         Response xmlResponse = messagesResource.getXmlDocument("1");
@@ -89,7 +89,7 @@ public class MessagesResourceMockTest {
     @Test(expectedExceptions = PeppolMessageNotFoundException.class)
     public void testMessageNotFoundException() throws Exception {
 
-        expect(mockFetchDocumentUseCase.execute(ringoAccount, MessageNumber.create(1))).andThrow(new PeppolMessageNotFoundException(1L));
+        expect(mockFetchDocumentUseCase.execute(account, MessageNumber.create(1))).andThrow(new PeppolMessageNotFoundException(1L));
         replayAllMocks();
 
         messagesResource.getXmlDocument("1");

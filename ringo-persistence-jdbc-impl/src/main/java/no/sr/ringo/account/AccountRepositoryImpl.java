@@ -2,10 +2,16 @@ package no.sr.ringo.account;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
-import no.sr.ringo.guice.jdbc.JdbcTxManager;
-import no.sr.ringo.guice.jdbc.Repository;
-import no.sr.ringo.guice.jdbc.Transactional;
+import eu.peppol.persistence.api.SrAccountNotFoundException;
+import eu.peppol.persistence.api.UserName;
+import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.api.account.Customer;
+import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
+import eu.peppol.persistence.guice.jdbc.Repository;
+import eu.peppol.persistence.guice.jdbc.Transactional;
 import no.sr.ringo.message.MessageNumber;
+
+import eu.peppol.persistence.api.account.Account;
 
 import java.sql.*;
 
@@ -25,13 +31,13 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public RingoAccount findAccountById(final AccountId id) throws SrAccountNotFoundException {
-        RingoAccount ringoAccount = findAccountWithWhereClause("a.id=?", new String[]{id.toString()});
-        if (ringoAccount == null) {
+    public Account findAccountById(final AccountId id) throws SrAccountNotFoundException {
+        Account account = findAccountWithWhereClause("a.id=?", new String[]{id.toString()});
+        if (account == null) {
             throw new SrAccountNotFoundException(id);
         }
 
-        return ringoAccount;
+        return account;
     }
 
     @Override
@@ -88,44 +94,44 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public RingoAccount findAccountAsOwnerOfMessage(MessageNumber messageNumber) {
+    public Account findAccountAsOwnerOfMessage(MessageNumber messageNumber) {
         if (messageNumber == null) {
             return null;
         }
-        RingoAccount ringoAccount = findAccountWithWhereClause("a.id = (select account_id from message m where m.msg_no = ?)", new String[]{messageNumber.getValue()});
-        return ringoAccount;
+        Account account = findAccountWithWhereClause("a.id = (select account_id from message m where m.msg_no = ?)", new String[]{messageNumber.getValue()});
+        return account;
     }
 
     @Override
-    public RingoAccount findAccountByParticipantId(final ParticipantId participantId) {
+    public Account findAccountByParticipantId(final ParticipantId participantId) {
         if (participantId == null) {
             return null;
         }
-        RingoAccount ringoAccount = findAccountWithWhereClause("a.id = (select account_id from account_receiver ac where ac.participant_id =?)", new String[]{participantId.stringValue()});
-        return ringoAccount;
+        Account account = findAccountWithWhereClause("a.id = (select account_id from account_receiver ac where ac.participant_id =?)", new String[]{participantId.stringValue()});
+        return account;
     }
 
     @Override
-    public RingoAccount findAccountByUsername(final UserName username) throws SrAccountNotFoundException {
-        RingoAccount ringoAccount = findAccountWithWhereClause("a.username=?", new String[]{username.stringValue()});
-        if (ringoAccount == null) {
+    public Account findAccountByUsername(final UserName username) throws SrAccountNotFoundException {
+        Account account = findAccountWithWhereClause("a.username=?", new String[]{username.stringValue()});
+        if (account == null) {
             throw new SrAccountNotFoundException(username);
         }
 
-        return ringoAccount;
+        return account;
     }
 
     @Override
     @Transactional
-    public RingoAccount createAccount(final RingoAccount account, final ParticipantId participantId) {
-        RingoAccount ringoAccount = findAccountByParticipantId(participantId);
+    public Account createAccount(final Account account, final ParticipantId participantId) {
+        Account currentAccount = findAccountByParticipantId(participantId);
 
-        if (ringoAccount != null) {
-            return ringoAccount;
+        if (currentAccount != null) {
+            return currentAccount;
         }
 
         final Connection con = jdbcTxManager.getConnection();
-        RingoAccount result = null;
+        Account result = null;
 
         try {
             //create test account                   1         2       3        4
@@ -272,7 +278,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         }
     }
 
-    RingoAccount findAccountWithWhereClause(final String whereClause, final String[] parameters) {
+    Account findAccountWithWhereClause(final String whereClause, final String[] parameters) {
 
         try {
             final Connection con = jdbcTxManager.getConnection();
@@ -308,9 +314,9 @@ public class AccountRepositoryImpl implements AccountRepository {
 
                 Customer customer = new Customer(id, name, created, contactPerson, email, phone, country, address1, address2, zip, city, orgNo);
 
-                RingoAccount ringoAccount = new RingoAccount(customer, username, created_ts, password, accountId, validateUpload, sendNotification);
+                Account account = new Account(customer, username, created_ts, password, accountId, validateUpload, sendNotification);
 
-                return ringoAccount;
+                return account;
             }
 
             return null;

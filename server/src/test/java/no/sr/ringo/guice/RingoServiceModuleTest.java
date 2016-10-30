@@ -1,5 +1,7 @@
 package no.sr.ringo.guice;
 
+import eu.peppol.persistence.guice.RepositoryModule;
+import eu.peppol.util.OxalisProductionConfigurationModule;
 import no.sr.ringo.document.DocumentRepository;
 import no.sr.ringo.document.PeppolDocumentDecoratorFactory;
 import no.sr.ringo.document.PeppolDocumentFactory;
@@ -18,7 +20,7 @@ import static org.testng.Assert.assertTrue;
  * Date: 1/19/12
  * Time: 11:41 AM
  */
-@Guice(modules = {RingoServiceModule.class, SmpInTestModeModule.class, AopJdbcTxManagerModule.class, TestDataSourceModule.class, FakeScopesModule.class})
+@Guice(modules = {RingoServiceModule.class, SmpInTestModeModule.class, RepositoryModule.class, OxalisProductionConfigurationModule.class,TestDataSourceModule.class, FakeScopesModule.class})
 public class RingoServiceModuleTest {
 
     @Inject

@@ -30,7 +30,6 @@ public class StreamTest {
         Stream<String> s = names.stream();
         s.forEach(str -> {sb.append(str).append('\n'); } );
 
-        System.out.println(sb);
     }
 
     @Test
@@ -43,7 +42,5 @@ public class StreamTest {
         StringBuffer sb = new StringBuffer();
 
         String collect = stringStream.collect(joining("\n"));
-        System.out.println(collect);
-
     }
 }

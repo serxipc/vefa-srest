@@ -1,8 +1,8 @@
 package no.sr.ringo.resource;
 
 import com.sun.jersey.api.uri.UriBuilderImpl;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.email.EmailService;
-import no.sr.ringo.account.RingoAccount;
 import org.easymock.EasyMock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
  */
 public class NotificationResourceTest {
 
-    private RingoAccount mockRingoAccount;
+    private Account mockRingoAccount;
     private NotificationResource notificationResource;
     private EmailService mockEmailService;
 
@@ -30,7 +30,7 @@ public class NotificationResourceTest {
     @BeforeMethod
     public void setUp() throws Exception {
 
-        mockRingoAccount = EasyMock.createStrictMock(RingoAccount.class);
+        mockRingoAccount = EasyMock.createStrictMock(Account.class);
         mockEmailService = createStrictMock(EmailService.class);
         notificationResource = new NotificationResource(null, mockEmailService);
     }

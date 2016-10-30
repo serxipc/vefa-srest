@@ -1,6 +1,7 @@
 package no.sr.ringo.message;
 
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.persistence.TransferDirection;
 
 /**
  * User: andy

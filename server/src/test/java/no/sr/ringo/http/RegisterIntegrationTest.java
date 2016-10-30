@@ -2,10 +2,10 @@ package no.sr.ringo.http;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.WellKnownParticipant;
+import eu.peppol.persistence.api.SrAccountNotFoundException;
+import eu.peppol.persistence.api.UserName;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.account.AccountRepository;
-import no.sr.ringo.account.RingoAccount;
-import no.sr.ringo.account.SrAccountNotFoundException;
-import no.sr.ringo.account.UserName;
 import no.sr.ringo.guice.TestModuleFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -107,7 +107,7 @@ public class RegisterIntegrationTest extends AbstractHttpClientServerTest {
         UserName username = new UserName(ACCOUNT_USERNAME);
         boolean accountExists = accountRepository.accountExists(username);
         if (accountExists) {
-            RingoAccount accountByUsername = null;
+            Account accountByUsername = null;
             try {
                 accountByUsername = accountRepository.findAccountByUsername(username);
                 accountRepository.deleteAccount(accountByUsername.getId());

@@ -1,7 +1,8 @@
 package no.sr.ringo.resource;
 
 import com.sun.jersey.api.uri.UriBuilderImpl;
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.document.DefaultPeppolDocument;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.document.PeppolDocument;
@@ -26,7 +27,7 @@ import static org.testng.Assert.assertEquals;
 public class OutboxResourceTest {
 
 
-    private RingoAccount mockRingoAccount;
+    private Account mockRingoAccount;
     private FetchMessagesUseCase mockFetchMessageUseCase;
     private OutboxResource outboxResource;
     private FetchDocumentUseCase mockFetchDocumentUseCase;
@@ -34,7 +35,7 @@ public class OutboxResourceTest {
     @BeforeMethod
     public void setUp() throws Exception {
 
-        mockRingoAccount = EasyMock.createStrictMock(RingoAccount.class);
+        mockRingoAccount = EasyMock.createStrictMock(Account.class);
         mockFetchMessageUseCase = EasyMock.createStrictMock(FetchMessagesUseCase.class);
         mockFetchDocumentUseCase = EasyMock.createStrictMock(FetchDocumentUseCase.class);
         outboxResource = new OutboxResource(null, mockRingoAccount, mockFetchMessageUseCase, mockFetchDocumentUseCase);

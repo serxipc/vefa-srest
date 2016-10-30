@@ -1,9 +1,9 @@
 package no.sr.ringo.persistence.repo;
 
 import com.google.inject.Inject;
-import no.sr.ringo.guice.jdbc.JdbcTxManager;
-import no.sr.ringo.guice.jdbc.Repository;
-import no.sr.ringo.guice.jdbc.Transactional;
+import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
+import eu.peppol.persistence.guice.jdbc.Repository;
+import eu.peppol.persistence.guice.jdbc.Transactional;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

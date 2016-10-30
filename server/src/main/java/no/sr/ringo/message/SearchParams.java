@@ -1,6 +1,7 @@
 package no.sr.ringo.message;
 
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.persistence.TransferDirection;
 import no.sr.ringo.resource.InvalidUserInputWebException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

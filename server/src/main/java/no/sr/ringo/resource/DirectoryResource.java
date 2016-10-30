@@ -3,7 +3,7 @@ package no.sr.ringo.resource;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.spi.container.ResourceFilters;
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.peppol.PeppolParticipantId;
 import no.sr.ringo.response.SmpLookupResponse;
@@ -27,12 +27,12 @@ import javax.ws.rs.core.UriInfo;
 public class DirectoryResource {
 
     private final RingoSmpLookup ringoSmpLookup;
-    private final RingoAccount ringoAccount;
+    private final Account account;
 
     @Inject
-    public DirectoryResource(RingoSmpLookup ringoSmpLookup, RingoAccount ringoAccount) {
+    public DirectoryResource(RingoSmpLookup ringoSmpLookup, Account account) {
         this.ringoSmpLookup = ringoSmpLookup;
-        this.ringoAccount = ringoAccount;
+        this.account = account;
     }
 
     /**

@@ -4,13 +4,13 @@ import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolProcessTypeId;
 import eu.peppol.persistence.ChannelProtocol;
-import eu.peppol.persistence.Direction;
+import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.MessageRepository;
-import no.sr.ringo.account.AccountId;
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
+import eu.peppol.persistence.guice.jdbc.Repository;
 import no.sr.ringo.cenbiimeta.ProfileId;
-import no.sr.ringo.guice.jdbc.JdbcTxManager;
-import no.sr.ringo.guice.jdbc.Repository;
 import no.sr.ringo.message.statistics.InboxStatistics;
 import no.sr.ringo.message.statistics.OutboxStatistics;
 import no.sr.ringo.message.statistics.RingoAccountStatistics;
@@ -47,6 +47,8 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     static final Logger log = LoggerFactory.getLogger(PeppolMessageRepositoryImpl.class);
 
     final JdbcTxManager jdbcTxManager;
+
+    // From oxalis-persistence
     private final MessageRepository messageRepository;
 
     @Inject
@@ -59,10 +61,10 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
      * Inserts or updates the supplied PEPPOL message to the database
      */
     @Override
-    public MessageWithLocations persistOutboundMessage(RingoAccount ringoAccount, PeppolMessage peppolMessage) {
+    public MessageWithLocations persistOutboundMessage(Account account, PeppolMessage peppolMessage) {
 
         Connection con;
-        if (ringoAccount == null) {
+        if (account == null) {
             throw new IllegalStateException("SrAccountId property of message is required");
         }
 
@@ -75,18 +77,19 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         String profileId = header.getProfileId() != null ? header.getProfileId().stringValue() : null;
 
         // Converts from our Ringo Types to the Oxalis types and instantiates a builder.
-        eu.peppol.persistence.MessageMetaData.Builder builder = new eu.peppol.persistence.MessageMetaData.Builder(Direction.OUT,
+        eu.peppol.persistence.MessageMetaData.Builder builder = new eu.peppol.persistence.MessageMetaData.Builder(TransferDirection.OUT,
                 new ParticipantId(sender),
                 new ParticipantId(receiver),
                 eu.peppol.identifier.PeppolDocumentTypeId.valueOf(documentTypeId),
                 ChannelProtocol.SREST);
 
         // Connects the data to the right account.
-        builder.accountId(ringoAccount.getId().toInteger());
+        builder.accountId(account.getId().toInteger());
 
         builder.processTypeId(PeppolProcessTypeId.valueOf(profileId));
         eu.peppol.persistence.MessageMetaData metaData = builder.build();
 
+        // Delegates to the injected message repository
         Long msgNo = messageRepository.saveOutboundMessage(metaData, peppolMessage.getXmlMessage());
 
 
@@ -98,69 +101,6 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         return new MessageWithLocationsImpl(messageMetaData);
     }
 
-    @Override
-    public MessageWithLocations persistInboundMessage(RingoAccount ringoAccount, PeppolMessage peppolMessage, String remoteHost, String apName) {
-
-        Connection con;
-        if (ringoAccount == null) {
-            throw new IllegalStateException("SrAccountId property of message is required");
-        }
-
-        PeppolHeader header = peppolMessage.getPeppolHeader();
-
-        String sender = header.getSender() != null ? header.getSender().stringValue() : null;
-        String receiver = header.getReceiver() != null ? header.getReceiver().stringValue() : null;
-        String channelId = header.getPeppolChannelId() != null ? header.getPeppolChannelId().stringValue() : null;
-        String documentTypeId = header.getPeppolDocumentTypeId() != null ? header.getPeppolDocumentTypeId().stringValue() : null;
-        String profileId = header.getProfileId() != null ? header.getProfileId().stringValue() : null;
-
-
-        try {
-
-            con = jdbcTxManager.getConnection();
-            PreparedStatement ps = con.prepareStatement("INSERT INTO message " +
-                    "( direction, received, sender, receiver, channel, document_id, process_id, xml_message, account_id, remote_host, ap_name ) " +
-                    " VALUES  (?,?,?,?,?,?,?,?,?,?,?) ", Statement.RETURN_GENERATED_KEYS);
-
-            TransferDirection transferDirection = TransferDirection.IN;
-            ps.setString(1, transferDirection.name());
-
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            ps.setTimestamp(2, timestamp);
-
-            ps.setString(3, sender);
-            ps.setString(4, receiver);
-            ps.setString(5, channelId);
-            ps.setString(6, documentTypeId);
-            ps.setString(7, profileId);
-
-            // Converts the XML Document into something which may be persisted into the database
-            SQLXML sqlxml = con.createSQLXML();
-            DOMResult domResult = sqlxml.setResult(DOMResult.class);
-            domResult.setNode(peppolMessage.getXmlMessage());
-            ps.setSQLXML(8, sqlxml);
-            ps.setInt(9, ringoAccount.getId().toInteger());
-
-            // Additional inbound transfer details
-            ps.setString(10, remoteHost);
-            ps.setString(11, apName);
-
-            ps.execute();
-            ResultSet rs = ps.getGeneratedKeys();
-            MessageMetaDataImpl messageMetaData = new MessageMetaDataImpl();
-            if (rs.next()) {
-                Long msgNo = rs.getLong(1);
-                messageMetaData.setPeppolHeader(header);
-                messageMetaData.setTransferDirection(TransferDirection.IN);
-                messageMetaData.setMsgNo(msgNo);
-            } else {
-                throw new IllegalStateException("Unable to obtain generated key after insert.");
-            }
-            return new MessageWithLocationsImpl(messageMetaData);
-        } catch (SQLException e) {
-            throw new IllegalStateException("Unable to insert message ", e);
-        }
-    }
 
     @Override
     public MessageMetaData findMessageByMessageNo(MessageNumber msgNo) throws PeppolMessageNotFoundException {
@@ -180,12 +120,12 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     }
 
     @Override
-    public MessageMetaData findMessageByMessageNo(RingoAccount ringoAccount, Long messageNo) throws PeppolMessageNotFoundException {
+    public MessageMetaData findMessageByMessageNo(Account account, Long messageNo) throws PeppolMessageNotFoundException {
         try {
             SqlHelper sql = SqlHelper.create().findMessageByMessageNoAndAccountId();
             PreparedStatement ps = sql.prepareStatement(jdbcTxManager.getConnection());
             ps.setLong(1, messageNo);
-            ps.setInt(2, ringoAccount.getId().toInteger());
+            ps.setInt(2, account.getId().toInteger());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return extractMessageFromResultSet(rs);
@@ -495,7 +435,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             //executes the sql and iterates the result set creating statistics for each account
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                final RingoAccountStatistics statistics = extractRingoAccountStatistics(rs);
+                final RingoAccountStatistics statistics = extractAccountStatistics(rs);
                 accountStatistics.add(statistics);
 
             }
@@ -563,7 +503,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         return m;
     }
 
-    private RingoAccountStatistics extractRingoAccountStatistics(ResultSet rs) throws SQLException {
+    private RingoAccountStatistics extractAccountStatistics(ResultSet rs) throws SQLException {
         //get the inbox statistics
         int in = rs.getInt("in");
         int undeliveredIn = rs.getInt("undelivered in");
@@ -599,6 +539,9 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         return new RingoAccountStatistics(total, inboxStatistics, outboxStatistics, new AccountId(accountIdint), accountName, contactEmail);
     }
 
+    /**
+     * Helps creating SQL statements
+     */
     private static class SqlHelper {
 
         private String sql;

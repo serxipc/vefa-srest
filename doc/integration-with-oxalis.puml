@@ -1,10 +1,10 @@
 @startuml
 
-database "Statistics" as odb
 database account <<SQL DBMS>> {
     rectangle "user acount"
     rectangle "customer"
     rectangle message
+    rectangle "raw statistics" as odb
 }
 
 node "Message payload repository" as r <<File system>> {
@@ -37,9 +37,9 @@ package "Oxalis" {
 
 }
     frame "Inbound messages" as mr {
-        [payload]
-        [rem]
-        [meta data]
+        rectangle payload <<xml file>>
+        rectangle "rem evidence" <<xml file>>
+        rectangle "meta data" <<smime file>>
     }
 
 oxalis_inbound ..> mr

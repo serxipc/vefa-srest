@@ -2,6 +2,10 @@
 package no.sr.ringo.account;
 
 import com.google.inject.Inject;
+import eu.peppol.persistence.api.SrAccountNotFoundException;
+import eu.peppol.persistence.api.UserName;
+import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.Customer;
 import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
 import org.testng.annotations.AfterMethod;
@@ -82,7 +86,7 @@ public class RegisterUseCaseIntegrationTest {
         assertTrue(result.isSuccess(), result.getMessage());
 
         // check that account exists
-        RingoAccount account = accountRepository.findAccountByUsername(new UserName(userName));
+        Account account = accountRepository.findAccountByUsername(new UserName(userName));
         assertNotNull(account);
 
         //check account_role 'client' has been created
@@ -110,7 +114,7 @@ public class RegisterUseCaseIntegrationTest {
     private void removeAccountIfExists() throws SrAccountNotFoundException {
         UserName username = new UserName(userName);
         if (accountRepository.accountExists(username)) {
-            RingoAccount accountByUsername = accountRepository.findAccountByUsername(username);
+            Account accountByUsername = accountRepository.findAccountByUsername(username);
             accountRepository.deleteAccount(accountByUsername.getId());
         }
     }

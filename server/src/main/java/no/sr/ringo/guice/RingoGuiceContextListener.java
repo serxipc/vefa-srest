@@ -5,14 +5,24 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.servlet.GuiceServletContextListener;
+import eu.peppol.persistence.RepositoryConfiguration;
+import eu.peppol.persistence.guice.AopJdbcTxManagerModule;
+import eu.peppol.persistence.guice.OxalisDataSourceModule;
 import eu.peppol.persistence.guice.RepositoryModule;
 import eu.peppol.smp.SmlHost;
+import eu.peppol.util.GlobalConfiguration;
+import eu.peppol.util.GlobalConfigurationImpl;
 import eu.peppol.util.OperationalMode;
+import eu.peppol.util.OxalisProductionConfigurationModule;
 import no.sr.ringo.common.PropertyHelper;
+import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
@@ -50,14 +60,61 @@ public class RingoGuiceContextListener extends GuiceServletContextListener {
                 new RingoRestModule(clientVersionNumber,enableTracingDebug),
                 //the ringo service
                 new RingoServiceModule(),
-                // the transaction manager
-                new AopJdbcTxManagerModule(),
-                //the Jndi datasource
+
+
+                /**  Stuff from oxalis-persistence */
+
+                // The repositories
+                new RepositoryModule(),
+                // The JDBC datasource to be obtained via JNDI
                 new RingoJndiDataSourceGuiceModule(jndiName),
-                // Repositories from oxalis-persistence
-                new RepositoryModule()
+
+                /** Stuff from Oxalis-commons */
+                // The configuration
+                new OxalisProductionConfigurationModule()
         );
     }
+
+    @NotNull
+    RepositoryConfiguration getRepositoryConfiguration() {
+        return new RepositoryConfiguration() {
+            @Override
+            public Path getBasePath() {
+                return Paths.get(GlobalConfigurationImpl.getInstance().getInboundMessageStore());
+            }
+
+            @Override
+            public URI getJdbcConnectionUri() {
+                return null;
+            }
+
+            @Override
+            public String getJdbcDriverClassPath() {
+                return null;
+            }
+
+            @Override
+            public String getJdbcDriverClassName() {
+                return null;
+            }
+
+            @Override
+            public String getJdbcUsername() {
+                return null;
+            }
+
+            @Override
+            public String getJdbcPassword() {
+                return null;
+            }
+
+            @Override
+            public String getValidationQuery() {
+                return null;
+            }
+        };
+    }
+
 
     private boolean getTracingDebug() {
         return "true".equalsIgnoreCase(fetchProperties().getProperty("ringo.debug"));

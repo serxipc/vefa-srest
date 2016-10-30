@@ -5,7 +5,7 @@ import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 import com.sun.jersey.spi.container.ResourceFilters;
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.document.PeppolDocument;
 import no.sr.ringo.message.*;
@@ -37,16 +37,16 @@ public class OutboxResource extends AbstractMessageResource {
 
     private static Logger logger = LoggerFactory.getLogger(OutboxResource.class);
 
-    private final RingoAccount ringoAccount;
+    private final Account account;
     private final ReceiveMessageFromClientUseCase receiveMessageFromClientUseCase;
     private final FetchMessagesUseCase fetchMessagesUseCase;
     private final FetchDocumentUseCase fetchDocumentUseCase;
 
     @Inject
-    OutboxResource(ReceiveMessageFromClientUseCase receiveMessageFromClientUseCase, RingoAccount ringoAccount, FetchMessagesUseCase fetchMessagesUseCase, FetchDocumentUseCase fetchDocumentUseCase) {
+    OutboxResource(ReceiveMessageFromClientUseCase receiveMessageFromClientUseCase, Account account, FetchMessagesUseCase fetchMessagesUseCase, FetchDocumentUseCase fetchDocumentUseCase) {
         super();
         this.receiveMessageFromClientUseCase = receiveMessageFromClientUseCase;
-        this.ringoAccount = ringoAccount;
+        this.account = account;
         this.fetchMessagesUseCase = fetchMessagesUseCase;
         this.fetchDocumentUseCase = fetchDocumentUseCase;
     }
@@ -61,7 +61,7 @@ public class OutboxResource extends AbstractMessageResource {
     public Response getMessages(@Context UriInfo uriInfo) {
 
         OutboxQueryResponse outboxQueryResponse = fetchMessagesUseCase.init(this, uriInfo)
-                .messagesFor(ringoAccount.getId())
+                .messagesFor(account.getId())
                 .getOutbox();
         String entity = outboxQueryResponse.asXml();
 
@@ -92,7 +92,7 @@ public class OutboxResource extends AbstractMessageResource {
             msgNo = parseMsgNo(msgNoString);
         }
 
-        MessageMetaData messageMetaData = fetchMessagesUseCase.findOutBoundMessageByMessageNo(ringoAccount, msgNo.toLong());
+        MessageMetaData messageMetaData = fetchMessagesUseCase.findOutBoundMessageByMessageNo(account, msgNo.toLong());
         return createSingleOutboxResponse(uriInfo, messageMetaData);
     }
 
@@ -115,7 +115,7 @@ public class OutboxResource extends AbstractMessageResource {
             msgNo = parseMsgNo(msgNoString);
         }
 
-        PeppolDocument xmlDocument = fetchDocumentUseCase.execute(ringoAccount, msgNo);
+        PeppolDocument xmlDocument = fetchDocumentUseCase.execute(account, msgNo);
 
         return Response.ok().entity(xmlDocument.getXml()).build();
     }
@@ -213,5 +213,4 @@ public class OutboxResource extends AbstractMessageResource {
         // Shoves the URI of this message into the HTTP header "Location" and supplies the XML response as the entity
         return SrResponse.ok().entity(entity).build();
     }
-
 }

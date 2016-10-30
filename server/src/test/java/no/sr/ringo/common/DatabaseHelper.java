@@ -7,12 +7,16 @@ import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolProcessTypeId;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
 import eu.peppol.persistence.*;
+import eu.peppol.persistence.api.UserName;
+import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.api.account.Customer;
+import eu.peppol.persistence.api.account.CustomerId;
+import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
+import eu.peppol.persistence.guice.jdbc.Repository;
 import no.sr.ringo.account.*;
 import no.sr.ringo.cenbiimeta.ProfileId;
-import no.sr.ringo.guice.jdbc.JdbcTxManager;
-import no.sr.ringo.guice.jdbc.Repository;
 import no.sr.ringo.message.OutboundMessageQueueState;
-import no.sr.ringo.message.TransferDirection;
 import no.sr.ringo.peppol.*;
 import no.sr.ringo.queue.OutboundMessageQueueErrorId;
 import no.sr.ringo.queue.OutboundMessageQueueId;
@@ -65,7 +69,7 @@ public class DatabaseHelper {
             throw new IllegalArgumentException("received date is required");
         }
 
-        MessageMetaData.Builder builder = new MessageMetaData.Builder(Direction.valueOf(direction.name()),
+        MessageMetaData.Builder builder = new MessageMetaData.Builder(TransferDirection.valueOf(direction.name()),
                 new ParticipantId(senderValue), new ParticipantId(receiverValue), eu.peppol.identifier.PeppolDocumentTypeId.valueOf(documentId.stringValue()),
                 ChannelProtocol.SREST);
 
@@ -172,7 +176,7 @@ public class DatabaseHelper {
     }
 
 
-    public void deleteAllMessagesForAccount(RingoAccount account) {
+    public void deleteAllMessagesForAccount(Account account) {
         if (account == null || account.getId() == null) {
             return;
         }

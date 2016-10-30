@@ -4,8 +4,9 @@ package no.sr.ringo.persistence;
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
+import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.document.DocumentRepository;
@@ -14,9 +15,7 @@ import no.sr.ringo.document.PeppolDocument;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.PeppolMessageNotFoundException;
-import no.sr.ringo.message.TransferDirection;
 import no.sr.ringo.peppol.*;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
@@ -37,7 +36,7 @@ public class PeppolDocumentIntegrationTest {
     private FetchDocumentUseCase fetchDocumentUseCase;
     private final DocumentRepository documentRepository;
 
-    private RingoAccount account;
+    private Account account;
     private ParticipantId participantId;
     private List<MessageNumber> messagesToDelete;
 

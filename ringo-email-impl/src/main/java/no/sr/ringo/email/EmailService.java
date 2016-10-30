@@ -1,6 +1,6 @@
 package no.sr.ringo.email;
 
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.message.MessageNumber;
 
 /**
@@ -22,30 +22,30 @@ public interface EmailService {
      * Sends information to sales department whenever new user has registered
      * so that the sales department will contact new customer with correct contract
      */
-    SentEmailResult sendRegistrationNotification(RingoAccount ringoAccount, String billingCode);
+    SentEmailResult sendRegistrationNotification(Account account, String billingCode);
 
     //
-    // Used to alert the customer (owner of the RingoAccount) by mail (of situations that need attention)
+    // Used to alert the customer (owner of the Account) by mail (of situations that need attention)
     //
 
     /**
      * Alerts the REST API customer that there was an error when he tried to upload a new message
      */
-    SentEmailResult sendUploadErrorNotification(RingoAccount ringoAccount, String errorMessage, String filename);
+    SentEmailResult sendUploadErrorNotification(Account account, String errorMessage, String filename);
 
     /**
      * Alerts the REST API customer that there we were unable to deliver the message
      */
-    SentEmailResult sendProcessingErrorNotification(RingoAccount ringoAccount, String errorMessage, MessageNumber messageNumber);
+    SentEmailResult sendProcessingErrorNotification(Account account, String errorMessage, MessageNumber messageNumber);
 
     /**
      * Alerts the Ringo Client customer that there we were trouble uploading one or more files
      */
-    SentEmailResult sendClientBatchUploadErrorNotification(RingoAccount ringoAccount, String commandLine, String errorMessage);
+    SentEmailResult sendClientBatchUploadErrorNotification(Account account, String commandLine, String errorMessage);
 
     /**
      * Alerts the Ringo Client customer that there we were trouble downloading one or more files
      */
-    SentEmailResult sendClientDownloadErrorNotification(RingoAccount ringoAccount, String commandLine, String errorMessage);
+    SentEmailResult sendClientDownloadErrorNotification(Account account, String commandLine, String errorMessage);
 
 }

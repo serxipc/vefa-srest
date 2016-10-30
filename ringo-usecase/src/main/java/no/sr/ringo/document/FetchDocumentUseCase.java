@@ -1,6 +1,6 @@
 package no.sr.ringo.document;
 
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.message.MessageNumber;
 
 import javax.inject.Inject;
@@ -23,12 +23,12 @@ public class FetchDocumentUseCase {
         this.peppolDocumentDecoratorFactory = peppolDocumentDecoratorFactory;
     }
 
-    public PeppolDocument execute(RingoAccount ringoAccount, MessageNumber msgNo) {
-        return documentRepository.getPeppolDocument(ringoAccount, msgNo);
+    public PeppolDocument execute(Account account, MessageNumber msgNo) {
+        return documentRepository.getPeppolDocument(account, msgNo);
     }
 
-    public PeppolDocument executeWithDecoration(RingoAccount ringoAccount, MessageNumber msgNo) {
-        PeppolDocument document = documentRepository.getPeppolDocument(ringoAccount, msgNo);
+    public PeppolDocument executeWithDecoration(Account account, MessageNumber msgNo) {
+        PeppolDocument document = documentRepository.getPeppolDocument(account, msgNo);
         return peppolDocumentDecoratorFactory.decorateWithStyleSheet(document);
     }
 

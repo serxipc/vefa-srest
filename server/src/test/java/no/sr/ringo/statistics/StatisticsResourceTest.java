@@ -1,7 +1,7 @@
 package no.sr.ringo.statistics;
 
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.message.statistics.InboxStatistics;
 import no.sr.ringo.message.statistics.OutboxStatistics;
@@ -44,7 +44,7 @@ public class StatisticsResourceTest {
     @Test
     public void testStatisticsResource() throws Exception {
 
-        final RingoAccount testAccount = ObjectMother.getTestAccount();
+        final Account testAccount = ObjectMother.getTestAccount();
         List<RingoAccountStatistics> accountStatistics = new ArrayList<RingoAccountStatistics>();
         Date lastDeliveredIN = parseDate("2010-01-01");
         Date oldestUndeliveredIN = parseDate("2011-01-01");

@@ -3,6 +3,9 @@ package no.sr.ringo.guice;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.servlet.RequestScoped;
+import eu.peppol.persistence.guice.AopJdbcTxManagerModule;
+import eu.peppol.persistence.guice.RepositoryModule;
+import eu.peppol.util.OxalisProductionConfigurationModule;
 import no.sr.ringo.security.CredentialHandler;
 import no.sr.ringo.security.SecretKeyCredentialHandler;
 import no.sr.ringo.smp.RingoSmpLookup;
@@ -59,9 +62,9 @@ public class TestModuleFactory implements IModuleFactory {
             Binder binder = binder();
 
 
-            //set up the transaction handler
-            binder.install(new AopJdbcTxManagerModule());
+            binder.install(new OxalisProductionConfigurationModule());
 
+            binder.install(new RepositoryModule());
             //set up the repositories email service etc.
             binder.install(new RingoServiceModule());
 

@@ -1,7 +1,7 @@
 package no.sr.ringo.document;
 
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.PeppolMessageNotFoundException;
 import no.sr.ringo.peppol.PeppolDocumentTest;
@@ -23,7 +23,7 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
     private DocumentRepository mockDocumentRepository;
     private FetchDocumentUseCase fetchDocumentUseCase;
 
-    private RingoAccount ringoAccount;
+    private Account account;
     private PeppolDocument ehfInvoice;
     private MyPeppolDocumentDecorator peppolDocumentDecorator;
 
@@ -34,7 +34,7 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
 
         fetchDocumentUseCase = new FetchDocumentUseCase(mockDocumentRepository, mockPeppolDocumentDecoratorFactory);
 
-        ringoAccount = ObjectMother.getTestAccount();
+        account = ObjectMother.getTestAccount();
         ehfInvoice = createEhfInvoice();
         peppolDocumentDecorator = new MyPeppolDocumentDecorator(ehfInvoice);
     }
@@ -43,13 +43,13 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
     public void testsDocumentIsFetchedAndDecoratedByTheUseCase() throws Exception {
         MessageNumber msgNo = MessageNumber.valueOf("10");
 
-        expect(mockDocumentRepository.getPeppolDocument(ringoAccount, msgNo)).andStubReturn(ehfInvoice);
+        expect(mockDocumentRepository.getPeppolDocument(account, msgNo)).andStubReturn(ehfInvoice);
 
         expect(mockPeppolDocumentDecoratorFactory.decorateWithStyleSheet(ehfInvoice)).andStubReturn(peppolDocumentDecorator);
 
         replayAllMocks();
 
-        PeppolDocument result = fetchDocumentUseCase.executeWithDecoration(ringoAccount, msgNo);
+        PeppolDocument result = fetchDocumentUseCase.executeWithDecoration(account, msgNo);
 
         assertEquals(result, peppolDocumentDecorator);
         verifyAllMocks();
@@ -59,10 +59,10 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
     public void testIfAMessageIsNotFoundTheExceptionIsLeftToPropagate() throws Exception {
         MessageNumber msgNo = MessageNumber.valueOf("10");
 
-        expect(mockDocumentRepository.getPeppolDocument(ringoAccount, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo.toLong()));
+        expect(mockDocumentRepository.getPeppolDocument(account, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo.toLong()));
         replayAllMocks();
 
-        fetchDocumentUseCase.execute(ringoAccount, msgNo);
+        fetchDocumentUseCase.execute(account, msgNo);
     }
 
     private PeppolDocument createEhfInvoice() {

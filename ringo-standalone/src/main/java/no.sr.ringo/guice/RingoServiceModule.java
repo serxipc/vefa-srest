@@ -22,7 +22,7 @@ import no.sr.ringo.queue.QueueRepositoryImpl;
  * Repositories
  * Stateless UseCases
  * Services
- * Email services etc
+ * Email services etc                                                                                                                                              ©
  * <p>
  * Configured for production or test through the constructor.
  * </p>

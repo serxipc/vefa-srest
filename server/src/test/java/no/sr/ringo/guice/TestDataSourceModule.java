@@ -29,7 +29,15 @@ public class TestDataSourceModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(DatabaseHelper.class);
-        bind(MessageRepository.class).to(MessageRepositoryH2Impl.class);
+    }
+
+
+    @Provides
+    @Singleton
+    public DataSource provideH2DataSource() {
+        log.warn("Creating in memory database and populating the schema. This should happen only once!");
+        return InMemoryDatabaseHelper.createInMemoryDatabase();
+
     }
 
     /** Use with Mysql */
@@ -42,14 +50,6 @@ public class TestDataSourceModule extends AbstractModule {
         dataSource.setPassword("vable");
         */
         return dataSource;
-    }
-
-    @Provides
-    @Singleton
-    public DataSource provideH2DataSource() {
-        log.warn("Creating in memory database and populating the schema. This should happen only once!");
-        return InMemoryDatabaseHelper.createInMemoryDatabase();
-
     }
 
 

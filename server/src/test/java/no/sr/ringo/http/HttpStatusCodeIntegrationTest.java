@@ -1,11 +1,11 @@
 package no.sr.ringo.http;
 
 import com.google.inject.Inject;
+import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
-import no.sr.ringo.message.TransferDirection;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.testng.annotations.Guice;
@@ -177,7 +177,7 @@ public class HttpStatusCodeIntegrationTest extends AbstractHttpClientServerTest 
      * Helper methods
      */
     public void insertSample() throws SQLException {
-        final RingoAccount account = ObjectMother.getTestAccount();
+        final Account account = ObjectMother.getTestAccount();
         messageId = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), null);
     }
 

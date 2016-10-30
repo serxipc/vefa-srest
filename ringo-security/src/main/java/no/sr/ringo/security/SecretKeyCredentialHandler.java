@@ -11,6 +11,8 @@ import java.security.spec.KeySpec;
  * This code has been borrowed from Apache Tomcat version 9.0.0.M10 in order to prevent us from declaring
  * a hard dependency on Tomcat artifacts.
  *
+ * This class is invoked by the Tomcat security realm in order to verify the credentials of users logging in.
+ *
  * @author steinar
  *         Date: 11.10.2016
  *         Time: 12.04

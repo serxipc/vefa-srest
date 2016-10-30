@@ -1,4 +1,4 @@
-<%@ page import="no.sr.ringo.account.RingoAccount" %>
+<%@ page import="eu.peppol.persistence.api.account.Account" %>
 <%--
   Created by IntelliJ IDEA.
   User: steinar
@@ -8,7 +8,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    RingoAccount ringoAccount = (RingoAccount) request.getAttribute(RingoAccount.class.getSimpleName());
+    Account account = (Account) request.getAttribute(Account.class.getSimpleName());
 %>
 <html>
 <head>

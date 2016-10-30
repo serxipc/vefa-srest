@@ -16,6 +16,7 @@ import static org.testng.Assert.fail;
 public class BadCredentialsTest extends AbstractHttpClientServerTest {
 
 
+
     @Test(groups = {"integration"})
     public void testInvalidUserNameAndPassword() throws Exception {
         RingoClientImpl client = new RingoClientImpl(new DefaultRingoConfig(PEPPOL_BASE_URL, null), "rubbish", "more rubbish");

@@ -2,8 +2,8 @@
 package no.sr.ringo.queue;
 
 import com.google.inject.Inject;
-import no.sr.ringo.guice.jdbc.JdbcTxManager;
-import no.sr.ringo.guice.jdbc.Repository;
+import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
+import eu.peppol.persistence.guice.jdbc.Repository;
 import no.sr.ringo.message.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

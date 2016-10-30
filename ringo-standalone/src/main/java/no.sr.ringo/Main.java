@@ -2,8 +2,10 @@ package no.sr.ringo;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import eu.peppol.persistence.guice.OxalisDataSourceModule;
+import eu.peppol.persistence.guice.RepositoryModule;
 import eu.peppol.smp.SmpModule;
-import no.sr.ringo.guice.AopJdbcTxManagerModule;
+import eu.peppol.util.OxalisProductionConfigurationModule;
 import no.sr.ringo.guice.RingoDataSourceGuiceModule;
 import no.sr.ringo.guice.RingoServiceModule;
 import no.sr.ringo.parser.CommandLineParser;
@@ -37,12 +39,15 @@ public class Main {
         }
 
         Injector injector = Guice.createInjector(
-                new AopJdbcTxManagerModule(),
                 // Needs to be modified
                 new RingoDataSourceGuiceModule(params.getDbHost(),params.getDbUser(),params.getDbPass(), params.getDbName()),
                 new RingoServiceModule(params.isProduction()),
                 new SmpModule(),
-                new SmpModule()
+                new SmpModule(),
+
+                new OxalisProductionConfigurationModule(),
+                new OxalisDataSourceModule(),
+                new RepositoryModule()
             );
 
         SendQueuedMessagesUseCase useCase = injector.getInstance(SendQueuedMessagesUseCase.class);

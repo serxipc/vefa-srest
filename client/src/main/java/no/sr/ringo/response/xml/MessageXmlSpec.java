@@ -6,13 +6,13 @@ package no.sr.ringo.response.xml;
  * Time: 3:21 PM
  */
 
+import eu.peppol.persistence.TransferDirection;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.peppol.RingoUtils;
 import no.sr.ringo.common.XmlSpecification;
 import no.sr.ringo.message.MessageMetaDataImpl;
 import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.message.MessageWithLocationsImpl;
-import no.sr.ringo.message.TransferDirection;
 import no.sr.ringo.peppol.*;
 import org.jdom.Element;
 import org.jdom.JDOMException;

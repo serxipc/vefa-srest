@@ -2,7 +2,7 @@ package no.sr.ringo.resource;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.message.statistics.RingoStatistics;
 import org.slf4j.Logger;
@@ -23,13 +23,13 @@ public class StatisticsResource extends AbstractMessageResource {
 
     private static Logger logger = LoggerFactory.getLogger(StatisticsResource.class);
 
-    private final RingoAccount ringoAccount;
+    private final Account account;
     private final PeppolMessageRepository peppolMessageRepository;
 
     @Inject
-    public StatisticsResource(RingoAccount ringoAccount, PeppolMessageRepository peppolMessageRepository) {
+    public StatisticsResource(Account account, PeppolMessageRepository peppolMessageRepository) {
         super();
-        this.ringoAccount = ringoAccount;
+        this.account = account;
         this.peppolMessageRepository = peppolMessageRepository;
     }
 
@@ -41,7 +41,7 @@ public class StatisticsResource extends AbstractMessageResource {
     @Path("/")
     public Response getOverview() {
 
-        final RingoStatistics ringoStatisticsForAccount = peppolMessageRepository.getAccountStatistics(ringoAccount.getId());
+        final RingoStatistics ringoStatisticsForAccount = peppolMessageRepository.getAccountStatistics(account.getId());
         return SrResponse.ok().entity(ringoStatisticsForAccount.asXml()).build();
     }
 }

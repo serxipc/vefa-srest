@@ -3,15 +3,15 @@ package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.AccountRepository;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageNotFoundException;
 import no.sr.ringo.message.PeppolMessageRepository;
-import no.sr.ringo.message.TransferDirection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -42,7 +42,7 @@ public class InboxWithMessageWithoutUUIDTest {
     private Long messageNo2;
     private Long messageNo3;
     private String receiver1 = "9908:976098898";
-    private RingoAccount ringoAccount;
+    private Account account;
     private ParticipantId sender;
 
     @Inject
@@ -59,32 +59,32 @@ public class InboxWithMessageWithoutUUIDTest {
     public void testMessageIdWithNoUUID() throws PeppolMessageNotFoundException {
 
         //proper message
-        messageNo = databaseHelper.createMessage(ringoAccount.getId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, UUID.randomUUID().toString(), null);
+        messageNo = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, UUID.randomUUID().toString(), null);
         //uuid = null
-        messageNo2 = databaseHelper.createMessage(ringoAccount.getId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, null, null);
+        messageNo2 = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, null, null);
         //uuid = ''
-        messageNo3 = databaseHelper.createMessage(ringoAccount.getId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, "", null);
+        messageNo3 = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, "", null);
 
         // We used to expect only a single message as message_uuid was required to be null in order to be deemed in the /inbox
-        Integer inboxCount = peppolMessageRepository.getInboxCount(ringoAccount.getId());
+        Integer inboxCount = peppolMessageRepository.getInboxCount(account.getId());
         assertEquals(inboxCount,(Integer) 3);
 
         //we expect to have only one message
-        List<MessageMetaData> undeliveredInboundMessagesByAccount = peppolMessageRepository.findUndeliveredInboundMessagesByAccount(ringoAccount.getId());
+        List<MessageMetaData> undeliveredInboundMessagesByAccount = peppolMessageRepository.findUndeliveredInboundMessagesByAccount(account.getId());
         assertEquals(undeliveredInboundMessagesByAccount.size(),3);
 
     }
 
     @BeforeMethod
     public void setUp() throws Exception {
-        ringoAccount = accountRepository.createAccount(ObjectMother.getAdamsAccount(), ObjectMother.getAdamsParticipantId());
+        account = accountRepository.createAccount(ObjectMother.getAdamsAccount(), ObjectMother.getAdamsParticipantId());
         sender = ObjectMother.getAdamsParticipantId();
     }
 
     @AfterMethod
     public void tearDown() throws Exception {
-        databaseHelper.deleteAllMessagesForAccount(ringoAccount);
-        accountRepository.deleteAccount(ringoAccount.getId());
+        databaseHelper.deleteAllMessagesForAccount(account);
+        accountRepository.deleteAccount(account.getId());
     }
 
 }

@@ -1,14 +1,14 @@
 package no.sr.ringo.client;
 
 import com.google.inject.Inject;
+import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.AccountRepository;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.http.AbstractHttpClientServerTest;
 import no.sr.ringo.message.PeppolMessageRepository;
-import no.sr.ringo.message.TransferDirection;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Guice;
@@ -44,7 +44,7 @@ public class MarkAsReadIntegrationTest extends AbstractHttpClientServerTest {
     @Inject
     DatabaseHelper databaseHelper;
 
-    private RingoAccount account;
+    private Account account;
 
     private String receiver1 = "9908:976098897";
 

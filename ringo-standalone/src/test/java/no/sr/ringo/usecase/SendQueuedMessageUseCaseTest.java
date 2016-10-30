@@ -1,8 +1,8 @@
 package no.sr.ringo.usecase;
 
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.account.AccountRepository;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.OutboundMessageQueueState;
@@ -173,7 +173,7 @@ public class SendQueuedMessageUseCaseTest {
     @Test
     public void testHandleSingleMessageFailed() throws Exception {
 
-        RingoAccount mockAccount = createMock(RingoAccount.class);
+        Account mockAccount = createMock(Account.class);
 
         //Tests that  path when a message is already locked for sending a document
         final MessageNumber msgNo = MessageNumber.create(1);

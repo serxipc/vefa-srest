@@ -1,18 +1,17 @@
 package no.sr.ringo.client;
 
 import com.google.inject.Inject;
+import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.AccountRepository;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.http.AbstractHttpClientServerTest;
 import no.sr.ringo.message.PeppolMessageRepository;
-import no.sr.ringo.message.TransferDirection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
@@ -51,7 +50,7 @@ public class DownloadXmlDocumentIntegrationTest extends AbstractHttpClientServer
 
     @BeforeMethod(groups = {"integration"})
     public void setUp() throws Exception {
-        RingoAccount account = accountRepository.findAccountByParticipantId(ObjectMother.getTestParticipantId());
+        Account account = accountRepository.findAccountByParticipantId(ObjectMother.getTestParticipantId());
         String uuid = UUID.randomUUID().toString();
         String receiver1 = "9908:976098897";
         messageNumber = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantId().stringValue(), receiver1, uuid, null);
@@ -66,6 +65,7 @@ public class DownloadXmlDocumentIntegrationTest extends AbstractHttpClientServer
 
         //fetch the inbox
         Inbox inbox = ringoRestClientImpl.getInbox();
+
         //get all the messages
         Messages messages = inbox.getMessages();
         //mark all the messages as read

@@ -3,7 +3,7 @@ package no.sr.ringo.resource;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.spi.container.ResourceFilters;
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.document.PeppolDocument;
 import no.sr.ringo.message.*;
@@ -28,18 +28,18 @@ public class MessagesResource extends AbstractMessageResource {
 
     final PeppolMessageRepository peppolMessageRepository;
     private final FetchDocumentUseCase fetchDocumentUseCase;
-    final RingoAccount ringoAccount;
+    final Account account;
     final ReceiveMessageFromClientUseCase receiveMessageFromClientUseCase;
     final FetchMessagesUseCase fetchMessagesUseCase;
 
     @Inject
-    public MessagesResource(ReceiveMessageFromClientUseCase receiveMessageFromClientUseCase, FetchMessagesUseCase fetchMessagesUseCase, PeppolMessageRepository peppolMessageRepository,FetchDocumentUseCase fetchDocumentUseCase, RingoAccount ringoAccount) {
+    public MessagesResource(ReceiveMessageFromClientUseCase receiveMessageFromClientUseCase, FetchMessagesUseCase fetchMessagesUseCase, PeppolMessageRepository peppolMessageRepository,FetchDocumentUseCase fetchDocumentUseCase, Account account) {
         super();
         this.receiveMessageFromClientUseCase = receiveMessageFromClientUseCase;
         this.fetchMessagesUseCase = fetchMessagesUseCase;
         this.peppolMessageRepository = peppolMessageRepository;
         this.fetchDocumentUseCase = fetchDocumentUseCase;
-        this.ringoAccount = ringoAccount;
+        this.account = account;
     }
 
     /**
@@ -51,7 +51,7 @@ public class MessagesResource extends AbstractMessageResource {
     public Response getMessages(@Context UriInfo uriInfo, @QueryParam("sent") String sent, @QueryParam("sender") String sender, @QueryParam("receiver") String receiver, @QueryParam("direction") String direction, @QueryParam("index") String index) {
 
             MessagesQueryResponse messagesQueryResponse = fetchMessagesUseCase.init(this, uriInfo)
-                    .messagesFor(ringoAccount.getId())
+                    .messagesFor(account.getId())
                     .getMessages(new SearchParams(direction, sender, receiver, sent, index));
             String entity = messagesQueryResponse.asXml();
             return SrResponse.ok().entity(entity).build();
@@ -79,7 +79,7 @@ public class MessagesResource extends AbstractMessageResource {
             msgNo = parseMsgNo(msgNoString);
         }
 
-        MessageMetaData messageMetaDataWithLocator = peppolMessageRepository.findMessageByMessageNo(ringoAccount, msgNo.toLong());
+        MessageMetaData messageMetaDataWithLocator = peppolMessageRepository.findMessageByMessageNo(account, msgNo.toLong());
         return createSingleMessageResponse(uriInfo, messageMetaDataWithLocator);
 
     }
@@ -102,7 +102,7 @@ public class MessagesResource extends AbstractMessageResource {
             msgNo = parseMsgNo(msgNoString);
         }
 
-        PeppolDocument xmlDocument = fetchDocumentUseCase.execute(ringoAccount, msgNo);
+        PeppolDocument xmlDocument = fetchDocumentUseCase.execute(account, msgNo);
         return SrResponse.ok().entity(xmlDocument.getXml()).build();
 
     }
@@ -125,7 +125,7 @@ public class MessagesResource extends AbstractMessageResource {
             msgNo = parseMsgNo(msgNoString);
         }
 
-        PeppolDocument xmlDocument = fetchDocumentUseCase.executeWithDecoration(ringoAccount, msgNo);
+        PeppolDocument xmlDocument = fetchDocumentUseCase.executeWithDecoration(account, msgNo);
         return SrResponse.ok().entity(xmlDocument.getXml()).build();
 
     }
@@ -135,7 +135,7 @@ public class MessagesResource extends AbstractMessageResource {
     @Path("/count")
     public Response getCount() {
 
-        Integer count = peppolMessageRepository.getInboxCount(ringoAccount.getId());
+        Integer count = peppolMessageRepository.getInboxCount(account.getId());
         return SrResponse.ok().entity(count.toString()).build();
 
     }

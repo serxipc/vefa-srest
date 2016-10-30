@@ -1,6 +1,6 @@
 package no.sr.ringo.message;
 
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolHeader;
@@ -29,7 +29,7 @@ public class PeppolMessageValidatorTest {
     PeppolMessage mockPeppolMessage;
     PeppolHeader mockPeppolHeader;
     RingoSmpLookup mockRingoSmpLookup;
-    RingoAccount mockRingoAccount;
+    Account mockRingoAccount;
 
     PeppolMessageValidator validator;
     PeppolParticipantId participantId;
@@ -39,7 +39,7 @@ public class PeppolMessageValidatorTest {
         mockPeppolMessage = createStrictMock(PeppolMessage.class);
         mockPeppolHeader = createStrictMock(PeppolHeader.class);
         mockRingoSmpLookup = createStrictMock(RingoSmpLookup.class);
-        mockRingoAccount = createStrictMock(RingoAccount.class);
+        mockRingoAccount = createStrictMock(Account.class);
 
         participantId = new PeppolParticipantId(SchemeId.NO_ORGNR, "976098897");
 

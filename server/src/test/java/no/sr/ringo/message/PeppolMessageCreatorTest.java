@@ -1,13 +1,11 @@
 package no.sr.ringo.message;
 
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
-import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.peppol.PeppolParticipantId;
 import no.sr.ringo.peppol.SchemeId;
 import no.sr.ringo.smp.RingoSmpLookup;
-import no.sr.ringo.usecase.ReceiveMessageFromClientUseCaseIntegrationTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -28,14 +26,14 @@ public class PeppolMessageCreatorTest {
 
 
     RingoSmpLookup mockRingoSmpLookup;
-    RingoAccount mockRingoAccount;
+    Account mockRingoAccount;
 
     PeppolParticipantId participantId;
 
     @BeforeMethod
     public void setUp() throws Exception {
         mockRingoSmpLookup = createStrictMock(RingoSmpLookup.class);
-        mockRingoAccount = createStrictMock(RingoAccount.class);
+        mockRingoAccount = createStrictMock(Account.class);
 
         participantId = new PeppolParticipantId(SchemeId.NO_ORGNR, "976098897");
 

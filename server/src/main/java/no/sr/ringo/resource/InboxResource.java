@@ -3,7 +3,8 @@ package no.sr.ringo.resource;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.spi.container.ResourceFilters;
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.document.PeppolDocument;
 import no.sr.ringo.message.*;
@@ -25,16 +26,16 @@ import javax.ws.rs.core.UriInfo;
 @RequestScoped
 public class InboxResource extends AbstractMessageResource {
 
-    private final RingoAccount ringoAccount;
+    private final Account account;
     private final PeppolMessageRepository peppolMessageRepository;
     private final FetchMessagesUseCase fetchMessagesUseCase;
     private final FetchDocumentUseCase fetchDocumentUseCase;
 
     @Inject
-    public InboxResource(PeppolMessageRepository peppolMessageRepository, RingoAccount ringoAccount, FetchMessagesUseCase fetchMessagesUseCase, FetchDocumentUseCase fetchDocumentUseCase) {
+    public InboxResource(PeppolMessageRepository peppolMessageRepository, Account account, FetchMessagesUseCase fetchMessagesUseCase, FetchDocumentUseCase fetchDocumentUseCase) {
         super();
         this.peppolMessageRepository = peppolMessageRepository;
-        this.ringoAccount = ringoAccount;
+        this.account = account;
         this.fetchMessagesUseCase = fetchMessagesUseCase;
         this.fetchDocumentUseCase = fetchDocumentUseCase;
     }
@@ -48,7 +49,7 @@ public class InboxResource extends AbstractMessageResource {
     public Response getMessages(@Context UriInfo uriInfo) {
 
         InboxQueryResponse inboxQueryResponse = fetchMessagesUseCase.init(this, uriInfo)
-                .messagesFor(ringoAccount.getId())
+                .messagesFor(account.getId())
                 .getInbox();
 
         String entity = inboxQueryResponse.asXml();
@@ -78,7 +79,7 @@ public class InboxResource extends AbstractMessageResource {
         }
 
         MessageMetaData messageMetaDataWithLocators = null;
-        messageMetaDataWithLocators = peppolMessageRepository.findMessageByMessageNo(ringoAccount, msgNo.toLong());
+        messageMetaDataWithLocators = peppolMessageRepository.findMessageByMessageNo(account, msgNo.toLong());
         if (!messageMetaDataWithLocators.getTransferDirection().equals(TransferDirection.IN)) {
             return SrResponse.status(Response.Status.NOT_FOUND, "Inbound message number " + msgNoString + " not found");
         }
@@ -92,7 +93,7 @@ public class InboxResource extends AbstractMessageResource {
     @Path("/count")
     public Response getCount() {
 
-        Integer count = peppolMessageRepository.getInboxCount(ringoAccount.getId());
+        Integer count = peppolMessageRepository.getInboxCount(account.getId());
         return SrResponse.ok().entity(count.toString()).build();
 
     }
@@ -114,7 +115,7 @@ public class InboxResource extends AbstractMessageResource {
             msgNo = parseMsgNo(msgNoString);
         }
 
-        PeppolDocument xmlDocument = fetchDocumentUseCase.execute(ringoAccount, msgNo);
+        PeppolDocument xmlDocument = fetchDocumentUseCase.execute(account, msgNo);
 
         return SrResponse.ok().entity(xmlDocument.getXml()).build();
 
@@ -133,7 +134,7 @@ public class InboxResource extends AbstractMessageResource {
         }
 
         MessageMetaData messageMetaDataWithLocators = null;
-        messageMetaDataWithLocators = peppolMessageRepository.findMessageByMessageNo(ringoAccount, msgNo.toLong());
+        messageMetaDataWithLocators = peppolMessageRepository.findMessageByMessageNo(account, msgNo.toLong());
         if (!messageMetaDataWithLocators.getTransferDirection().equals(TransferDirection.IN)) {
             return SrResponse.status(Response.Status.NOT_FOUND, "Inbound message number " + msgNoString + " not found");
         }

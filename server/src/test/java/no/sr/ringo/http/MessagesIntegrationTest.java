@@ -1,14 +1,14 @@
 package no.sr.ringo.http;
 
 import com.google.inject.Inject;
+import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.client.Message;
 import no.sr.ringo.client.Messagebox;
 import no.sr.ringo.client.Messages;
 import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
-import no.sr.ringo.message.TransferDirection;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Guice;
@@ -83,7 +83,7 @@ public class MessagesIntegrationTest extends AbstractHttpClientServerTest {
 
     @BeforeMethod(groups = {"slow"})
     public void insertSample() throws SQLException {
-        final RingoAccount account = ObjectMother.getTestAccount();
+        final Account account = ObjectMother.getTestAccount();
         for (int i = 0; i <= 26; i++) {
             final Long message = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), null);
             messageIds.add(message);

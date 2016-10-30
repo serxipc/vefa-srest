@@ -1,7 +1,7 @@
 package no.sr.ringo.usecase;
 
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.email.EmailService;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.client.ClientObjectMother;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.message.PeppolMessageRepository;
@@ -36,7 +36,7 @@ public class ExtractInvoiceNoFromDocumentTest {
     @BeforeMethod
     public void setUp() throws Exception {
         this.documentString = readTestDocumentToFile();
-        RingoAccount mockRingoAccount = createStrictMock(RingoAccount.class);
+        Account mockRingoAccount = createStrictMock(Account.class);
         RingoSmpLookup mockRingoSmpLookup = createStrictMock(RingoSmpLookup.class);
         QueueRepository mockQueueRepository = createStrictMock(QueueRepository.class);
         PeppolMessageRepository mockPeppolMessageRepository = createStrictMock(PeppolMessageRepository.class);

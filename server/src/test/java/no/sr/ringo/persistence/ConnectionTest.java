@@ -3,9 +3,11 @@ package no.sr.ringo.persistence;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import eu.peppol.persistence.guice.AopJdbcTxManagerModule;
+import eu.peppol.persistence.guice.RepositoryModule;
+import eu.peppol.util.OxalisProductionConfigurationModule;
 import no.sr.ringo.account.AccountRepository;
 import no.sr.ringo.account.AccountRepositoryImpl;
-import no.sr.ringo.guice.AopJdbcTxManagerModule;
 import no.sr.ringo.guice.TestDataSourceModule;
 import no.sr.ringo.persistence.repo.TestRepo;
 import no.sr.ringo.persistence.repo.TestRepoImpl;
@@ -24,7 +26,7 @@ import static org.testng.Assert.fail;
 /**
  * Sets up guice with Test datasource and aop
  */
-@Guice(modules = {AopJdbcTxManagerModule.class, TestDataSourceModule.class, ConnectionTest.ConnectionTestModule.class })
+@Guice(modules = {TestDataSourceModule.class, ConnectionTest.ConnectionTestModule.class, RepositoryModule.class, OxalisProductionConfigurationModule.class})
 public class ConnectionTest {
 
     @Inject TestRepo testRepo;

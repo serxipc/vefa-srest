@@ -2,12 +2,12 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
+import eu.peppol.persistence.TransferDirection;
 import no.sr.ringo.account.AccountRepository;
 import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageRepository;
-import no.sr.ringo.message.TransferDirection;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Guice;

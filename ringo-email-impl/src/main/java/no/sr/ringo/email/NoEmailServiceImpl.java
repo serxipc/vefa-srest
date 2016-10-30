@@ -1,6 +1,6 @@
 package no.sr.ringo.email;
 
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.message.MessageNumber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,32 +20,32 @@ public class NoEmailServiceImpl implements EmailService {
     }
 
     @Override
-    public SentEmailResult sendRegistrationNotification(RingoAccount ringoAccount, String info) {
-        log.error("Mail not implemented - no mail was sent to sales department for account {} and info {}", ringoAccount.getUserName().stringValue(), info);
+    public SentEmailResult sendRegistrationNotification(Account account, String info) {
+        log.error("Mail not implemented - no mail was sent to sales department for account {} and info {}", account.getUserName().stringValue(), info);
         return null;
     }
 
     @Override
-    public SentEmailResult sendUploadErrorNotification(RingoAccount ringoAccount, String errorMessage, String filename) {
-        log.error("Mail not implemented - no upload error notification was sent to user {} for file {} and error {}", ringoAccount.getUserName().stringValue(), filename, errorMessage);
+    public SentEmailResult sendUploadErrorNotification(Account account, String errorMessage, String filename) {
+        log.error("Mail not implemented - no upload error notification was sent to user {} for file {} and error {}", account.getUserName().stringValue(), filename, errorMessage);
         return null;
     }
 
     @Override
-    public SentEmailResult sendProcessingErrorNotification(RingoAccount ringoAccount, String errorMessage, MessageNumber messageNumber) {
-        log.error("Mail not implemented - no processing error notification was sent to user {} for message number {} and error {}", ringoAccount.getUserName().stringValue(), messageNumber.getValue(), errorMessage);
+    public SentEmailResult sendProcessingErrorNotification(Account account, String errorMessage, MessageNumber messageNumber) {
+        log.error("Mail not implemented - no processing error notification was sent to user {} for message number {} and error {}", account.getUserName().stringValue(), messageNumber.getValue(), errorMessage);
         return null;
     }
 
     @Override
-    public SentEmailResult sendClientBatchUploadErrorNotification(RingoAccount ringoAccount, String commandLine, String errorMessage) {
-        log.error("Mail not implemented - no Ringo Client batch upload notification was sent to user {} for command {} and error {}", ringoAccount.getUserName().stringValue(), commandLine, errorMessage);
+    public SentEmailResult sendClientBatchUploadErrorNotification(Account account, String commandLine, String errorMessage) {
+        log.error("Mail not implemented - no Ringo Client batch upload notification was sent to user {} for command {} and error {}", account.getUserName().stringValue(), commandLine, errorMessage);
         return null;
     }
 
     @Override
-    public SentEmailResult sendClientDownloadErrorNotification(RingoAccount ringoAccount, String commandLine, String errorMessage) {
-        log.error("Mail not implemented - no Ringo Client download error notification was sent to user {} for command {} and error {}", ringoAccount.getUserName().stringValue(), commandLine, errorMessage);
+    public SentEmailResult sendClientDownloadErrorNotification(Account account, String commandLine, String errorMessage) {
+        log.error("Mail not implemented - no Ringo Client download error notification was sent to user {} for command {} and error {}", account.getUserName().stringValue(), commandLine, errorMessage);
         return null;
     }
 

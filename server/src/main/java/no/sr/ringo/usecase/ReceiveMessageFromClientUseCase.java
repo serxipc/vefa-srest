@@ -3,8 +3,8 @@ package no.sr.ringo.usecase;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.email.EmailService;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.common.UploadMode;
 import no.sr.ringo.message.*;
 import no.sr.ringo.queue.OutboundMessageQueueId;
@@ -28,7 +28,7 @@ public class ReceiveMessageFromClientUseCase {
 
     static final Logger log = LoggerFactory.getLogger(ReceiveMessageFromClientUseCase.class);
 
-    private final RingoAccount ringoAccount;
+    private final Account account;
     private final PeppolMessageRepository messageRepository;
     private final QueueRepository queueRepository;
     private final RingoSmpLookup ringoSmpLookup;
@@ -41,8 +41,8 @@ public class ReceiveMessageFromClientUseCase {
 
 
     @Inject
-    ReceiveMessageFromClientUseCase(RingoAccount ringoAccount, PeppolMessageRepository messageRepository, QueueRepository queueRepository, RingoSmpLookup ringoSmpLookup, EmailService emailService) {
-        this.ringoAccount = ringoAccount;
+    ReceiveMessageFromClientUseCase(Account account, PeppolMessageRepository messageRepository, QueueRepository queueRepository, RingoSmpLookup ringoSmpLookup, EmailService emailService) {
+        this.account = account;
         this.messageRepository = messageRepository;
         this.queueRepository = queueRepository;
         this.ringoSmpLookup = ringoSmpLookup;
@@ -79,7 +79,7 @@ public class ReceiveMessageFromClientUseCase {
             throw webException;
         }
 
-        MessageWithLocations messageWithLocations = extractInvoiceNoAndPersistOutboundMessage(ringoAccount);
+        MessageWithLocations messageWithLocations = extractInvoiceNoAndPersistOutboundMessage(account);
 
         queueMessage(messageWithLocations);
 
@@ -87,7 +87,7 @@ public class ReceiveMessageFromClientUseCase {
     }
 
     private void validateDocument() {
-        if (ringoAccount.isValidateUpload()) {
+        if (account.isValidateUpload()) {
             peppolMessageValidator.validateDocument();
         }
     }
@@ -102,7 +102,7 @@ public class ReceiveMessageFromClientUseCase {
     }
 
     private void extractHeader(OutboundPostParams postParams) {
-        peppolMessageCreator = new PeppolMessageCreator(ringoSmpLookup, ringoAccount, postParams);
+        peppolMessageCreator = new PeppolMessageCreator(ringoSmpLookup, account, postParams);
         peppolMessage = peppolMessageCreator.extractHeader();
     }
 
@@ -110,7 +110,7 @@ public class ReceiveMessageFromClientUseCase {
     /**
      * Store message in db, even though it might not be valid
      */
-    private MessageWithLocations extractInvoiceNoAndPersistOutboundMessage(RingoAccount account) {
+    private MessageWithLocations extractInvoiceNoAndPersistOutboundMessage(Account account) {
 
         if (peppolMessage == null) {
             throw new IllegalStateException("Tried to persist message which doesn't exist.");
@@ -160,7 +160,7 @@ public class ReceiveMessageFromClientUseCase {
      * Sends email notification informing about exception situation that has occurred
      */
     private void handleInvalidInputException(InvalidUserInputWebException webException) {
-        emailService.sendUploadErrorNotification(ringoAccount, webException.getMessage(), postParams.getFilename());
+        emailService.sendUploadErrorNotification(account, webException.getMessage(), postParams.getFilename());
     }
 
 }

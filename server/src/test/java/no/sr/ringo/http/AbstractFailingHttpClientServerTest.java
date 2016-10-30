@@ -1,7 +1,7 @@
 package no.sr.ringo.http;
 
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.client.RingoClientImpl;
 import no.sr.ringo.common.TestFileHelper;
 import no.sr.ringo.standalone.DefaultRingoConfig;
@@ -33,7 +33,7 @@ import org.testng.annotations.BeforeMethod;
  */
 public class AbstractFailingHttpClientServerTest {
 
-    protected static final RingoAccount TEST_ACCOUNT = ObjectMother.getTestAccount();
+    protected static final Account TEST_ACCOUNT = ObjectMother.getTestAccount();
     protected static final String REALM = "test-realm";
     protected static final String WEB_CONTEXT_NAME = "error";
     protected static final int HTTP_PORT = 8889;

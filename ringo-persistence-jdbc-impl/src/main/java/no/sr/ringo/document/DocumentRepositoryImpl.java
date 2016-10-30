@@ -1,20 +1,14 @@
 package no.sr.ringo.document;
 
-import no.difi.vefa.peppol.sbdh.SbdReader;
-import no.difi.vefa.peppol.sbdh.lang.SbdhException;
-import no.difi.vefa.peppol.sbdh.util.XMLStreamUtils;
-import no.sr.ringo.account.RingoAccount;
-import no.sr.ringo.guice.jdbc.JdbcTxManager;
-import no.sr.ringo.guice.jdbc.Repository;
+import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
+import eu.peppol.persistence.guice.jdbc.Repository;
 import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.PeppolMessageNotFoundException;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.utils.SbdhUtils;
 
 import javax.inject.Inject;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -38,10 +32,10 @@ public class DocumentRepositoryImpl implements DocumentRepository {
     }
 
     @Override
-    public PeppolDocument getPeppolDocument(RingoAccount ringoAccount, MessageNumber msgNo) {
+    public PeppolDocument getPeppolDocument(Account account, MessageNumber msgNo) {
         try {
 
-            return fetchPeppolDocument(ringoAccount, msgNo);
+            return fetchPeppolDocument(account, msgNo);
         } catch (SQLException e) {
             throw new IllegalStateException("Unable to retrieve xml document for message no: " + msgNo, e);
         }
@@ -51,8 +45,8 @@ public class DocumentRepositoryImpl implements DocumentRepository {
     // utility functions should be kept private to avoid being intercepted by the Repository annotation
     //
 
-    private PeppolDocument fetchPeppolDocument(RingoAccount ringoAccount, MessageNumber msgNo) throws SQLException {
-        ResultSet rs = fetchResultSet(ringoAccount, msgNo);
+    private PeppolDocument fetchPeppolDocument(Account account, MessageNumber msgNo) throws SQLException {
+        ResultSet rs = fetchResultSet(account, msgNo);
         if (documentFound(rs)) {
             return extractPeppolDocumentFromResultSet(rs);
         } else {
@@ -64,9 +58,9 @@ public class DocumentRepositoryImpl implements DocumentRepository {
         return rs.next();
     }
 
-    private ResultSet fetchResultSet(RingoAccount ringoAccount, MessageNumber msgNo) throws SQLException {
+    private ResultSet fetchResultSet(Account account, MessageNumber msgNo) throws SQLException {
         final Connection con = jdbcTxManager.getConnection();
-        PreparedStatement ps = prepareSelect(ringoAccount, msgNo, con);
+        PreparedStatement ps = prepareSelect(account, msgNo, con);
         return ps.executeQuery();
     }
 
@@ -100,12 +94,12 @@ public class DocumentRepositoryImpl implements DocumentRepository {
         return documentFactory.makePeppolDocument(PeppolDocumentTypeId.valueFor(documentId), xmlMessage);
     }
 
-    private PreparedStatement prepareSelect(RingoAccount ringoAccount, MessageNumber msgNo, Connection con) throws SQLException {
+    private PreparedStatement prepareSelect(Account account, MessageNumber msgNo, Connection con) throws SQLException {
         // dumpDbmsMetaData(con);
 
         PreparedStatement ps = con.prepareStatement("select document_id, payload_url from message where msg_no=? and account_id = ?");
         ps.setInt(1, msgNo.toInt());
-        ps.setInt(2, ringoAccount.getId().toInteger());
+        ps.setInt(2, account.getId().toInteger());
         return ps;
     }
 

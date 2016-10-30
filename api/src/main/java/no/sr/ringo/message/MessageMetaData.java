@@ -1,5 +1,6 @@
 package no.sr.ringo.message;
 
+import eu.peppol.persistence.TransferDirection;
 import no.sr.ringo.peppol.PeppolHeader;
 
 import java.util.Date;

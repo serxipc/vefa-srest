@@ -21,6 +21,7 @@ import static org.testng.Assert.*;
 
 /**
  * This test proves that SMP lookup using the Oxalis outbound library works
+ *
  * <p/>
  * User: andy
  * Date: 1/25/12

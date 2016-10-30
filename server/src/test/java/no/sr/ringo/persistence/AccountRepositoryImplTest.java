@@ -2,12 +2,17 @@ package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.SrAccountNotFoundException;
+import eu.peppol.persistence.api.UserName;
+import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.api.account.Customer;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.*;
 import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.MessageNumber;
-import no.sr.ringo.message.TransferDirection;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Guice;
@@ -30,11 +35,11 @@ public class AccountRepositoryImplTest {
 
 
     private AccountRepository accountRepository;
-    private RingoAccount ringoAccount;
+    private Account account;
     private ParticipantId participantId;
     private DatabaseHelper databaseHelper;
     private Customer customer;
-    RingoAccount adamsAccount;
+    Account adamsAccount;
 
     @Inject
     public AccountRepositoryImplTest(DatabaseHelper databaseHelper, AccountRepository accountRepository) {
@@ -47,14 +52,14 @@ public class AccountRepositoryImplTest {
         participantId = ObjectMother.getAdamsParticipantId();
         adamsAccount = ObjectMother.getAdamsAccount();
         adamsAccount = accountRepository.createAccount(adamsAccount, participantId);
-        ringoAccount = accountRepository.createAccount(ringoAccount, participantId);
+        account = accountRepository.createAccount(account, participantId);
 
     }
 
     @AfterMethod(groups = {"persistence"})
     public void tearDown() throws Exception {
-        databaseHelper.deleteAllMessagesForAccount(ringoAccount);
-        accountRepository.deleteAccount(ringoAccount.getId());
+        databaseHelper.deleteAllMessagesForAccount(account);
+        accountRepository.deleteAccount(account.getId());
         databaseHelper.deleteCustomer(customer);
 
         databaseHelper.deleteAllMessagesForAccount(adamsAccount);
@@ -64,7 +69,7 @@ public class AccountRepositoryImplTest {
     @Test(groups = {"persistence"})
     public void testFindAccountById() throws Exception {
 
-        RingoAccount accountById = accountRepository.findAccountById(ringoAccount.getId());
+        Account accountById = accountRepository.findAccountById(account.getId());
 
         assertNotNull(accountById.getId());
         assertNotNull(accountById.getCustomer());
@@ -73,7 +78,7 @@ public class AccountRepositoryImplTest {
     @Test(groups = {"persistence"})
     public void testFindAccountByUsername() throws Exception {
 
-        RingoAccount accountByUsername = accountRepository.findAccountByUsername(ringoAccount.getUserName());
+        Account accountByUsername = accountRepository.findAccountByUsername(account.getUserName());
 
         assertNotNull(accountByUsername.getId());
         assertNotNull(accountByUsername.getCustomer());
@@ -83,7 +88,7 @@ public class AccountRepositoryImplTest {
 
     @Test(groups = {"persistence"})
     public void testFindAccountByParticipantId() throws Exception {
-        RingoAccount accountByParticipantId = accountRepository.findAccountByParticipantId(participantId);
+        Account accountByParticipantId = accountRepository.findAccountByParticipantId(participantId);
         assertNotNull(accountByParticipantId);
         assertNotNull(accountByParticipantId.getId());
         assertNotNull(accountByParticipantId.getCustomer());

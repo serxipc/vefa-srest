@@ -2,12 +2,12 @@ package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.PeppolMessageRepository;
-import no.sr.ringo.message.TransferDirection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -29,7 +29,7 @@ public class SameMessageSenderAndReceiverIntegrationTest {
     private final PeppolMessageRepository peppolMessageRepository;
     private final DatabaseHelper databaseHelper;
 
-    private RingoAccount account = ObjectMother.getTestAccount();
+    private Account account = ObjectMother.getTestAccount();
     private ParticipantId participantId = ObjectMother.getTestParticipantId();
 
     private Long messageOut;

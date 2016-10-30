@@ -3,22 +3,19 @@ package no.sr.ringo.account;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
-import no.sr.ringo.email.EmailService;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.persistence.api.UserName;
+import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.Customer;
+import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
+import eu.peppol.persistence.guice.jdbc.Transactional;
 import no.sr.ringo.RingoConstant;
 import no.sr.ringo.common.MessageHelper;
-import no.sr.ringo.guice.jdbc.JdbcTxManager;
-import no.sr.ringo.guice.jdbc.Transactional;
+import no.sr.ringo.email.EmailService;
 import no.sr.ringo.peppol.PeppolParticipantId;
 import no.sr.ringo.security.CredentialHandler;
-import no.sr.ringo.security.HashedPassword;
-import no.sr.ringo.security.Hasher;
-import no.sr.ringo.security.SaltData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * UseCase responsible for the process of registration of new users
@@ -85,7 +82,7 @@ public class RegisterUseCase {
             throw new IllegalArgumentException("Provided organisation number is invalid");
         }
 
-        RingoAccount orgNoUsed = accountRepository.findAccountByParticipantId(new ParticipantId(peppolParticipantId.stringValue()));
+        Account orgNoUsed = accountRepository.findAccountByParticipantId(new ParticipantId(peppolParticipantId.stringValue()));
         if (orgNoUsed != null) {
             return new RegistrationProcessResult(RegistrationProcessResult.RegistrationSource.RINGO, false, MessageHelper.getMessage("reg.orgNo.registered"));
         }
@@ -93,12 +90,12 @@ public class RegisterUseCase {
         // create customer entry
         Customer customer = accountRepository.createCustomer(registrationData.getName(), registrationData.getEmail(), registrationData.getPhone(), registrationData.getCountry(), registrationData.getContactPerson(), registrationData.getAddress1(), registrationData.getAddress2(), registrationData.getZip(), registrationData.getCity(), registrationData.getOrgNo());
 
-        RingoAccount account = new RingoAccount(customer, new UserName(registrationData.getUsername()), null, null, null, false, true);
+        Account account = new Account(customer, new UserName(registrationData.getUsername()), null, null, null, false, true);
 
         // create account entry and account_receiver entry (only if registering in SMP)
         //Prefix given orgNo with 9908
         ParticipantId participantId = registrationData.isRegisterSmp() ? new ParticipantId(RingoConstant.PEPPOL_PARTICIPANT_PREFIX + registrationData.getOrgNo()) : null;
-        RingoAccount stored = accountRepository.createAccount(account, participantId);
+        Account stored = accountRepository.createAccount(account, participantId);
 
         // Encrypts/hashes the password
         String mutatedPassword = credentialHandler.mutate(registrationData.getPassword());

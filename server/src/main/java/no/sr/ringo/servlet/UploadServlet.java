@@ -2,9 +2,11 @@ package no.sr.ringo.servlet;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import no.sr.ringo.account.RingoAccount;
+import eu.peppol.persistence.api.SrAccountNotFoundException;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.account.RingoAccountProvider;
-import no.sr.ringo.account.SrAccountNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -23,6 +25,8 @@ import java.io.IOException;
 public class UploadServlet extends HttpServlet {
 
 
+    public static final Logger log = LoggerFactory.getLogger(UploadServlet.class);
+
     private final RingoAccountProvider ringoAccountProvider;
 
     @Inject
@@ -38,10 +42,12 @@ public class UploadServlet extends HttpServlet {
 
         // Retrieves the SrAccount for the authenticated user and stuffs it into the request context.
         try {
-            request.setAttribute(RingoAccount.class.getSimpleName(), ringoAccountProvider.getAccount(request.getUserPrincipal()));
+            request.setAttribute(Account.class.getSimpleName(), ringoAccountProvider.getAccount(request.getUserPrincipal()));
         } catch (SrAccountNotFoundException e) {
             throw new IllegalStateException("No account for user " + request.getUserPrincipal());
         }
+
+        log.info("Redirecting to /WEB-INF/pages/upload.jsp");
 
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/pages/upload.jsp");
         requestDispatcher.forward(request, response);

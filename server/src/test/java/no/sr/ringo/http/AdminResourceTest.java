@@ -1,12 +1,12 @@
 package no.sr.ringo.http;
 
 import com.google.inject.Inject;
+import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.PeppolMessageRepository;
-import no.sr.ringo.message.TransferDirection;
 import no.sr.ringo.message.statistics.RingoStatistics;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -45,7 +45,7 @@ public class AdminResourceTest extends AbstractHttpClientServerTest {
     PeppolMessageRepository peppolMessageRepository;
 
     private List<Long> messageIds = new ArrayList<>();
-    private RingoAccount testAccount = ObjectMother.getTestAccount();
+    private Account testAccount = ObjectMother.getTestAccount();
 
     /**
      * By default there's no admin constraint, so this will return forbidden

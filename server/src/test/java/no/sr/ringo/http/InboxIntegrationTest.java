@@ -1,7 +1,8 @@
 package no.sr.ringo.http;
 
+import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.client.Inbox;
 import no.sr.ringo.client.Message;
 import no.sr.ringo.client.Messages;
@@ -10,7 +11,6 @@ import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.PeppolMessageRepository;
-import no.sr.ringo.message.TransferDirection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -41,6 +41,13 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
 
     @Inject
     PeppolMessageRepository peppolMessageRepository;
+
+
+    @Test(groups = {"integration"})
+    public void helloWorld() {
+        System.out.println("Hello world");;
+
+    }
 
     /**
      * Retrieves messages from inbox
@@ -76,7 +83,7 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
 
     @BeforeMethod(groups = {"integration"})
     public void insertSample() throws SQLException {
-        final RingoAccount account = ObjectMother.getTestAccount();
+        final Account account = ObjectMother.getTestAccount();
         messageId = databaseHelper.createMessage(1, TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), null);
         MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(MessageNumber.create(messageId));
 

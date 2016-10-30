@@ -1,7 +1,8 @@
 package no.sr.ringo.message;
 
+import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.account.RingoAccount;
 import no.sr.ringo.resource.UriLocationAware;
 import no.sr.ringo.response.MessagesQueryResponse;
 import no.sr.ringo.response.Navigation;
@@ -29,7 +30,7 @@ public class FetchMessagesUseCaseTest {
     private URI OK_URI;
     private MessagesDataProvider mockMessagesDataProvider;
     private FetchMessagesUseCase useCase;
-    private RingoAccount ringoAccount;
+    private Account account;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -42,7 +43,7 @@ public class FetchMessagesUseCaseTest {
         useCase = new FetchMessagesUseCase(mockPeppolMessageRepository);
         useCase.messagesDataProvider = mockMessagesDataProvider;
         useCase.locationAware = mockLocationAware;
-        ringoAccount = ringoAccount();
+        account = account();
     }
 
     @Test
@@ -113,10 +114,10 @@ public class FetchMessagesUseCaseTest {
     public void testsThatMessagesWithoutSearchParamsBehavesAsExpected() throws Exception{
         List<MessageMetaData> messages = new ArrayList<MessageMetaData>();
 
-        expect(mockPeppolMessageRepository.findMessages(ringoAccount.getId(), null)).andReturn(messages);
+        expect(mockPeppolMessageRepository.findMessages(account.getId(), null)).andReturn(messages);
         replayMocks();
 
-        useCase.messagesFor(ringoAccount.getId());
+        useCase.messagesFor(account.getId());
 
         final MessagesQueryResponse messagesQueryResponse = useCase.getMessages();
 
@@ -172,20 +173,20 @@ public class FetchMessagesUseCaseTest {
 
     @Test
     public void testFindOutboundMessage() throws Exception {
-        expect(mockPeppolMessageRepository.findMessageByMessageNo(ringoAccount,1L)).andStubReturn(validOutboundMessage());
+        expect(mockPeppolMessageRepository.findMessageByMessageNo(account,1L)).andStubReturn(validOutboundMessage());
         replayMocks();
 
-        MessageMetaData outBoundMessageByMessageNo = useCase.findOutBoundMessageByMessageNo(ringoAccount, 1L);
+        MessageMetaData outBoundMessageByMessageNo = useCase.findOutBoundMessageByMessageNo(account, 1L);
 
         assertNotNull(outBoundMessageByMessageNo);
     }
 
     @Test(expectedExceptions = PeppolMessageNotFoundException.class)
     public void testFindOutboundMessageException() throws Exception {
-        expect(mockPeppolMessageRepository.findMessageByMessageNo(ringoAccount,1L)).andStubReturn(invalidOutboundMessage());
+        expect(mockPeppolMessageRepository.findMessageByMessageNo(account,1L)).andStubReturn(invalidOutboundMessage());
         replayMocks();
 
-        MessageMetaData outBoundMessageByMessageNo = useCase.findOutBoundMessageByMessageNo(ringoAccount, 1L);
+        MessageMetaData outBoundMessageByMessageNo = useCase.findOutBoundMessageByMessageNo(account, 1L);
 
         assertNotNull(outBoundMessageByMessageNo);
     }
@@ -208,8 +209,8 @@ public class FetchMessagesUseCaseTest {
 
 
 
-    private RingoAccount ringoAccount() {
-        RingoAccount account = ObjectMother.getTestAccount();
+    private Account account() {
+        Account account = ObjectMother.getTestAccount();
         return account;
     }
 }
