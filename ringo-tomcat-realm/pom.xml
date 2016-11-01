@@ -13,7 +13,9 @@
     <packaging>jar</packaging>
 
     <name>Ringo - Tomcat login realm</name>
-    <description>Custom single sign on db realm</description>
+    <description>NOT IN USE as of Oct 30, 2016
+        Custom single sign on db realm.
+    </description>
 
     <dependencies>
 
@@ -31,15 +33,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- for tests -->
-
-<!--
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>test</scope>
-        </dependency>
--->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

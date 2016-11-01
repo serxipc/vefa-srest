@@ -29,7 +29,7 @@
         </dependency>
         <dependency>
             <groupId>no.difi.oxalis</groupId>
-            <artifactId>oxalis-persistence-impl</artifactId>
+            <artifactId>oxalis-persistence</artifactId>
         </dependency>
 
 

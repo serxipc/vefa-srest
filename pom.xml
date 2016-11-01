@@ -65,8 +65,8 @@
 
             <dependency>
                 <groupId>no.difi.oxalis</groupId>
-                <artifactId>oxalis-persistence-impl</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <artifactId>oxalis-persistence</artifactId>
+                <version>4.0.0-SNAPSHOT</version>
             </dependency>
 
             <!-- standard jee javax.inject annotations (for non jee applications) -->

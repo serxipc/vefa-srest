@@ -1,42 +1,12 @@
-# vefa-srest
+# vefa-srest (formerly "Ringo") - REST based API for PEPPOL access point
 
-Install MySQL or use the supplied H2 database. Follow the instructions below.
+## Installation prerequisites
 
-### Install MySQL with database oxalis_test
-- install mysql
-- create database `oxalis_test` with one user `skrue` using password `vable`
+ - Oxalis version 4.x has been installed and verified.
 
-  ```sql    
-    create database oxalis_test;
-    create user 'skrue' identified by 'vable';
-    use oxalis_test;
-    grant all on oxalis_test.* to 'skrue';
-  ```        
-- run the script in `/server/src/main/sql/create-oxalis-dbms.sql`
-Given that your are located in the root source directory of the code, this
-MySQL command should do the trick:
+These installation instructions assumes that you are using Tomcat 9.x with Oxalis installed. 
 
-  ```sql
-  source /server/src/main/sql/create-oxalis-dbms.sql
-  ```
-
-
-### Install Java 8 and Tomcat 9
-- create new folder .../rest-server/
-- unzip JDK 8 in that folder .../rest-server/jdk1.8.0_66
-- unzip Tomcat 9 in that folder .../rest-server/apache-tomcat-9.0.0.M4
-- make start / stop scripts runnable chmod +x .../rest-server/apache-tomcat-9.0.0.M4/bin/*.sh
-- create .../rest-server/apache-tomcat-9.0.0.M4/bin/setenv.sh file pointing to your local JDK:
-
-  ```sh
-  # Linux put this in setenv.sh
-  export JAVA_HOME=.../rest-server/jdk1.8.0_66
-
-  # Windows put this is setenv.bat
-  set JAVA_HOME=C:/.../rest-server/jdk1.8.0_66
-  ```
-
-### Compiling the code
+## Compiling the code
 
 The code may be compiled using the following commands:
 
@@ -49,53 +19,9 @@ Command                     | Comment
 `mvn clean install`         | same as above
 
 
-### Install build artifacts for REST interface
+## Install build artifacts for the REST interface
 
-1. Copy `server/target/ROOT.war` to $TOMCAT_HOME/webapps as `ROOT.war`
-1. Copy MySQL jdbc driver file mysql-connector-java-5.1.38-bin.jar to `tomcat/lib`
-1. Copy Ringo Realm file ringo-tomcat-realm-1.1.28-SNAPSHOT-jar-with-dependencies.jar to `tomcat/lib`
-1. Add the jdbc datasource resource into `<GlobalNamingResources>` in `tomcat/conf/server.xml`:
-   ```xml
-  <Resource name="jdbc/oxalis"
-        auth="Container"
-        type="javax.sql.DataSource"
-        maxActive="100"
-        maxIdle="30"
-        maxWait="10000"
-        username="skrue"
-        password="vable"
-        driverClassName="com.mysql.jdbc.Driver"
-        url="jdbc:mysql://localhost:3306/oxalis_test"
-        removeAbandoned="true"
-        removeAbandonedTimeout="60"
-        logAbandoned="true"
-        validationQuery="select now()"
-    />
-  ```
-1. Configure security realm in `tomcat/conf/server.xml` inside the `<Engine>` element, below the `UserDatabaseRealm` (nested inside the `LockOutRealm`):
-
-  ```xml
-  <Engine name="Catalina" defultHost="localhost">
-
-        <Realm className="org.apache.catalina.realm.LockOutRealm">
-
-            <Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase" />
-    
-                  <Realm className="ringo.realm.RingoDataSourceRealm"
-                        dataSourceName="jdbc/oxalis"
-                        userTable="account"
-                        userNameCol="username"
-                        userCredCol="password"
-                        userRoleTable="account_role"
-                        roleNameCol="role_name"
-                    />
-```
-1. Add resource link from GlobalNamingResources to the WebApp Context in `${TOMCAT_HOME}/conf/context.xml`:
-
-  ```
-<ResourceLink name="jdbc/oxalis" global="jdbc/oxalis" type="javax.sql.DataSource"/>
-  ```
-  
+1. Copy `server/target/ROOT.war` to $TOMCAT_HOME/webapps as `ROOT.war` 
 1. Start Tomcat using `${TOMCAT_HOME}/bin/startup.sh`
 1. Make sure there are no errors in `$TOMCAT_HOME/logs/catalina.out`
 1. Verify REST response using a browser or command line _curl_:
@@ -118,7 +44,7 @@ Command                     | Comment
 1. Execute the client and enqueue the eligible documents for transmission:
 
   ```
-  bin/upload sr ringo c:/temp/ringo/outbox c:/temp/ringo/archive CH1
+  bin/upload sr ringo1 c:/temp/ringo/outbox c:/temp/ringo/archive CH1
   ```
 
 1. Execute the vefa-srest standalone client, which will fetch all enqued outbound messages
@@ -129,3 +55,34 @@ Command                     | Comment
   -k /C:/Users/soc/Dropbox/DIFI/oxalis/difi-test-cert-ok-2015/difi-keystore.jks \
   -p vable -t ALL -u skrue -s true
   ```
+
+
+## Configuration of BASIC authentication
+
+BASIC authentication is used to verify credentials of users and associating them with
+the correct account. Using BASIC authentication over https is considered safe.
+
+The password is stored in the SQL database `account.password` for each user.
+
+The password is generated using the _PBKDF2WithHmacSHA1_ algorithm, which is considered being
+one of the best ways of handling passwords these days. There is really no simple way to reverse the
+password. If you are really interested in this topic, may I suggest [this article from CrackStation](https://crackstation.net/hashing-security.htm)  
+
+Basically this means you must use
+the `$TOMCAT_HOME/bin/digest.sh|.bat` script or write your own little Java program.
+
+This command will generate a hashed password for cleartext "ringo1". Basically the hashed password will
+be different every time you execute it:
+
+    ```
+    bin/digest.sh -a PBKDF2WithHmacSHA1 -h org.apache.catalina.realm.SecretKeyCredentialHandler ringo1
+    ```
+
+The output looks like this:
+    ```
+    ringo1:197ce6e3955f4d4c24e8e35ae15be74f6cd5e5bfe7a19bc8201cfaad7629fdec$20000$bb48ce2c6e389b5eb2fdbb07671d8fb516aeaed5
+    ```
+Take away the `ringo1:` (don't forget the colon) and what remains is the encrypted password to be stored into 
+`account.password`
+    
+The `bin/digest` command is explained in the Tomcat documentation.   
