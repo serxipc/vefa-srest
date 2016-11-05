@@ -49,7 +49,7 @@ public class RingoDataSourceRealmTest {
 
     }
 
-    @Test
+    @Test(enabled=false)
     /**
      * This test is run locally on oxalis_test database, to generate password for different account on different db use generatePasswordTest
      */

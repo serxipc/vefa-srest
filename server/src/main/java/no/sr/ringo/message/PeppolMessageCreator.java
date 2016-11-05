@@ -45,7 +45,7 @@ public class PeppolMessageCreator {
         extractChannelId();
         extractRecipient();
         extractSender();
-        extractDocumentId();
+        extractDocumentTypeId();
         extractProcessId();
         return peppolMessage;
     }
@@ -72,7 +72,7 @@ public class PeppolMessageCreator {
         }
     }
 
-    private void extractDocumentId() {
+    private void extractDocumentTypeId() {
         if (StringUtils.isNotBlank(postParams.getDocumentIdString())) {
             DocumentTypeIdResolver documentIdResolver = new DocumentTypeIdResolver(ringoSmpLookup);
             try {

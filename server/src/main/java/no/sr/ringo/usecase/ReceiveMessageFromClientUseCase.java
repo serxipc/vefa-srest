@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 /**
- * Complete use case which will verify the supplied parameters and extractInvoiceNoAndPersistOutboundMessage the message.
+ * Complete use case which will verify the supplied parameters and persistOutboundMessage the message.
  * This object is stateful in request scope
  *
  * @author Steinar Overbeck Cook
@@ -79,8 +79,9 @@ public class ReceiveMessageFromClientUseCase {
             throw webException;
         }
 
-        MessageWithLocations messageWithLocations = extractInvoiceNoAndPersistOutboundMessage(account);
+        MessageWithLocations messageWithLocations = persistOutboundMessage(account);
 
+        // Places the message number into the outbound queue
         queueMessage(messageWithLocations);
 
         return messageWithLocations;
@@ -110,7 +111,7 @@ public class ReceiveMessageFromClientUseCase {
     /**
      * Store message in db, even though it might not be valid
      */
-    private MessageWithLocations extractInvoiceNoAndPersistOutboundMessage(Account account) {
+    private MessageWithLocations persistOutboundMessage(Account account) {
 
         if (peppolMessage == null) {
             throw new IllegalStateException("Tried to persist message which doesn't exist.");

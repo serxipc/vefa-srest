@@ -160,22 +160,11 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- DBMS -->
-        <!-- If the mysql-connector .jar is copied into the TOMCAT_HOME/lib directory -->
-        <!-- the scope should be declared as "provided", otherwise the size of the .war file -->
-        <!-- is increased for no good reason -->
-<!--
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-             <scope>provided</scope>
-        </dependency>
--->
 
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <scope>provided</scope>
         </dependency>
         <!-- GUICE -->
 

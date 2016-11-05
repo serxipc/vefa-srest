@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolDocumentTypeId;
 import eu.peppol.identifier.PeppolProcessTypeId;
+import eu.peppol.outbound.OxalisOutboundModule;
 import eu.peppol.outbound.transmission.TransmissionRequest;
 import eu.peppol.outbound.transmission.TransmissionRequestBuilder;
 import eu.peppol.outbound.transmission.TransmissionResponse;
@@ -19,13 +20,18 @@ import java.util.Date;
 
 public class OxalisDocumentSender implements PeppolDocumentSender {
 
-    @Inject
-    private Injector injector;
+
+    private final OxalisOutboundModule oxalisOutboundModule;
+
+    @javax.inject.Inject
+    public OxalisDocumentSender(OxalisOutboundModule oxalisOutboundModule) {
+        this.oxalisOutboundModule = oxalisOutboundModule;
+    }
 
     @Override
     public TransmissionReceipt sendDocument(MessageMetaData message, String xmlMessage) throws Exception {
 
-        TransmissionRequestBuilder requestBuilder = injector.getInstance(TransmissionRequestBuilder.class);
+        TransmissionRequestBuilder requestBuilder = oxalisOutboundModule.getTransmissionRequestBuilder();
 
         requestBuilder
                 .trace(true)
@@ -37,7 +43,7 @@ public class OxalisDocumentSender implements PeppolDocumentSender {
 
 
         TransmissionRequest transmissionRequest = requestBuilder.build();
-        Transmitter transmitter = injector.getInstance(Transmitter.class);
+        Transmitter transmitter = oxalisOutboundModule.getTransmitter();
         TransmissionResponse transmissionResponse = transmitter.transmit(transmissionRequest);
 
         // Write the transmission id and where the message was delivered

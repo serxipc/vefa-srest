@@ -18,14 +18,8 @@ public class CommandLineParser {
 
     static final Logger log = LoggerFactory.getLogger(CommandLineParser.class);
 
-    private static OptionSpec<File> keystore;
     private static OptionSpec<String> processingType;
     private static OptionSpec<Integer> queueId;
-
-    private static OptionSpec<String> dbHost;
-    private static OptionSpec<String> dbUser;
-    private static OptionSpec<String> dbPass;
-    private static OptionSpec<String> dbName;
 
     private static OptionSpec<Boolean> production;
 
@@ -63,7 +57,7 @@ public class CommandLineParser {
             }
         }
 
-        return new ParserResult(type, dbUser.value(optionSet), dbPass.value(optionSet), dbHost.value(optionSet), dbName.value(optionSet), queueId, keystore.value(optionSet), production.value(optionSet));
+        return new ParserResult(type, queueId,  production.value(optionSet));
     }
 
     private static OptionParser getOptionParser() {
@@ -71,11 +65,6 @@ public class CommandLineParser {
         queueId = optionParser.accepts("q", "queueId to process").withRequiredArg().ofType(Integer.class);
         processingType = optionParser.accepts("t", "Processing type: ALL or SINGLE").withRequiredArg().ofType(String.class).required();
 
-        dbHost = optionParser.accepts("h", "Database host").withRequiredArg().ofType(String.class).required();
-        dbUser = optionParser.accepts("u", "Database user").withRequiredArg().ofType(String.class).required();
-        dbPass = optionParser.accepts("p", "Database password").withRequiredArg().ofType(String.class).required();
-        dbName = optionParser.accepts("d", "Database name").withRequiredArg().ofType(String.class).required();
-        keystore = optionParser.accepts("k", "Keystore file").withRequiredArg().ofType(File.class).required();
 
         production = optionParser.accepts("s", "Production server").withRequiredArg().ofType(Boolean.class).required();
         return optionParser;

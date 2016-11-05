@@ -86,3 +86,33 @@ Take away the `ringo1:` (don't forget the colon) and what remains is the encrypt
 `account.password`
     
 The `bin/digest` command is explained in the Tomcat documentation.   
+
+## Replacing the SQL DBMS
+
+The standard distribution comes preconfigured with support for H2.
+
+If you wish to use a different database:
+
+ 1. Copy the the .jar-file of the driver to `$TOMCAT_HOME/lib`
+ 1. Modify the contents of `$TOMCAT_HOME/conf/Catalina/localhost/vefa-srest.xml` to make the security realm of Tomcat point to your database:
+    ```
+    <!--  Establishes a JNDI DataSource made available in java:comp/env as jdbc/oxalis -->
+        <Resource name="jdbc/oxalis"
+                  auth="Container"
+                  type="javax.sql.DataSource"
+                  maxActive="100"
+                  maxIdle="30"
+                  maxWait="10000"
+                  username="sa"                     <<<< Change tthis
+                  password=""                       <<<< Change this
+                  driverClassName="org.h2.Driver"   <<< Change to class name of your driver
+                  url="jdbc:h2:~/.oxalis/ap;AUTO_SERVER=true" <<<< Change to your DBMS URL
+                  removeAbandoned="true"
+                  removeAbandonedTimeout="60"
+                  logAbandoned="true"
+                  validationQuery="select now()"
+        />
+    ```
+ 1. Verify the contents of the table `account`. Hint: look at the database creation script found in your Oxalis distribution.
+ 1. Restart Tomcat and you should be able to login using for example username "sr" with password "ringo1".
+  

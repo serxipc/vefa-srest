@@ -38,17 +38,7 @@ public class Main {
             System.exit(-1);
         }
 
-        Injector injector = Guice.createInjector(
-                // Needs to be modified
-                new RingoDataSourceGuiceModule(params.getDbHost(),params.getDbUser(),params.getDbPass(), params.getDbName()),
-                new RingoServiceModule(params.isProduction()),
-                new SmpModule(),
-                new SmpModule(),
-
-                new OxalisProductionConfigurationModule(),
-                new OxalisDataSourceModule(),
-                new RepositoryModule()
-            );
+        Injector injector = getInjector(params.isProduction());
 
         SendQueuedMessagesUseCase useCase = injector.getInstance(SendQueuedMessagesUseCase.class);
         QueuedMessageSenderResult result = null;
@@ -76,4 +66,17 @@ public class Main {
 
     }
 
+    static Injector getInjector(boolean isProduction) {
+        return Guice.createInjector(
+                    // Needs to be modified
+                    // new RingoDataSourceGuiceModule(params.getDbHost(),params.getDbUser(),params.getDbPass(), params.getDbName()),
+                    new RingoServiceModule(isProduction),
+                    new SmpModule(),
+
+                    new OxalisProductionConfigurationModule(),
+                    new OxalisDataSourceModule(),
+                    new RepositoryModule()
+
+                );
+    }
 }

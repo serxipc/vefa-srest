@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * Decorates a PeppolMessageResultImpl object and adds to more methods
+ * Decorates a PeppolMessageResultImpl object and adds two more methods
  *
  * @author Steinar Overbeck Cook steinar@sendregning.no
  */

@@ -68,13 +68,13 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             throw new IllegalStateException("SrAccountId property of message is required");
         }
 
-        PeppolHeader header = peppolMessage.getPeppolHeader();
+        PeppolHeader peppolHeader = peppolMessage.getPeppolHeader();
 
-        String sender = header.getSender() != null ? header.getSender().stringValue() : null;
-        String receiver = header.getReceiver() != null ? header.getReceiver().stringValue() : null;
-        String channelId = header.getPeppolChannelId() != null ? header.getPeppolChannelId().stringValue() : null;
-        String documentTypeId = header.getPeppolDocumentTypeId() != null ? header.getPeppolDocumentTypeId().stringValue() : null;
-        String profileId = header.getProfileId() != null ? header.getProfileId().stringValue() : null;
+        String sender = peppolHeader.getSender() != null ? peppolHeader.getSender().stringValue() : null;
+        String receiver = peppolHeader.getReceiver() != null ? peppolHeader.getReceiver().stringValue() : null;
+        String channelId = peppolHeader.getPeppolChannelId() != null ? peppolHeader.getPeppolChannelId().stringValue() : null;
+        String documentTypeId = peppolHeader.getPeppolDocumentTypeId() != null ? peppolHeader.getPeppolDocumentTypeId().stringValue() : null;
+        String profileId = peppolHeader.getProfileId() != null ? peppolHeader.getProfileId().stringValue() : null;
 
         // Converts from our Ringo Types to the Oxalis types and instantiates a builder.
         eu.peppol.persistence.MessageMetaData.Builder builder = new eu.peppol.persistence.MessageMetaData.Builder(TransferDirection.OUT,
@@ -94,7 +94,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
 
 
         MessageMetaDataImpl messageMetaData = new MessageMetaDataImpl();
-        messageMetaData.setPeppolHeader(header);
+        messageMetaData.setPeppolHeader(peppolHeader);
         messageMetaData.setTransferDirection(TransferDirection.OUT);
         messageMetaData.setMsgNo(msgNo);
 
