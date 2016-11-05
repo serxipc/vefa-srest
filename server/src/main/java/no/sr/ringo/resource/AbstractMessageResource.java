@@ -125,8 +125,8 @@ public abstract class AbstractMessageResource implements UriLocationAware {
 
     private UriBuilder getUriBuilderForResource(UriInfo uriInfo, Class<? extends AbstractMessageResource> resource) {
         return uriInfo.getBaseUriBuilder()
-                .path(resource)
-                .scheme("https");
+                .path(resource);
+                // .scheme("https"); // Use whatever scheme the original request was made with.
     }
 
     protected boolean isEmpty(String value) {
