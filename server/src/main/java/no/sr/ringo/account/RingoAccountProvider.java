@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import eu.peppol.persistence.api.SrAccountNotFoundException;
 import eu.peppol.persistence.api.UserName;
 import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

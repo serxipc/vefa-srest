@@ -1,10 +1,10 @@
 package no.sr.ringo.usecase;
 
 import com.google.inject.Inject;
+import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.email.EmailService;
 import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.*;
 import no.sr.ringo.peppol.PeppolChannelId;
@@ -73,7 +73,7 @@ public class ReceiveMessageFromClientUseCaseIntegrationTest {
         assertNotNull(queuedMessage);
         assertNotNull(queuedMessage.getQueueId());
         assertEquals(message.getMsgNo(), queuedMessage.getMsgNo());
-        assertEquals(OutboundMessageQueueState.QUEUED, queuedMessage.getState());
+        assertEquals(eu.peppol.persistence.api.OutboundMessageQueueState.QUEUED, queuedMessage.getState());
 
         MessageMetaData metaData = peppolMessageRepository.findMessageByMessageNo(MessageNumber.create(message.getMsgNo()));
         assertNotNull(metaData);

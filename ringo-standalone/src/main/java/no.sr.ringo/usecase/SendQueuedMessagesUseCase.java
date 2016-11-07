@@ -2,10 +2,11 @@ package no.sr.ringo.usecase;
 
 import com.google.inject.Inject;
 import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountRepository;
 import eu.peppol.persistence.guice.jdbc.Transactional;
 import no.sr.ringo.email.EmailService;
-import no.sr.ringo.account.AccountRepository;
 import no.sr.ringo.message.MessageMetaData;
+import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.OutboundMessageQueueState;
 import no.sr.ringo.queue.OutboundMessageQueueId;
 import no.sr.ringo.message.PeppolMessageRepository;
@@ -200,7 +201,9 @@ public class SendQueuedMessagesUseCase {
 
         logger.error(String.format("Unable to process queue item %d with messageNo %d sent; %s", queuedOutboundMessage.getOutboundQueueId().toInt(), queuedOutboundMessage.getMessageNumber().toInt(), message), e);
 
-        Account account = accountRepository.findAccountAsOwnerOfMessage(queuedOutboundMessage.getMessageNumber());
+        MessageNumber messageNumber = queuedOutboundMessage.getMessageNumber();
+
+        Account account = accountRepository.findAccountAsOwnerOfMessage( eu.peppol.persistence.api.MessageNumber.create(messageNumber.toLong()));
         emailService.sendProcessingErrorNotification(account, message, queuedOutboundMessage.getMessageNumber());
 
     }

@@ -3,10 +3,10 @@ package no.sr.ringo.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.RequestScoped;
+import eu.peppol.persistence.api.account.AccountRepository;
+import eu.peppol.persistence.jdbc.AccountRepositoryImpl;
 import no.sr.ringo.email.*;
 import eu.peppol.smp.*;
-import no.sr.ringo.account.AccountRepository;
-import no.sr.ringo.account.AccountRepositoryImpl;
 import no.sr.ringo.common.IsProductionServer;
 import no.sr.ringo.document.*;
 import no.sr.ringo.message.PeppolMessageRepository;
@@ -43,7 +43,6 @@ public class RingoServiceModule extends AbstractModule {
     }
 
     private void bindRepositories() {
-        bind(AccountRepository.class).to(AccountRepositoryImpl.class).in(Singleton.class);
         // The main workhorse
         bind(PeppolMessageRepository.class).to(PeppolMessageRepositoryImpl.class).in(Singleton.class);
         bind(QueueRepository.class).to(QueueRepositoryImpl.class).in(Singleton.class);

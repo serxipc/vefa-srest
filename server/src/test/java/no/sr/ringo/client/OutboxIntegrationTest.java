@@ -5,9 +5,9 @@ import eu.peppol.identifier.ParticipantId;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.cenbiimeta.ProfileId;
-import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.common.UploadMode;
 import no.sr.ringo.guice.TestModuleFactory;
@@ -43,8 +43,8 @@ import static org.testng.Assert.*;
 @Guice(moduleFactory = TestModuleFactory.class)
 public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
 
-    PeppolDocumentTypeId ehfInvoicePeppolDocumentTypeId = PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1::2.0");
-    PeppolDocumentTypeId creditNotePeppolDocumentTypeId = PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.cenbii.eu:profile:biixx:ver1.0#urn:www.difi.no:ehf:kreditnota:ver1::2.0");
+    PeppolDocumentTypeId ehfInvoicePeppolDocumentTypeId = PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1::2.0");
+    PeppolDocumentTypeId creditNotePeppolDocumentTypeId = PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.cenbii.eu:profile:biixx:ver1.0#urn:www.difi.no:ehf:kreditnota:ver1::2.0");
 
     @Inject
     DatabaseHelper databaseHelper;

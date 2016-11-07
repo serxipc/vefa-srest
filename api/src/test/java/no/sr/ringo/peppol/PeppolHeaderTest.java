@@ -23,7 +23,7 @@ public class PeppolHeaderTest {
     @Test
     public void testPeppolDocumentIdCreatedWithinPeppolDocumentItTypeIdCreation() throws Exception {
         PeppolHeader peppolHeader = new PeppolHeader();
-        peppolHeader.setPeppolDocumentTypeId(PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0::2.0"));
+        peppolHeader.setPeppolDocumentTypeId(PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0::2.0"));
         assertEquals(peppolHeader.getPeppolDocumentIdAcronym(), PeppolDocumentIdAcronym.INVOICE);
     }
 }

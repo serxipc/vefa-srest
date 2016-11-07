@@ -32,7 +32,7 @@ public class AcceptedDocumentTransfersXmlSpec implements XmlSpecification<Accept
     public AcceptedDocumentTransfer extractEntity(Element element) throws Exception {
         String documentId = getXmlValue(element,"DocumentID");
         String processId = getXmlValue(element,"ProcessID");
-        return new AcceptedDocumentTransfer(PeppolDocumentTypeId.valueFor(documentId), new ProfileId(processId));
+        return new AcceptedDocumentTransfer(PeppolDocumentTypeId.valueOf(documentId), new ProfileId(processId));
     }
 
     private String getXmlValue(Parent root, String xPathString) throws JDOMException {

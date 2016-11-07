@@ -3,8 +3,8 @@ package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
 import eu.peppol.persistence.TransferDirection;
-import no.sr.ringo.account.AccountRepository;
-import no.sr.ringo.common.DatabaseHelper;
+import eu.peppol.persistence.api.account.AccountRepository;
+import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageRepository;

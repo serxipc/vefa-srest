@@ -35,7 +35,7 @@ public class PeppolDocumentFactoryImplTest extends PeppolDocumentTest {
 
     @Test
     public void testUnknownPeppolDocumentTypeId() throws Exception {
-        final PeppolDocument document = documentFactory.makePeppolDocument(PeppolDocumentTypeId.valueFor("rubbish"), "");
+        final PeppolDocument document = documentFactory.makePeppolDocument(PeppolDocumentTypeId.valueOf("rubbish"), "");
         assertEquals(document.getClass(), DefaultPeppolDocument.class);
     }
 

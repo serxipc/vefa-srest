@@ -30,7 +30,7 @@ public class SmpLookupResultTest {
     @Test
     public void makeSureWeCanHandleTenderDocuments() throws Exception {
         SmpLookupResult smpLookupResult = new SmpLookupResult(null);
-        PeppolDocumentTypeId did = PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:Tender-2::Tender##urn:www.cenbii.eu:transaction:biitrdm090:ver3.0::2.1");
+        PeppolDocumentTypeId did = PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:Tender-2::Tender##urn:www.cenbii.eu:transaction:biitrdm090:ver3.0::2.1");
         ProfileId pid = smpLookupResult.profileIdFor(did);
         assertEquals(pid.stringValue(), "urn:www.cenbii.eu:profile:bii54:ver3.0");
     }
@@ -38,7 +38,7 @@ public class SmpLookupResultTest {
     @Test
     public void makeSureWeCanHandleTenderReceiptDocuments() throws Exception {
         SmpLookupResult smpLookupResult = new SmpLookupResult(null);
-        PeppolDocumentTypeId did = PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:TenderReceipt-2::TenderReceipt##urn:www.cenbii.eu:transaction:biitrdm045:ver3.0::2.1");
+        PeppolDocumentTypeId did = PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:TenderReceipt-2::TenderReceipt##urn:www.cenbii.eu:transaction:biitrdm045:ver3.0::2.1");
         ProfileId pid = smpLookupResult.profileIdFor(did);
         assertEquals(pid.stringValue(), "urn:www.cenbii.eu:profile:bii54:ver3.0");
     }
@@ -46,7 +46,7 @@ public class SmpLookupResultTest {
     @Test
     public void makeSureWeCanHandleCallForTendersDocuments() throws Exception {
         SmpLookupResult smpLookupResult = new SmpLookupResult(null);
-        PeppolDocumentTypeId did = PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:CallForTenders::CallForTenders##urn:www.cenbii.eu:transaction:biitrdm083:ver3.0::2.1");
+        PeppolDocumentTypeId did = PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:CallForTenders::CallForTenders##urn:www.cenbii.eu:transaction:biitrdm083:ver3.0::2.1");
         ProfileId pid = smpLookupResult.profileIdFor(did);
         assertEquals(pid.stringValue(), "urn:www.cenbii.eu:profile:bii47:ver3.0");
     }

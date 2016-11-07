@@ -4,6 +4,8 @@ package no.sr.ringo.queue;
 import com.google.inject.Inject;
 import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
 import eu.peppol.persistence.guice.jdbc.Repository;
+import eu.peppol.persistence.jdbc.platform.DbmsPlatform;
+import eu.peppol.persistence.jdbc.platform.DbmsPlatformFactory;
 import no.sr.ringo.message.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,8 +65,12 @@ public class QueueRepositoryImpl implements QueueRepository {
 
         List<QueuedOutboundMessage> result = new ArrayList<QueuedOutboundMessage>();
 
-        String sql = "select q.id, q.msg_no, q.state from outbound_message_queue q join message m on (q.msg_no = m.msg_no) where state = ?";
-        if (returnLimit > 0) sql = sql + " limit " + returnLimit;
+        String sql = "select q.id, q.msg_no, q.state from outbound_message_queue q join message m on (q.msg_no = m.msg_no) where state = ? ";
+        if (returnLimit > 0) {
+            DbmsPlatform dbmsPlatform = DbmsPlatformFactory.platformFor(jdbcTxManager.getConnection());
+            String limitClause = dbmsPlatform.getLimitClause(0, ((int) returnLimit));
+            sql = sql + " order by q.id " + limitClause;
+        }
 
         try {
             Connection con = jdbcTxManager.getConnection();

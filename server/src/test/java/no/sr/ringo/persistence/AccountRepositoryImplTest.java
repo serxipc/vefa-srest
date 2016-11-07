@@ -7,12 +7,11 @@ import eu.peppol.persistence.api.SrAccountNotFoundException;
 import eu.peppol.persistence.api.UserName;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.api.account.AccountRepository;
 import eu.peppol.persistence.api.account.Customer;
+import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.account.*;
-import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
-import no.sr.ringo.message.MessageNumber;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Guice;
@@ -148,7 +147,7 @@ public class AccountRepositoryImplTest {
     @Test(groups = {"persistence"})
     public void findMessageOwner(){
         Long messageNumber = databaseHelper.createMessage(adamsAccount.getId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null);
-        assertEquals(adamsAccount, accountRepository.findAccountAsOwnerOfMessage(MessageNumber.create(messageNumber)));
+        assertEquals(adamsAccount, accountRepository.findAccountAsOwnerOfMessage(eu.peppol.persistence.api.MessageNumber.create(messageNumber)));
 
     }
 

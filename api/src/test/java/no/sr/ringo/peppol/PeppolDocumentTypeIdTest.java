@@ -21,14 +21,14 @@ public class PeppolDocumentTypeIdTest {
 
     @Test
     public void testValueOf() throws Exception {
-        PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.valueFor(documentIdAsText);
+        PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.valueOf(documentIdAsText);
 
         assertNotNull(peppolDocumentTypeId);
     }
 
     @Test
     public void testValueOfWrongValue() throws Exception {
-        PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.valueFor("urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.cenbii.eu:profile:biixx:ver1.0#urn:www.difi.no:ehf:kreditnota:ver1");
+        PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.valueOf("urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.cenbii.eu:profile:biixx:ver1.0#urn:www.difi.no:ehf:kreditnota:ver1");
 
         assertNotNull(peppolDocumentTypeId);
         assertTrue(peppolDocumentTypeId instanceof PeppolDocumentTypeId.UnknownPeppolDocumentTypeId);
@@ -36,38 +36,38 @@ public class PeppolDocumentTypeIdTest {
 
     @Test
     public void testGetLocalName() throws Exception {
-        PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.valueFor(documentIdAsText);
+        PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.valueOf(documentIdAsText);
 
         assertEquals(LocalName.Invoice, peppolDocumentTypeId.getLocalName());
     }
 
     @Test
     public void testGetCreditInvoiceLocalName() throws Exception {
-        PeppolDocumentTypeId peppolDocumentIdString = PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0::2.0");
+        PeppolDocumentTypeId peppolDocumentIdString = PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0::2.0");
         assertEquals(LocalName.CreditNote, peppolDocumentIdString.getLocalName());
     }
 
 
     @Test
     public void testCreditNoteFromIntegrationTestIsValid() throws Exception {
-        PeppolDocumentTypeId peppolDocumentIdString = PeppolDocumentTypeId.valueFor("urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.cenbii.eu:profile:biixx:ver1.0#urn:www.difi.no:ehf:kreditnota:ver1");
+        PeppolDocumentTypeId peppolDocumentIdString = PeppolDocumentTypeId.valueOf("urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.cenbii.eu:profile:biixx:ver1.0#urn:www.difi.no:ehf:kreditnota:ver1");
         assertEquals(peppolDocumentIdString.getLocalName(),LocalName.valueOf("UNKNOWN"));
     }
 
     @Test
     public void testParsingInvalidPeppolDocumentTypeIdReturnsUnknownDocumentTypeId() throws Exception {
-        PeppolDocumentTypeId documentTypeId = PeppolDocumentTypeId.valueFor("");
+        PeppolDocumentTypeId documentTypeId = PeppolDocumentTypeId.valueOf("");
         assertNotNull(documentTypeId);
         assertEquals(documentTypeId.getClass(), PeppolDocumentTypeId.UnknownPeppolDocumentTypeId.class);
 
-        documentTypeId = PeppolDocumentTypeId.valueFor(null);
+        documentTypeId = PeppolDocumentTypeId.valueOf(null);
         assertNotNull(documentTypeId);
         assertEquals(documentTypeId.getClass(), PeppolDocumentTypeId.UnknownPeppolDocumentTypeId.class);
     }
 
     @Test
     public void testToString() throws Exception {
-        PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.valueFor(documentIdAsText);
+        PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.valueOf(documentIdAsText);
 
         assertEquals(peppolDocumentTypeId.toString(),documentIdAsText);
     }
@@ -75,7 +75,7 @@ public class PeppolDocumentTypeIdTest {
     @Test
     public void testToStringOnUnknown() throws Exception {
         final String idAsText = "invalid";
-        PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.valueFor(idAsText);
+        PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.valueOf(idAsText);
 
         assertEquals(peppolDocumentTypeId.toString(),idAsText);
     }
@@ -83,9 +83,9 @@ public class PeppolDocumentTypeIdTest {
     @Test
     public void testEqualsForTwoIdenticalPeppolDocumentTypeId() {
 
-        final PeppolDocumentTypeId id1 = PeppolDocumentTypeId.valueFor(documentIdAsText);
+        final PeppolDocumentTypeId id1 = PeppolDocumentTypeId.valueOf(documentIdAsText);
 
-        final PeppolDocumentTypeId id2 = PeppolDocumentTypeId.valueFor(documentIdAsText);
+        final PeppolDocumentTypeId id2 = PeppolDocumentTypeId.valueOf(documentIdAsText);
 
         assertTrue(id1.equals(id2));
     }
@@ -93,7 +93,7 @@ public class PeppolDocumentTypeIdTest {
     @Test
     public void testInvoiceNotEqualToUnknown() throws Exception {
 
-        final PeppolDocumentTypeId invoice = PeppolDocumentTypeId.valueFor(documentIdAsText);
+        final PeppolDocumentTypeId invoice = PeppolDocumentTypeId.valueOf(documentIdAsText);
 
         PeppolDocumentTypeId.UnknownPeppolDocumentTypeId unknown = new PeppolDocumentTypeId.UnknownPeppolDocumentTypeId(documentIdAsText);
 
@@ -114,14 +114,14 @@ public class PeppolDocumentTypeIdTest {
 
     @Test
     public void testInvoiceNotEqualsToCreditNote() throws Exception {
-        final PeppolDocumentTypeId invoice = PeppolDocumentTypeId.valueFor(documentIdAsText);
-        PeppolDocumentTypeId creditNote = PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0::2.0");
+        final PeppolDocumentTypeId invoice = PeppolDocumentTypeId.valueOf(documentIdAsText);
+        PeppolDocumentTypeId creditNote = PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0::2.0");
         assertFalse(invoice.equals(creditNote));
     }
 
     @Test
     public void testHashCode() {
-        PeppolDocumentTypeId invalidDocumentTypeId = PeppolDocumentTypeId.valueFor(null);
+        PeppolDocumentTypeId invalidDocumentTypeId = PeppolDocumentTypeId.valueOf(null);
         try {
             invalidDocumentTypeId.hashCode();
         } catch (NullPointerException e) {
@@ -131,34 +131,34 @@ public class PeppolDocumentTypeIdTest {
 
     @Test
     public void testHashCodeSame() {
-        PeppolDocumentTypeId invalidDocumentTypeId = PeppolDocumentTypeId.valueFor(null);
-        PeppolDocumentTypeId invalidDocumentTypeId2 = PeppolDocumentTypeId.valueFor(null);
+        PeppolDocumentTypeId invalidDocumentTypeId = PeppolDocumentTypeId.valueOf(null);
+        PeppolDocumentTypeId invalidDocumentTypeId2 = PeppolDocumentTypeId.valueOf(null);
         assertEquals(invalidDocumentTypeId.hashCode(),invalidDocumentTypeId2.hashCode());
     }
 
     @Test
     public void testIllegalValueOf() throws Exception {
-        PeppolDocumentTypeId typeId = PeppolDocumentTypeId.valueFor("urn::##urn::");
+        PeppolDocumentTypeId typeId = PeppolDocumentTypeId.valueOf("urn::##urn::");
         assertEquals(typeId.getLocalName(), LocalName.valueOf("UNKNOWN"));
     }
 
     @Test
     public void testStringValue() throws Exception {
-        PeppolDocumentTypeId id = PeppolDocumentTypeId.valueFor(documentIdAsText);
+        PeppolDocumentTypeId id = PeppolDocumentTypeId.valueOf(documentIdAsText);
         assertEquals(id.stringValue(),documentIdAsText);
     }
 
     @Test
     public void testStringValue2() {
         String documentIdAsText1 = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1::2.0";
-        PeppolDocumentTypeId id = PeppolDocumentTypeId.valueFor(documentIdAsText1);
+        PeppolDocumentTypeId id = PeppolDocumentTypeId.valueOf(documentIdAsText1);
         assertEquals(id.toString(), documentIdAsText1);
     }
 
     @Test
     public void testServiceProviderContainer() {
         String spc = "urn:ap:unit4.com::ServiceProviderContainer##urn:spc:extended:dmk::1.0";
-        PeppolDocumentTypeId id = PeppolDocumentTypeId.valueFor(spc);
+        PeppolDocumentTypeId id = PeppolDocumentTypeId.valueOf(spc);
         assertNotNull(id);
         assertEquals(id.toString(), spc);
     }

@@ -1,8 +1,8 @@
 package no.sr.ringo.usecase;
 
 import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountRepository;
 import no.sr.ringo.email.EmailService;
-import no.sr.ringo.account.AccountRepository;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.OutboundMessageQueueState;
@@ -198,7 +198,7 @@ public class SendQueuedMessageUseCaseTest {
         mockQueueRepository.changeQueuedMessageState(queueId, OutboundMessageQueueState.AOD);
 
         //send error notification
-        expect(mockAccountRepository.findAccountAsOwnerOfMessage(msgNo)).andReturn(mockAccount);
+        expect(mockAccountRepository.findAccountAsOwnerOfMessage(eu.peppol.persistence.api.MessageNumber.create(msgNo.toLong()))).andReturn(mockAccount);
         expect(mockEmailService.sendProcessingErrorNotification(mockAccount, "Exception simulation", msgNo)).andReturn(null);
 
         // new entry in error table

@@ -2,11 +2,11 @@ package no.sr.ringo.http;
 
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.client.Inbox;
 import no.sr.ringo.client.Message;
 import no.sr.ringo.client.Messages;
-import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.MessageNumber;

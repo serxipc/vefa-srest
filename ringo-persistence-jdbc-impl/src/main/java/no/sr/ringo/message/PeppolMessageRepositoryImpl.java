@@ -4,12 +4,14 @@ import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolProcessTypeId;
 import eu.peppol.persistence.ChannelProtocol;
-import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.MessageRepository;
+import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.api.account.AccountId;
 import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
 import eu.peppol.persistence.guice.jdbc.Repository;
+import eu.peppol.persistence.jdbc.platform.DbmsPlatform;
+import eu.peppol.persistence.jdbc.platform.DbmsPlatformFactory;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.message.statistics.InboxStatistics;
 import no.sr.ringo.message.statistics.OutboxStatistics;
@@ -23,7 +25,6 @@ import no.sr.ringo.utils.SbdhUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.transform.dom.DOMResult;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -38,6 +39,10 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.joining;
 
 /**
+ * Repository for the message meta data entities.
+ * <p>
+ * TODO: This class should be merged with {@link MessageRepository} in oxalis-persistence.
+ *
  * @author Steinar Overbeck Cook steinar@sendregning.no
  * @author Thore Holmberg Johnsen thore@sendregning.no
  */
@@ -102,11 +107,16 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     }
 
 
+    DbmsPlatform getDbmsPlatform(){
+        return DbmsPlatformFactory.platformFor(jdbcTxManager.getConnection());
+    }
+
     @Override
     public MessageMetaData findMessageByMessageNo(MessageNumber msgNo) throws PeppolMessageNotFoundException {
         try {
-            SqlHelper sql = SqlHelper.create().findMessageByMessageNo();
-            PreparedStatement ps = sql.prepareStatement(jdbcTxManager.getConnection());
+            Connection connection = jdbcTxManager.getConnection();
+            SqlHelper sql = SqlHelper.create(getDbmsPlatform()).findMessageByMessageNo();
+            PreparedStatement ps = sql.prepareStatement(connection);
             ps.setInt(1, msgNo.toInt());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -122,7 +132,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     @Override
     public MessageMetaData findMessageByMessageNo(Account account, Long messageNo) throws PeppolMessageNotFoundException {
         try {
-            SqlHelper sql = SqlHelper.create().findMessageByMessageNoAndAccountId();
+            SqlHelper sql = SqlHelper.create(getDbmsPlatform()).findMessageByMessageNoAndAccountId();
             PreparedStatement ps = sql.prepareStatement(jdbcTxManager.getConnection());
             ps.setLong(1, messageNo);
             ps.setInt(2, account.getId().toInteger());
@@ -141,7 +151,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     public Integer getInboxCount(AccountId accountId) {
         Integer result = 0;
         try {
-            SqlHelper sql = SqlHelper.create().inboxCount();
+            SqlHelper sql = SqlHelper.create(getDbmsPlatform()).inboxCount();
             PreparedStatement ps = sql.prepareStatement(jdbcTxManager.getConnection());
             ps.setInt(1, accountId.toInteger());
             ps.setString(2, TransferDirection.IN.name());
@@ -169,7 +179,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
      * Helper method for finding undelivered messages, which are either outbound or inbound.
      */
     List<MessageMetaData> findUndeliveredMessagesByAccount(AccountId accountId, TransferDirection transferDirection) {
-        final SqlHelper sql = SqlHelper.create().undeliveredMessagesSql(transferDirection);
+        final SqlHelper sql = SqlHelper.create(getDbmsPlatform()).undeliveredMessagesSql(transferDirection);
         try {
             PreparedStatement ps = sql.prepareStatement(jdbcTxManager.getConnection());
             ps.setInt(1, accountId.toInteger());
@@ -184,7 +194,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     @Override
     public List<MessageMetaData> findMessages(AccountId accountId, MessageSearchParams searchParams) {
         try {
-            SqlHelper sql = SqlHelper.create().findMessages(searchParams);
+            SqlHelper sql = SqlHelper.create(getDbmsPlatform()).findMessages(searchParams);
             PreparedStatement ps = sql.prepareStatement(jdbcTxManager.getConnection());
             ps.setInt(1, accountId.toInteger());
             ResultSet rs = ps.executeQuery();
@@ -196,7 +206,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
 
     @Override
     public Integer getMessagesCount(AccountId accountId, MessageSearchParams searchParams) {
-        SqlHelper sql = SqlHelper.create().messagesCount(searchParams);
+        SqlHelper sql = SqlHelper.create(getDbmsPlatform()).messagesCount(searchParams);
         Integer result = 0;
         try {
             PreparedStatement ps = sql.prepareStatement(jdbcTxManager.getConnection());
@@ -475,7 +485,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         if (message_uuid != null) {
             messageMetaData.setUuid(message_uuid);
         }
-        messageMetaData.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.valueFor(rs.getString("document_id")));
+        messageMetaData.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.valueOf(rs.getString("document_id")));
 
         String processId = rs.getString("process_id");
         if (processId != null) {
@@ -493,7 +503,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         m.getPeppolHeader().setSender(PeppolParticipantId.valueFor(rs.getString("sender")));
         m.getPeppolHeader().setReceiver(PeppolParticipantId.valueFor(rs.getString("receiver")));
         m.getPeppolHeader().setPeppolChannelId(new PeppolChannelId(rs.getString("channel")));
-        m.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.valueFor(rs.getString("document_id")));
+        m.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.valueOf(rs.getString("document_id")));
         m.getPeppolHeader().setProfileId(new ProfileId(rs.getString("process_id")));
         // UUIDs are heavy lifting, check for null values first.
         String uuidString = rs.getString("message_uuid");
@@ -544,10 +554,15 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
      */
     private static class SqlHelper {
 
+        private final DbmsPlatform dbmsPlatform;
         private String sql;
 
-        public static SqlHelper create() {
-            return new SqlHelper();
+        private SqlHelper(DbmsPlatform dbmsPlatform) {
+            this.dbmsPlatform = dbmsPlatform;
+        }
+
+        public static SqlHelper create(DbmsPlatform dbmsPlatform) {
+            return new SqlHelper(dbmsPlatform);
         }
 
         public SqlHelper inboxCount() {
@@ -556,17 +571,21 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         }
 
         private SqlHelper undeliveredMessagesSql(TransferDirection transferDirection) {
+
+            String limitCondition = dbmsPlatform.getLimitClause(0, DEFAULT_PAGE_SIZE);
+
+
             if (TransferDirection.IN.equals(transferDirection)) {
                 // Delivered must be null and uuid must not be null for valid undelivered incoming messages
                 sql = selectMessage() +
-                        "where delivered is null and message_uuid is not null and message_uuid != '' and account_id=? and direction=? limit " + PeppolMessageRepository.DEFAULT_PAGE_SIZE;
+                        "where delivered is null and message_uuid is not null and message_uuid != '' and account_id=? and direction=? order by msg_no " + limitCondition;
             } else {
                 // Delivered must be null and uuid must be null for valid undelivered outgoing messages
                 sql = selectMessage() +
                         "where delivered is null " +
                         "and account_id=? and direction=? " +
-                        "and not exists(select 1 from outbound_message_queue omq where omq.msg_no = message.msg_no and omq.state='AOD')" +
-                        " limit " + PeppolMessageRepository.DEFAULT_PAGE_SIZE;
+                        "and not exists(select 1 from outbound_message_queue omq where omq.msg_no = message.msg_no and omq.state='AOD') order by msg_no " +
+                        limitCondition;
             }
             return this;
         }
@@ -582,12 +601,14 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         }
 
         public PreparedStatement prepareStatement(Connection connection) throws SQLException {
+            log.debug("Preparing " + sql);
             return connection.prepareStatement(sql);
         }
 
         public SqlHelper findMessages(MessageSearchParams searchParams) {
             sql = selectMessage() + "where account_id=? ";
             generateWhereClause(searchParams);
+            sql = sql.concat(" order by msg_no ");
             generateLimitCondition(searchParams.getPageIndex());
             return this;
         }
@@ -620,8 +641,10 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
                 //first page should have offset 0, second one 25 etc...so subtracting 1 before multiplication
                 offset = (pageIndex - 1) * PeppolMessageRepository.DEFAULT_PAGE_SIZE;
             }
-            limit = String.format(" limit %d, %d", offset, PeppolMessageRepository.DEFAULT_PAGE_SIZE);
-            sql = sql.concat(limit);
+
+
+            String limitClause = dbmsPlatform.getLimitClause(offset, DEFAULT_PAGE_SIZE);
+            sql = sql.concat(" ").concat(limitClause);
             return sql;
         }
 

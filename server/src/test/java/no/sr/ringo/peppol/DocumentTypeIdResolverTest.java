@@ -108,13 +108,13 @@ public class DocumentTypeIdResolverTest {
 
     private SmpLookupResult prepareTestResultForInvoice() {
         List<PeppolDocumentTypeId> list = new ArrayList<PeppolDocumentTypeId>();
-        list.add(PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1::2.0"));
+        list.add(PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1::2.0"));
         return new SmpLookupResult(list);
     }
 
     private SmpLookupResult prepareTestResultForCreditNote() {
         List<PeppolDocumentTypeId> list = new ArrayList<PeppolDocumentTypeId>();
-        list.add(PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.cenbii.eu:profile:biixx:ver1.0#urn:www.difi.no:ehf:kreditnota:ver1::2.0"));
+        list.add(PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.cenbii.eu:profile:biixx:ver1.0#urn:www.difi.no:ehf:kreditnota:ver1::2.0"));
         return new SmpLookupResult(list);
     }
 

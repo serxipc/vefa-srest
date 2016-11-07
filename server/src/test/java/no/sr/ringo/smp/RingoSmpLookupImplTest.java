@@ -201,7 +201,7 @@ public class RingoSmpLookupImplTest {
         replay(mockSmpLookupManager);
 
         RingoSmpLookupImpl ringoSmpLookup = new RingoSmpLookupImpl(mockSmpLookupManager);
-        return ringoSmpLookup.isAcceptable(registeredPeppolParticipantId, no.sr.ringo.peppol.PeppolDocumentTypeId.valueFor(invoiceOnly));
+        return ringoSmpLookup.isAcceptable(registeredPeppolParticipantId, no.sr.ringo.peppol.PeppolDocumentTypeId.valueOf(invoiceOnly));
     }
 
 }

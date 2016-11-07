@@ -56,7 +56,7 @@ public class DirectoryResourceTest {
 
         List<PeppolDocumentTypeId> acceptedDocuments = new ArrayList<PeppolDocumentTypeId>();
         String invoiceDocumentType = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1::2.0";
-        acceptedDocuments.add(PeppolDocumentTypeId.valueFor(invoiceDocumentType));
+        acceptedDocuments.add(PeppolDocumentTypeId.valueOf(invoiceDocumentType));
 
         prepareMetaData(acceptedDocuments);
 

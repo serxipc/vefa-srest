@@ -53,55 +53,55 @@ public class PeppolDocumentTypeIdComparatorTest {
 
     @Test
     void testUbl21Faktura() {
-        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0::2.1"));
+        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0::2.1"));
         assertEquals(ordinalNumber.getOrdinalNumber().intValue(), 1);
     }
 
     @Test
     void testUbl21Kreditnota() {
-        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.cenbii.eu:profile:biixx:ver2.0:extended:urn:www.difi.no:ehf:kreditnota:ver2.0::2.1"));
+        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.cenbii.eu:profile:biixx:ver2.0:extended:urn:www.difi.no:ehf:kreditnota:ver2.0::2.1"));
         assertEquals(ordinalNumber.getOrdinalNumber().intValue(), 2);
     }
 
     @Test
     void testUbl21Ordre() {
-        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:Order-2::Order##urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol28a:ver2.0:extended:urn:www.difi.no:ehf:ordre:ver1.0::2.1"));
+        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:Order-2::Order##urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol28a:ver2.0:extended:urn:www.difi.no:ehf:ordre:ver1.0::2.1"));
         assertEquals(ordinalNumber.getOrdinalNumber().intValue(), 3);
     }
 
     @Test
     void testUbl21Ordrebekreftelse() {
-        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2::OrderResponse##urn:www.cenbii.eu:transaction:biitrns076:ver2.0:extended:urn:www.peppol.eu::bis:peppol28a:ver1.0:extended:urn:www.difi.no:ehf:ordrebekreftelse:ver1.0::2.1"));
+        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2::OrderResponse##urn:www.cenbii.eu:transaction:biitrns076:ver2.0:extended:urn:www.peppol.eu::bis:peppol28a:ver1.0:extended:urn:www.difi.no:ehf:ordrebekreftelse:ver1.0::2.1"));
         assertEquals(ordinalNumber.getOrdinalNumber().intValue(), 4);
     }
 
     @Test
     void testUbl21Katalog() {
-        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2::Catalogue##urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.peppol.eu:bis:peppol1a:ver2.0:extended:urn:www.difi.no:ehf:katalog:ver1.0::2.1"));
+        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2::Catalogue##urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.peppol.eu:bis:peppol1a:ver2.0:extended:urn:www.difi.no:ehf:katalog:ver1.0::2.1"));
         assertEquals(ordinalNumber.getOrdinalNumber().intValue(), 5);
     }
 
     @Test
     void testUbl21Invoice() {
-        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0::2.1"));
+        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0::2.1"));
         assertEquals(ordinalNumber.getOrdinalNumber().intValue(), 21);
     }
 
     @Test
     void testUbl21CreditNote() {
-        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0::2.1"));
+        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0::2.1"));
         assertEquals(ordinalNumber.getOrdinalNumber().intValue(), 22);
     }
 
     @Test
     void testUbl21InvoiceBis05() {
-        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0::2.1"));
+        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0::2.1"));
         assertEquals(ordinalNumber.getOrdinalNumber().intValue(), 21);
     }
 
     @Test
     void testUbl21Pakkseddel() {
-        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueFor( "urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2::DespatchAdvice##urn:www.cenbii.eu:transaction:biitrns016:ver1.0:extended:urn:www.peppol.eu:bis:peppol30a:ver1.0:extended:urn:www.difi.no:ehf:pakkseddel:ver1.0::2.1"));
+        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueOf( "urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2::DespatchAdvice##urn:www.cenbii.eu:transaction:biitrns016:ver1.0:extended:urn:www.peppol.eu:bis:peppol30a:ver1.0:extended:urn:www.difi.no:ehf:pakkseddel:ver1.0::2.1"));
         assertEquals(ordinalNumber.getOrdinalNumber().intValue(), 50);
     }
 
@@ -147,7 +147,7 @@ public class PeppolDocumentTypeIdComparatorTest {
     }
 
     @Test void testPeppolApplicationResponse() {
-        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueFor("urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2::ApplicationResponse##urn:www.cenbii.eu:transaction:biicoretrdm057:ver1.0:#urn:www.peppol.eu:bis:peppol1a:ver1.0::2.0"));
+        PeppolDocumentTypeIdComparator.OrdinalNumberProvider ordinalNumber = comparator.getOrdinalNumberProvider(PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2::ApplicationResponse##urn:www.cenbii.eu:transaction:biicoretrdm057:ver1.0:#urn:www.peppol.eu:bis:peppol1a:ver1.0::2.0"));
         assertEquals(ordinalNumber.getOrdinalNumber().intValue(), 100);
     }
 

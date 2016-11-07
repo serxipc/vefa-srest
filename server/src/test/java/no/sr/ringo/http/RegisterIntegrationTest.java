@@ -5,7 +5,7 @@ import eu.peppol.identifier.WellKnownParticipant;
 import eu.peppol.persistence.api.SrAccountNotFoundException;
 import eu.peppol.persistence.api.UserName;
 import eu.peppol.persistence.api.account.Account;
-import no.sr.ringo.account.AccountRepository;
+import eu.peppol.persistence.api.account.AccountRepository;
 import no.sr.ringo.guice.TestModuleFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;

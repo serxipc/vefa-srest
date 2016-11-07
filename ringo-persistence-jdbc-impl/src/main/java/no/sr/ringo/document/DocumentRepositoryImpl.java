@@ -19,6 +19,10 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
 
+/**
+ * Repository for managing the payload documents.
+ *
+ */
 @Repository
 public class DocumentRepositoryImpl implements DocumentRepository {
 
@@ -91,7 +95,7 @@ public class DocumentRepositoryImpl implements DocumentRepository {
         }
 */
 
-        return documentFactory.makePeppolDocument(PeppolDocumentTypeId.valueFor(documentId), xmlMessage);
+        return documentFactory.makePeppolDocument(PeppolDocumentTypeId.valueOf(documentId), xmlMessage);
     }
 
     private PreparedStatement prepareSelect(Account account, MessageNumber msgNo, Connection con) throws SQLException {

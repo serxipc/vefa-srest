@@ -2,11 +2,8 @@ package no.sr.ringo.guice;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import eu.peppol.persistence.MessageRepository;
-import eu.peppol.persistence.jdbc.MessageRepositoryH2Impl;
+import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import eu.peppol.persistence.jdbc.util.InMemoryDatabaseHelper;
-import no.sr.ringo.common.DatabaseHelper;
-import org.h2.jdbcx.JdbcDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

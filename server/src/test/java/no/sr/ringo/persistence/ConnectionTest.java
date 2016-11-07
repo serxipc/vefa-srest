@@ -3,11 +3,10 @@ package no.sr.ringo.persistence;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import eu.peppol.persistence.guice.AopJdbcTxManagerModule;
+import eu.peppol.persistence.api.account.AccountRepository;
 import eu.peppol.persistence.guice.RepositoryModule;
+import eu.peppol.persistence.jdbc.AccountRepositoryImpl;
 import eu.peppol.util.OxalisProductionConfigurationModule;
-import no.sr.ringo.account.AccountRepository;
-import no.sr.ringo.account.AccountRepositoryImpl;
 import no.sr.ringo.guice.TestDataSourceModule;
 import no.sr.ringo.persistence.repo.TestRepo;
 import no.sr.ringo.persistence.repo.TestRepoImpl;
@@ -74,7 +73,6 @@ public class ConnectionTest {
          */
         @Override
         protected void configure() {
-            bind(AccountRepository.class).to(AccountRepositoryImpl.class).in(Singleton.class);
             bind(TestRepo.class).to(TestRepoImpl.class).in(Singleton.class);
         }
     }

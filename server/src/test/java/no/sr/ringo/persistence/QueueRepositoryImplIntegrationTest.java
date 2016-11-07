@@ -3,12 +3,13 @@ package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.cenbiimeta.ProfileId;
-import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.common.PeppolMessageTestdataGenerator;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.*;
@@ -80,10 +81,11 @@ public class QueueRepositoryImplIntegrationTest {
         OutboundMessageQueueId queueId = queueRepository.putMessageOnQueue(messageWithLocations.getMsgNo());
         assertNotNull(queueId);
 
-        DatabaseHelper.QueuedMessage queuedMessage = databaseHelper.getQueuedMessageByQueueId(queueId);
+        eu.peppol.persistence.api.OutboundMessageQueueId qid = eu.peppol.persistence.api.OutboundMessageQueueId.valueOf(queueId.toString());
+        DatabaseHelper.QueuedMessage queuedMessage = databaseHelper.getQueuedMessageByQueueId(qid);
         assertEquals(queueId, new OutboundMessageQueueId(queuedMessage.getQueueId()));
         assertEquals(messageWithLocations.getMsgNo(), queuedMessage.getMsgNo());
-        assertEquals(OutboundMessageQueueState.QUEUED, queuedMessage.getState());
+        assertEquals(eu.peppol.persistence.api.OutboundMessageQueueState.QUEUED, queuedMessage.getState());
 
     }
 
@@ -125,8 +127,9 @@ public class QueueRepositoryImplIntegrationTest {
     public void testUpdateQueuedMessageState(){
         OutboundMessageQueueId id = createMessageAndPutOnQueue();
         queueRepository.changeQueuedMessageState(id, OutboundMessageQueueState.OK);
-        DatabaseHelper.QueuedMessage fetched = databaseHelper.getQueuedMessageByQueueId(id);
-        assertEquals(OutboundMessageQueueState.OK, fetched.getState());
+
+        DatabaseHelper.QueuedMessage fetched = databaseHelper.getQueuedMessageByQueueId(eu.peppol.persistence.api.OutboundMessageQueueId.valueOf(id.toString()));
+        assertEquals(eu.peppol.persistence.api.OutboundMessageQueueState.OK, fetched.getState());
     }
 
     @Test(groups = {"persistence"})
@@ -134,11 +137,11 @@ public class QueueRepositoryImplIntegrationTest {
         OutboundMessageQueueId queueId = createMessageAndPutOnQueue();
         QueuedOutboundMessageError error = new QueuedOutboundMessageError(queueId, "detail", "message", "stacktrace");
         queueRepository.logOutboundError(error);
-        List<QueuedOutboundMessageError> errors = databaseHelper.getErrorMessages();
+        List<eu.peppol.persistence.api.QueuedOutboundMessageError> errors = databaseHelper.getErrorMessages();
 
-        QueuedOutboundMessageError fetched = errors.get(errors.size() - 1);
+        eu.peppol.persistence.api.QueuedOutboundMessageError fetched = errors.get(errors.size() - 1);
         assertNotNull(fetched.getErrorId());
-        assertEquals(queueId, fetched.getOutboundQueueId());
+        assertEquals(eu.peppol.persistence.api.OutboundMessageQueueId.valueOf(queueId.toString()), fetched.getOutboundQueueId());
         assertEquals("detail", fetched.getDetails());
         assertEquals("message", fetched.getMessage());
         assertEquals("stacktrace", fetched.getStacktrace());
@@ -160,7 +163,7 @@ public class QueueRepositoryImplIntegrationTest {
         //creates an outbound message
         final int accountId = 1;
 
-        msgIdInvoice = databaseHelper.createMessage(PeppolDocumentTypeId.EHF_INVOICE,
+        msgIdInvoice = databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
                 PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
                 invoiceXml, accountId, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), null, null, new Date());
         Integer queueId = databaseHelper.putMessageOnQueue(msgIdInvoice);
@@ -176,7 +179,7 @@ public class QueueRepositoryImplIntegrationTest {
         String invoiceXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"text/xsl\" href=\"xxx.xslt\"?><Invoice>invoice</Invoice>";
         //creates an outbound message
         final int accountId = 1;
-        msgIdInvoice = databaseHelper.createMessage(PeppolDocumentTypeId.EHF_INVOICE,
+        msgIdInvoice = databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
                 PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
                 invoiceXml, accountId, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), null, new Date(), new Date());
         assertNotNull(msgIdInvoice);

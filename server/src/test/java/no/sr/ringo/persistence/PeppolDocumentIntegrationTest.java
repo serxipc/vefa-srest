@@ -3,12 +3,13 @@ package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.cenbiimeta.ProfileId;
-import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.document.DocumentRepository;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.document.PeppolDocument;
@@ -103,7 +104,8 @@ public class PeppolDocumentIntegrationTest {
                 CustomizationIdentifier.valueOf(TransactionIdentifier.Predefined.T010_INVOICE_V1 + ":#" + ProfileId.Predefined.PEPPOL_4A_INVOICE_ONLY + "#" + ProfileId.Predefined.EHF_INVOICE),
                 "2.0");
 
-        Long message = databaseHelper.createMessage(invoiceDocumentType,
+
+        Long message = databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
                 PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
                 invoiceXml, 1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), new Date(), new Date());
         return MessageNumber.create(message);
@@ -117,7 +119,7 @@ public class PeppolDocumentIntegrationTest {
                 CustomizationIdentifier.valueOf(TransactionIdentifier.Predefined.T014_CREDIT_NOTE_V1 + ":#" + ProfileId.Predefined.PROPOSED_BII_XX + "#" + ProfileId.Predefined.EHF_CREDIT_NOTE),
                 "2.0");
 
-        Long messageNumber = databaseHelper.createMessage(creditNoteDocumentType,
+        Long messageNumber = databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.CREDIT_NOTE.getDocumentTypeIdentifier(),
                 PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
                 creditXml, 1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), new Date(), new Date());
         return MessageNumber.create(messageNumber);

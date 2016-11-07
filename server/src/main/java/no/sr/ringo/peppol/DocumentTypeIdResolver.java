@@ -1,9 +1,5 @@
 package no.sr.ringo.peppol;
 
-import no.sr.ringo.peppol.LocalName;
-import no.sr.ringo.peppol.PeppolDocumentIdAcronym;
-import no.sr.ringo.peppol.PeppolDocumentTypeId;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import no.sr.ringo.smp.RingoSmpLookup;
 import no.sr.ringo.smp.SmpLookupResult;
 
@@ -33,7 +29,7 @@ public class DocumentTypeIdResolver {
      */
     public PeppolDocumentTypeId resolve(PeppolParticipantId peppolParticipantId, String documentIdString) {
 
-        PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.valueFor(documentIdString);
+        PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.valueOf(documentIdString);
         if (peppolDocumentTypeId.isKnown()) {
             return peppolDocumentTypeId;
         } else {

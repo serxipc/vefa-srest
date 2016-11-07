@@ -58,7 +58,7 @@ public class PeppolDocumentTypeId {
         this.version = version;
     }
 
-    public static PeppolDocumentTypeId valueFor(String documentIdAsText) {
+    public static PeppolDocumentTypeId valueOf(String documentIdAsText) {
         PeppolDocumentTypeId result = new UnknownPeppolDocumentTypeId(documentIdAsText);
         if (documentIdAsText != null) {
 

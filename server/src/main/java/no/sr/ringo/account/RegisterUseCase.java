@@ -6,6 +6,7 @@ import com.google.inject.servlet.RequestScoped;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.persistence.api.UserName;
 import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountRepository;
 import eu.peppol.persistence.api.account.Customer;
 import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
 import eu.peppol.persistence.guice.jdbc.Transactional;

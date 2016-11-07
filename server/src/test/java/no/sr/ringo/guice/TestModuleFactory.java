@@ -61,7 +61,6 @@ public class TestModuleFactory implements IModuleFactory {
             // like an "include" statement
             Binder binder = binder();
 
-
             binder.install(new OxalisProductionConfigurationModule());
 
             binder.install(new RepositoryModule());

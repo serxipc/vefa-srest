@@ -1,8 +1,8 @@
 package no.sr.ringo.http;
 
 import com.google.inject.Inject;
+import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.common.DatabaseHelper;
 import no.sr.ringo.common.ResponseUtils;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.guice.TestModuleFactory;
