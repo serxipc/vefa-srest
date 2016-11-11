@@ -33,9 +33,10 @@ public enum SchemeId {
          * Allows a specific PartyId implementation to format the organisationId
          * correctly.
          * <p/>
-         * The norwegian Organisation number can be postfixed with MVA or prefixed with NO
+         * Norwegian Organisation numbers can be post fixed with MVA or prefixed with NO, but only
+         * the numeric part should be returned.
          * <p/>
-         * e.g. 987654321MVA is valid as is NO987654321MVA
+         * e.g. 987654321MVA is valid as is NO987654321MVA, both represented as 987654321
          *
          * @param organisationId
          * @return
@@ -64,13 +65,15 @@ public enum SchemeId {
          */
         @Override
         public String formatOrganisationId(String organisationId) {
-            //Clean up Norwegian VAT strings
+
+            //Cleans up Norwegian VAT strings, removing the optional prefix and optional suffix
             Matcher matcher = PeppolParticipantId.NO_ORG_NUM_PATTERN.matcher(organisationId);
             if (matcher.matches()) {
                 return matcher.group(1);
             }
             return super.formatOrganisationId(organisationId);
         }
+
     },
     HU_VAT("HU:VAT", "9910"),
     EU_VAT("EU:VAT", "9912"),
@@ -120,11 +123,11 @@ public enum SchemeId {
     ZZ_("ZZZ", "9999");
 
     final String schemeId;
-    final String numericISO652Code;
+    final String numericISO6523Code;
 
-    SchemeId(String schemeId, String numericISO652Code) {
+    SchemeId(String schemeId, String numericISO6523Code) {
         this.schemeId = schemeId;
-        this.numericISO652Code = numericISO652Code;
+        this.numericISO6523Code = numericISO6523Code;
     }
 
     /**
@@ -133,6 +136,8 @@ public enum SchemeId {
      * The norwegian Organisation number can be postfixed with MVA or prefixed with NO
      * <p/>
      * e.g. 987654321MVA is valid as is NO987654321MVA
+     *
+     * This method may be overridden for each scheme identifier
      *
      * @param organisationId
      * @return
@@ -143,34 +148,33 @@ public enum SchemeId {
 
     /**
      * Tries to find the Party id with the given schemeId
-     * e.g. "ES:VAT" --> ES_VAT
+     * e.g. "ES:VAT" --> {@link #ES_VAT}
      * @param schemeId
      * @return the PartyId if found, null otherwise
      */
     public static SchemeId parse(String schemeId) {
         if(schemeId == null) return null;
-        for (SchemeId partyId : values()) {
-            if (partyId.schemeId.equalsIgnoreCase(schemeId)) {
-                return partyId;
+        for (SchemeId entry : values()) {
+            if (entry.schemeId.equalsIgnoreCase(schemeId)) {
+                return entry;
             }
         }
         return null;
     }
 
     /**
-     * Tries to find the Party id from the ISO652 code
-     * e.g. "9919" --> AT_KUR
+     * Tries to find the Party id from the ISO6523 code
+     * e.g. "9919" --> {@link #AT_KUR}
      * @param code
      * @return the party id if found null otherwise.
      */
-    public static SchemeId fromISO652(String code) {
+    public static SchemeId fromISO6523(String code) {
         if (code == null) return null;
         for (SchemeId schemeId : values()) {
-            if (schemeId.numericISO652Code.equalsIgnoreCase(code)) {
+            if (schemeId.numericISO6523Code.equalsIgnoreCase(code)) {
                 return schemeId;
             }
         }
         return null;
     }
-
 }

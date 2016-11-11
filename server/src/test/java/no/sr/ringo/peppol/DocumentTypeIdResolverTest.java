@@ -25,7 +25,7 @@ public class DocumentTypeIdResolverTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        peppolParticipantId = PeppolParticipantId.valueFor(ObjectMother.getTestParticipantIdForSMPLookup().stringValue());
+        peppolParticipantId = PeppolParticipantId.valueOf(ObjectMother.getTestParticipantIdForSMPLookup().stringValue());
         mockRingoSmpLookup = createStrictMock(RingoSmpLookup.class);
     }
 
@@ -92,7 +92,7 @@ public class DocumentTypeIdResolverTest {
     public void testResolveFromEhf2DocumentTypeIdString() throws Exception {
 
         String documentId = "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.cenbii.eu:profile:biixx:ver2.0:extended:urn:www.difi.no:ehf:kreditnota:ver2.0::2.1";
-        PeppolParticipantId participantId = PeppolParticipantId.valueFor("9908:910667831");
+        PeppolParticipantId participantId = PeppolParticipantId.valueOf("9908:910667831");
 
         //RingoSmpLookup smpLookup = new RingoSmpLookupImpl(SmpLookupManagerFactory.getSmpLookupManager());
         DocumentTypeIdResolver resolver = new DocumentTypeIdResolver(mockRingoSmpLookup);

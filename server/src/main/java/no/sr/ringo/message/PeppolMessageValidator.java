@@ -141,7 +141,7 @@ public class PeppolMessageValidator {
 
     private PeppolParticipantId validateRecipientWithoutSmpLookup() {
         //recipient id
-        PeppolParticipantId receiver = PeppolParticipantId.valueFor(postParams.getRecipientIdString());
+        PeppolParticipantId receiver = PeppolParticipantId.valueOf(postParams.getRecipientIdString());
         if (peppolMessage.getPeppolHeader().getReceiver() == null) {
             throw new InvalidUserInputWebException(String.format("Wrong recipientId value: %s", postParams.getRecipientIdString()));
         }
@@ -153,7 +153,7 @@ public class PeppolMessageValidator {
      */
     private PeppolParticipantId validateRecipientAndDoSmpLookup() {
         //recipient id
-        PeppolParticipantId receiver = PeppolParticipantId.valueFor(postParams.getRecipientIdString());
+        PeppolParticipantId receiver = PeppolParticipantId.valueOf(postParams.getRecipientIdString());
         if (peppolMessage.getPeppolHeader().getReceiver() == null) {
             throw new InvalidUserInputWebException(String.format("Wrong recipientId value: %s", postParams.getRecipientIdString()));
         }

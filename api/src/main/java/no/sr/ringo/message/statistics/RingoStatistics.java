@@ -1,7 +1,8 @@
 package no.sr.ringo.message.statistics;
 
 
-import eu.peppol.persistence.api.account.AccountId;
+
+import eu.peppol.persistence.AccountId;
 
 import java.util.List;
 

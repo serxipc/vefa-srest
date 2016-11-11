@@ -19,6 +19,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 
+import javax.sql.DataSource;
+import java.sql.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,26 +39,34 @@ public class InboxWithMessageWithoutUUIDTest {
     private final AccountRepository accountRepository;
     private final DatabaseHelper databaseHelper;
     private final PeppolMessageRepository peppolMessageRepository;
+    private final DataSource dataSource;
 
     private Long messageNo;
     private Long messageNo2;
     private Long messageNo3;
-    private String receiver1 = "9908:976098898";
+    private String receiver1 = ObjectMother.getAdamsParticipantId().stringValue();
     private Account account;
     private ParticipantId sender;
 
     @Inject
-    public InboxWithMessageWithoutUUIDTest(AccountRepository accountRepository, DatabaseHelper databaseHelper, PeppolMessageRepository peppolMessageRepository) {
+    public InboxWithMessageWithoutUUIDTest(AccountRepository accountRepository, DatabaseHelper databaseHelper, PeppolMessageRepository peppolMessageRepository, DataSource dataSource) {
         this.accountRepository = accountRepository;
         this.databaseHelper = databaseHelper;
         this.peppolMessageRepository = peppolMessageRepository;
+        this.dataSource = dataSource;
+    }
+
+    @BeforeMethod
+    public void setUp() throws Exception {
+        account = accountRepository.createAccount(ObjectMother.getAdamsAccount(), ObjectMother.getAdamsParticipantId());
+        sender = ObjectMother.getAdamsParticipantId();
     }
 
     /**
      * This test must be run as last one, because it creates new message which would impact other tests
      */
     @Test(groups = {"persistence"})
-    public void testMessageIdWithNoUUID() throws PeppolMessageNotFoundException {
+    public void testMessageIdWithNoUUID() throws PeppolMessageNotFoundException, SQLException {
 
         //proper message
         messageNo = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, UUID.randomUUID().toString(), null);
@@ -65,6 +75,7 @@ public class InboxWithMessageWithoutUUIDTest {
         //uuid = ''
         messageNo3 = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, "", null);
 
+        inspectDbms();
         // We used to expect only a single message as message_uuid was required to be null in order to be deemed in the /inbox
         Integer inboxCount = peppolMessageRepository.getInboxCount(account.getId());
         assertEquals(inboxCount,(Integer) 3);
@@ -75,11 +86,21 @@ public class InboxWithMessageWithoutUUIDTest {
 
     }
 
-    @BeforeMethod
-    public void setUp() throws Exception {
-        account = accountRepository.createAccount(ObjectMother.getAdamsAccount(), ObjectMother.getAdamsParticipantId());
-        sender = ObjectMother.getAdamsParticipantId();
+    void inspectDbms() throws SQLException {
+
+        Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from MESSAGE");
+        ResultSet rs = preparedStatement.executeQuery();
+        ResultSetMetaData metaData = rs.getMetaData();
+
+        while (rs.next()) {
+            for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                String columnLabel = metaData.getColumnLabel(i);
+                System.out.format("%20s : %s\n", columnLabel, rs.getString(i));
+            }
+        }
     }
+
 
     @AfterMethod
     public void tearDown() throws Exception {

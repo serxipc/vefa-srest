@@ -54,7 +54,7 @@ public class RingoServiceRestImplTest {
         expect(httpClient.execute(isA(HttpHost.class),isA(HttpGet.class),isA(AcceptedDocumentTransfersRingoResponseHandler.class),isA(BasicHttpContext.class))).andStubReturn(expectedResult);
 
         replay(httpClient);
-        List<AcceptedDocumentTransfer> result = ringoService.fetchAcceptedDocumentTransfers(PeppolParticipantId.valueFor("976098897"), LocalName.Invoice);
+        List<AcceptedDocumentTransfer> result = ringoService.fetchAcceptedDocumentTransfers(PeppolParticipantId.valueOf("976098897"), LocalName.Invoice);
 
         assertNotNull(result);
         verify(httpClient);
@@ -74,8 +74,8 @@ public class RingoServiceRestImplTest {
     @Test
     public void testSendDocumentValidInvoiceHeaders() throws Exception {
 
-        PeppolParticipantId receiver = PeppolParticipantId.valueFor("0037:12345");
-        PeppolParticipantId sender = PeppolParticipantId.valueFor("0037:12345");
+        PeppolParticipantId receiver = PeppolParticipantId.valueOf("0037:12345");
+        PeppolParticipantId sender = PeppolParticipantId.valueOf("0037:12345");
         PeppolDocumentTypeId invoiceOnly = PeppolDocumentTypeId.EHF_INVOICE;
         PeppolHeader peppolHeader = PeppolHeader.forDocumentType(invoiceOnly, sender, receiver);
 
@@ -90,7 +90,7 @@ public class RingoServiceRestImplTest {
     public void testUrlEncodeSwedishOrgNum() throws Exception {
 
         String swedishOrgNum = "0007:2021005026";
-        PeppolParticipantId receiver = PeppolParticipantId.valueFor(swedishOrgNum);
+        PeppolParticipantId receiver = PeppolParticipantId.valueOf(swedishOrgNum);
         String asString = ringoService.urlEncode(receiver);
         assertEquals(asString,"0007%3A2021005026");
     }

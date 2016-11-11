@@ -24,7 +24,7 @@ public class GenericParticipantIdXmlSpecification extends PeppolDocumentSpecific
         String schemeId = element.getAttributeValue("schemeID");
         final SchemeId partyId = SchemeId.parse(schemeId);
         if (partyId == null) {
-            return PeppolParticipantId.valueFor(element.getText());
+            return PeppolParticipantId.valueOf(element.getText());
         }
         else {
             return new PeppolParticipantId(partyId, element.getText());

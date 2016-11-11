@@ -222,7 +222,7 @@ public class MessageSearchPersistenceTest {
         account = accountRepository.createAccount(ObjectMother.getAdamsAccount(), participantId);
         final String sender = participantId.stringValue();
 
-        boolean validNorwegianOrgNum = PeppolParticipantId.isValidNorwegianOrgNum(receiver1);
+        boolean validNorwegianOrgNum = ParticipantId.isValidParticipantIdentifierPattern(receiver1);
 
         firstMessageNo = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, sender, receiver1, UUID.randomUUID().toString(), null);
         secondMessageNo = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.OUT, sender, receiver2, UUID.randomUUID().toString(), null);

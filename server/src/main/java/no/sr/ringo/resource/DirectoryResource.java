@@ -41,7 +41,7 @@ public class DirectoryResource {
     @GET
     @Path("/{participantId}/")
     public Response isRegistered(@Context final UriInfo uriInfo, @PathParam("participantId") final String peppolParticipantId) {
-        PeppolParticipantId participantId = PeppolParticipantId.valueFor(peppolParticipantId);
+        PeppolParticipantId participantId = PeppolParticipantId.valueOf(peppolParticipantId);
         if (participantId == null) {
             return SrResponse.status(Response.Status.BAD_REQUEST, String.format("Invalid peppol participant id '%s'", peppolParticipantId));
         }
@@ -56,7 +56,7 @@ public class DirectoryResource {
     @Produces(RingoMediaType.APPLICATION_XML)
     @Path("/{participantId}/{localName}")
     public Response getDocumentTypes(@Context final UriInfo uriInfo, @PathParam("participantId") final String peppolParticipantId, @PathParam("localName") final String localNameString) {
-        PeppolParticipantId participantId = PeppolParticipantId.valueFor(peppolParticipantId);
+        PeppolParticipantId participantId = PeppolParticipantId.valueOf(peppolParticipantId);
         if (participantId == null) {
             return SrResponse.status(Response.Status.BAD_REQUEST, String.format("Invalid peppol participant id '%s'", peppolParticipantId));
         }

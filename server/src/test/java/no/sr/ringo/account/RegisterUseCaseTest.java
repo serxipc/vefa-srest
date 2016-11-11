@@ -3,6 +3,7 @@ package no.sr.ringo.account;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.persistence.AccountId;
 import eu.peppol.persistence.api.UserName;
 import eu.peppol.persistence.api.account.*;
 import no.sr.ringo.RingoConstant;
@@ -57,7 +58,7 @@ public class RegisterUseCaseTest {
         assertFalse(res.isValid());
         assertEquals("orgNo er ikke et gyldig norsk organisasjonsnummer", res.getMessage());
 
-        data = new RegistrationData("name", "pass", "username", null, null, null, null, null, null, null, null, "976098897", true);
+        data = new RegistrationData("name", "pass", "username", null, null, null, null, null, null, null, null, "NO976098897", true);
         res = registerUseCase.validateData(data);
         assertTrue(res.isValid());
 
@@ -68,7 +69,7 @@ public class RegisterUseCaseTest {
 
         AccountRepository mockRepo = createStrictMock(AccountRepository.class);
         registerUseCase.setAccountRepository(mockRepo);
-        final String orgNo = "222222222";
+        final String orgNo = "976098897";
         expect(mockRepo.accountExists(new UserName("username"))).andReturn(true);
         replay(mockRepo);
 

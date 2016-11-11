@@ -95,11 +95,12 @@ This is an example showing how to register a new account. I.e entries will be cr
       "phone" : "111222333",
       "username" : "newbusiness",
       "password" : "topsecret123",
-      "orgNo" : "991825827",
+      "orgNo" : "NO991825827",
       "registerSmp" : false
     }
     ```
-    Note! The organisation number must be valid and previously unknown in the system
+    Note! The organisation number must be valid and previously unknown in the system and *must* be prefixed with the country code or any other prefix which is required by 
+    whatever Issuing Agency Scheme is in charge.
  
  1. Execute the registration by performing an http POST using any tool you like. Here is how you would do it using `curl`, given the data being present in 
     a file named `/tmp/register.json`:

@@ -1,6 +1,6 @@
 package no.sr.ringo.account;
 
-import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.AccountId;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;

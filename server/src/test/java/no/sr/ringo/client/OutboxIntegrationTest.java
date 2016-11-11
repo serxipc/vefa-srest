@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
-import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.AccountId;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.cenbiimeta.ProfileId;
@@ -71,7 +71,7 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         File file = ClientObjectMother.getTestInvoice();
 
         final PeppolChannelId channel = new PeppolChannelId("Test");
-        final Message message = ringoRestClientImpl.send(file, channel, PeppolParticipantId.valueFor(sender.stringValue()), PeppolParticipantId.valueFor(sender.stringValue()), uploadMode);
+        final Message message = ringoRestClientImpl.send(file, channel, PeppolParticipantId.valueOf(sender.stringValue()), PeppolParticipantId.valueOf(sender.stringValue()), uploadMode);
 
         assertNotNull(message);
         assertNull(message.getContents().getDelivered());
@@ -97,7 +97,7 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
 
         final PeppolChannelId channel = new PeppolChannelId("Test");
 
-        final Message message = ringoRestClientImpl.send(file, channel, PeppolParticipantId.valueFor(sender.stringValue()), PeppolParticipantId.valueFor(sender.stringValue()), uploadMode);
+        final Message message = ringoRestClientImpl.send(file, channel, PeppolParticipantId.valueOf(sender.stringValue()), PeppolParticipantId.valueOf(sender.stringValue()), uploadMode);
 
         assertNotNull(message);
         assertNull(message.getContents().getDelivered());
@@ -179,7 +179,7 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         final ReaderInputStream readerInputStream = new ReaderInputStream(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 
         PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.EHF_INVOICE;
-        PeppolParticipantId participantId = PeppolParticipantId.valueFor("0002:1234");
+        PeppolParticipantId participantId = PeppolParticipantId.valueOf("0002:1234");
         final Message message = ringoRestClientImpl.send(readerInputStream, PeppolHeader.forDocumentType(peppolDocumentTypeId, participantId, participantId));
 
         assertNotNull(message);
@@ -206,7 +206,7 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         final PeppolChannelId channel = new PeppolChannelId("SendRegning");
 
         PeppolDocumentTypeId peppolDocumentTypeId = creditNotePeppolDocumentTypeId;
-        PeppolParticipantId participantId = PeppolParticipantId.valueFor("0002:1234");
+        PeppolParticipantId participantId = PeppolParticipantId.valueOf("0002:1234");
         final Message message = ringoRestClientImpl.send(readerInputStream, PeppolHeader.forDocumentType(peppolDocumentTypeId, participantId, participantId));
 
         assertNotNull(message);

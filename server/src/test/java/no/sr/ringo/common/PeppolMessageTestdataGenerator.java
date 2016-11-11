@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.AccountId;
 
 import static org.testng.Assert.assertNotNull;
 
@@ -32,7 +32,7 @@ public class PeppolMessageTestdataGenerator {
     public static final String EHF_TEST_SEND_REGNING_HELSE_VEST2_XML = "ehf-test-SendRegning-HelseVest2.xml";
     public static final String EHF_TEST_USING_DEFAULT_NAMESPACE_XML = "ehf-test-dakantus_using_default_namespace.xml";
 
-    protected static final PeppolParticipantId SR_PPID = PeppolParticipantId.valueFor("9908:976098897");
+    protected static final PeppolParticipantId SR_PPID = PeppolParticipantId.valueOf("9908:976098897");
 
     public static MessageWithLocationsImpl outboundMesssageNotSent() {
         return sampleMessage(TransferDirection.OUT);
@@ -67,7 +67,7 @@ public class PeppolMessageTestdataGenerator {
         m.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.EHF_INVOICE);
         m.getPeppolHeader().setProfileId(new ProfileId(PeppolProcessIdAcronym.INVOICE_ONLY.stringValue()));
         m.getPeppolHeader().setReceiver(SR_PPID);
-        m.getPeppolHeader().setSender(PeppolParticipantId.valueFor("9908:976098897"));
+        m.getPeppolHeader().setSender(PeppolParticipantId.valueOf("9908:976098897"));
 
         String path = null;
 

@@ -21,8 +21,8 @@ import static org.testng.Assert.*;
  */
 public class RingoClientAgressoTest {
 
-    private static final PeppolParticipantId UNIT4_PARTICIPANT_ID = PeppolParticipantId.valueFor("9908:961329310");
-    private static final PeppolParticipantId SEND_REGNING_TEST_ID = PeppolParticipantId.valueFor("9908:810017902");
+    private static final PeppolParticipantId UNIT4_PARTICIPANT_ID = PeppolParticipantId.valueOf("9908:961329310");
+    private static final PeppolParticipantId SEND_REGNING_TEST_ID = PeppolParticipantId.valueOf("9908:810017902");
 
     private RingoClientImpl agressoRingoClient;
 
@@ -62,7 +62,7 @@ public class RingoClientAgressoTest {
 
     @Test(enabled = false)
     public void thereAreAvailableDocumentTransfersForCreditNote() throws Exception {
-        List<AcceptedDocumentTransfer> acceptedDocumentTransfers = agressoRingoClient.fetchAcceptedDocumentTransfers(PeppolParticipantId.valueFor("9908:961329310"), LocalName.Invoice);
+        List<AcceptedDocumentTransfer> acceptedDocumentTransfers = agressoRingoClient.fetchAcceptedDocumentTransfers(PeppolParticipantId.valueOf("9908:961329310"), LocalName.Invoice);
         assertNotNull(acceptedDocumentTransfers);
         assertTrue(acceptedDocumentTransfers.size() > 0);
     }

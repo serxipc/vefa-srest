@@ -32,6 +32,7 @@ import static org.testng.Assert.assertEquals;
 public class RegisterIntegrationTest extends AbstractHttpClientServerTest {
 
     public static final String ACCOUNT_USERNAME = "Difi_test";
+    // Skips past the "9908:" prefix
     public static final String DIFI_TEST_ORG_NO = WellKnownParticipant.DIFI_TEST.stringValue().substring(5);
 
     @Inject
@@ -82,7 +83,7 @@ public class RegisterIntegrationTest extends AbstractHttpClientServerTest {
                 "  \"phone\" : \"111222333\",\n" +
                 "  \"username\" : \""+ ACCOUNT_USERNAME +"\",\n" +
                 "  \"password\" : \"topsecret123\",\n" +
-                "  \"orgNo\" : \"" + DIFI_TEST_ORG_NO + "\",\n" +
+                "  \"orgNo\" : \"" + "NO"+DIFI_TEST_ORG_NO + "\",\n" +
                 "  \"registerSmp\" : false\n" +
                 "}\n";
 

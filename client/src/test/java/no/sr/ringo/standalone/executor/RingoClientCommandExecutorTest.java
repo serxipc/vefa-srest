@@ -176,7 +176,7 @@ public class RingoClientCommandExecutorTest  {
         prepareUploadFile(FILENAME);
 
         RingoClientParams params = prepareParamsForOutbox();
-        params.setSenderId(PeppolParticipantId.valueFor("9908:976098891"));
+        params.setSenderId(PeppolParticipantId.valueOf("9908:976098891"));
 
         assertTrue(uploadFile.toString().endsWith(".xml"),"Ooops dow we have a threading problem?");
         expect(client.send(uploadFile, params.getChannelId(), params.getSenderId(), params.getRecipientId(), UploadMode.BATCH)).andReturn(mockUploadMessage);
@@ -403,7 +403,7 @@ public class RingoClientCommandExecutorTest  {
         RingoClientParams params = new RingoClientParams();
 
         params.setOperation(RingoClientParams.ClientOperation.SMP_LOOKUP);
-        params.setPeppolParticipantId(PeppolParticipantId.valueFor("9908:976098897"));
+        params.setPeppolParticipantId(PeppolParticipantId.valueOf("9908:976098897"));
 
         return params;
     }

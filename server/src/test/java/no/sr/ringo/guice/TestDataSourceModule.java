@@ -36,18 +36,4 @@ public class TestDataSourceModule extends AbstractModule {
         return InMemoryDatabaseHelper.createInMemoryDatabase();
 
     }
-
-    /** Use with Mysql */
-    public DataSource provideMysqlDataSource() {
-        DataSource dataSource = null;
-        /*
-        dataSource = new MysqlDataSource();
-        dataSource.setURL("jdbc:mysql://localhost/oxalis_test");
-        dataSource.setUser("skrue");
-        dataSource.setPassword("vable");
-        */
-        return dataSource;
-    }
-
-
 }

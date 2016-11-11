@@ -2,6 +2,7 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
+import eu.peppol.identifier.WellKnownParticipant;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.AccountRepository;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
@@ -37,13 +38,13 @@ public class MessageWithoutAccountIdSearchTest {
     @Test(groups = {"persistence"})
     public void testFindAllMessages() {
         List<MessageMetaData> messagesWithoutAccountId = peppolMessageRepository.findMessagesWithoutAccountId();
-        assertEquals(1, messagesWithoutAccountId.size());
+        assertEquals(messagesWithoutAccountId.size(),1);
     }
 
     @BeforeMethod
     public void setUp() throws Exception {
         databaseHelper.deleteAllMessagesWithoutAccountId();
-        databaseHelper.createMessage(null, TransferDirection.IN, "sender", "receiver", "12345", null);
+        databaseHelper.createMessage(null, TransferDirection.IN, WellKnownParticipant.U4_TEST.stringValue()  ,WellKnownParticipant.U4_TEST.stringValue() , "12345", null);
 
     }
 

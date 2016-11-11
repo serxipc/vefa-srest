@@ -3,7 +3,7 @@ package no.sr.ringo.message;
 import com.google.inject.Inject;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
-import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.AccountId;
 import no.sr.ringo.resource.UriLocationAware;
 import no.sr.ringo.response.InboxQueryResponse;
 import no.sr.ringo.response.MessagesQueryResponse;

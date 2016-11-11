@@ -128,35 +128,35 @@ public class SearchParamsTest {
     @Test
     public void testCopyingReceiverSearchParmsToNewURI() throws Exception {
 
-        String receiver = "9908:123456789";
+        String receiver = "9908:976098897";
         SearchParams params = new SearchParams(null, null, receiver, null, null);
 
         final UriBuilder uriBuilder = UriBuilder.fromUri(new URI("http://test"));
         params.appendTo(uriBuilder);
 
         final URI build = uriBuilder.build();
-        assertEquals(build.toString(),"http://test?receiver=9908:123456789");
+        assertEquals(build.toString(),"http://test?receiver=9908:976098897");
     }
 
     @Test
     public void testCopyingSenderSearchParmsToNewURI() throws Exception {
 
-        String sender = "9908:123456789";
+        String sender = "9908:976098897";
         SearchParams params = new SearchParams(null, sender, null, null, null);
 
         final UriBuilder uriBuilder = UriBuilder.fromUri(new URI("http://test"));
         params.appendTo(uriBuilder);
 
         final URI build = uriBuilder.build();
-        assertEquals(build.toString(),"http://test?sender=9908:123456789");
+        assertEquals(build.toString(),"http://test?sender=9908:976098897");
     }
 
 
     @Test
     public void testAllParamsExceptIndexToNewURI() throws Exception {
         String direction = "IN";
-        String sender = "9908:123456789";
-        String receiver = "9908:123456789";
+        String sender = "9908:976098897";
+        String receiver = "9908:976098897";
         String sent = "'<2012-11-21'";
         SearchParams params = new SearchParams(direction, sender, receiver, sent, "1");
 
@@ -164,6 +164,6 @@ public class SearchParamsTest {
         params.appendTo(uriBuilder);
 
         final URI build = uriBuilder.build();
-        assertEquals(build.toString(),"http://test?sender=9908:123456789&receiver=9908:123456789&sent='%3C2012-11-21'&direction=IN");
+        assertEquals(build.toString(),"http://test?sender=9908:976098897&receiver=9908:976098897&sent='%3C2012-11-21'&direction=IN");
     }
 }

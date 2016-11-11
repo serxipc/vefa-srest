@@ -85,12 +85,12 @@ public class PeppolMessageCreator {
     }
 
     private void extractRecipient() {
-        PeppolParticipantId receiver = PeppolParticipantId.valueFor(postParams.getRecipientIdString());
+        PeppolParticipantId receiver = PeppolParticipantId.valueOf(postParams.getRecipientIdString());
         peppolMessage.getPeppolHeader().setReceiver(receiver);
     }
 
     private void extractSender() {
-        PeppolParticipantId senderId = PeppolParticipantId.valueFor(postParams.getSenderIdString());
+        PeppolParticipantId senderId = PeppolParticipantId.valueOf(postParams.getSenderIdString());
         peppolMessage.getPeppolHeader().setSender(senderId);
     }
 

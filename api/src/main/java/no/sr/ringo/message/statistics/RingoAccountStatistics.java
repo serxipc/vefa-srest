@@ -1,9 +1,11 @@
 package no.sr.ringo.message.statistics;
 
-import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.AccountId;
 import no.sr.ringo.peppol.RingoUtils;
 
 import java.util.Date;
+
+import eu.peppol.persistence.AccountId;
 
 /**
  * DTO which holds the statistics for a given ringo account

@@ -39,7 +39,7 @@ public class DirectoryHttpTest extends AbstractHttpClientServerTest {
      */
     @Test(groups = {"integration"})
     public void testsDirectoryLookup() {
-        assertTrue(ringoRestClientImpl.isParticipantRegistered(PeppolParticipantId.valueFor(ObjectMother.getTestParticipantIdForSMPLookup().stringValue())));
+        assertTrue(ringoRestClientImpl.isParticipantRegistered(PeppolParticipantId.valueOf(ObjectMother.getTestParticipantIdForSMPLookup().stringValue())));
     }
 
 
@@ -60,6 +60,6 @@ public class DirectoryHttpTest extends AbstractHttpClientServerTest {
     }
 
     private PeppolParticipantId peppolIdNotInElma() {
-        return PeppolParticipantId.valueFor("987373822");
+        return PeppolParticipantId.valueOf("987373822");
     }
 }

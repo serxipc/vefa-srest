@@ -55,7 +55,7 @@ public class RegisterUseCase {
         } else if (isEmpty(registrationData.getUsername())) {
             message = MessageHelper.getMessage("reg.username.required");
         } else {
-            if (!PeppolParticipantId.isValidNorwegianOrgNum(registrationData.getOrgNo())) {
+            if (!ParticipantId.isValidParticipantIdentifier(registrationData.getOrgNo())) {
                 message = MessageHelper.getMessage("reg.orgNo.invalid", registrationData.getOrgNo());
             }
         }
@@ -78,7 +78,7 @@ public class RegisterUseCase {
         }
 
         //Prefix given orgNo with 9908
-        final PeppolParticipantId peppolParticipantId = PeppolParticipantId.valueFor(registrationData.getOrgNo());
+        final PeppolParticipantId peppolParticipantId = PeppolParticipantId.valueOf(registrationData.getOrgNo());
         if (peppolParticipantId == null) {
             throw new IllegalArgumentException("Provided organisation number is invalid");
         }

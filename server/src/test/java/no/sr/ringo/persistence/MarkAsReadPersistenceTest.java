@@ -35,7 +35,7 @@ public class MarkAsReadPersistenceTest {
     private final PeppolMessageRepository peppolMessageRepository;
 
     private Long messageNo;
-    private String receiver1 = "9908:976098898";
+    private String receiver1 = ObjectMother.getAdamsParticipantId().stringValue();
     private Account account;
     private ParticipantId sender;
 

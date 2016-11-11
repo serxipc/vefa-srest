@@ -1,8 +1,9 @@
 package no.sr.ringo.message;
 
 import com.sun.jersey.api.uri.UriBuilderImpl;
+import eu.peppol.identifier.WellKnownParticipant;
 import eu.peppol.persistence.api.account.Account;
-import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.AccountId;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.document.DefaultPeppolDocument;
 import no.sr.ringo.document.FetchDocumentUseCase;
@@ -57,8 +58,8 @@ public class MessagesResourceMockTest {
     public void testGetMessages() throws Exception {
 
         String direction = "OUT";
-        String sender = "sender";
-        String receiver = "receiver";
+        String sender = WellKnownParticipant.DIFI_TEST.stringValue();
+        String receiver = WellKnownParticipant.DIFI_TEST.stringValue();
         String sent = "<=2112-01-01";
         String index = "4";
 

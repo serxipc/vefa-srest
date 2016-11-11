@@ -15,7 +15,7 @@ import static org.testng.Assert.*;
 public class TestModeSmpLookupImplTest {
 
     TestModeSmpLookupImpl smpLookup = new TestModeSmpLookupImpl();
-    PeppolParticipantId unit4agresso = PeppolParticipantId.valueFor("9908:961329310");
+    PeppolParticipantId unit4agresso = PeppolParticipantId.valueOf("9908:961329310");
 
     private void verifySmpType(LocalName localName) {
         //System.out.println("Testing : " + localName.toString());

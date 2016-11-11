@@ -74,7 +74,7 @@ public class RingoUtilsTest {
     @Test
     public void testToXmlPeppolParticipantId(){
         String expected = "9908:976098897";
-        final String encoded = RingoUtils.toXml(PeppolParticipantId.valueFor(expected));
+        final String encoded = RingoUtils.toXml(PeppolParticipantId.valueOf(expected));
         final String decoded = RingoUtils.decodePredefinedXmlEntities(encoded);
         assertEquals(decoded, expected);
     }

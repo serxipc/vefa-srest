@@ -93,8 +93,8 @@ public class MessageXmlSpec implements XmlSpecification<MessageWithLocations> {
         peppolHeader.setPeppolChannelId(new PeppolChannelId(channel));
         peppolHeader.setPeppolDocumentTypeId(PeppolDocumentTypeId.valueOf(documentId));
         peppolHeader.setProfileId(new ProfileId(processId));
-        peppolHeader.setReceiver(PeppolParticipantId.valueFor(receiver));
-        peppolHeader.setSender(PeppolParticipantId.valueFor(sender));
+        peppolHeader.setReceiver(PeppolParticipantId.valueOf(receiver));
+        peppolHeader.setSender(PeppolParticipantId.valueOf(sender));
 
         MessageMetaDataImpl messageMetaData = new MessageMetaDataImpl();
 

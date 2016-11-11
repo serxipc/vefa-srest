@@ -48,7 +48,7 @@ public class RingoClientImplTest {
     @Test
     public void testFetchAcceptedDocumentTransfers() {
         RingoClientImpl ringoClient = new RingoClientImpl(mockRingoService);
-        PeppolParticipantId peppolParticipantId = PeppolParticipantId.valueFor("976098897");
+        PeppolParticipantId peppolParticipantId = PeppolParticipantId.valueOf("976098897");
         LocalName localName = LocalName.Invoice;
         expect(mockRingoService.fetchAcceptedDocumentTransfers(peppolParticipantId, localName)).andReturn(Collections.<AcceptedDocumentTransfer>emptyList());
         replay(mockRingoService);

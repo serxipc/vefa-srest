@@ -2,7 +2,7 @@ package no.sr.ringo.usecase;
 
 import eu.peppol.persistence.api.UserName;
 import eu.peppol.persistence.api.account.Account;
-import eu.peppol.persistence.api.account.AccountId;
+import eu.peppol.persistence.AccountId;
 import eu.peppol.persistence.api.account.Customer;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.common.UploadMode;

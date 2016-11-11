@@ -40,7 +40,7 @@ public class SenderParticipantIdXmlSpecification extends PeppolDocumentSpecifica
         final SchemeId partyId = SchemeId.parse(schemeId);
 
         if (partyId == null) {
-            return PeppolParticipantId.valueFor(element.getText());
+            return PeppolParticipantId.valueOf(element.getText());
         }
         else {
             return new PeppolParticipantId(partyId, element.getText());

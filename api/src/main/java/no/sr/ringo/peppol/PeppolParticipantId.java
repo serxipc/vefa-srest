@@ -27,13 +27,15 @@ public class PeppolParticipantId implements Serializable {
 
     static final int MODULUS_11 = 11;
 
-    static final Pattern INTERNATIONAL_ID_PATTERN = Pattern.compile("^(\\d{4}):([^\\s]+)$");
+    static final Pattern ISO6523_PATTERN = Pattern.compile("^(\\d{4}):([^\\s]+)$");
     static final Pattern NO_ORG_NUM_PATTERN = Pattern.compile("^(?:NO)?\\s*(\\d{9})\\s*(?:MVA)?$");
 
-    // The full organisation id including the scheme idloc
-    final String id;
+    // The full ISO6523 organisation id including the scheme ICD
+    final String peppolParticipantId;
+
     // The scheme id
     final SchemeId schemeId;
+
     // Just the organisation id
     final String organisationId;
 
@@ -44,7 +46,7 @@ public class PeppolParticipantId implements Serializable {
      */
     public PeppolParticipantId(SchemeId schemeId, String organisationId) {
         if(schemeId == null) {
-            throw new IllegalArgumentException("SchemeId must be specified with a a valid ISO652 code.");
+            throw new IllegalArgumentException("SchemeId must be specified with a a valid ISO6523 code.");
         }
 
         if (organisationId == null) {
@@ -66,7 +68,7 @@ public class PeppolParticipantId implements Serializable {
 
         this.schemeId = schemeId;
         this.organisationId = orgNo;
-        this.id = String.format("%s:%s", schemeId.numericISO652Code, orgNo);
+        this.peppolParticipantId = String.format("%s:%s", schemeId.numericISO6523Code, orgNo);
     }
 
     /**
@@ -78,7 +80,7 @@ public class PeppolParticipantId implements Serializable {
      * @param text
      * @return null if not able to parse, A PeppolParticipantId with iso code set if parsing is successful.
      */
-    public static PeppolParticipantId valueFor(String text) {
+    public static PeppolParticipantId valueOf(String text) {
         String id = text == null ? null : text.trim().replaceAll("\\s","");
         if (id == null || id.length() == 0) {
             return null;
@@ -87,9 +89,9 @@ public class PeppolParticipantId implements Serializable {
         try {
     
             //Case 1 of the form 1234:123456789
-            Matcher matcher = INTERNATIONAL_ID_PATTERN.matcher(id);
+            Matcher matcher = ISO6523_PATTERN.matcher(id);
             if (matcher.matches()) {
-                final SchemeId schemeId = SchemeId.fromISO652(matcher.group(1));
+                final SchemeId schemeId = SchemeId.fromISO6523(matcher.group(1));
                 return schemeId == null ?  null : new PeppolParticipantId(schemeId,matcher.group(2));
             }
     
@@ -112,15 +114,22 @@ public class PeppolParticipantId implements Serializable {
         return organisationId;
     }
 
+    /**
+     * Provides the PEPPOL participant ID on the form xxxx:yyyyy, in which the
+     * xxxx represents the ISO623 ICD prefix and the stuff after the ':' represents
+     * the part of the organisation number to be used for PEPPOL addressing.
+     *
+     * @return
+     */
     public String stringValue() {
-        return id;
+        return peppolParticipantId;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("PeppolParticipantId");
-        sb.append("{id='").append(id).append('\'');
+        sb.append("{id='").append(peppolParticipantId).append('\'');
         sb.append(", partyId=").append(schemeId);
         sb.append('}');
         return sb.toString();
@@ -134,14 +143,14 @@ public class PeppolParticipantId implements Serializable {
 
         PeppolParticipantId that = (PeppolParticipantId) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (peppolParticipantId != null ? !peppolParticipantId.equals(that.peppolParticipantId) : that.peppolParticipantId != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return peppolParticipantId != null ? peppolParticipantId.hashCode() : 0;
     }
 
     public static boolean isValidNorwegianOrgNum(String orgNo) {
@@ -157,7 +166,7 @@ public class PeppolParticipantId implements Serializable {
         final int modulus = generateOrgNumModulus11(orgNo.substring(0, 8));
 
 
-        /** don't subtract from length if modelus is 0 */
+        /** don't subtract from length if modulus is 0 */
         if ((modulus == 0) && (controlNumber == 0)) {
             return true;
         }
@@ -182,12 +191,6 @@ public class PeppolParticipantId implements Serializable {
 
         /** finding the modulus of the sum */
         return sum % MODULUS_11;
-    }
-
-    static void logMessage(Logger log, String message, Exception e) {
-        if (log.isInfoEnabled()) {
-            log.info(message, e);
-        }
     }
 
 }

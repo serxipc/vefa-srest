@@ -256,7 +256,7 @@ public class RingoClientCommandLineParser {
                     throw new CommandLineParserException(String.format("Invalid recipientId '%s', " + VALID_FORMAT_PEPPOL_PARTICIPANT, recipientId));
                 }
 
-                final PeppolParticipantId peppolParticipantId = PeppolParticipantId.valueFor(recipientId);
+                final PeppolParticipantId peppolParticipantId = PeppolParticipantId.valueOf(recipientId);
                 if (peppolParticipantId == null) {
                     throw new CommandLineParserException(String.format("Invalid recipientId '%s', " + VALID_FORMAT_PEPPOL_PARTICIPANT, recipientId));
                 }
@@ -273,7 +273,7 @@ public class RingoClientCommandLineParser {
                     throw new CommandLineParserException(String.format("Invalid senderId '%s', " + VALID_FORMAT_PEPPOL_PARTICIPANT, senderId));
                 }
 
-                final PeppolParticipantId peppolParticipantId = PeppolParticipantId.valueFor(senderId);
+                final PeppolParticipantId peppolParticipantId = PeppolParticipantId.valueOf(senderId);
                 if (peppolParticipantId == null) {
                     throw new CommandLineParserException(String.format("Invalid senderId '%s', " + VALID_FORMAT_PEPPOL_PARTICIPANT, senderId));
                 }
@@ -383,7 +383,7 @@ public class RingoClientCommandLineParser {
         if (!participantIdString.matches(PARTICIPANT_ID_FORMAT)) {
             throw new CommandLineParserException(String.format(INVALID_PEPOL_PARTICIPANT, participantIdString));
         }
-        final PeppolParticipantId peppolParticipantId = PeppolParticipantId.valueFor(participantIdString);
+        final PeppolParticipantId peppolParticipantId = PeppolParticipantId.valueOf(participantIdString);
         if (peppolParticipantId == null) {
             throw new CommandLineParserException(String.format(INVALID_PEPOL_PARTICIPANT, participantIdString));
         }

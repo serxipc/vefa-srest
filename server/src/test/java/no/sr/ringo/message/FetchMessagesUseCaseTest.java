@@ -1,5 +1,6 @@
 package no.sr.ringo.message;
 
+import eu.peppol.identifier.WellKnownParticipant;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
@@ -48,7 +49,7 @@ public class FetchMessagesUseCaseTest {
 
     @Test
     public void testNavigationWithNoNextAndPreviousLinks() throws Exception{
-        final SearchParams searchParams = new SearchParams("IN","9908:123456789","9908:123456789","",null);
+        final SearchParams searchParams = new SearchParams("IN", WellKnownParticipant.DIFI_TEST.stringValue(),WellKnownParticipant.DIFI_TEST.stringValue(),"",null);
 
         expect(mockMessagesDataProvider.getCount(searchParams)).andReturn(0);
 
@@ -63,7 +64,7 @@ public class FetchMessagesUseCaseTest {
 
     @Test
     public void testNavigationWithOnlyNextLinks() throws Exception{
-        final SearchParams searchParams = new SearchParams("IN","9908:123456789","9908:123456789","",null);
+        final SearchParams searchParams = new SearchParams("IN",WellKnownParticipant.DIFI_TEST.stringValue(),WellKnownParticipant.DIFI_TEST.stringValue(),"",null);
 
         expect(mockMessagesDataProvider.getCount(searchParams)).andReturn(26);
         expect(mockLocationAware.linkToResource(null, searchParams, 2)).andReturn(OK_URI);
@@ -80,7 +81,7 @@ public class FetchMessagesUseCaseTest {
 
     @Test
     public void testNavigationWithOnlyPreviousLinks() throws Exception{
-        final SearchParams searchParams = new SearchParams("IN","9908:123456789","9908:123456789","","2");
+        final SearchParams searchParams = new SearchParams("IN",WellKnownParticipant.DIFI_TEST.stringValue(),WellKnownParticipant.DIFI_TEST.stringValue(),"","2");
 
         expect(mockMessagesDataProvider.getCount(searchParams)).andReturn(48);
         expect(mockLocationAware.linkToResource(null, searchParams, 1)).andReturn(OK_URI);
@@ -96,7 +97,7 @@ public class FetchMessagesUseCaseTest {
 
     @Test
     public void testNavigationWithOnlyPreviousLinksUpperLimit() throws Exception{
-        final SearchParams searchParams = new SearchParams("IN","9908:123456789","9908:123456789","","2");
+        final SearchParams searchParams = new SearchParams("IN",WellKnownParticipant.DIFI_TEST.stringValue(),WellKnownParticipant.DIFI_TEST.stringValue(),"","2");
 
         expect(mockMessagesDataProvider.getCount(searchParams)).andReturn(50);
         expect(mockLocationAware.linkToResource(null, searchParams, 1)).andReturn(OK_URI);

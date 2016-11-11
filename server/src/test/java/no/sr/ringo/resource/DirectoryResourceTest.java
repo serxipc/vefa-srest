@@ -77,7 +77,7 @@ public class DirectoryResourceTest {
 
     private void prepareMetaData(List<PeppolDocumentTypeId> acceptedDocuments) {
         SmpLookupResult smpMetaDataResponse = new SmpLookupResult(acceptedDocuments);
-        expect(mockRingoSmpLookup.fetchSmpMetaData(PeppolParticipantId.valueFor(participantId.stringValue()), LocalName.Invoice)).andReturn(smpMetaDataResponse);
+        expect(mockRingoSmpLookup.fetchSmpMetaData(PeppolParticipantId.valueOf(participantId.stringValue()), LocalName.Invoice)).andReturn(smpMetaDataResponse);
         replay(mockRingoSmpLookup);
     }
 
