@@ -26,6 +26,7 @@ import static org.testng.Assert.assertEquals;
 @Guice(moduleFactory = TestModuleFactory.class)
 public class MessageWithoutAccountIdSearchTest {
 
+
     final PeppolMessageRepository peppolMessageRepository;
     final DatabaseHelper databaseHelper;
 
