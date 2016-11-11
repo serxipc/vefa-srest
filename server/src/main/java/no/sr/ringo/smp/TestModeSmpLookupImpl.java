@@ -1,8 +1,8 @@
 package no.sr.ringo.smp;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
-import no.sr.ringo.peppol.PeppolParticipantId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +17,12 @@ public class TestModeSmpLookupImpl implements RingoSmpLookup {
 
 
     @Override
-    public boolean isRegistered(PeppolParticipantId participantId) {
+    public boolean isRegistered(ParticipantId participantId) {
         return true;
     }
 
     @Override
-    public SmpLookupResult fetchSmpMetaData(PeppolParticipantId peppolParticipantId, LocalName localName) {
+    public SmpLookupResult fetchSmpMetaData(ParticipantId peppolParticipantId, LocalName localName) {
 
         List<PeppolDocumentTypeId> documentTypeIds = new ArrayList<PeppolDocumentTypeId>();
 
@@ -67,7 +67,7 @@ public class TestModeSmpLookupImpl implements RingoSmpLookup {
     }
 
     @Override
-    public boolean isAcceptable(PeppolParticipantId participantId, PeppolDocumentTypeId peppolDocumentTypeId) {
+    public boolean isAcceptable(ParticipantId participantId, PeppolDocumentTypeId peppolDocumentTypeId) {
         return true;
     }
 

@@ -5,7 +5,6 @@ import no.sr.ringo.ObjectMother;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import no.sr.ringo.smp.RingoSmpLookup;
 import no.sr.ringo.smp.SmpLookupResult;
 import org.easymock.EasyMock;
@@ -18,10 +17,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.testng.Assert.*;
+import static org.easymock.EasyMock.*;
+import static org.testng.Assert.assertEquals;
 
 @Guice(moduleFactory = TestModuleFactory.class)
 public class DirectoryResourceTest {
@@ -77,7 +74,7 @@ public class DirectoryResourceTest {
 
     private void prepareMetaData(List<PeppolDocumentTypeId> acceptedDocuments) {
         SmpLookupResult smpMetaDataResponse = new SmpLookupResult(acceptedDocuments);
-        expect(mockRingoSmpLookup.fetchSmpMetaData(PeppolParticipantId.valueOf(participantId.stringValue()), LocalName.Invoice)).andReturn(smpMetaDataResponse);
+        expect(mockRingoSmpLookup.fetchSmpMetaData(ParticipantId.valueOf(participantId.stringValue()), LocalName.Invoice)).andReturn(smpMetaDataResponse);
         replay(mockRingoSmpLookup);
     }
 

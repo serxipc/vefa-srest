@@ -1,11 +1,11 @@
 package no.sr.ringo.client;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.common.UploadMode;
 import no.sr.ringo.document.ClientPeppolDocument;
 import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolHeader;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import no.sr.ringo.smp.AcceptedDocumentTransfer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +64,7 @@ public class RingoClientImpl implements RingoClient {
      * @param peppolParticipantId
      * @return
      */
-    public boolean isParticipantRegistered(PeppolParticipantId peppolParticipantId) {
+    public boolean isParticipantRegistered(ParticipantId peppolParticipantId) {
         return ringoService.isParticipantRegistered(peppolParticipantId);
     }
 
@@ -79,7 +79,7 @@ public class RingoClientImpl implements RingoClient {
      * @param recipientIdPeppol The participant id of the recipient
      * @return the Message indicating that the file was uploaded
      */
-    public Message send(File file, PeppolChannelId peppolChannelId, PeppolParticipantId senderIdPeppol, PeppolParticipantId recipientIdPeppol, UploadMode uploadMode) {
+    public Message send(File file, PeppolChannelId peppolChannelId, ParticipantId senderIdPeppol, ParticipantId recipientIdPeppol, UploadMode uploadMode) {
 
         ClientPeppolDocumentFactory clientPeppolDocumentFactory = new ClientPeppolDocumentFactory(file);
         ClientPeppolDocument peppolDocument = clientPeppolDocumentFactory.createDocument();
@@ -102,7 +102,7 @@ public class RingoClientImpl implements RingoClient {
         return ringoService.sendDocument(peppolDocument,peppolHeader, UploadMode.SINGLE);
     }
 
-    public List<AcceptedDocumentTransfer> fetchAcceptedDocumentTransfers(PeppolParticipantId peppolParticipantId, LocalName localName) {
+    public List<AcceptedDocumentTransfer> fetchAcceptedDocumentTransfers(ParticipantId peppolParticipantId, LocalName localName) {
         return ringoService.fetchAcceptedDocumentTransfers(peppolParticipantId, localName);
     }
 

@@ -1,14 +1,14 @@
 package no.sr.ringo.document.specification;
 
-import no.sr.ringo.peppol.PeppolParticipantId;
-import no.sr.ringo.peppol.SchemeId;
+import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.SchemeId;
 import org.jdom.Element;
 
 /**
- * Finds the PeppolParticipantId from the xpath given by the constructor.
+ * Finds the ParticipantId from the xpath given by the constructor.
  * Generic version of the RecipientParticipantIdXmlSpecification / SenderParticipantIdXmlSpecification
  */
-public class GenericParticipantIdXmlSpecification extends PeppolDocumentSpecification<PeppolParticipantId> {
+public class GenericParticipantIdXmlSpecification extends PeppolDocumentSpecification<ParticipantId> {
 
     private final String xpath;
 
@@ -20,14 +20,14 @@ public class GenericParticipantIdXmlSpecification extends PeppolDocumentSpecific
         return xpath;
     }
 
-    public PeppolParticipantId extractEntity(Element element) throws Exception {
+    public ParticipantId extractEntity(Element element) throws Exception {
         String schemeId = element.getAttributeValue("schemeID");
         final SchemeId partyId = SchemeId.parse(schemeId);
         if (partyId == null) {
-            return PeppolParticipantId.valueOf(element.getText());
+            return ParticipantId.valueOf(element.getText());
         }
         else {
-            return new PeppolParticipantId(partyId, element.getText());
+            return new ParticipantId(partyId, element.getText());
         }
     }
 

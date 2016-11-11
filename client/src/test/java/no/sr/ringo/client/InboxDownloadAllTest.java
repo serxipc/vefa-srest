@@ -1,11 +1,11 @@
 package no.sr.ringo.client;
 
+import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.SchemeId;
 import no.sr.ringo.message.MessageMetaDataImpl;
 import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.message.MessageWithLocationsImpl;
 import no.sr.ringo.peppol.PeppolHeader;
-import no.sr.ringo.peppol.PeppolParticipantId;
-import no.sr.ringo.peppol.SchemeId;
 import no.sr.ringo.response.MessageListRingoResponseHandler;
 import no.sr.ringo.response.MessagesQueryResponse;
 import no.sr.ringo.standalone.executor.CommandLineExecutorException;
@@ -20,7 +20,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URI;
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.*;
 
 /**
@@ -55,7 +53,7 @@ public class InboxDownloadAllTest {
 
         MessageMetaDataImpl messageMetaData = new MessageMetaDataImpl();
         PeppolHeader peppolHeader = new PeppolHeader();
-        peppolHeader.setReceiver(new PeppolParticipantId(SchemeId.NO_ORGNR,"976098897"));
+        peppolHeader.setReceiver(new ParticipantId(SchemeId.NO_ORGNR,"976098897"));
         messageMetaData.setPeppolHeader(peppolHeader);
         uuid = UUID.randomUUID().toString();
         messageMetaData.setUuid(uuid);

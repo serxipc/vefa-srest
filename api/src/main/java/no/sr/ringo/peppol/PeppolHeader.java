@@ -1,14 +1,15 @@
 /* Created by steinar on 08.01.12 at 19:49 */
 package no.sr.ringo.peppol;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.cenbiimeta.ProfileId;
 
 /**
  * @author Steinar Overbeck Cook steinar@sendregning.no
  */
 public class PeppolHeader {
-    private PeppolParticipantId sender;
-    private PeppolParticipantId receiver;
+    private ParticipantId sender;
+    private ParticipantId receiver;
     private PeppolChannelId peppolChannel;
     private PeppolDocumentTypeId peppolDocumentTypeId;
     private ProfileId profileId;
@@ -19,19 +20,19 @@ public class PeppolHeader {
     @Deprecated
     private PeppolProcessIdAcronym peppolProcessIdAcronym;
 
-    public PeppolParticipantId getSender() {
+    public ParticipantId getSender() {
         return sender;
     }
 
-    public void setSender(PeppolParticipantId sender) {
+    public void setSender(ParticipantId sender) {
         this.sender = sender;
     }
 
-    public PeppolParticipantId getReceiver() {
+    public ParticipantId getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(PeppolParticipantId receiver) {
+    public void setReceiver(ParticipantId receiver) {
         this.receiver = receiver;
     }
 
@@ -84,7 +85,7 @@ public class PeppolHeader {
      * @param sender
      * @param receiver
      */
-    public static PeppolHeader forDocumentType(PeppolDocumentTypeId peppolDocumentTypeId, PeppolParticipantId sender, PeppolParticipantId receiver) {
+    public static PeppolHeader forDocumentType(PeppolDocumentTypeId peppolDocumentTypeId, ParticipantId sender, ParticipantId receiver) {
         PeppolHeader result = new PeppolHeader();
         result.setPeppolDocumentTypeId(peppolDocumentTypeId);
 

@@ -1,9 +1,13 @@
 package no.sr.ringo.client;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.common.UploadMode;
 import no.sr.ringo.document.ClientPeppolDocument;
 import no.sr.ringo.exception.NotifyingException;
-import no.sr.ringo.peppol.*;
+import no.sr.ringo.peppol.InvalidPeppolHeaderException;
+import no.sr.ringo.peppol.LocalName;
+import no.sr.ringo.peppol.PeppolDocumentTypeId;
+import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.response.AcceptedDocumentTransfersRingoResponseHandler;
 import no.sr.ringo.response.NotificationRingoResponseHandler;
 import no.sr.ringo.smp.AcceptedDocumentTransfer;
@@ -21,9 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * User: andy
@@ -54,7 +56,7 @@ public class RingoServiceRestImplTest {
         expect(httpClient.execute(isA(HttpHost.class),isA(HttpGet.class),isA(AcceptedDocumentTransfersRingoResponseHandler.class),isA(BasicHttpContext.class))).andStubReturn(expectedResult);
 
         replay(httpClient);
-        List<AcceptedDocumentTransfer> result = ringoService.fetchAcceptedDocumentTransfers(PeppolParticipantId.valueOf("976098897"), LocalName.Invoice);
+        List<AcceptedDocumentTransfer> result = ringoService.fetchAcceptedDocumentTransfers(ParticipantId.valueOf("NO976098897"), LocalName.Invoice);
 
         assertNotNull(result);
         verify(httpClient);
@@ -74,8 +76,8 @@ public class RingoServiceRestImplTest {
     @Test
     public void testSendDocumentValidInvoiceHeaders() throws Exception {
 
-        PeppolParticipantId receiver = PeppolParticipantId.valueOf("0037:12345");
-        PeppolParticipantId sender = PeppolParticipantId.valueOf("0037:12345");
+        ParticipantId receiver = ParticipantId.valueOf("0037:12345");
+        ParticipantId sender = ParticipantId.valueOf("0037:12345");
         PeppolDocumentTypeId invoiceOnly = PeppolDocumentTypeId.EHF_INVOICE;
         PeppolHeader peppolHeader = PeppolHeader.forDocumentType(invoiceOnly, sender, receiver);
 
@@ -90,7 +92,7 @@ public class RingoServiceRestImplTest {
     public void testUrlEncodeSwedishOrgNum() throws Exception {
 
         String swedishOrgNum = "0007:2021005026";
-        PeppolParticipantId receiver = PeppolParticipantId.valueOf(swedishOrgNum);
+        ParticipantId receiver = ParticipantId.valueOf(swedishOrgNum);
         String asString = ringoService.urlEncode(receiver);
         assertEquals(asString,"0007%3A2021005026");
     }

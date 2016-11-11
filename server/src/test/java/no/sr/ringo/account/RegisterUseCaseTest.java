@@ -5,7 +5,10 @@ import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.persistence.AccountId;
 import eu.peppol.persistence.api.UserName;
-import eu.peppol.persistence.api.account.*;
+import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountRepository;
+import eu.peppol.persistence.api.account.Customer;
+import eu.peppol.persistence.api.account.CustomerId;
 import no.sr.ringo.RingoConstant;
 import no.sr.ringo.common.MessageHelper;
 import no.sr.ringo.guice.TestModuleFactory;
@@ -88,7 +91,7 @@ public class RegisterUseCaseTest {
     public void testRegisterWithoutSmp() throws NoSuchAlgorithmException, UnsupportedEncodingException {
 
         CustomerId customerId = new CustomerId(10);
-        final String orgNo = "222222222";
+        final String orgNo = "NO222222222";
         AccountRepository mockAccountRepository = createStrictMock(AccountRepository.class);
         registerUseCase.setAccountRepository(mockAccountRepository);
 

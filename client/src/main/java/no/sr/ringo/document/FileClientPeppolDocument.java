@@ -1,12 +1,12 @@
 package no.sr.ringo.document;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.XmlHelper;
 import no.sr.ringo.document.specification.*;
 import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolHeader;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.jdom.Document;
@@ -88,18 +88,18 @@ public class FileClientPeppolDocument extends ClientPeppolDocument {
         }
     }
 
-    PeppolParticipantId findGenericParticipantId(String xpath) {
-        XmlHelper<PeppolParticipantId> participantIdXmlHelper = new XmlHelper<PeppolParticipantId>(new GenericParticipantIdXmlSpecification(xpath));
+    ParticipantId findGenericParticipantId(String xpath) {
+        XmlHelper<ParticipantId> participantIdXmlHelper = new XmlHelper<ParticipantId>(new GenericParticipantIdXmlSpecification(xpath));
         return participantIdXmlHelper.selectSingle(getDocument());
     }
 
-    PeppolParticipantId findReceiver() {
-        XmlHelper<PeppolParticipantId> participantIdXmlHelper = new XmlHelper<PeppolParticipantId>(new RecipientParticipantIdXmlSpecification());
+    ParticipantId findReceiver() {
+        XmlHelper<ParticipantId> participantIdXmlHelper = new XmlHelper<ParticipantId>(new RecipientParticipantIdXmlSpecification());
         return participantIdXmlHelper.selectSingle(getDocument());
     }
 
-    PeppolParticipantId findSender() {
-        XmlHelper<PeppolParticipantId> participantIdXmlHelper = new XmlHelper<PeppolParticipantId>(new SenderParticipantIdXmlSpecification());
+    ParticipantId findSender() {
+        XmlHelper<ParticipantId> participantIdXmlHelper = new XmlHelper<ParticipantId>(new SenderParticipantIdXmlSpecification());
         return participantIdXmlHelper.selectSingle(getDocument());
     }
 

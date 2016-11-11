@@ -17,7 +17,6 @@ import no.sr.ringo.message.statistics.RingoStatistics;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolHeader;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import no.sr.ringo.utils.SbdhUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -476,10 +475,10 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         messageMetaData.setTransferDirection(TransferDirection.valueOf(rs.getString("direction")));
         messageMetaData.setReceived(rs.getTimestamp("received"));
         messageMetaData.setDelivered(rs.getTimestamp("delivered"));
-        messageMetaData.getPeppolHeader().setSender(PeppolParticipantId.valueOf(rs.getString("sender")));
+        messageMetaData.getPeppolHeader().setSender(ParticipantId.valueOf(rs.getString("sender")));
 
         String receiverAsString = rs.getString("receiver");
-        PeppolParticipantId receiver = PeppolParticipantId.valueOf(receiverAsString);
+        ParticipantId receiver = ParticipantId.valueOf(receiverAsString);
 
         messageMetaData.getPeppolHeader().setReceiver(receiver);
 
@@ -503,8 +502,8 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         m.setTransferDirection(TransferDirection.valueOf(rs.getString("direction")));
         m.setReceived(rs.getTimestamp("received"));
         m.setDelivered(rs.getTimestamp("delivered"));
-        m.getPeppolHeader().setSender(PeppolParticipantId.valueOf(rs.getString("sender")));
-        m.getPeppolHeader().setReceiver(PeppolParticipantId.valueOf(rs.getString("receiver")));
+        m.getPeppolHeader().setSender(ParticipantId.valueOf(rs.getString("sender")));
+        m.getPeppolHeader().setReceiver(ParticipantId.valueOf(rs.getString("receiver")));
         m.getPeppolHeader().setPeppolChannelId(new PeppolChannelId(rs.getString("channel")));
         m.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.valueOf(rs.getString("document_id")));
         m.getPeppolHeader().setProfileId(new ProfileId(rs.getString("process_id")));

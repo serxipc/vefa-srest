@@ -1,10 +1,9 @@
 package no.sr.ringo.client;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.common.FileHelper;
 import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.peppol.PeppolHeader;
-import no.sr.ringo.peppol.PeppolParticipantId;
-import org.apache.http.client.methods.HttpGet;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -79,7 +78,7 @@ public class Message {
         return file;
     }
 
-    public PeppolParticipantId getReceiver() {
+    public ParticipantId getReceiver() {
         return messageWithLocations.getPeppolHeader().getReceiver();
     }
 

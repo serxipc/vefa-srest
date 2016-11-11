@@ -1,15 +1,15 @@
 package no.sr.ringo.document;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
-import no.sr.ringo.peppol.PeppolHeader;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import org.testng.annotations.Test;
 
 import java.io.File;
 import java.net.URL;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * Making sure we decode the EHF 1.x documents correctly.
@@ -26,7 +26,7 @@ public class FileClientPeppolDocumentTest {
         File testFile = new File(validInvoiceUrl.toURI());
 
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
-        PeppolParticipantId result = document.findReceiver();
+        ParticipantId result = document.findReceiver();
 
         assertNotNull(result);
         assertEquals(result.stringValue(),"9908:976098897", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
@@ -38,7 +38,7 @@ public class FileClientPeppolDocumentTest {
         final URL validInvoiceUrl = FileClientPeppolDocumentTest.class.getResource("/participantWithMva.xml");
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
-        PeppolParticipantId result = document.findReceiver();
+        ParticipantId result = document.findReceiver();
 
         assertNotNull(result);
         assertEquals(result.stringValue(),"9908:976098897", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
@@ -50,7 +50,7 @@ public class FileClientPeppolDocumentTest {
         final URL validInvoiceUrl = FileClientPeppolDocumentTest.class.getResource("/validInvoice.xml");
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
-        PeppolParticipantId result = document.findReceiver();
+        ParticipantId result = document.findReceiver();
 
         assertNotNull(result);
         assertEquals(result.stringValue(),"9999:983974724", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
@@ -62,7 +62,7 @@ public class FileClientPeppolDocumentTest {
         final URL validInvoiceUrl = FileClientPeppolDocumentTest.class.getResource("/BII04 T10 gyldig faktura med alle elementer.xml");
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
-        PeppolParticipantId result = document.findReceiver();
+        ParticipantId result = document.findReceiver();
 
         assertNotNull(result);
         assertEquals(result.stringValue(),"9999:NO976098897MVA", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
@@ -74,10 +74,10 @@ public class FileClientPeppolDocumentTest {
         final URL validInvoiceUrl = FileClientPeppolDocumentTest.class.getResource("/BII05 T10 0 gyldig faktura med vanlige dataelementer.xml");
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
-        PeppolParticipantId result = document.findReceiver();
+        ParticipantId result = document.findReceiver();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(),"9908:888888888", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
+        assertEquals(result.stringValue(),"9908:976098897", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class FileClientPeppolDocumentTest {
         File testFile = new File(validInvoiceUrl.toURI());
 
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
-        PeppolParticipantId result = document.findSender();
+        ParticipantId result = document.findSender();
 
         assertNotNull(result);
         assertEquals(result.stringValue(),"9908:540269750", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
@@ -100,7 +100,7 @@ public class FileClientPeppolDocumentTest {
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
 
-        PeppolParticipantId result = document.findSender();
+        ParticipantId result = document.findSender();
 
         assertNotNull(result);
         assertEquals(result.stringValue(),"9908:540269750", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
@@ -113,10 +113,10 @@ public class FileClientPeppolDocumentTest {
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
 
-        PeppolParticipantId result = document.findSender();
+        ParticipantId result = document.findSender();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(),"9908:540269750", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
+        assertEquals(result.stringValue(),"9902:540269750", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
     }
 
     @Test
@@ -126,10 +126,10 @@ public class FileClientPeppolDocumentTest {
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
 
-        PeppolParticipantId result = document.findSender();
+        ParticipantId result = document.findSender();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(),"9908:999999999", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
+        assertEquals(result.stringValue(),"9902:999999999", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
     }
 
     @Test
@@ -139,10 +139,10 @@ public class FileClientPeppolDocumentTest {
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
 
-        PeppolParticipantId result = document.findSender();
+        ParticipantId result = document.findSender();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(),"9908:999999999", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
+        assertEquals(result.stringValue(),"9908:976098897", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
     }
 
     @Test

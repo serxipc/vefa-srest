@@ -71,7 +71,7 @@
             </cac:PartyTaxScheme>
             <cac:PartyLegalEntity>
                 <cbc:RegistrationName>SendRegning AS</cbc:RegistrationName>
-                <cbc:CompanyID schemeAgencyID="ZZZ" schemeID="CVR">540269750</cbc:CompanyID>
+                <cbc:CompanyID schemeAgencyID="ZZZ" schemeID="DK:CVR">540269750</cbc:CompanyID>
                 <cac:RegistrationAddress>
                     <cbc:CityName>Big city</cbc:CityName>
                     <cbc:CountrySubentity>RegionA</cbc:CountrySubentity>

@@ -1,11 +1,11 @@
 package no.sr.ringo.client;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.common.*;
 import no.sr.ringo.document.ClientPeppolDocument;
 import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.peppol.PeppolHeader;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import no.sr.ringo.request.TestSocketFactory;
 import no.sr.ringo.response.*;
 import no.sr.ringo.response.exception.*;
@@ -178,7 +178,7 @@ public class RingoServiceRestImpl implements RingoService {
         return sendAsMimeMultipartHttpPost(peppolDocument, peppolHeader, uploadMode);
     }
 
-    public boolean isParticipantRegistered(PeppolParticipantId peppolParticipantId) {
+    public boolean isParticipantRegistered(ParticipantId peppolParticipantId) {
         try {
             String s = baseUri.toString() + "/directory/" + URLEncoder.encode(peppolParticipantId.stringValue(), "UTF-8");
             URI directoryLookupUri = createURI(s);
@@ -189,7 +189,7 @@ public class RingoServiceRestImpl implements RingoService {
         }
     }
 
-    public List<AcceptedDocumentTransfer> fetchAcceptedDocumentTransfers(PeppolParticipantId peppolParticipantId, LocalName localName) {
+    public List<AcceptedDocumentTransfer> fetchAcceptedDocumentTransfers(ParticipantId peppolParticipantId, LocalName localName) {
         try {
             HttpGet httpGet = createHttpGet("/directory/" + urlEncode(peppolParticipantId) + "/" + localName.toString());
             return execute(httpGet, new AcceptedDocumentTransfersRingoResponseHandler(this));
@@ -342,7 +342,7 @@ public class RingoServiceRestImpl implements RingoService {
         return new HttpGet(directoryLookupUri);
     }
 
-    protected String urlEncode(PeppolParticipantId peppolParticipantId) {
+    protected String urlEncode(ParticipantId peppolParticipantId) {
         try {
             return URLEncoder.encode(peppolParticipantId.stringValue(), "UTF-8");
         } catch (UnsupportedEncodingException e) {

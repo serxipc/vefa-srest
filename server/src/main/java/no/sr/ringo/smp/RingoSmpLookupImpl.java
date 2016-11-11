@@ -1,10 +1,13 @@
 package no.sr.ringo.smp;
 
+import eu.peppol.identifier.ParticipantId;
 import eu.peppol.smp.ParticipantNotRegisteredException;
 import eu.peppol.smp.SmpLookupException;
 import eu.peppol.smp.SmpLookupManager;
-import eu.peppol.identifier.ParticipantId;
-import no.sr.ringo.peppol.*;
+import no.sr.ringo.peppol.CustomizationIdentifier;
+import no.sr.ringo.peppol.LocalName;
+import no.sr.ringo.peppol.PeppolDocumentTypeId;
+import no.sr.ringo.peppol.RootNameSpace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +33,7 @@ public class RingoSmpLookupImpl implements RingoSmpLookup {
     }
 
     @Override
-    public boolean isRegistered(PeppolParticipantId participantId) {
+    public boolean isRegistered(ParticipantId participantId) {
         try {
             fetchAcceptedDocumentTypesFromManager(participantId);
         } catch (ParticipantNotRegisteredException e) {
@@ -40,7 +43,7 @@ public class RingoSmpLookupImpl implements RingoSmpLookup {
     }
 
     @Override
-    public SmpLookupResult fetchSmpMetaData(PeppolParticipantId peppolParticipantId, LocalName localName) {
+    public SmpLookupResult fetchSmpMetaData(ParticipantId peppolParticipantId, LocalName localName) {
         SmpLookupResult result = new SmpLookupResult(Collections.<PeppolDocumentTypeId>emptyList());
         List<PeppolDocumentTypeId> documentTypes;
         try {
@@ -56,7 +59,7 @@ public class RingoSmpLookupImpl implements RingoSmpLookup {
     }
 
     @Override
-    public boolean isAcceptable(PeppolParticipantId participantId, PeppolDocumentTypeId peppolDocumentTypeId) {
+    public boolean isAcceptable(ParticipantId participantId, PeppolDocumentTypeId peppolDocumentTypeId) {
         List<PeppolDocumentTypeId> documentTypes;
         try {
             documentTypes = fetchAcceptedDocumentTypesFromManager(participantId);
@@ -76,7 +79,7 @@ public class RingoSmpLookupImpl implements RingoSmpLookup {
         return result;
     }
 
-    private List<PeppolDocumentTypeId> fetchAcceptedDocumentTypesFromManager(PeppolParticipantId peppolParticipantId) throws ParticipantNotRegisteredException {
+    private List<PeppolDocumentTypeId> fetchAcceptedDocumentTypesFromManager(ParticipantId peppolParticipantId) throws ParticipantNotRegisteredException {
         try {
             ParticipantId participant = new ParticipantId(peppolParticipantId.stringValue());
             List<eu.peppol.identifier.PeppolDocumentTypeId> serviceGroups = smpLookupManager.getServiceGroups(participant);

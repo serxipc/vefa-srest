@@ -1,12 +1,11 @@
 package no.sr.ringo.standalone.executor;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.client.Inbox;
 import no.sr.ringo.client.Message;
 import no.sr.ringo.client.RingoClient;
 import no.sr.ringo.common.FileHelper;
 import no.sr.ringo.common.UploadMode;
-import no.sr.ringo.exception.NotifyingException;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import no.sr.ringo.standalone.parser.RingoClientParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,15 +127,15 @@ public class RingoClientCommandExecutor {
             //Perform SMP lookup
             case SMP_LOOKUP:
                 if (log.isDebugEnabled()) {
-                    log.debug(String.format("Checking if participant %s is registered", params.getPeppolParticipantId()));
+                    log.debug(String.format("Checking if participant %s is registered", params.getParticipantId()));
                 }
 
-                boolean participantRegistered = client.isParticipantRegistered(params.getPeppolParticipantId());
+                boolean participantRegistered = client.isParticipantRegistered(params.getParticipantId());
 
                 if (participantRegistered) {
-                    printStream.println(String.format("Participant %s is registered", params.getPeppolParticipantId().stringValue()));
+                    printStream.println(String.format("Participant %s is registered", params.getParticipantId().stringValue()));
                 } else {
-                    printStream.println(String.format("Participant %s is NOT registered", params.getPeppolParticipantId().stringValue()));
+                    printStream.println(String.format("Participant %s is NOT registered", params.getParticipantId().stringValue()));
                 }
 
                 printStream.close();
@@ -184,7 +183,7 @@ public class RingoClientCommandExecutor {
      * @param inboxPath
      * @return
      */
-    private File getReceiverDirectory(PeppolParticipantId participantId, File inboxPath) {
+    private File getReceiverDirectory(ParticipantId participantId, File inboxPath) {
         String directoryName = FileHelper.formatForFileName(participantId.stringValue());
 
         File result = new File(inboxPath, directoryName);

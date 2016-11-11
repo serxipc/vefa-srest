@@ -1,11 +1,11 @@
 package no.sr.ringo.message;
 
+import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.SchemeId;
 import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolHeader;
-import no.sr.ringo.peppol.PeppolParticipantId;
-import no.sr.ringo.peppol.SchemeId;
 import no.sr.ringo.resource.InvalidUserInputWebException;
 import no.sr.ringo.smp.RingoSmpLookup;
 import org.testng.annotations.BeforeMethod;
@@ -15,9 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import static org.easymock.EasyMock.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
+import static org.testng.Assert.*;
 
 /**
  * User: Adam
@@ -32,7 +30,7 @@ public class PeppolMessageValidatorTest {
     Account mockRingoAccount;
 
     PeppolMessageValidator validator;
-    PeppolParticipantId participantId;
+    ParticipantId participantId;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -41,29 +39,10 @@ public class PeppolMessageValidatorTest {
         mockRingoSmpLookup = createStrictMock(RingoSmpLookup.class);
         mockRingoAccount = createStrictMock(Account.class);
 
-        participantId = new PeppolParticipantId(SchemeId.NO_ORGNR, "976098897");
+        participantId = new ParticipantId(SchemeId.NO_ORGNR, "976098897");
 
     }
 
-    @Test
-    public void testValidateWrongRecipient() throws Exception {
-        OutboundPostParams params = new OutboundPostParams.Builder().recipientId("invalidRecipientId").build();
-        validator = new PeppolMessageValidator(mockRingoSmpLookup, mockPeppolMessage, params);
-        expect(mockPeppolMessage.getPeppolHeader()).andStubReturn(mockPeppolHeader);
-        expect(mockPeppolHeader.getReceiver()).andReturn(null);
-
-        replay(mockPeppolMessage, mockPeppolHeader, mockRingoSmpLookup);
-
-        try{
-            validator.validateHeader();
-            fail();
-        } catch (InvalidUserInputWebException e) {
-            assertEquals(e.getMessage(), "Wrong recipientId value: invalidRecipientId");
-        }
-
-        verify(mockPeppolMessage, mockPeppolHeader, mockRingoSmpLookup);
-
-    }
 
     @Test
     public void testValidateRecipientNotInSmp() throws Exception {
@@ -79,7 +58,7 @@ public class PeppolMessageValidatorTest {
             validator.validateHeader();
             fail();
         } catch (InvalidUserInputWebException e) {
-            assertEquals(e.getMessage(), "recipient PeppolParticipantId{id='9908:976098897', partyId=NO_ORGNR} is not registered in the SMP with an accesspoint for receiving INVOICE documents");
+            assertEquals(e.getMessage(), "recipient 9908:976098897 is not registered in the SMP with an accesspoint for receiving INVOICE documents");
         }
 
         verify(mockPeppolMessage, mockPeppolHeader, mockRingoSmpLookup);

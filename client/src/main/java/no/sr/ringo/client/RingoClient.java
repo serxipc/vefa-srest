@@ -1,10 +1,10 @@
 package no.sr.ringo.client;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.common.UploadMode;
 import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolHeader;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import no.sr.ringo.smp.AcceptedDocumentTransfer;
 
 import java.io.File;
@@ -33,7 +33,7 @@ public interface RingoClient {
      * @param peppolParticipantId The participant id of the recipient to check
      * @return true if the participant is registered false otherwise
      */
-    boolean isParticipantRegistered(PeppolParticipantId peppolParticipantId);
+    boolean isParticipantRegistered(ParticipantId peppolParticipantId);
 
     /**
      * Sends the given file using the peppol network.
@@ -47,7 +47,7 @@ public interface RingoClient {
      * @param uploadMode        Single or batch upload mode. To inform the server whether errors should be reported
      * @return the Message indicating that the file was uploaded
      */
-    Message send(File file, PeppolChannelId peppolChannelId, PeppolParticipantId senderIdPeppol, PeppolParticipantId recipientIdPeppol, UploadMode uploadMode);
+    Message send(File file, PeppolChannelId peppolChannelId, ParticipantId senderIdPeppol, ParticipantId recipientIdPeppol, UploadMode uploadMode);
 
     /**
      * Sends the document provided by the inputStream using the peppol network. Using a Stream helps to reduce the memory footprint
@@ -71,5 +71,5 @@ public interface RingoClient {
      * @param localName the local name of the document e.g. Invoice,Order,CreditNote
      * @return a List of Objects containing the DocumentId and ProcessId combination
      */
-    List<AcceptedDocumentTransfer> fetchAcceptedDocumentTransfers(PeppolParticipantId peppolParticipantId, LocalName localName);
+    List<AcceptedDocumentTransfer> fetchAcceptedDocumentTransfers(ParticipantId peppolParticipantId, LocalName localName);
 }

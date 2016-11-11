@@ -1,10 +1,17 @@
 package no.sr.ringo.common;
 
+import eu.peppol.identifier.ParticipantId;
+import eu.peppol.persistence.AccountId;
 import eu.peppol.persistence.ChannelProtocol;
 import eu.peppol.persistence.TransferDirection;
 import no.sr.ringo.cenbiimeta.ProfileId;
-import no.sr.ringo.message.*;
-import no.sr.ringo.peppol.*;
+import no.sr.ringo.message.MessageMetaDataImpl;
+import no.sr.ringo.message.MessageWithLocations;
+import no.sr.ringo.message.MessageWithLocationsImpl;
+import no.sr.ringo.message.PeppolMessage;
+import no.sr.ringo.peppol.PeppolChannelId;
+import no.sr.ringo.peppol.PeppolDocumentTypeId;
+import no.sr.ringo.peppol.PeppolProcessIdAcronym;
 import no.sr.ringo.response.OutboxQueryResponse;
 import no.sr.ringo.usecase.ReceiveMessageFromClientUseCaseIntegrationTest;
 import org.w3c.dom.Document;
@@ -16,8 +23,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import eu.peppol.persistence.AccountId;
 
 import static org.testng.Assert.assertNotNull;
 
@@ -32,7 +37,7 @@ public class PeppolMessageTestdataGenerator {
     public static final String EHF_TEST_SEND_REGNING_HELSE_VEST2_XML = "ehf-test-SendRegning-HelseVest2.xml";
     public static final String EHF_TEST_USING_DEFAULT_NAMESPACE_XML = "ehf-test-dakantus_using_default_namespace.xml";
 
-    protected static final PeppolParticipantId SR_PPID = PeppolParticipantId.valueOf("9908:976098897");
+    protected static final ParticipantId SR_PPID = ParticipantId.valueOf("9908:976098897");
 
     public static MessageWithLocationsImpl outboundMesssageNotSent() {
         return sampleMessage(TransferDirection.OUT);
@@ -67,7 +72,7 @@ public class PeppolMessageTestdataGenerator {
         m.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.EHF_INVOICE);
         m.getPeppolHeader().setProfileId(new ProfileId(PeppolProcessIdAcronym.INVOICE_ONLY.stringValue()));
         m.getPeppolHeader().setReceiver(SR_PPID);
-        m.getPeppolHeader().setSender(PeppolParticipantId.valueOf("9908:976098897"));
+        m.getPeppolHeader().setSender(ParticipantId.valueOf("9908:976098897"));
 
         String path = null;
 

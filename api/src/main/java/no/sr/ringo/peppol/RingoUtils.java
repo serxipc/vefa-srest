@@ -1,5 +1,6 @@
 package no.sr.ringo.peppol;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -12,8 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.text.MessageFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Utility class for common methods.
@@ -136,7 +137,7 @@ public class RingoUtils {
      * @param sender
      * @return
      */
-    public static String toXml(PeppolParticipantId sender) {
+    public static String toXml(ParticipantId sender) {
         return sender == null ? "" : sender.stringValue();
     }
 

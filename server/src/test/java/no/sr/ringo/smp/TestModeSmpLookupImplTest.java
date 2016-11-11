@@ -1,8 +1,8 @@
 package no.sr.ringo.smp;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
@@ -15,7 +15,7 @@ import static org.testng.Assert.*;
 public class TestModeSmpLookupImplTest {
 
     TestModeSmpLookupImpl smpLookup = new TestModeSmpLookupImpl();
-    PeppolParticipantId unit4agresso = PeppolParticipantId.valueOf("9908:961329310");
+    ParticipantId unit4agresso = ParticipantId.valueOf("9908:961329310");
 
     private void verifySmpType(LocalName localName) {
         //System.out.println("Testing : " + localName.toString());

@@ -1,11 +1,11 @@
 package no.sr.ringo.client;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.document.ClientPeppolDocument;
 import no.sr.ringo.document.FileClientPeppolDocument;
 import no.sr.ringo.document.InputStreamPeppolDocument;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolHeader;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,7 @@ public class ClientPeppolDocumentFactory {
         return clientPeppolDocument;
     }
 
-    public PeppolHeader createPeppolHeader(PeppolChannelId peppolChannelId, PeppolParticipantId senderIdPeppol, PeppolParticipantId recipientIdPeppol) {
+    public PeppolHeader createPeppolHeader(PeppolChannelId peppolChannelId, ParticipantId senderIdPeppol, ParticipantId recipientIdPeppol) {
         PeppolHeader peppolHeader = new PeppolHeader();
         peppolHeader.setPeppolChannelId(peppolChannelId);
         peppolHeader.setSender(senderIdPeppol);

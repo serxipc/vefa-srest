@@ -1,12 +1,12 @@
 package no.sr.ringo.client;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.common.MessageContainer;
 import no.sr.ringo.common.UploadMode;
 import no.sr.ringo.document.ClientPeppolDocument;
 import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.peppol.PeppolHeader;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import no.sr.ringo.response.Navigation;
 import no.sr.ringo.response.RingoResponseHandler;
 import no.sr.ringo.smp.AcceptedDocumentTransfer;
@@ -75,7 +75,7 @@ public interface RingoService {
      * @param localName the local name of the document e.g. Invoice,Order,CreditNote
      * @return a List of Objects containing the DocumentId and ProcessId combination
      */
-    List<AcceptedDocumentTransfer> fetchAcceptedDocumentTransfers(PeppolParticipantId peppolParticipantId, LocalName localName);
+    List<AcceptedDocumentTransfer> fetchAcceptedDocumentTransfers(ParticipantId peppolParticipantId, LocalName localName);
 
     /**
      * Determines if the participant is registered on the PEPPOL network
@@ -83,7 +83,7 @@ public interface RingoService {
      * @param peppolParticipantId The participant id of the recipient to check
      * @return true if the participant is registered false otherwise
      */
-    boolean isParticipantRegistered(PeppolParticipantId peppolParticipantId);
+    boolean isParticipantRegistered(ParticipantId peppolParticipantId);
 
     /**
      * Downloads the message to the output stream provided

@@ -1,11 +1,8 @@
 package no.sr.ringo.standalone.parser;
 
 import no.sr.ringo.common.ProxySettings;
-import no.sr.ringo.peppol.PeppolChannelId;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import org.apache.commons.lang.StringUtils;
 
-import java.io.File;
 import java.net.URI;
 
 /**

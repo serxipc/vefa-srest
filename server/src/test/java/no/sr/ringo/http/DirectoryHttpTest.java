@@ -1,12 +1,12 @@
 package no.sr.ringo.http;
 
 import com.google.inject.Inject;
+import eu.peppol.identifier.ParticipantId;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.common.ResponseUtils;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.guice.TestModuleFactory;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class DirectoryHttpTest extends AbstractHttpClientServerTest {
      */
     @Test(groups = {"integration"})
     public void testsDirectoryLookup() {
-        assertTrue(ringoRestClientImpl.isParticipantRegistered(PeppolParticipantId.valueOf(ObjectMother.getTestParticipantIdForSMPLookup().stringValue())));
+        assertTrue(ringoRestClientImpl.isParticipantRegistered(ParticipantId.valueOf(ObjectMother.getTestParticipantIdForSMPLookup().stringValue())));
     }
 
 
@@ -59,7 +59,7 @@ public class DirectoryHttpTest extends AbstractHttpClientServerTest {
         assertEquals(ResponseUtils.writeResponseToString(response, RingoConstants.DEFAULT_CHARACTER_SET), "Invalid peppol participant id 'rubbish'");
     }
 
-    private PeppolParticipantId peppolIdNotInElma() {
-        return PeppolParticipantId.valueOf("987373822");
+    private ParticipantId peppolIdNotInElma() {
+        return ParticipantId.valueOf("987373822");
     }
 }

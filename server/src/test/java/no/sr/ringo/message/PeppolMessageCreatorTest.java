@@ -1,19 +1,17 @@
 package no.sr.ringo.message;
 
+import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.SchemeId;
 import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
-import no.sr.ringo.peppol.PeppolParticipantId;
-import no.sr.ringo.peppol.SchemeId;
 import no.sr.ringo.smp.RingoSmpLookup;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.InputStream;
 
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -28,14 +26,14 @@ public class PeppolMessageCreatorTest {
     RingoSmpLookup mockRingoSmpLookup;
     Account mockRingoAccount;
 
-    PeppolParticipantId participantId;
+    ParticipantId participantId;
 
     @BeforeMethod
     public void setUp() throws Exception {
         mockRingoSmpLookup = createStrictMock(RingoSmpLookup.class);
         mockRingoAccount = createStrictMock(Account.class);
 
-        participantId = new PeppolParticipantId(SchemeId.NO_ORGNR, "976098897");
+        participantId = new ParticipantId(SchemeId.NO_ORGNR, "976098897");
 
     }
 

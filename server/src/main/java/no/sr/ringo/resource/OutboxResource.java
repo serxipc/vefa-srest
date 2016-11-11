@@ -167,7 +167,13 @@ public class OutboxResource extends AbstractMessageResource {
                 .build();
 
         //perform params validation as well as smp lookup; create message when validation successful
-        MessageWithLocations messageWithLocations = receiveMessageFromClientUseCase.handleMessage(postParams);
+        MessageWithLocations messageWithLocations = null;
+        try {
+            messageWithLocations = receiveMessageFromClientUseCase.handleMessage(postParams);
+        } catch (Exception e) {
+            return SrResponse.status(Response.Status.BAD_REQUEST, e.getMessage());
+
+        }
 
         // Provides a nice response
         return createOutboxPostMessageResponse(uriInfo, messageWithLocations);

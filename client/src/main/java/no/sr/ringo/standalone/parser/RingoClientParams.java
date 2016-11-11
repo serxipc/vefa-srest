@@ -1,10 +1,9 @@
 package no.sr.ringo.standalone.parser;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.peppol.PeppolChannelId;
-import no.sr.ringo.peppol.PeppolParticipantId;
 
 import java.io.File;
-import java.net.URI;
 
 /**
  * Holds RingoClient execution params parsed from command line arguments
@@ -28,16 +27,16 @@ public class RingoClientParams {
     private ClientOperation operation;
 
     //participantID used for SMP lookup
-    private PeppolParticipantId peppolParticipantId;
+    private ParticipantId peppolParticipantId;
 
     //ChannelId used when uploading files
     private PeppolChannelId peppolChannelId;
 
     //participantID of sender when uploading file
-    private PeppolParticipantId senderIdPeppol;
+    private ParticipantId senderIdPeppol;
 
     //participantId of recipient when uploading single gile
-    private PeppolParticipantId recipientIdPeppol;
+    private ParticipantId recipientIdPeppol;
 
 
     public File getOutboxPath() {
@@ -81,7 +80,7 @@ public class RingoClientParams {
         return operation;
     }
 
-    public PeppolParticipantId getPeppolParticipantId() {
+    public ParticipantId getParticipantId() {
         return peppolParticipantId;
     }
 
@@ -89,7 +88,7 @@ public class RingoClientParams {
         return peppolChannelId;
     }
 
-    public PeppolParticipantId getSenderId() {
+    public ParticipantId getSenderId() {
         return senderIdPeppol;
     }
 
@@ -109,7 +108,7 @@ public class RingoClientParams {
         this.operation = operation;
     }
 
-    public void setPeppolParticipantId(PeppolParticipantId peppolParticipantId) {
+    public void setParticipantId(ParticipantId peppolParticipantId) {
         this.peppolParticipantId = peppolParticipantId;
     }
 
@@ -117,15 +116,15 @@ public class RingoClientParams {
         this.peppolChannelId = peppolChannelId;
     }
 
-    public void setSenderId(PeppolParticipantId senderIdPeppol) {
+    public void setSenderId(ParticipantId senderIdPeppol) {
         this.senderIdPeppol = senderIdPeppol;
     }
 
-    public PeppolParticipantId getRecipientId() {
+    public ParticipantId getRecipientId() {
         return recipientIdPeppol;
     }
 
-    public void setRecipientId(PeppolParticipantId recipientIdPeppol) {
+    public void setRecipientId(ParticipantId recipientIdPeppol) {
         this.recipientIdPeppol = recipientIdPeppol;
     }
 

@@ -22,7 +22,7 @@ public class RegisterUseCaseIntegrationTest {
     private final AccountRepository accountRepository;
     private final DatabaseHelper databaseHelper;
 
-    private final String ORG_NUM_STR = "222222222";
+    private final String ORG_NUM_STR = "NO810418052";
     private final String userName = "UserName";
 
     @Inject
@@ -94,7 +94,7 @@ public class RegisterUseCaseIntegrationTest {
         assertTrue(databaseHelper.hasClientRole(new UserName(userName)));
 
         //check there's account receiver
-        assertTrue(databaseHelper.accountReceiverExists(account.getId(), ORG_NUM_STR));
+        assertTrue(databaseHelper.accountReceiverExists(account.getId(), ORG_NUM_STR.substring(2)));
 
         //check customer
         Customer customer = accountRepository.findCustomerById(account.getCustomer().getId());

@@ -4,8 +4,8 @@ package no.sr.ringo.usecase;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import eu.peppol.persistence.api.account.Account;
-import no.sr.ringo.email.EmailService;
 import no.sr.ringo.common.UploadMode;
+import no.sr.ringo.email.EmailService;
 import no.sr.ringo.message.*;
 import no.sr.ringo.queue.OutboundMessageQueueId;
 import no.sr.ringo.queue.QueueRepository;
@@ -16,6 +16,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+
+import javax.ws.rs.WebApplicationException;
 
 /**
  * Complete use case which will verify the supplied parameters and persistOutboundMessage the message.
@@ -104,7 +106,11 @@ public class ReceiveMessageFromClientUseCase {
 
     private void extractHeader(OutboundPostParams postParams) {
         peppolMessageCreator = new PeppolMessageCreator(ringoSmpLookup, account, postParams);
-        peppolMessage = peppolMessageCreator.extractHeader();
+        try {
+            peppolMessage = peppolMessageCreator.extractHeader();
+        } catch (Exception e) {
+            throw new WebApplicationException(e);
+        }
     }
 
 

@@ -13,7 +13,6 @@ import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.message.SearchParams;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;

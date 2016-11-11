@@ -37,7 +37,7 @@
 				</cac:TaxScheme>
 			</cac:PartyTaxScheme>
 			<cac:PartyLegalEntity>
-				<cbc:CompanyID>999999999</cbc:CompanyID>
+				<cbc:CompanyID schemeID="NO:ORGNR">976098897</cbc:CompanyID>
 			</cac:PartyLegalEntity>
 			<cac:Contact>
 				<cbc:ID>O Hansen</cbc:ID>
@@ -62,7 +62,7 @@
 				</cac:Country>
 			</cac:PostalAddress>
 			<cac:PartyLegalEntity>
-				<cbc:CompanyID>888888888</cbc:CompanyID>
+				<cbc:CompanyID schemeID="NO:ORGNR">976098897</cbc:CompanyID>
 			</cac:PartyLegalEntity>
 			<cac:Contact>
 				<cbc:ID>3150bdn</cbc:ID>

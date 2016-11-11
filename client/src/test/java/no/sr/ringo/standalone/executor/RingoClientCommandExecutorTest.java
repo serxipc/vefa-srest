@@ -1,5 +1,7 @@
 package no.sr.ringo.standalone.executor;
 
+import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.SchemeId;
 import no.sr.ringo.client.Inbox;
 import no.sr.ringo.client.Message;
 import no.sr.ringo.client.Messages;
@@ -7,8 +9,6 @@ import no.sr.ringo.client.RingoClient;
 import no.sr.ringo.common.FileHelper;
 import no.sr.ringo.common.UploadMode;
 import no.sr.ringo.peppol.PeppolChannelId;
-import no.sr.ringo.peppol.PeppolParticipantId;
-import no.sr.ringo.peppol.SchemeId;
 import no.sr.ringo.standalone.parser.RingoClientParams;
 import org.easymock.EasyMock;
 import org.testng.annotations.AfterMethod;
@@ -52,7 +52,7 @@ public class RingoClientCommandExecutorTest  {
     private PrintStream mockStream;
 
     //will be used to create folder
-    PeppolParticipantId participantId = new PeppolParticipantId(SchemeId.AT_VAT, "111111111");
+    ParticipantId participantId = new ParticipantId(SchemeId.AT_VAT, "111111111");
 
 
     @BeforeMethod
@@ -77,7 +77,7 @@ public class RingoClientCommandExecutorTest  {
     public void testSMPLookup() throws IOException, CommandLineExecutorException {
         RingoClientParams params = prepareParamsForSMPLookup();
 
-        expect(client.isParticipantRegistered(params.getPeppolParticipantId())).andReturn(true);
+        expect(client.isParticipantRegistered(params.getParticipantId())).andReturn(true);
         mockStream.println("Participant 9908:976098897 is registered");
         mockStream.close();
 
@@ -176,7 +176,7 @@ public class RingoClientCommandExecutorTest  {
         prepareUploadFile(FILENAME);
 
         RingoClientParams params = prepareParamsForOutbox();
-        params.setSenderId(PeppolParticipantId.valueOf("9908:976098891"));
+        params.setSenderId(ParticipantId.valueOf("9908:976098897"));
 
         assertTrue(uploadFile.toString().endsWith(".xml"),"Ooops dow we have a threading problem?");
         expect(client.send(uploadFile, params.getChannelId(), params.getSenderId(), params.getRecipientId(), UploadMode.BATCH)).andReturn(mockUploadMessage);
@@ -403,7 +403,7 @@ public class RingoClientCommandExecutorTest  {
         RingoClientParams params = new RingoClientParams();
 
         params.setOperation(RingoClientParams.ClientOperation.SMP_LOOKUP);
-        params.setPeppolParticipantId(PeppolParticipantId.valueOf("9908:976098897"));
+        params.setParticipantId(ParticipantId.valueOf("9908:976098897"));
 
         return params;
     }

@@ -1,8 +1,7 @@
 package no.sr.ringo.standalone.parser;
 
-import no.sr.ringo.exception.NotifyingException;
-import no.sr.ringo.peppol.PeppolParticipantId;
-import no.sr.ringo.peppol.SchemeId;
+import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.SchemeId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -224,7 +223,7 @@ public class RingoClientCommandLineParserTest {
         assertEquals(new URI("http://ringo.domain.com"), connectionParams.getAccessPointURI());
 
         assertEquals(RingoClientParams.ClientOperation.SMP_LOOKUP, params.getOperation());
-        assertEquals(new PeppolParticipantId(SchemeId.NO_ORGNR,"976098897"), params.getPeppolParticipantId());
+        assertEquals(new ParticipantId(SchemeId.NO_ORGNR,"976098897"), params.getParticipantId());
 
         assertNull(params.getOutboxPath());
         assertNull(params.getInboxPath());

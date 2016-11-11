@@ -1,15 +1,15 @@
 package no.sr.ringo.document;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
-import no.sr.ringo.peppol.PeppolHeader;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import org.testng.annotations.Test;
 
 import java.io.File;
 import java.net.URL;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * Testing the different EHF 2.0 variants, making sure we understand them correctly.
@@ -55,12 +55,12 @@ public class FileClientPeppolEHF2Test {
         System.out.println(profileId.toString());
 
         // makes sure we have the correct receiver
-        PeppolParticipantId receiver = document.findReceiver();
+        ParticipantId receiver = document.findReceiver();
         assertNotNull(receiver);
         System.out.println(receiver.toString());
 
         // make sure we have the correct sender
-        PeppolParticipantId sender = document.findSender();
+        ParticipantId sender = document.findSender();
         assertNotNull(sender);
         System.out.println(sender.toString());
 
@@ -83,12 +83,12 @@ public class FileClientPeppolEHF2Test {
         System.out.println(profileId.toString());
 
         // makes sure we have the correct receiver
-        PeppolParticipantId receiver = document.findReceiver();
+        ParticipantId receiver = document.findReceiver();
         assertNotNull(receiver);
         System.out.println(receiver.toString());
 
         // make sure we have the correct sender
-        PeppolParticipantId sender = document.findSender();
+        ParticipantId sender = document.findSender();
         assertNotNull(sender);
         System.out.println(sender.toString());
 

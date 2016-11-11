@@ -1,13 +1,12 @@
 package no.sr.ringo.smp;
 
+import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.PeppolDocumentTypeId;
 import eu.peppol.smp.ParticipantNotRegisteredException;
 import eu.peppol.smp.SmpLookupException;
 import eu.peppol.smp.SmpLookupManager;
-import eu.peppol.identifier.ParticipantId;
-import eu.peppol.identifier.PeppolDocumentTypeId;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.peppol.LocalName;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -43,7 +42,6 @@ public class RingoSmpLookupImplTest {
     SmpLookupManager mockSmpLookupManager;
 
     ParticipantId registeredParticipantId;
-    PeppolParticipantId registeredPeppolParticipantId;
     ParticipantId notRegisteredParticipantId;
 
     List<PeppolDocumentTypeId> list;
@@ -73,7 +71,7 @@ public class RingoSmpLookupImplTest {
         replay(mockSmpLookupManager);
 
         RingoSmpLookupImpl ringoSmpLookup = new RingoSmpLookupImpl(mockSmpLookupManager);
-        boolean registered = ringoSmpLookup.isRegistered(PeppolParticipantId.valueOf(notRegisteredParticipantId.stringValue()));
+        boolean registered = ringoSmpLookup.isRegistered(ParticipantId.valueOf(notRegisteredParticipantId.stringValue()));
         assertFalse(registered);
 
         verify(mockSmpLookupManager);
@@ -157,7 +155,7 @@ public class RingoSmpLookupImplTest {
     private void setUpTestData() {
         list = prepareAcceptedDocumentTypes();
         registeredParticipantId = ObjectMother.getTestParticipantIdForSMPLookup();
-        registeredPeppolParticipantId = PeppolParticipantId.valueOf(registeredParticipantId.stringValue());
+        registeredParticipantId = ParticipantId.valueOf(registeredParticipantId.stringValue());
         notRegisteredParticipantId = ObjectMother.getAdamsParticipantId();
     }
 
@@ -167,7 +165,7 @@ public class RingoSmpLookupImplTest {
         replay(mockSmpLookupManager);
 
         RingoSmpLookupImpl ringoSmpLookup = new RingoSmpLookupImpl(mockSmpLookupManager);
-        return ringoSmpLookup.isRegistered(PeppolParticipantId.valueOf(participantId.stringValue()));
+        return ringoSmpLookup.isRegistered(ParticipantId.valueOf(participantId.stringValue()));
     }
 
     private SmpLookupResult fetchSmpDataForLocalName(LocalName localName) throws SmpLookupException, ParticipantNotRegisteredException {
@@ -175,7 +173,7 @@ public class RingoSmpLookupImplTest {
         replay(mockSmpLookupManager);
 
         RingoSmpLookupImpl ringoSmpLookup = new RingoSmpLookupImpl(mockSmpLookupManager);
-        return ringoSmpLookup.fetchSmpMetaData(registeredPeppolParticipantId, localName);
+        return ringoSmpLookup.fetchSmpMetaData(registeredParticipantId, localName);
     }
 
     private List<PeppolDocumentTypeId> prepareAcceptedDocumentTypes() {
@@ -201,7 +199,7 @@ public class RingoSmpLookupImplTest {
         replay(mockSmpLookupManager);
 
         RingoSmpLookupImpl ringoSmpLookup = new RingoSmpLookupImpl(mockSmpLookupManager);
-        return ringoSmpLookup.isAcceptable(registeredPeppolParticipantId, no.sr.ringo.peppol.PeppolDocumentTypeId.valueOf(invoiceOnly));
+        return ringoSmpLookup.isAcceptable(registeredParticipantId, no.sr.ringo.peppol.PeppolDocumentTypeId.valueOf(invoiceOnly));
     }
 
 }

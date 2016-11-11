@@ -1,14 +1,14 @@
 package no.sr.ringo.smp;
 
 import com.google.inject.Inject;
+import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.PeppolDocumentTypeId;
 import eu.peppol.smp.SmpLookupException;
 import eu.peppol.smp.SmpLookupManager;
-import eu.peppol.identifier.PeppolDocumentTypeId;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.common.SmpLookupManagerFactory;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.peppol.LocalName;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Guice;
@@ -58,12 +58,12 @@ public class SmpTest {
 
     @Test(groups = {"external"})
     public void testLookUpUsingRingoSmpLookup() throws Exception {
-        assertTrue(ringoSmpLookup.isRegistered(PeppolParticipantId.valueOf(ObjectMother.getTestParticipantIdForSMPLookup().stringValue())));
+        assertTrue(ringoSmpLookup.isRegistered(ParticipantId.valueOf(ObjectMother.getTestParticipantIdForSMPLookup().stringValue())));
     }
 
     @Test(groups = {"external"})
     public void testFailedLookUpUsingRingoSmpLookup() throws Exception {
-        assertFalse(ringoSmpLookup.isRegistered(PeppolParticipantId.valueOf(ObjectMother.getAdamsParticipantId().stringValue())));
+        assertFalse(ringoSmpLookup.isRegistered(ParticipantId.valueOf(ObjectMother.getAdamsParticipantId().stringValue())));
     }
 
     @Test(groups = {"external"})
@@ -75,7 +75,7 @@ public class SmpTest {
 
     @Test(groups = {"external"})
     public void testRingoSmpLookupServiceGroups() throws Exception {
-        SmpLookupResult lookupResult = ringoSmpLookup.fetchSmpMetaData(PeppolParticipantId.valueOf(ObjectMother.getTestParticipantIdForSMPLookup().stringValue()), LocalName.Invoice);
+        SmpLookupResult lookupResult = ringoSmpLookup.fetchSmpMetaData(ParticipantId.valueOf(ObjectMother.getTestParticipantIdForSMPLookup().stringValue()), LocalName.Invoice);
         assertNotNull(lookupResult);
         assertNotNull(lookupResult.getAcceptedDocumentTypes());
         assertFalse(lookupResult.getAcceptedDocumentTypes().isEmpty());
@@ -83,14 +83,14 @@ public class SmpTest {
 
     @Test(groups = {"external"})
     public void testFailedRingoSmpLookupServiceGroups() throws Exception {
-        SmpLookupResult smpLookupResult = ringoSmpLookup.fetchSmpMetaData(PeppolParticipantId.valueOf(ObjectMother.getAdamsParticipantId().stringValue()), LocalName.Invoice);
+        SmpLookupResult smpLookupResult = ringoSmpLookup.fetchSmpMetaData(ParticipantId.valueOf(ObjectMother.getAdamsParticipantId().stringValue()), LocalName.Invoice);
         assertNotNull(smpLookupResult);
         assertTrue(smpLookupResult.getAcceptedDocumentTypes().isEmpty());
     }
 
     //@Test(groups = {"external"})
     public void testRingoSmpLookupProblematicNumber() throws Exception {
-        SmpLookupResult lookupResult = ringoSmpLookup.fetchSmpMetaData(PeppolParticipantId.valueOf("9908:994496093"), LocalName.Invoice);
+        SmpLookupResult lookupResult = ringoSmpLookup.fetchSmpMetaData(ParticipantId.valueOf("9908:994496093"), LocalName.Invoice);
         assertNotNull(lookupResult);
         assertNotNull(lookupResult.getAcceptedDocumentTypes());
         assertFalse(lookupResult.getAcceptedDocumentTypes().isEmpty());
@@ -98,7 +98,7 @@ public class SmpTest {
 
     @Test(groups = {"external"})
     public void testRingoSmpLookupRegularDifiElma() throws Exception {
-        SmpLookupResult lookupResult = ringoSmpLookup.fetchSmpMetaData(PeppolParticipantId.valueOf("9908:889640782"), LocalName.Invoice);
+        SmpLookupResult lookupResult = ringoSmpLookup.fetchSmpMetaData(ParticipantId.valueOf("9908:889640782"), LocalName.Invoice);
         assertNotNull(lookupResult);
         assertNotNull(lookupResult.getAcceptedDocumentTypes());
         assertFalse(lookupResult.getAcceptedDocumentTypes().isEmpty());
@@ -106,7 +106,7 @@ public class SmpTest {
 
     //@Test(groups = {"external"})
     public void testRingoSmpLookupTenderFormats() throws Exception {
-        SmpLookupResult lookupResult = ringoSmpLookup.fetchSmpMetaData(PeppolParticipantId.valueOf("9908:990638942"), LocalName.Tender);
+        SmpLookupResult lookupResult = ringoSmpLookup.fetchSmpMetaData(ParticipantId.valueOf("9908:990638942"), LocalName.Tender);
         assertNotNull(lookupResult);
         assertNotNull(lookupResult.getAcceptedDocumentTypes());
         assertFalse(lookupResult.getAcceptedDocumentTypes().isEmpty());     // expected to fail, since this receiver is only available in test environment

@@ -1,6 +1,7 @@
 package no.sr.ringo.http;
 
-import no.sr.ringo.RingoConstant;
+import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.SchemeId;
 import no.sr.ringo.client.ClientObjectMother;
 import no.sr.ringo.client.Inbox;
 import no.sr.ringo.client.Messagebox;
@@ -8,7 +9,8 @@ import no.sr.ringo.client.RingoServiceRestImpl;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.common.RingoLoggingStream;
 import no.sr.ringo.guice.TestModuleFactory;
-import no.sr.ringo.peppol.*;
+import no.sr.ringo.peppol.PeppolDocumentTypeId;
+import no.sr.ringo.peppol.PeppolHeader;
 import org.apache.commons.io.input.ReaderInputStream;
 import org.apache.http.client.HttpClient;
 import org.apache.http.params.HttpParams;
@@ -58,7 +60,7 @@ public class VersionHeaderTest extends AbstractHttpClientServerTest {
     @Test(groups = {"integration"})
     public void testOutOfDateSMP() throws IOException, URISyntaxException {
 
-        ringoRestClientImpl.isParticipantRegistered(new PeppolParticipantId(SchemeId.NO_VAT, "976098897"));
+        ringoRestClientImpl.isParticipantRegistered(new ParticipantId(SchemeId.NO_ORGNR, "976098897"));
 
         verify(mockOutputStream);
     }
@@ -78,7 +80,7 @@ public class VersionHeaderTest extends AbstractHttpClientServerTest {
     @Test(groups = {"integration"})
     public void testOutOfDateOutbox() throws IOException, URISyntaxException {
 
-        PeppolParticipantId participantId = new PeppolParticipantId(SchemeId.NO_ORGNR, "976098897");
+        ParticipantId participantId = new ParticipantId(SchemeId.NO_ORGNR, "976098897");
 
         final ReaderInputStream readerInputStream = getTestInvoiceAsStream();
         ringoRestClientImpl.send(readerInputStream, PeppolHeader.forDocumentType(INVOICE, participantId, participantId));

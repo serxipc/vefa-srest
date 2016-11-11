@@ -13,7 +13,6 @@ import eu.peppol.persistence.guice.jdbc.Transactional;
 import no.sr.ringo.RingoConstant;
 import no.sr.ringo.common.MessageHelper;
 import no.sr.ringo.email.EmailService;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import no.sr.ringo.security.CredentialHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +77,7 @@ public class RegisterUseCase {
         }
 
         //Prefix given orgNo with 9908
-        final PeppolParticipantId peppolParticipantId = PeppolParticipantId.valueOf(registrationData.getOrgNo());
+        final ParticipantId peppolParticipantId = ParticipantId.valueOf(registrationData.getOrgNo());
         if (peppolParticipantId == null) {
             throw new IllegalArgumentException("Provided organisation number is invalid");
         }

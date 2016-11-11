@@ -70,7 +70,7 @@
 			</cac:PartyTaxScheme>
 			<cac:PartyLegalEntity>
 				<cbc:RegistrationName>The Sellercompany Incorporated</cbc:RegistrationName>
-				<cbc:CompanyID schemeID="CVR" schemeAgencyID="ZZZ">999999999</cbc:CompanyID>
+				<cbc:CompanyID schemeID="DK:CVR" schemeAgencyID="ZZZ">999999999</cbc:CompanyID>
 				<cac:RegistrationAddress>
 					<cbc:CityName>Big city</cbc:CityName>
 					<cbc:CountrySubentity>RegionA</cbc:CountrySubentity>

@@ -1,5 +1,6 @@
 package no.sr.ringo.peppol;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.smp.RingoSmpLookup;
 import no.sr.ringo.smp.SmpLookupResult;
 
@@ -27,7 +28,7 @@ public class DocumentTypeIdResolver {
      *
      * Returns PeppolDocumentTypeId id given String is already a proper value
      */
-    public PeppolDocumentTypeId resolve(PeppolParticipantId peppolParticipantId, String documentIdString) {
+    public PeppolDocumentTypeId resolve(ParticipantId peppolParticipantId, String documentIdString) {
 
         PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.valueOf(documentIdString);
         if (peppolDocumentTypeId.isKnown()) {
@@ -43,7 +44,7 @@ public class DocumentTypeIdResolver {
      * is not empty return the optimal value (first one in ordered list).
      * Throws an exception if there're no accepted document types available
      */
-    private PeppolDocumentTypeId findOptimalDocumentTypeIdentifierFor(PeppolParticipantId peppolParticipantId, LocalName localName) {
+    private PeppolDocumentTypeId findOptimalDocumentTypeIdentifierFor(ParticipantId peppolParticipantId, LocalName localName) {
         SmpLookupResult result = ringoSmpLookup.fetchSmpMetaData(peppolParticipantId, localName);
         if (result.getAcceptedDocumentTypes().isEmpty()) {
             throw new IllegalArgumentException(String.format("No accepted document type identifiers for local name: %s", localName));

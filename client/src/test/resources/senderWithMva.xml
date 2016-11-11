@@ -7,7 +7,7 @@
         <cac:AccountingSupplierParty>
                 <cac:Party>
                     <cac:PartyLegalEntity>
-                        <cbc:CompanyID schemeAgencyID="82" schemeID="NO:VAT">NO540269750MVA</cbc:CompanyID>
+                        <cbc:CompanyID schemeAgencyID="82" schemeID="NO:ORGNR">NO540269750MVA</cbc:CompanyID>
                     </cac:PartyLegalEntity>
                 </cac:Party>
         </cac:AccountingSupplierParty>

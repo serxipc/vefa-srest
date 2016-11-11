@@ -6,14 +6,17 @@ package no.sr.ringo.response.xml;
  * Time: 3:21 PM
  */
 
+import eu.peppol.identifier.ParticipantId;
 import eu.peppol.persistence.TransferDirection;
 import no.sr.ringo.cenbiimeta.ProfileId;
-import no.sr.ringo.peppol.RingoUtils;
 import no.sr.ringo.common.XmlSpecification;
 import no.sr.ringo.message.MessageMetaDataImpl;
 import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.message.MessageWithLocationsImpl;
-import no.sr.ringo.peppol.*;
+import no.sr.ringo.peppol.PeppolChannelId;
+import no.sr.ringo.peppol.PeppolDocumentTypeId;
+import no.sr.ringo.peppol.PeppolHeader;
+import no.sr.ringo.peppol.RingoUtils;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Parent;
@@ -93,8 +96,8 @@ public class MessageXmlSpec implements XmlSpecification<MessageWithLocations> {
         peppolHeader.setPeppolChannelId(new PeppolChannelId(channel));
         peppolHeader.setPeppolDocumentTypeId(PeppolDocumentTypeId.valueOf(documentId));
         peppolHeader.setProfileId(new ProfileId(processId));
-        peppolHeader.setReceiver(PeppolParticipantId.valueOf(receiver));
-        peppolHeader.setSender(PeppolParticipantId.valueOf(sender));
+        peppolHeader.setReceiver(ParticipantId.valueOf(receiver));
+        peppolHeader.setSender(ParticipantId.valueOf(sender));
 
         MessageMetaDataImpl messageMetaData = new MessageMetaDataImpl();
 

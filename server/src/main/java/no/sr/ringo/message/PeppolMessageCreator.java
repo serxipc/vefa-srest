@@ -1,5 +1,6 @@
 package no.sr.ringo.message;
 
+import eu.peppol.identifier.ParticipantId;
 import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.ProfileIdResolver;
@@ -7,7 +8,6 @@ import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.peppol.DocumentTypeIdResolver;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
-import no.sr.ringo.peppol.PeppolParticipantId;
 import no.sr.ringo.resource.InvalidUserInputWebException;
 import no.sr.ringo.smp.RingoSmpLookup;
 import org.apache.commons.lang.StringUtils;
@@ -85,12 +85,12 @@ public class PeppolMessageCreator {
     }
 
     private void extractRecipient() {
-        PeppolParticipantId receiver = PeppolParticipantId.valueOf(postParams.getRecipientIdString());
+        ParticipantId receiver = ParticipantId.valueOf(postParams.getRecipientIdString());
         peppolMessage.getPeppolHeader().setReceiver(receiver);
     }
 
     private void extractSender() {
-        PeppolParticipantId senderId = PeppolParticipantId.valueOf(postParams.getSenderIdString());
+        ParticipantId senderId = ParticipantId.valueOf(postParams.getSenderIdString());
         peppolMessage.getPeppolHeader().setSender(senderId);
     }
 

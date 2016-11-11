@@ -1,5 +1,6 @@
 package no.sr.ringo.peppol;
 
+import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.smp.RingoSmpLookup;
 import no.sr.ringo.smp.SmpLookupResult;
@@ -21,11 +22,11 @@ import static org.testng.Assert.assertNotNull;
 public class DocumentTypeIdResolverTest {
 
     private RingoSmpLookup mockRingoSmpLookup;
-    PeppolParticipantId peppolParticipantId;
+    ParticipantId peppolParticipantId;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        peppolParticipantId = PeppolParticipantId.valueOf(ObjectMother.getTestParticipantIdForSMPLookup().stringValue());
+        peppolParticipantId = ParticipantId.valueOf(ObjectMother.getTestParticipantIdForSMPLookup().stringValue());
         mockRingoSmpLookup = createStrictMock(RingoSmpLookup.class);
     }
 
@@ -92,7 +93,7 @@ public class DocumentTypeIdResolverTest {
     public void testResolveFromEhf2DocumentTypeIdString() throws Exception {
 
         String documentId = "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.cenbii.eu:profile:biixx:ver2.0:extended:urn:www.difi.no:ehf:kreditnota:ver2.0::2.1";
-        PeppolParticipantId participantId = PeppolParticipantId.valueOf("9908:910667831");
+        ParticipantId participantId = ParticipantId.valueOf("9908:910667831");
 
         //RingoSmpLookup smpLookup = new RingoSmpLookupImpl(SmpLookupManagerFactory.getSmpLookupManager());
         DocumentTypeIdResolver resolver = new DocumentTypeIdResolver(mockRingoSmpLookup);
