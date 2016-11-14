@@ -74,19 +74,12 @@
         <!-- If your are using different JDBC driver, this is the dependency to change -->
         <!-- You must supply a JDBC driver in order to make oxalis-statistics-dbcp work -->
 
-<!--
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
--->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
-        <!-- logging -->
 
+        <!-- logging -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -98,6 +91,8 @@
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <!-- Version 3.0.0 increases the build time to almost a minute, so override to previous version -->
+                <version>2.6</version>
                 <executions>
                     <execution>
                         <id>package standalone</id>
@@ -108,9 +103,15 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!-- This is where the name of the artifact is determined -->
+                    <!-- This is where the name of the artifact is determined, seems to not be part of assembly-plugin version 3.0.0 but still works -->
+<!--
                     <finalName>ringo-standalone</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
+-->
+
+                    <!-- If false, excludes the assembly id from the assembly final name, and creates the resultant assembly artifacts
+                    without classifier. As such, an assembly artifact having the same format as the packaging of the current Maven project
+                    will replace the file for this main project artifact -->
+                    <appendAssemblyId>true</appendAssemblyId>
                     <archive>
                         <manifest>
                             <mainClass>no.sr.ringo.Main</mainClass>

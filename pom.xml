@@ -36,6 +36,7 @@
         <module>ringo-tomcat-realm</module>
         <module>ringo-usecase</module>
         <module>server</module>
+        <module>ringo-distribution</module>
     </modules>
 
     <dependencyManagement>
@@ -364,7 +365,6 @@
         </dependency>
 
 
-
     </dependencies>
 
     <build>
@@ -374,7 +374,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.6.0</version>
                     <inherited>true</inherited>
                     <configuration>
                         <source>1.8</source>
@@ -436,12 +436,21 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>2.5.3</version>
                 </plugin>
+
+                <!-- Note! The version 3.0.0 is very slow when building certain types of projects -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+
             </plugins>
         </pluginManagement>
 
         <plugins>
 
             <!-- these plugins are activated for every module, see pluginManagement for versions -->
+
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
