@@ -44,7 +44,7 @@ public abstract class AbstractMessageResource implements UriLocationAware {
     }
 
     protected URI computeXmlDocumentUri(UriInfo uriInfo, Long msgNo) {
-        // https....../oubox
+        // https....../outbox
         UriBuilder uriBuilder = getUriBuilderForResource(uriInfo, MessagesResource.class);
 
         // https....../outbox/{msgno}/xml-document
@@ -56,7 +56,7 @@ public abstract class AbstractMessageResource implements UriLocationAware {
 
     protected URI computeUriForSelf(UriInfo uriInfo, Long msgNo) {
 
-        // https....../oubox
+        // https....../outbox
         UriBuilder uriBuilder = getUriBuilderForResource(uriInfo, this.getClass());
 
         // https....../outbox/{msgno}
@@ -125,8 +125,8 @@ public abstract class AbstractMessageResource implements UriLocationAware {
 
     private UriBuilder getUriBuilderForResource(UriInfo uriInfo, Class<? extends AbstractMessageResource> resource) {
         return uriInfo.getBaseUriBuilder()
-                .path(resource);
-                // .scheme("https"); // Use whatever scheme the original request was made with.
+                .path(resource)
+                .scheme("https"); // Must use https (we are always behind a firewall)
     }
 
     protected boolean isEmpty(String value) {

@@ -4,6 +4,7 @@ import no.sr.ringo.ObjectMother;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.client.ClientObjectMother;
 import no.sr.ringo.common.RingoConstants;
+import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -16,6 +17,7 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -32,6 +34,9 @@ import static org.testng.Assert.assertTrue;
  * @author andy
  * @author thore
  */
+
+// The test database will be initialized with initial scheme
+@Guice(moduleFactory = TestModuleFactory.class)
 public class OutboxHttpTest extends AbstractHttpClientServerTest {
 
     static final Logger log = LoggerFactory.getLogger(OutboxHttpTest.class);

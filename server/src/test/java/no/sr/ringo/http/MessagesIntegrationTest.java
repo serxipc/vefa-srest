@@ -24,6 +24,7 @@ import java.util.UUID;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+// The test database will be initialized with initial scheme
 @Guice(moduleFactory = TestModuleFactory.class)
 public class MessagesIntegrationTest extends AbstractHttpClientServerTest {
 

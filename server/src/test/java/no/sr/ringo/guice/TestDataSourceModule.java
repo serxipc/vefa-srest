@@ -11,7 +11,10 @@ import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 /**
- * The test data source
+ * The test data source.
+ *
+ * Note! When running Jetty based integration tests, the database scheme needs to be populated before any server side DBMS code is
+ * being executed. The Jetty server simply establishes a JNDI DataSource connected to the database, but does not initialize it.
  *
  * @author Steinar Overbeck Cook
  *         <p/>
