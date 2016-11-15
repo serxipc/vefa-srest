@@ -8,9 +8,9 @@ import no.sr.ringo.email.EmailService;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.OutboundMessageQueueState;
-import no.sr.ringo.queue.OutboundMessageQueueId;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.oxalis.PeppolDocumentSender;
+import no.sr.ringo.queue.OutboundMessageQueueId;
 import no.sr.ringo.queue.QueueRepository;
 import no.sr.ringo.queue.QueuedOutboundMessage;
 import no.sr.ringo.queue.QueuedOutboundMessageError;
@@ -124,21 +124,21 @@ public class SendQueuedMessagesUseCase {
         boolean succeeded = false;
         String errorMessage = null;
 
-        MessageMetaData message = messageRepository.findMessageByMessageNo(queuedOutboundMessage.getMessageNumber());
-        if (message == null) {
+        MessageMetaData messageMetaData = messageRepository.findMessageByMessageNo(queuedOutboundMessage.getMessageNumber());
+        if (messageMetaData == null) {
             errorMessage = String.format("Cannot find message with msgNo  %d", queuedOutboundMessage.getMessageNumber().toInt());
             logger.error(errorMessage);
             return new SingleProcessingResult(skipped, succeeded, errorMessage);
         }
 
-        if (message.getDelivered() != null) {
+        if (messageMetaData.getDelivered() != null) {
             errorMessage = String.format("Message with msgNo %d already delivered even though state is %s", queuedOutboundMessage.getMessageNumber().toInt(), queuedOutboundMessage.getState().name());
             logger.error(errorMessage);
             return new SingleProcessingResult(skipped, succeeded, errorMessage);
         }
 
         try {
-            boolean deliveryOk = lockQueueRowAndSendMessage(message, queuedOutboundMessage.getOutboundQueueId());
+            boolean deliveryOk = lockQueueRowAndSendMessage(messageMetaData, queuedOutboundMessage.getOutboundQueueId());
             if (deliveryOk) {
                 queueRepository.changeQueuedMessageState(queuedOutboundMessage.getOutboundQueueId(), OutboundMessageQueueState.OK);
                 logger.info(String.format("Queue item %d with messageNo %d sent - great success!", queuedOutboundMessage.getOutboundQueueId().toInt(), queuedOutboundMessage.getMessageNumber().toInt()));
@@ -161,7 +161,7 @@ public class SendQueuedMessagesUseCase {
      * @throws Exception If the message could not be sent. In which case the delivered timestamp is rolledback to NULL
      */
     @Transactional
-    protected boolean lockQueueRowAndSendMessage(MessageMetaData message, OutboundMessageQueueId outboundQueueID) throws Exception {
+    protected boolean lockQueueRowAndSendMessage(MessageMetaData messageMetaData, OutboundMessageQueueId outboundQueueID) throws Exception {
 
         // perform a selective update of the message row so that it in effect is locked (status changed to IN_PROGRESS)
         boolean ok = queueRepository.lockQueueItemForDelivery(outboundQueueID);
@@ -174,10 +174,10 @@ public class SendQueuedMessagesUseCase {
 
         // when we pass here the queued message has state IN_PROGRESS
 
-        String xmlMessage = messageRepository.findDocumentByMessageNoWithoutAccountCheck(message.getMsgNo().longValue());
-        logger.debug("Attempting to send message #" + message.getMsgNo());
-        final PeppolDocumentSender.TransmissionReceipt transmissionReceipt = documentSender.sendDocument(message, xmlMessage);
-        messageRepository.updateOutBoundMessageDeliveryDateAndUuid(message.getMsgNo().longValue(), transmissionReceipt.getRemoteAccessPoint(), transmissionReceipt.getMessageId(), transmissionReceipt.getDate());
+        String xmlMessage = messageRepository.findDocumentByMessageNoWithoutAccountCheck(messageMetaData.getMsgNo().longValue());
+        logger.debug("Attempting to send message #" + messageMetaData.getMsgNo());
+        final PeppolDocumentSender.TransmissionReceipt transmissionReceipt = documentSender.sendDocument(messageMetaData, xmlMessage);
+        messageRepository.updateOutBoundMessageDeliveryDateAndUuid(messageMetaData.getMsgNo().longValue(), transmissionReceipt.getRemoteAccessPoint(), transmissionReceipt.getMessageId(), transmissionReceipt.getDate());
 
         // we got this far so delivery was ok
 

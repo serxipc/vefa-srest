@@ -1,7 +1,6 @@
 package no.sr.ringo.oxalis;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
+import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolDocumentTypeId;
 import eu.peppol.identifier.PeppolProcessTypeId;
@@ -29,16 +28,17 @@ public class OxalisDocumentSender implements PeppolDocumentSender {
     }
 
     @Override
-    public TransmissionReceipt sendDocument(MessageMetaData message, String xmlMessage) throws Exception {
+    public TransmissionReceipt sendDocument(MessageMetaData messageMetaData, String xmlMessage) throws Exception {
 
         TransmissionRequestBuilder requestBuilder = oxalisOutboundModule.getTransmissionRequestBuilder();
 
         requestBuilder
                 .trace(true)
-                .receiver(new ParticipantId(message.getPeppolHeader().getReceiver().stringValue()))
-                .sender((new ParticipantId(message.getPeppolHeader().getSender().stringValue())))
-                .documentType(PeppolDocumentTypeId.valueOf(message.getPeppolHeader().getPeppolDocumentTypeId().stringValue()))
-                .processType(PeppolProcessTypeId.valueOf(message.getPeppolHeader().getProfileId().stringValue()))
+                .receiver(new ParticipantId(messageMetaData.getPeppolHeader().getReceiver().stringValue()))
+                .sender((new ParticipantId(messageMetaData.getPeppolHeader().getSender().stringValue())))
+                .documentType(PeppolDocumentTypeId.valueOf(messageMetaData.getPeppolHeader().getPeppolDocumentTypeId().stringValue()))
+                .processType(PeppolProcessTypeId.valueOf(messageMetaData.getPeppolHeader().getProfileId().stringValue()))
+                .messageId(new MessageId(messageMetaData.getUuid()))
                 .payLoad(getXmlDocumentAsStream(xmlMessage));
 
 
