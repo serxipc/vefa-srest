@@ -1,13 +1,10 @@
 package no.sr.ringo;
 
 import com.google.inject.Injector;
-import eu.peppol.outbound.OxalisOutboundModule;
-import eu.peppol.outbound.transmission.Transmitter;
-import eu.peppol.security.CommonName;
-import eu.peppol.security.KeystoreManager;
+import eu.peppol.outbound.OxalisOutboundComponent;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * @author steinar
@@ -20,7 +17,7 @@ public class MainTest {
     @Test
     public void testGetInjector() throws Exception {
         Injector injector = Main.getInjector(true);
-        OxalisOutboundModule oxalisOutboundModule = injector.getInstance(OxalisOutboundModule.class);
+        OxalisOutboundComponent oxalisOutboundModule = injector.getInstance(OxalisOutboundComponent.class);
         assertNotNull(oxalisOutboundModule);
     }
 

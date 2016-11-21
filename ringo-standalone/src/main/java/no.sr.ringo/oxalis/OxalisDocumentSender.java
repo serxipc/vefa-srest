@@ -4,7 +4,7 @@ import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolDocumentTypeId;
 import eu.peppol.identifier.PeppolProcessTypeId;
-import eu.peppol.outbound.OxalisOutboundModule;
+import eu.peppol.outbound.OxalisOutboundComponent;
 import eu.peppol.outbound.transmission.TransmissionRequest;
 import eu.peppol.outbound.transmission.TransmissionRequestBuilder;
 import eu.peppol.outbound.transmission.TransmissionResponse;
@@ -20,10 +20,10 @@ import java.util.Date;
 public class OxalisDocumentSender implements PeppolDocumentSender {
 
 
-    private final OxalisOutboundModule oxalisOutboundModule;
+    private final OxalisOutboundComponent oxalisOutboundModule;
 
     @javax.inject.Inject
-    public OxalisDocumentSender(OxalisOutboundModule oxalisOutboundModule) {
+    public OxalisDocumentSender(OxalisOutboundComponent oxalisOutboundModule) {
         this.oxalisOutboundModule = oxalisOutboundModule;
     }
 
@@ -43,17 +43,17 @@ public class OxalisDocumentSender implements PeppolDocumentSender {
 
 
         TransmissionRequest transmissionRequest = requestBuilder.build();
-        Transmitter transmitter = oxalisOutboundModule.getTransmitter();
+        Transmitter transmitter = oxalisOutboundModule.getSimpleTransmitter();
         TransmissionResponse transmissionResponse = transmitter.transmit(transmissionRequest);
 
         // Write the transmission id and where the message was delivered
         System.out.printf("Message sent to %s using %s was assigned transmissionId : %s\n",
                 transmissionRequest.getEndpointAddress().getUrl().toString(),
                 transmissionRequest.getEndpointAddress().getBusDoxProtocol().toString(),
-                transmissionResponse.getTransmissionId()
+                transmissionResponse.getMessageId()
         );
 
-        return new TransmissionReceipt(transmissionResponse.getTransmissionId().toString(), transmissionResponse.getURL(), new Date());
+        return new TransmissionReceipt(transmissionResponse.getMessageId().toString(), transmissionResponse.getURL(), new Date());
 
     }
 

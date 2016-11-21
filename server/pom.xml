@@ -17,24 +17,12 @@
 
     <profiles>
         <profile>
-            <id>test</id>
+            <id>prod</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <isProduction>false</isProduction>
-            </properties>
-            <build>
-                <finalName>test</finalName>
-            </build>
-        </profile>
-        <profile>
-            <id>prod</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <isProduction>true</isProduction>
+                <isProduction>true</isProduction> <!-- isProduction is referenced in web.xml -->
             </properties>
             <build>
                 <finalName>ROOT</finalName>

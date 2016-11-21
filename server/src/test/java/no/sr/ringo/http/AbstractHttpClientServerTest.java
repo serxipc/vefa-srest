@@ -21,10 +21,11 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.security.Credential;
-import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebInfConfiguration;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterGroups;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeGroups;
@@ -45,6 +46,7 @@ import java.net.URI;
  */
 public class AbstractHttpClientServerTest {
 
+    public static final Logger log = LoggerFactory.getLogger(AbstractHttpClientServerTest.class);
     protected static final Account TEST_ACCOUNT = ObjectMother.getTestAccount();
     protected static final String REALM = "PEPPOL AP";
     protected static final String WEB_CONTEXT_NAME = "ringo";
@@ -66,6 +68,7 @@ public class AbstractHttpClientServerTest {
     @BeforeGroups(groups = {"integration"})
     public static void setUpJetty() throws Exception {
 
+        log.info("------------- STARTING Jetty SERVER ------------");
         // Creates the empty Jetty Server with no connectors or handlers
         server = new Server(HTTP_PORT);
 
@@ -87,6 +90,7 @@ public class AbstractHttpClientServerTest {
 
         // Start the server
         server.start();
+        log.info("------------ START Jetty COMPLETED ------------");
     }
 
     private static void setUpWebAppContext(EnvConfiguration envConfiguration) {
