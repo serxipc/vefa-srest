@@ -24,9 +24,6 @@
             <properties>
                 <isProduction>true</isProduction> <!-- isProduction is referenced in web.xml -->
             </properties>
-            <build>
-                <finalName>ROOT</finalName>
-            </build>
         </profile>
     </profiles>
 
