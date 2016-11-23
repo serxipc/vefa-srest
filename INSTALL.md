@@ -1,4 +1,4 @@
-# vefa-srest (formerly "Ringo") - REST based API for PEPPOL access point
+# vefa-srest a.k.a. "Ringo" - REST based API for Oxalis based PEPPOL access points
 
 ## Installation prerequisites
 
@@ -14,14 +14,21 @@ Command                     | Comment
 --------------------------- | ---------------------------
 `mvn clean test`            | unit tests
 `mvn clean verify`          | integration tests (needs database and network)
-`mvn clean install -Pprod`  | build runnable artifacts for production in `server/target/ROOT.war`
-`mvn clean install -Ptest`  | build runnable artifacts for test (fake SMP lookup) in `server/target/test.war`.
-`mvn clean install`         | same as above
+`mvn clean install`  | builds runnable artifacts for production in `server/target/ringo-server-${version}.war`
+
+This installation guide assumes that you have a binary distribution, which you have either 
+built using the maven commands listed above or downloaded. 
 
 
-## Install build artifacts for the REST interface
+## Installation of artifacts for the REST interface
 
-1. Copy `server/target/ROOT.war` to $TOMCAT_HOME/webapps as `ROOT.war` 
+1. Unpack the contents of the binary distribution in a separate directory:
+  ```    
+    mkdir ~/opt/ringo-distribution-${version}
+    cd ~/opt/ringo-distribution-${version}
+    unzip ringo-distribution-${version}-bin.zip 
+  ```  
+1. Copy `war/ringo-server-${version}.war` to `$TOMCAT_HOME/webapps/vefa-srest.war` 
 1. Start Tomcat using `${TOMCAT_HOME}/bin/startup.sh`
 1. Make sure there are no errors in `$TOMCAT_HOME/logs/catalina.out`
 1. Verify REST response using a browser or command line _curl_:
@@ -41,6 +48,8 @@ Command                     | Comment
             -->
  ```
 
+1. If you are going to use a DBMS of your own choice, you must modify the security realm. 
+   Please consult the section [DBMS][DBMS]
 1. Execute the client and enqueue the eligible documents for transmission:
 
   ```
@@ -89,7 +98,7 @@ The `bin/digest` command is explained in the Tomcat documentation.
 
 ## Replacing the SQL DBMS
 
-The standard distribution comes preconfigured with support for H2.
+[DBMS]: The standard distribution comes preconfigured with support for H2.
 
 If you wish to use a different database:
 
