@@ -104,6 +104,7 @@ If you wish to use a different database:
 
  1. Copy the the .jar-file of the driver to `$TOMCAT_HOME/lib`
  1. Modify the contents of `$TOMCAT_HOME/conf/Catalina/localhost/vefa-srest.xml` to make the security realm of Tomcat point to your database:
+    
     ```
     <!--  Establishes a JNDI DataSource made available in java:comp/env as jdbc/oxalis -->
         <Resource name="jdbc/oxalis"
@@ -122,6 +123,7 @@ If you wish to use a different database:
                   validationQuery="select now()"
         />
     ```
+    
  1. Verify the contents of the table `account`. Hint: look at the database creation script found in your Oxalis distribution.
  1. Restart Tomcat and you should be able to login using for example username "sr" with password "ringo1".
   
