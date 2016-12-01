@@ -22,7 +22,7 @@ import java.util.List;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * User: andy
@@ -53,10 +53,10 @@ public class StatisticsResourceTest {
         InboxStatistics inboxStatistics = new InboxStatistics(1, 1, lastDeliveredIN, lastReceivedIN, oldestUndeliveredIN);
         final Date date = new Date();
         OutboxStatistics outboxStatistics = new OutboxStatistics(9, 1, date, date);
-        accountStatistics.add(new RingoAccountStatistics(10, inboxStatistics, outboxStatistics, testAccount.getId(), "test", "a@b.com"));
+        accountStatistics.add(new RingoAccountStatistics(10, inboxStatistics, outboxStatistics, testAccount.getAccountId(), "test", "a@b.com"));
         RingoStatistics statistics = new RingoStatistics(accountStatistics);
 
-        expect(mockPeppolMessageRepository.getAccountStatistics(testAccount.getId())).andStubReturn(statistics);
+        expect(mockPeppolMessageRepository.getAccountStatistics(testAccount.getAccountId())).andStubReturn(statistics);
 
         replay(mockPeppolMessageRepository);
 

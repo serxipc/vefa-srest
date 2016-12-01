@@ -57,7 +57,7 @@ public class MessageSearchPersistenceTest {
 
     @Test(groups = {"persistence"})
     public void testFindAllMessages() {
-        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getId(), new SearchParams(null, null, null, null, null));
+        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getAccountId(), new SearchParams(null, null, null, null, null));
 
         //expect to find 2 messages created in setUp
         assertEquals(2, messages.size());
@@ -68,7 +68,7 @@ public class MessageSearchPersistenceTest {
 
         SearchParams searchParams = new SearchParams(null, participantId.stringValue(), null, null, null);
 
-        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getId(), searchParams);
+        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
 
         //expect to find 2 messages for sender
         assertEquals(2, messages.size());
@@ -80,14 +80,14 @@ public class MessageSearchPersistenceTest {
         final String sender = participantId.stringValue();
         SearchParams searchParams = new SearchParams(null, sender, receiver1, null, null);
 
-        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getId(), searchParams);
+        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
 
         //expect to find 1 message for receiver1
         assertEquals(1, messages.size());
 
         searchParams = new SearchParams(null, sender, receiver2, null, null);
 
-        messages = peppolMessageRepository.findMessages(account.getId(), searchParams);
+        messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
 
         //expect to find 1 message for receiver2
         assertEquals(1, messages.size());
@@ -98,14 +98,14 @@ public class MessageSearchPersistenceTest {
         final String sender = participantId.stringValue();
         SearchParams searchParams = new SearchParams("IN", sender, null, null, null);
 
-        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getId(), searchParams);
+        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
 
         //expect to find 1 IN message
         assertEquals(1, messages.size());
 
         searchParams = new SearchParams("OUT", sender, receiver2, null, null);
 
-        messages = peppolMessageRepository.findMessages(account.getId(), searchParams);
+        messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
 
         //expect to find 1 OUT message
         assertEquals(1, messages.size());
@@ -116,14 +116,14 @@ public class MessageSearchPersistenceTest {
         final String sender = participantId.stringValue();
         SearchParams searchParams = new SearchParams("in", sender, receiver1, null, null);
 
-        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getId(), searchParams);
+        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
 
         //expect to find 1 IN message for receiver1
         assertEquals(1, messages.size());
 
         searchParams = new SearchParams("out", sender, receiver1, null, null);
 
-        messages = peppolMessageRepository.findMessages(account.getId(), searchParams);
+        messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
 
         //expect to find no OUT messages for receiver1
         assertEquals(0, messages.size());
@@ -136,7 +136,7 @@ public class MessageSearchPersistenceTest {
         SearchParams searchParams = new SearchParams(null, sender, null, null, null);
 
         //find all messages
-        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getId(), searchParams);
+        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
         assertEquals(2, messages.size());
 
         //they both have today's date, so let's construct the dateString in 'yyyy-MM-dd' format
@@ -150,7 +150,7 @@ public class MessageSearchPersistenceTest {
         searchParams = new SearchParams(null, sender, null, sentParam, null);
 
         //looking for messages from today, so we still expect to find 2 of them
-        messages = peppolMessageRepository.findMessages(account.getId(), searchParams);
+        messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
         assertEquals(2, messages.size());
 
         //Let's update one of the message's receive date to tomorrow and the other one to yesterday,
@@ -168,35 +168,35 @@ public class MessageSearchPersistenceTest {
 
         searchParams = new SearchParams(null, sender, null, sentParam, null);
         //we expect to find no messages for today
-        messages = peppolMessageRepository.findMessages(account.getId(), searchParams);
+        messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
         assertEquals(0, messages.size());
 
         //we do expect to have one for yesterday
         dateCondition = SearchParams.DateCondition.EQUAL;
         sentParam = dateCondition.getValue() + yesterdayString;
         searchParams = new SearchParams(null, sender, null, sentParam, null);
-        messages = peppolMessageRepository.findMessages(account.getId(), searchParams);
+        messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
         assertEquals(1, messages.size());
 
         //the same result for <= today
         dateCondition = SearchParams.DateCondition.LESS_EQUAL;
         sentParam = dateCondition.getValue() + todayString;
         searchParams = new SearchParams(null, sender, null, sentParam, null);
-        messages = peppolMessageRepository.findMessages(account.getId(), searchParams);
+        messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
         assertEquals(1, messages.size());
 
         //we do expect to have one for tomorrow
         dateCondition = SearchParams.DateCondition.EQUAL;
         sentParam = dateCondition.getValue() + tomorrowString;
         searchParams = new SearchParams(null, sender, null, sentParam, null);
-        messages = peppolMessageRepository.findMessages(account.getId(), searchParams);
+        messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
         assertEquals(1, messages.size());
 
         //the same result for => today
         dateCondition = SearchParams.DateCondition.GREATER_EQUAL;
         sentParam = dateCondition.getValue() + todayString;
         searchParams = new SearchParams(null, sender, null, sentParam, null);
-        messages = peppolMessageRepository.findMessages(account.getId(), searchParams);
+        messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
         assertEquals(1, messages.size());
 
     }
@@ -223,13 +223,13 @@ public class MessageSearchPersistenceTest {
 
         boolean validNorwegianOrgNum = ParticipantId.isValidParticipantIdentifierPattern(receiver1);
 
-        firstMessageNo = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, sender, receiver1, UUID.randomUUID().toString(), null);
-        secondMessageNo = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.OUT, sender, receiver2, UUID.randomUUID().toString(), null);
+        firstMessageNo = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, sender, receiver1, UUID.randomUUID().toString(), null);
+        secondMessageNo = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.OUT, sender, receiver2, UUID.randomUUID().toString(), null);
     }
 
     @AfterMethod
     public void tearDown() throws Exception {
         databaseHelper.deleteAllMessagesForAccount(account);
-        accountRepository.deleteAccount(account.getId());
+        accountRepository.deleteAccount(account.getAccountId());
     }
 }

@@ -69,13 +69,13 @@ public class MarkAsReadPersistenceTest {
     public void setUp() throws Exception {
         account = accountRepository.createAccount(ObjectMother.getAdamsAccount(), ObjectMother.getAdamsParticipantId());
         sender = ObjectMother.getAdamsParticipantId();
-        messageNo = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, UUID.randomUUID().toString(), null);
+        messageNo = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, UUID.randomUUID().toString(), null);
     }
 
     @AfterMethod
     public void tearDown() throws Exception {
         databaseHelper.deleteAllMessagesForAccount(account);
-        accountRepository.deleteAccount(account.getId());
+        accountRepository.deleteAccount(account.getAccountId());
     }
 
 }

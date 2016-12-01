@@ -1,14 +1,16 @@
 /* Created by steinar on 08.01.12 at 19:55 */
 package no.sr.ringo.message;
 
-import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.AccountId;
+import eu.peppol.persistence.TransferDirection;
 import no.sr.ringo.peppol.PeppolHeader;
 
 import java.util.Date;
 
 /**
  * @author Steinar Overbeck Cook steinar@sendregning.no
+ *
+ * @deprecated please use {@link eu.peppol.persistence.MessageMetaData}
  */
 public class MessageMetaDataImpl implements MessageMetaData {
 

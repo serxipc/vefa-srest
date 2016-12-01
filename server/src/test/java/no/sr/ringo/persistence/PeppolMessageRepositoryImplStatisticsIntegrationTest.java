@@ -8,7 +8,7 @@ import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.guice.TestModuleFactory;
-import no.sr.ringo.message.*;
+import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.message.statistics.RingoAccountStatistics;
 import no.sr.ringo.message.statistics.RingoStatistics;
 import org.slf4j.Logger;
@@ -75,7 +75,7 @@ public class PeppolMessageRepositoryImplStatisticsIntegrationTest {
         assertNotNull(accountStatistics);
         assertFalse(accountStatistics.isEmpty());
 
-        RingoAccountStatistics testAccount = ringoStatistics.findByAccountId(account.getId());
+        RingoAccountStatistics testAccount = ringoStatistics.findByAccountId(account.getAccountId());
         assertNotNull(testAccount);
 
         validateMessages(testAccount);
@@ -103,10 +103,10 @@ public class PeppolMessageRepositoryImplStatisticsIntegrationTest {
     }
 
     private void createTestMessages() {
-        databaseHelper.createDummyMessage(account.getId().toInteger(), TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), sentDate, receivedDate);
-        databaseHelper.createDummyMessage(account.getId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), downloadedDate, receivedDate);
-        databaseHelper.createDummyMessage(account.getId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null, oldestUndeliveredDate);
-        databaseHelper.createDummyMessage(account.getId().toInteger(), TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null, oldestUndeliveredDate);
+        databaseHelper.createDummyMessage(account.getAccountId().toInteger(), TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), sentDate, receivedDate);
+        databaseHelper.createDummyMessage(account.getAccountId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), downloadedDate, receivedDate);
+        databaseHelper.createDummyMessage(account.getAccountId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null, oldestUndeliveredDate);
+        databaseHelper.createDummyMessage(account.getAccountId().toInteger(), TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null, oldestUndeliveredDate);
     }
 
     /**

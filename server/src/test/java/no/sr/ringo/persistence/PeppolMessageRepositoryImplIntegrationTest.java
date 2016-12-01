@@ -130,8 +130,9 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage);
         MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, messageWithLocations.getMsgNo().longValue());
         PeppolDocument docFromDatabase = documentRepository.getPeppolDocument(account, MessageNumber.create(messageByMessageNo.getMsgNo()));
-        // System.out.println(doc.getXml());
         assertTrue(!docFromDatabase.getXml().contains("xmlns=\"\""), "We should not have added xmlns=\"\" anywhere in the message");
+
+        assertNotNull(messageWithLocations.getUuid(), "Missing UUID in MessageWithLocations");
     }
 
     @Test(groups = {"persistence"})
@@ -152,7 +153,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     @Test(groups = {"persistence"})
     public void testFindUndeliveredOutboundMessagesByAccount() throws Exception {
 
-        List<MessageMetaData> messages = peppolMessageRepository.findUndeliveredOutboundMessagesByAccount(account.getId());
+        List<MessageMetaData> messages = peppolMessageRepository.findUndeliveredOutboundMessagesByAccount(account.getAccountId());
         assertNotNull(messages, "Null object returned when querying DBMS for undelivered outbound messages");
 
         logger.debug("Found " + messages.size() + " messages");
@@ -181,13 +182,13 @@ public class PeppolMessageRepositoryImplIntegrationTest {
 
     @Test(groups = {"persistence"})
     public void testInboxCount() throws Exception {
-        final Integer inboxCount = peppolMessageRepository.getInboxCount(account.getId());
+        final Integer inboxCount = peppolMessageRepository.getInboxCount(account.getAccountId());
         assertTrue(inboxCount > 0);
     }
 
     @Test(groups = {"persistence"})
     public void testUndeliveredIn() throws Exception {
-        List<MessageMetaData> messages = peppolMessageRepository.findUndeliveredInboundMessagesByAccount(account.getId());
+        List<MessageMetaData> messages = peppolMessageRepository.findUndeliveredInboundMessagesByAccount(account.getAccountId());
         assertNotNull(messages, "Null object returned when querying DBMS for undelivered inbound messages");
 
         logger.debug("Found " + messages.size() + " messages");
@@ -201,12 +202,12 @@ public class PeppolMessageRepositoryImplIntegrationTest {
 
         //no page index, expect not more than 25 messages
         SearchParams params = new SearchParams(null, null, null, null, null);
-        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getId(), params);
+        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getAccountId(), params);
         assertTrue(messages.size() <= 25, "Expected not more than 25 messages!");
 
         //test assumes we don't have 100 000 pages of messages (25 each)
         params = new SearchParams(null, null, null, null, "100000");
-        messages = peppolMessageRepository.findMessages(account.getId(), params);
+        messages = peppolMessageRepository.findMessages(account.getAccountId(), params);
         assertEquals(0, messages.size());
 
     }
@@ -215,7 +216,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     public void testUndeliveredInWithNotParsablePageIndex() {
         // test assumes we don't have 100 000 pages of messages (25 each)
         SearchParams params = new SearchParams(null, null, null, null, "xxx");
-        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getId(), params);
+        List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getAccountId(), params);
         assertEquals(0, messages.size());
     }
 
@@ -264,25 +265,25 @@ public class PeppolMessageRepositoryImplIntegrationTest {
 
     @Test(groups = {"persistence"})
     public void testMessagesCount() throws Exception {
-        final Integer inboxCount = peppolMessageRepository.getMessagesCount(account.getId());
+        final Integer inboxCount = peppolMessageRepository.getMessagesCount(account.getAccountId());
         assertTrue(inboxCount > 0);
     }
 
     @Test(groups = {"persistence"})
     public void testMessagesCountWithEmptySearchParams() throws Exception {
         SearchParams searchParams = new SearchParams(null, null, null, null, null);
-        final Integer messagesCount = peppolMessageRepository.getMessagesCount(account.getId(), searchParams);
+        final Integer messagesCount = peppolMessageRepository.getMessagesCount(account.getAccountId(), searchParams);
         assertTrue(messagesCount > 0);
     }
 
     @Test(groups = {"persistence"})
     public void testMessagesCountWithDirection() throws Exception {
         SearchParams searchParams = new SearchParams("IN", null, null, null, null);
-        Integer messagesCount = peppolMessageRepository.getMessagesCount(account.getId(), searchParams);
+        Integer messagesCount = peppolMessageRepository.getMessagesCount(account.getAccountId(), searchParams);
         assertTrue(messagesCount > 0);
 
         searchParams = new SearchParams("OUT", null, null, null, null);
-        messagesCount = peppolMessageRepository.getMessagesCount(account.getId(), searchParams);
+        messagesCount = peppolMessageRepository.getMessagesCount(account.getAccountId(), searchParams);
         assertTrue(messagesCount > 0);
     }
 

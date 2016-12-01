@@ -101,7 +101,7 @@ public class RegisterUseCaseTest {
         Customer customer = new Customer(customerId.toInteger(), "name", new Date(), null, "email", "phone", "country", "add1", "add2", "zip", "city", orgNo);
 
         expect(mockAccountRepository.createCustomer("name", "email", "phone", "country", "contactPerson", "add1", "add2", "zip", "city", orgNo)).andReturn(customer);
-        Account ra = new Account(customer, new UserName("username"), new Date(), "password", new AccountId(1), false, true);
+        Account ra = new Account(customer.getCustomerId(), customer.getName(),new UserName("username"), new Date(), "password", new AccountId(1), false, true);
 
         expect(mockAccountRepository.createAccount(isA(Account.class), EasyMock.<ParticipantId>isNull())).andReturn(ra);
 

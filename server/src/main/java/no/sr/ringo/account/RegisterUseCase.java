@@ -90,18 +90,18 @@ public class RegisterUseCase {
         // create customer entry
         Customer customer = accountRepository.createCustomer(registrationData.getName(), registrationData.getEmail(), registrationData.getPhone(), registrationData.getCountry(), registrationData.getContactPerson(), registrationData.getAddress1(), registrationData.getAddress2(), registrationData.getZip(), registrationData.getCity(), registrationData.getOrgNo());
 
-        Account account = new Account(customer, new UserName(registrationData.getUsername()), null, null, null, false, true);
+        Account account = new Account(customer.getCustomerId(), customer.getName(), new UserName(registrationData.getUsername()), null, null, null, false, true);
 
         // create account entry and account_receiver entry (only if registering in SMP)
         //Prefix given orgNo with 9908
         ParticipantId participantId = registrationData.isRegisterSmp() ? new ParticipantId(RingoConstant.PEPPOL_PARTICIPANT_PREFIX + registrationData.getOrgNo()) : null;
-        Account stored = accountRepository.createAccount(account, participantId);
+        Account storedAccount = accountRepository.createAccount(account, participantId);
 
         // Encrypts/hashes the password
         String mutatedPassword = credentialHandler.mutate(registrationData.getPassword());
 
         // update account entry with password
-        accountRepository.updatePasswordOnAccount(stored.getId(), mutatedPassword);
+        accountRepository.updatePasswordOnAccount(storedAccount.getAccountId(), mutatedPassword);
 
         // FIXME: add code here if you want to register party with SMP
         if (registrationData.isRegisterSmp()) {

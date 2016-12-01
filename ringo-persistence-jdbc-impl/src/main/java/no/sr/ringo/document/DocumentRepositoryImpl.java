@@ -103,7 +103,7 @@ public class DocumentRepositoryImpl implements DocumentRepository {
 
         PreparedStatement ps = con.prepareStatement("select document_id, payload_url from message where msg_no=? and account_id = ?");
         ps.setInt(1, msgNo.toInt());
-        ps.setInt(2, account.getId().toInteger());
+        ps.setInt(2, account.getAccountId().toInteger());
         return ps;
     }
 

@@ -51,7 +51,7 @@ public class MarkAsReadIntegrationTest extends AbstractHttpClientServerTest {
     @BeforeTest(groups = {"persistence"})
     public void setUp() throws Exception {
         account = accountRepository.findAccountByParticipantId(ObjectMother.getTestParticipantId());
-        databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), receiver1, UUID.randomUUID().toString(), new Date());
+        databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), receiver1, UUID.randomUUID().toString(), new Date());
     }
 
     @AfterTest(groups = {"persistence"})

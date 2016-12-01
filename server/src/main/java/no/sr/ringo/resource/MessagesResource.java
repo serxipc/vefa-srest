@@ -51,7 +51,7 @@ public class MessagesResource extends AbstractMessageResource {
     public Response getMessages(@Context UriInfo uriInfo, @QueryParam("sent") String sent, @QueryParam("sender") String sender, @QueryParam("receiver") String receiver, @QueryParam("direction") String direction, @QueryParam("index") String index) {
 
             MessagesQueryResponse messagesQueryResponse = fetchMessagesUseCase.init(this, uriInfo)
-                    .messagesFor(account.getId())
+                    .messagesFor(account.getAccountId())
                     .getMessages(new SearchParams(direction, sender, receiver, sent, index));
             String entity = messagesQueryResponse.asXml();
             return SrResponse.ok().entity(entity).build();
@@ -135,7 +135,7 @@ public class MessagesResource extends AbstractMessageResource {
     @Path("/count")
     public Response getCount() {
 
-        Integer count = peppolMessageRepository.getInboxCount(account.getId());
+        Integer count = peppolMessageRepository.getInboxCount(account.getAccountId());
         return SrResponse.ok().entity(count.toString()).build();
 
     }

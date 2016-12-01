@@ -85,7 +85,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
                 ChannelProtocol.SREST);
 
         // Connects the data to the right account.
-        builder.accountId(account.getId().toInteger());
+        builder.accountId(account.getAccountId().toInteger());
 
         builder.processTypeId(PeppolProcessTypeId.valueOf(profileId));
         eu.peppol.persistence.MessageMetaData metaData = builder.build();
@@ -103,6 +103,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         messageMetaData.setPeppolHeader(peppolHeader);
         messageMetaData.setTransferDirection(TransferDirection.OUT);
         messageMetaData.setMsgNo(msgNo);
+        messageMetaData.setUuid(metaData.getMessageId().stringValue());
 
         return new MessageWithLocationsImpl(messageMetaData);
     }
@@ -136,7 +137,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             SqlHelper sql = SqlHelper.create(getDbmsPlatform()).findMessageByMessageNoAndAccountId();
             PreparedStatement ps = sql.prepareStatement(jdbcTxManager.getConnection());
             ps.setLong(1, messageNo);
-            ps.setInt(2, account.getId().toInteger());
+            ps.setInt(2, account.getAccountId().toInteger());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return extractMessageFromResultSet(rs);

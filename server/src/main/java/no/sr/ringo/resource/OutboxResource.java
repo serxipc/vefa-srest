@@ -61,7 +61,7 @@ public class OutboxResource extends AbstractMessageResource {
     public Response getMessages(@Context UriInfo uriInfo) {
 
         OutboxQueryResponse outboxQueryResponse = fetchMessagesUseCase.init(this, uriInfo)
-                .messagesFor(account.getId())
+                .messagesFor(account.getAccountId())
                 .getOutbox();
         String entity = outboxQueryResponse.asXml();
 

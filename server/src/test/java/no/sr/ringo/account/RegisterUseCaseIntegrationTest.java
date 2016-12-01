@@ -94,10 +94,10 @@ public class RegisterUseCaseIntegrationTest {
         assertTrue(databaseHelper.hasClientRole(new UserName(userName)));
 
         //check there's account receiver
-        assertTrue(databaseHelper.accountReceiverExists(account.getId(), ORG_NUM_STR.substring(2)));
+        assertTrue(databaseHelper.accountReceiverExists(account.getAccountId(), ORG_NUM_STR.substring(2)));
 
         //check customer
-        Customer customer = accountRepository.findCustomerById(account.getCustomer().getId());
+        Customer customer = accountRepository.findCustomerById(account.getCustomerId().toInteger());
         assertNotNull(customer);
         assertEquals(ORG_NUM_STR, customer.getOrgNo());
         assertEquals(add1, customer.getAddress1());
@@ -116,7 +116,7 @@ public class RegisterUseCaseIntegrationTest {
         UserName username = new UserName(userName);
         if (accountRepository.accountExists(username)) {
             Account accountByUsername = accountRepository.findAccountByUsername(username);
-            accountRepository.deleteAccount(accountByUsername.getId());
+            accountRepository.deleteAccount(accountByUsername.getAccountId());
         }
     }
 

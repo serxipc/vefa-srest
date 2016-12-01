@@ -64,7 +64,7 @@ public class SameMessageSenderAndReceiverIntegrationTest {
         databaseHelper.updateMessageReceiver(messageOut, receiver);
         assertFalse(peppolMessageRepository.isSenderAndReceiverAccountTheSame(messageOut));
 
-        accountReceiverId =  databaseHelper.addAccountReceiver(account.getId(), receiver);
+        accountReceiverId =  databaseHelper.addAccountReceiver(account.getAccountId(), receiver);
 
         //add receiver to account_role table for the same account
         assertTrue(peppolMessageRepository.isSenderAndReceiverAccountTheSame(messageOut));

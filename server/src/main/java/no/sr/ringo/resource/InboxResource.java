@@ -49,7 +49,7 @@ public class InboxResource extends AbstractMessageResource {
     public Response getMessages(@Context UriInfo uriInfo) {
 
         InboxQueryResponse inboxQueryResponse = fetchMessagesUseCase.init(this, uriInfo)
-                .messagesFor(account.getId())
+                .messagesFor(account.getAccountId())
                 .getInbox();
 
         String entity = inboxQueryResponse.asXml();
@@ -93,7 +93,7 @@ public class InboxResource extends AbstractMessageResource {
     @Path("/count")
     public Response getCount() {
 
-        Integer count = peppolMessageRepository.getInboxCount(account.getId());
+        Integer count = peppolMessageRepository.getInboxCount(account.getAccountId());
         return SrResponse.ok().entity(count.toString()).build();
 
     }

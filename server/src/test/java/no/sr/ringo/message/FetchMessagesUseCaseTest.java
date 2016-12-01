@@ -115,10 +115,10 @@ public class FetchMessagesUseCaseTest {
     public void testsThatMessagesWithoutSearchParamsBehavesAsExpected() throws Exception{
         List<MessageMetaData> messages = new ArrayList<MessageMetaData>();
 
-        expect(mockPeppolMessageRepository.findMessages(account.getId(), null)).andReturn(messages);
+        expect(mockPeppolMessageRepository.findMessages(account.getAccountId(), null)).andReturn(messages);
         replayMocks();
 
-        useCase.messagesFor(account.getId());
+        useCase.messagesFor(account.getAccountId());
 
         final MessagesQueryResponse messagesQueryResponse = useCase.getMessages();
 

@@ -41,7 +41,7 @@ public class StatisticsResource extends AbstractMessageResource {
     @Path("/")
     public Response getOverview() {
 
-        final RingoStatistics ringoStatisticsForAccount = peppolMessageRepository.getAccountStatistics(account.getId());
+        final RingoStatistics ringoStatisticsForAccount = peppolMessageRepository.getAccountStatistics(account.getAccountId());
         return SrResponse.ok().entity(ringoStatisticsForAccount.asXml()).build();
     }
 }

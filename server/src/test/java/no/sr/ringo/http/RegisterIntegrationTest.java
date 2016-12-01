@@ -111,7 +111,7 @@ public class RegisterIntegrationTest extends AbstractHttpClientServerTest {
             Account accountByUsername = null;
             try {
                 accountByUsername = accountRepository.findAccountByUsername(username);
-                accountRepository.deleteAccount(accountByUsername.getId());
+                accountRepository.deleteAccount(accountByUsername.getAccountId());
             } catch (SrAccountNotFoundException e) {
                 throw new IllegalStateException("Existing account was not found for username " + username);
             }

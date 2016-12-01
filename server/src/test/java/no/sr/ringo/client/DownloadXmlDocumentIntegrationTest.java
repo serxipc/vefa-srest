@@ -53,7 +53,7 @@ public class DownloadXmlDocumentIntegrationTest extends AbstractHttpClientServer
         Account account = accountRepository.findAccountByParticipantId(ObjectMother.getTestParticipantId());
         String uuid = UUID.randomUUID().toString();
         String receiver1 = "9908:976098897";
-        messageNumber = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantId().stringValue(), receiver1, uuid, null);
+        messageNumber = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantId().stringValue(), receiver1, uuid, null);
     }
 
 

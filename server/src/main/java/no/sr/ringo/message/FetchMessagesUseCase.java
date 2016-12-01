@@ -1,9 +1,9 @@
 package no.sr.ringo.message;
 
 import com.google.inject.Inject;
+import eu.peppol.persistence.AccountId;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
-import eu.peppol.persistence.AccountId;
 import no.sr.ringo.resource.UriLocationAware;
 import no.sr.ringo.response.InboxQueryResponse;
 import no.sr.ringo.response.MessagesQueryResponse;
@@ -21,7 +21,7 @@ import java.util.List;
  * Useage..
  *
  *  MessagesQueryResponse messagesQueryResponse = fetchMessagesForClientUseCase.init(this,uriInfo)
- * .messagesFor(account.getId())
+ * .messagesFor(account.getAccountId())
  * .getMessages(new SearchParams(direction, receiver, sender, sent, index));
  *
  * @author andy

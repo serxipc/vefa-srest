@@ -69,19 +69,19 @@ public class InboxWithMessageWithoutUUIDTest {
     public void testMessageIdWithNoUUID() throws PeppolMessageNotFoundException, SQLException {
 
         //proper message
-        messageNo = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, UUID.randomUUID().toString(), null);
+        messageNo = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, UUID.randomUUID().toString(), null);
         //uuid = null
-        messageNo2 = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, null, null);
+        messageNo2 = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, null, null);
         //uuid = ''
-        messageNo3 = databaseHelper.createMessage(account.getId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, "", null);
+        messageNo3 = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, "", null);
 
         inspectDbms();
         // We used to expect only a single message as message_uuid was required to be null in order to be deemed in the /inbox
-        Integer inboxCount = peppolMessageRepository.getInboxCount(account.getId());
+        Integer inboxCount = peppolMessageRepository.getInboxCount(account.getAccountId());
         assertEquals(inboxCount,(Integer) 3);
 
         //we expect to have only one message
-        List<MessageMetaData> undeliveredInboundMessagesByAccount = peppolMessageRepository.findUndeliveredInboundMessagesByAccount(account.getId());
+        List<MessageMetaData> undeliveredInboundMessagesByAccount = peppolMessageRepository.findUndeliveredInboundMessagesByAccount(account.getAccountId());
         assertEquals(undeliveredInboundMessagesByAccount.size(),3);
 
     }
@@ -105,7 +105,7 @@ public class InboxWithMessageWithoutUUIDTest {
     @AfterMethod
     public void tearDown() throws Exception {
         databaseHelper.deleteAllMessagesForAccount(account);
-        accountRepository.deleteAccount(account.getId());
+        accountRepository.deleteAccount(account.getAccountId());
     }
 
 }

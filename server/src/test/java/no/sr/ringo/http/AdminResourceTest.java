@@ -105,7 +105,7 @@ public class AdminResourceTest extends AbstractHttpClientServerTest {
         databaseHelper.deleteAllMessagesForAccount(testAccount);
         //creates 2 messages
         for (int i = 0; i <= 1; i++) {
-            final Long message = databaseHelper.createMessage(testAccount.getId().toInteger(), TransferDirection.OUT, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), new Date());
+            final Long message = databaseHelper.createMessage(testAccount.getAccountId().toInteger(), TransferDirection.OUT, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), new Date());
             messageIds.add(message);
         }
     }

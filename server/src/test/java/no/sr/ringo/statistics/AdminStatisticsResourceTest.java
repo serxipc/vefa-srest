@@ -19,7 +19,7 @@ import java.util.List;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * User: andy
@@ -43,7 +43,7 @@ public class AdminStatisticsResourceTest {
         final Date date = new Date();
         InboxStatistics inboxStatistics = new InboxStatistics(1, 1, date, date, date);
         final OutboxStatistics outboxStatistics = new OutboxStatistics(9, 1, date, date);
-        accountStatistics.add(new RingoAccountStatistics(10, inboxStatistics, outboxStatistics, testAccount.getId(), "test", "a@b.com"));
+        accountStatistics.add(new RingoAccountStatistics(10, inboxStatistics, outboxStatistics, testAccount.getAccountId(), "test", "a@b.com"));
         RingoStatistics statistics = new RingoStatistics(accountStatistics);
 
         expect(mockPeppolMessageRepository.getAdminStatistics()).andStubReturn(statistics);
