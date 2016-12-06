@@ -1,7 +1,8 @@
 package no.sr.ringo.message;
 
-import eu.peppol.persistence.api.account.Account;
+import eu.peppol.identifier.MessageId;
 import eu.peppol.persistence.AccountId;
+import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.message.statistics.RingoStatistics;
 
 import java.util.Date;
@@ -111,10 +112,11 @@ public interface PeppolMessageRepository {
      ***************************************************/
 
     /**
-     * Updates delivered and uuid fields on outbound message
+     * Updates delivered, uuid fields on outbound message. Furthermore the AS2 MDN (native evidence) and
+     * REM evidence is persisted.
      *
      */
-    public void updateOutBoundMessageDeliveryDateAndUuid(Long msgNo, String remoteAP, String uuid, Date delivered);
+    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, MessageId messageId, Date delivered, byte[] nativeEvidenceBytes, byte[] remEvidenceBytes);
 
     /**
      * Creates inbound message as copy of outbound one with delivered being null

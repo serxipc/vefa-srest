@@ -1,6 +1,7 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
+import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
@@ -58,7 +59,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     private Long messageOut;
     private Long messageIn;
     private String messageInUuid;
-    private String messageOutUuid;
+    private MessageId messageOutUuid;
 
     @Inject
     public PeppolMessageRepositoryImplIntegrationTest(PeppolMessageRepository peppolMessageRepository, DocumentRepository documentRepository, DatabaseHelper databaseHelper) {
@@ -72,8 +73,8 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         databaseHelper.deleteAllMessagesForAccount(account);
         messageInUuid = UUID.randomUUID().toString();
         messageId = databaseHelper.createMessage(1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), messageInUuid, null);
-        messageOutUuid = UUID.randomUUID().toString();
-        messageOut = databaseHelper.createMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), messageOutUuid, null);
+        messageOutUuid = new MessageId();
+        messageOut = databaseHelper.createMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), messageOutUuid.stringValue(), null);
     }
 
     @AfterMethod(groups = {"persistence"})
@@ -229,11 +230,12 @@ public class PeppolMessageRepositoryImplIntegrationTest {
 
         //update the message
         Date date = cal.getTime();
-        peppolMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(messageOut, null, "testUUID", date);
+        peppolMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(MessageNumber.create(messageOut), null, messageOutUuid, date,
+                "Native evidence bytes".getBytes(), "REM evidence bytes".getBytes());
 
         MessageMetaData messageOutbound = peppolMessageRepository.findMessageByMessageNo(account, messageOut);
 
-        assertEquals("testUUID", messageOutbound.getUuid());
+        assertEquals(messageOutUuid.stringValue(), messageOutbound.getUuid());
         Calendar c2 = Calendar.getInstance();
         c2.setTime(messageOutbound.getDelivered());
 

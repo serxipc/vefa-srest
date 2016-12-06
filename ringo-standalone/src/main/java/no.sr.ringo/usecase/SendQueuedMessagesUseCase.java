@@ -177,7 +177,14 @@ public class SendQueuedMessagesUseCase {
         String xmlMessage = messageRepository.findDocumentByMessageNoWithoutAccountCheck(messageMetaData.getMsgNo().longValue());
         logger.debug("Attempting to send message #" + messageMetaData.getMsgNo());
         final PeppolDocumentSender.TransmissionReceipt transmissionReceipt = documentSender.sendDocument(messageMetaData, xmlMessage);
-        messageRepository.updateOutBoundMessageDeliveryDateAndUuid(messageMetaData.getMsgNo().longValue(), transmissionReceipt.getRemoteAccessPoint(), transmissionReceipt.getMessageId(), transmissionReceipt.getDate());
+
+        messageRepository.updateOutBoundMessageDeliveryDateAndUuid(
+                MessageNumber.create(messageMetaData.getMsgNo()),
+                transmissionReceipt.getRemoteAccessPoint(),
+                transmissionReceipt.getMessageId(),
+                transmissionReceipt.getDate(),
+                transmissionReceipt.getNativeEvidenceBytes(),
+                transmissionReceipt.getRemEvidenceBytes());
 
         // we got this far so delivery was ok
 

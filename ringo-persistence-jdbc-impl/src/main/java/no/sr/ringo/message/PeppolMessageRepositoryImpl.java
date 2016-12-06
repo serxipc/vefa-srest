@@ -1,6 +1,8 @@
 package no.sr.ringo.message;
 
 import com.google.inject.Inject;
+import eu.peppol.evidence.TransmissionEvidence;
+import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolProcessTypeId;
 import eu.peppol.persistence.*;
@@ -21,7 +23,9 @@ import no.sr.ringo.utils.SbdhUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -50,12 +54,12 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     final JdbcTxManager jdbcTxManager;
 
     // From oxalis-persistence
-    private final MessageRepository messageRepository;
+    private final MessageRepository oxalisMessageRepository;
 
     @Inject
-    public PeppolMessageRepositoryImpl(JdbcTxManager jdbcTxManager, MessageRepository messageRepository) {
+    public PeppolMessageRepositoryImpl(JdbcTxManager jdbcTxManager, MessageRepository oxalisMessageRepository) {
         this.jdbcTxManager = jdbcTxManager;
-        this.messageRepository = messageRepository;
+        this.oxalisMessageRepository = oxalisMessageRepository;
     }
 
     /**
@@ -93,7 +97,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         // Delegates to the injected message repository
         Long msgNo = null;
         try {
-            msgNo = messageRepository.saveOutboundMessage(metaData, peppolMessage.getXmlMessage());
+            msgNo = oxalisMessageRepository.saveOutboundMessage(metaData, peppolMessage.getXmlMessage());
         } catch (OxalisMessagePersistenceException e) {
             throw new IllegalStateException("Unable to persiste outbound message " + peppolMessage + "\n" + e.getMessage(), e);
         }
@@ -277,7 +281,15 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     }
 
     @Override
-    public void updateOutBoundMessageDeliveryDateAndUuid(Long msgNo, String remoteAP, String uuid, Date delivered) {
+    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, MessageId messageId, Date delivered, byte[] nativeEvidenceBytes, byte[] remEvidenceBytes) {
+
+        // Persists the evidence, after which the DBMS is updated
+        try {
+            persistOutboundEvidence(messageId, delivered, nativeEvidenceBytes, remEvidenceBytes);
+        } catch (OxalisMessagePersistenceException e) {
+            throw new IllegalStateException("Unable to persist evidence bytes to database");
+        }
+
         Connection con;
         String sql = "update message set delivered = ?, ap_name = ?, message_uuid = ? where msg_no = ?";
         try {
@@ -285,12 +297,33 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setTimestamp(1, new Timestamp(delivered.getTime()));
             ps.setString(2, remoteAP);
-            ps.setString(3, uuid);
-            ps.setLong(4, msgNo);
+            ps.setString(3, messageId.stringValue());
+            ps.setLong(4, msgNo.toInt());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new IllegalStateException(sql + " failed " + e, e);
         }
+    }
+
+    void persistOutboundEvidence(final MessageId messageId, final Date delivered, final byte[] nativeEvidenceBytes, final byte[] remEvidenceBytes) throws OxalisMessagePersistenceException {
+
+        TransmissionEvidence transmissionEvidence = new TransmissionEvidence() {
+            @Override
+            public Date getReceptionTimeStamp() {
+                return delivered;
+            }
+
+            @Override
+            public InputStream getInputStream() {
+                return new ByteArrayInputStream(remEvidenceBytes);
+            }
+
+            @Override
+            public InputStream getNativeEvidenceStream() {
+                return new ByteArrayInputStream(nativeEvidenceBytes);
+            }
+        };
+        oxalisMessageRepository.saveOutboundTransportReceipt(transmissionEvidence,messageId);
     }
 
     @Override

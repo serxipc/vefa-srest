@@ -1,5 +1,6 @@
 package no.sr.ringo.oxalis;
 
+import eu.peppol.identifier.MessageId;
 import no.sr.ringo.message.MessageMetaData;
 
 import java.net.URL;
@@ -17,7 +18,7 @@ public interface PeppolDocumentSender {
      *
      * @param message the Message to send
      * @param xmlMessage
-     * @return a Recipient containing the UUID and the TimeStamp for the delivery
+     * @return a Receipt containing the UUID and the TimeStamp for the delivery
      */
     TransmissionReceipt sendDocument(MessageMetaData message, String xmlMessage) throws Exception;
 
@@ -27,17 +28,21 @@ public interface PeppolDocumentSender {
      */
     public static final class TransmissionReceipt {
 
-        private final String messageId;
+        private final MessageId messageId;
         private final String remoteAccessPoint;
         private final Date date;
+        private final byte[] nativeEvidenceBytes;
+        private final byte[] remEvidenceBytes;
 
-        public TransmissionReceipt(String messageId, URL remoteAccessPoint, Date date) {
+        public TransmissionReceipt(MessageId messageId, URL remoteAccessPoint, Date date, byte[] nativeEvidenceBytes, byte[] remEvidenceBytes) {
             this.messageId = messageId;
             this.remoteAccessPoint = remoteAccessPoint != null ? remoteAccessPoint.toExternalForm() : "n/a";
             this.date = date;
+            this.nativeEvidenceBytes = nativeEvidenceBytes;
+            this.remEvidenceBytes = remEvidenceBytes;
         }
 
-        public String getMessageId() {
+        public MessageId getMessageId() {
             return messageId;
         }
 
@@ -49,6 +54,14 @@ public interface PeppolDocumentSender {
             return date;
         }
 
+        public byte[] getNativeEvidenceBytes() {
+            return nativeEvidenceBytes;
+        }
+
+        public byte[] getRemEvidenceBytes() {
+            return remEvidenceBytes;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -56,11 +69,10 @@ public interface PeppolDocumentSender {
 
             TransmissionReceipt that = (TransmissionReceipt) o;
 
-            if (date != null ? !date.equals(that.date) : that.date != null) return false;
-            if (remoteAccessPoint != null ? !remoteAccessPoint.equals(that.remoteAccessPoint) : that.remoteAccessPoint != null) return false;
             if (messageId != null ? !messageId.equals(that.messageId) : that.messageId != null) return false;
-
-            return true;
+            if (remoteAccessPoint != null ? !remoteAccessPoint.equals(that.remoteAccessPoint) : that.remoteAccessPoint != null)
+                return false;
+            return date != null ? date.equals(that.date) : that.date == null;
         }
 
         @Override

@@ -53,7 +53,11 @@ public class OxalisDocumentSender implements PeppolDocumentSender {
                 transmissionResponse.getMessageId()
         );
 
-        return new TransmissionReceipt(transmissionResponse.getMessageId().toString(), transmissionResponse.getURL(), new Date());
+        return new TransmissionReceipt(transmissionResponse.getMessageId(),
+                transmissionResponse.getURL(),
+                new Date(),
+                transmissionResponse.getNativeEvidenceBytes(),
+                transmissionResponse.getRemEvidenceBytes());
 
     }
 
