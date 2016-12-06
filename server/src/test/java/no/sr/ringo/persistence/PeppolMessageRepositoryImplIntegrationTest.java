@@ -3,6 +3,7 @@ package no.sr.ringo.persistence;
 import com.google.inject.Inject;
 import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.persistence.MessageRepository;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
@@ -30,12 +31,17 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import static org.testng.Assert.*;
 
@@ -46,12 +52,11 @@ import static org.testng.Assert.*;
 @Guice(moduleFactory = TestModuleFactory.class)
 public class PeppolMessageRepositoryImplIntegrationTest {
 
-    Logger logger = LoggerFactory.getLogger(PeppolMessageRepositoryImplIntegrationTest.class);
-
     private final PeppolMessageRepository peppolMessageRepository;
     private final DocumentRepository documentRepository;
     private final DatabaseHelper databaseHelper;
-
+    private final MessageRepository oxalisMessageRepository;
+    Logger logger = LoggerFactory.getLogger(PeppolMessageRepositoryImplIntegrationTest.class);
     private Account account = ObjectMother.getTestAccount();
     private ParticipantId participantId = ObjectMother.getTestParticipantIdForSMPLookup();
 
@@ -62,10 +67,11 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     private MessageId messageOutUuid;
 
     @Inject
-    public PeppolMessageRepositoryImplIntegrationTest(PeppolMessageRepository peppolMessageRepository, DocumentRepository documentRepository, DatabaseHelper databaseHelper) {
+    public PeppolMessageRepositoryImplIntegrationTest(PeppolMessageRepository peppolMessageRepository, DocumentRepository documentRepository, DatabaseHelper databaseHelper, MessageRepository oxalisMessageRepository) {
         this.peppolMessageRepository = peppolMessageRepository;
         this.documentRepository = documentRepository;
         this.databaseHelper = databaseHelper;
+        this.oxalisMessageRepository = oxalisMessageRepository;
     }
 
     @BeforeMethod(groups = {"persistence"})
@@ -95,7 +101,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         PeppolHeader peppolHeader = peppolMessage.getPeppolHeader();
         PeppolHeader persistedPeppolHeader = messageMetaData.getPeppolHeader();
 
-        assertEquals(peppolHeader,persistedPeppolHeader);
+        assertEquals(peppolHeader, persistedPeppolHeader);
 
     }
 
@@ -104,7 +110,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
      * Those who relied on using the default xmlns="...." as one of the PEPPOL/BIS/UBL namespaces would get their file corrupted.
      * Most EHF customers explicitly used named namespaces for PEPPOL/BIS/UBL and will not have their files corrupted (only slightly
      * changed as the xmlns="" will be added).
-     *
+     * <p>
      * The customer that had their files corruped was Dakantus, and the issue was resolved in 2015-03-05.
      */
     @Test(groups = {"persistence"})
@@ -122,7 +128,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         Document doc = peppolMessage.getXmlMessage();
         System.out.println("Getting children of : " + doc.getDocumentElement().getTagName());
         NodeList nodes = doc.getDocumentElement().getChildNodes();
-        for (int i=0; i<nodes.getLength(); i++) {
+        for (int i = 0; i < nodes.getLength(); i++) {
             Node n = nodes.item(i);
             if (Node.ELEMENT_NODE == n.getNodeType() && n.getChildNodes().getLength() == 1) {
                 System.out.println("Element : " + n.getNodeName() + " = " + n.getTextContent());
@@ -147,7 +153,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         PeppolHeader peppolHeader = peppolMessage.getPeppolHeader();
         PeppolHeader persistedPeppolHeader = messageByMessageNo.getPeppolHeader();
 
-        assertEquals(peppolHeader,persistedPeppolHeader);
+        assertEquals(peppolHeader, persistedPeppolHeader);
 
     }
 
@@ -222,7 +228,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     }
 
     @Test(groups = {"persistence"})
-    public void testUpdateAndCopyMessage() throws PeppolMessageNotFoundException {
+    public void testUpdateAndCopyMessage() throws PeppolMessageNotFoundException, IOException {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2020);
         cal.set(Calendar.MONTH, 5);
@@ -230,8 +236,10 @@ public class PeppolMessageRepositoryImplIntegrationTest {
 
         //update the message
         Date date = cal.getTime();
+        byte[] nativeEvidenceBytes = "Native evidence bytes".getBytes();
+        byte[] remEvidenceBytes = "REM evidence bytes".getBytes();
         peppolMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(MessageNumber.create(messageOut), null, messageOutUuid, date,
-                "Native evidence bytes".getBytes(), "REM evidence bytes".getBytes());
+                nativeEvidenceBytes, remEvidenceBytes);
 
         MessageMetaData messageOutbound = peppolMessageRepository.findMessageByMessageNo(account, messageOut);
 
@@ -259,10 +267,28 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         assertEquals(newUuid, messageInbound.getUuid());
         assertEquals(messageOutbound.getReceived(), messageInbound.getReceived());
 
+        // Verifies the contents of the evidence
+        {
+            List<eu.peppol.persistence.MessageMetaData> messages = oxalisMessageRepository.findByMessageId(messageOutUuid);
+            assertEquals(messages.size(), 1);
+            eu.peppol.persistence.MessageMetaData m = messages.get(0);
+
+            verifyEvidence(m::getNativeEvidenceUri, nativeEvidenceBytes);
+            verifyEvidence(m::getGenericEvidenceUri, remEvidenceBytes);
+        }
+
         String xmlOut = peppolMessageRepository.findDocumentByMessageNoWithoutAccountCheck(messageOut);
         String xmlIn = peppolMessageRepository.findDocumentByMessageNoWithoutAccountCheck(messageIn);
 
         assertEquals(xmlIn, xmlOut);
+    }
+
+    void verifyEvidence(Supplier<URI> pathFunction, byte[] bytes) throws IOException {
+
+        URI nativeEvidenceUri = pathFunction.get();
+
+        byte[] evidenceBytes = Files.readAllBytes(Paths.get(nativeEvidenceUri));
+        assertEquals(bytes, evidenceBytes);
     }
 
     @Test(groups = {"persistence"})

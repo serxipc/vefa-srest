@@ -40,6 +40,7 @@ if [ ! -r "$SAMPLE_INVOICE" ]; then
 fi
 
 echo "Sending $SAMPLE_INVOICE"
+echo "Using doc type id $DOC_TYPE_ID"
 
 curl -i -u sr:ringo1 \
   -H 'Accept: application/xml'  \
