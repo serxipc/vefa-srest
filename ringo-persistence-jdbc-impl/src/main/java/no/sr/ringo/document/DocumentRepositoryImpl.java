@@ -1,9 +1,9 @@
 package no.sr.ringo.document;
 
+import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
 import eu.peppol.persistence.guice.jdbc.Repository;
-import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.PeppolMessageNotFoundException;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.utils.SbdhUtils;

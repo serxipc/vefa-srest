@@ -1,8 +1,8 @@
 package no.sr.ringo.document;
 
+import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.PeppolMessageNotFoundException;
 import no.sr.ringo.peppol.PeppolDocumentTest;
 import org.easymock.EasyMock;
@@ -10,7 +10,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.easymock.EasyMock.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * User: andy

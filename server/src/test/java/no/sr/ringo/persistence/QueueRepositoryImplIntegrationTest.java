@@ -5,19 +5,18 @@ import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
+import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
+import eu.peppol.persistence.queue.*;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.PeppolMessageTestdataGenerator;
 import no.sr.ringo.guice.TestModuleFactory;
-import no.sr.ringo.message.*;
-import no.sr.ringo.peppol.PeppolDocumentTypeId;
-import no.sr.ringo.queue.OutboundMessageQueueId;
-import no.sr.ringo.queue.QueueRepository;
-import no.sr.ringo.queue.QueuedOutboundMessage;
-import no.sr.ringo.queue.QueuedOutboundMessageError;
+import no.sr.ringo.message.MessageWithLocations;
+import no.sr.ringo.message.PeppolMessage;
+import no.sr.ringo.message.PeppolMessageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -81,11 +80,11 @@ public class QueueRepositoryImplIntegrationTest {
         OutboundMessageQueueId queueId = queueRepository.putMessageOnQueue(messageWithLocations.getMsgNo());
         assertNotNull(queueId);
 
-        eu.peppol.persistence.api.OutboundMessageQueueId qid = eu.peppol.persistence.api.OutboundMessageQueueId.valueOf(queueId.toString());
+        OutboundMessageQueueId qid = OutboundMessageQueueId.valueOf(queueId.toString());
         DatabaseHelper.QueuedMessage queuedMessage = databaseHelper.getQueuedMessageByQueueId(qid);
         assertEquals(queueId, new OutboundMessageQueueId(queuedMessage.getQueueId()));
         assertEquals(messageWithLocations.getMsgNo(), queuedMessage.getMsgNo());
-        assertEquals(eu.peppol.persistence.api.OutboundMessageQueueState.QUEUED, queuedMessage.getState());
+        assertEquals(OutboundMessageQueueState.QUEUED, queuedMessage.getState());
 
     }
 
@@ -128,8 +127,8 @@ public class QueueRepositoryImplIntegrationTest {
         OutboundMessageQueueId id = createMessageAndPutOnQueue();
         queueRepository.changeQueuedMessageState(id, OutboundMessageQueueState.OK);
 
-        DatabaseHelper.QueuedMessage fetched = databaseHelper.getQueuedMessageByQueueId(eu.peppol.persistence.api.OutboundMessageQueueId.valueOf(id.toString()));
-        assertEquals(eu.peppol.persistence.api.OutboundMessageQueueState.OK, fetched.getState());
+        DatabaseHelper.QueuedMessage fetched = databaseHelper.getQueuedMessageByQueueId(OutboundMessageQueueId.valueOf(id.toString()));
+        assertEquals(OutboundMessageQueueState.OK, fetched.getState());
     }
 
     @Test(groups = {"persistence"})
@@ -137,11 +136,11 @@ public class QueueRepositoryImplIntegrationTest {
         OutboundMessageQueueId queueId = createMessageAndPutOnQueue();
         QueuedOutboundMessageError error = new QueuedOutboundMessageError(queueId, "detail", "message", "stacktrace");
         queueRepository.logOutboundError(error);
-        List<eu.peppol.persistence.api.QueuedOutboundMessageError> errors = databaseHelper.getErrorMessages();
+        List<QueuedOutboundMessageError> errors = databaseHelper.getErrorMessages();
 
-        eu.peppol.persistence.api.QueuedOutboundMessageError fetched = errors.get(errors.size() - 1);
+        QueuedOutboundMessageError fetched = errors.get(errors.size() - 1);
         assertNotNull(fetched.getErrorId());
-        assertEquals(eu.peppol.persistence.api.OutboundMessageQueueId.valueOf(queueId.toString()), fetched.getOutboundQueueId());
+        assertEquals(OutboundMessageQueueId.valueOf(queueId.toString()), fetched.getOutboundQueueId());
         assertEquals("detail", fetched.getDetails());
         assertEquals("message", fetched.getMessage());
         assertEquals("stacktrace", fetched.getStacktrace());

@@ -1,12 +1,16 @@
 package no.sr.ringo.resource;
 
 import com.sun.jersey.api.uri.UriBuilderImpl;
+import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.document.DefaultPeppolDocument;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.document.PeppolDocument;
-import no.sr.ringo.message.*;
+import no.sr.ringo.message.FetchMessagesUseCase;
+import no.sr.ringo.message.MessageMetaData;
+import no.sr.ringo.message.MessageMetaDataImpl;
+import no.sr.ringo.message.PeppolMessageNotFoundException;
 import org.easymock.EasyMock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

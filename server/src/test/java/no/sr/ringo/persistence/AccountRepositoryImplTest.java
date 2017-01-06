@@ -3,6 +3,7 @@ package no.sr.ringo.persistence;
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.persistence.AccountId;
+import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.SrAccountNotFoundException;
 import eu.peppol.persistence.api.UserName;
@@ -147,7 +148,7 @@ public class AccountRepositoryImplTest {
     @Test(groups = {"persistence"})
     public void findMessageOwner(){
         Long messageNumber = databaseHelper.createMessage(adamsAccount.getAccountId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null);
-        assertEquals(adamsAccount, accountRepository.findAccountAsOwnerOfMessage(eu.peppol.persistence.api.MessageNumber.create(messageNumber)));
+        assertEquals(adamsAccount, accountRepository.findAccountAsOwnerOfMessage(MessageNumber.create(messageNumber)));
 
     }
 

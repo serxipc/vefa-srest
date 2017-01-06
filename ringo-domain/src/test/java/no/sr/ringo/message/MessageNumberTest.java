@@ -1,5 +1,6 @@
 package no.sr.ringo.message;
 
+import eu.peppol.persistence.MessageNumber;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;

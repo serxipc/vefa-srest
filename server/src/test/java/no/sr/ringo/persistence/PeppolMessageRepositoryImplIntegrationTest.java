@@ -3,6 +3,7 @@ package no.sr.ringo.persistence;
 import com.google.inject.Inject;
 import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.MessageRepository;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;

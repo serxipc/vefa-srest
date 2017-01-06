@@ -2,6 +2,7 @@ package no.sr.ringo.message;
 
 import eu.peppol.identifier.MessageId;
 import eu.peppol.persistence.AccountId;
+import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.message.statistics.RingoStatistics;
 

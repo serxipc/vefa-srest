@@ -1,19 +1,15 @@
 package no.sr.ringo.usecase;
 
 import com.google.inject.Inject;
+import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.api.account.AccountRepository;
 import eu.peppol.persistence.guice.jdbc.Transactional;
+import eu.peppol.persistence.queue.*;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.message.MessageMetaData;
-import no.sr.ringo.message.MessageNumber;
-import no.sr.ringo.message.OutboundMessageQueueState;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.oxalis.PeppolDocumentSender;
-import no.sr.ringo.queue.OutboundMessageQueueId;
-import no.sr.ringo.queue.QueueRepository;
-import no.sr.ringo.queue.QueuedOutboundMessage;
-import no.sr.ringo.queue.QueuedOutboundMessageError;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -210,7 +206,7 @@ public class SendQueuedMessagesUseCase {
 
         MessageNumber messageNumber = queuedOutboundMessage.getMessageNumber();
 
-        Account account = accountRepository.findAccountAsOwnerOfMessage( eu.peppol.persistence.api.MessageNumber.create(messageNumber.toLong()));
+        Account account = accountRepository.findAccountAsOwnerOfMessage( MessageNumber.create(messageNumber.toLong()));
         emailService.sendProcessingErrorNotification(account, message, queuedOutboundMessage.getMessageNumber());
 
     }

@@ -3,16 +3,13 @@ package no.sr.ringo.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.RequestScoped;
-import eu.peppol.persistence.api.account.AccountRepository;
-import eu.peppol.persistence.jdbc.AccountRepositoryImpl;
-import no.sr.ringo.email.*;
 import eu.peppol.smp.*;
 import no.sr.ringo.common.IsProductionServer;
 import no.sr.ringo.document.*;
+import no.sr.ringo.email.EmailService;
+import no.sr.ringo.email.NoEmailServiceImpl;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.message.PeppolMessageRepositoryImpl;
-import no.sr.ringo.queue.QueueRepository;
-import no.sr.ringo.queue.QueueRepositoryImpl;
 import no.sr.ringo.report.ReportRepository;
 import no.sr.ringo.report.ReportRepositoryImpl;
 
@@ -45,7 +42,6 @@ public class RingoServiceModule extends AbstractModule {
     private void bindRepositories() {
         // The main workhorse
         bind(PeppolMessageRepository.class).to(PeppolMessageRepositoryImpl.class).in(Singleton.class);
-        bind(QueueRepository.class).to(QueueRepositoryImpl.class).in(Singleton.class);
         bind(ReportRepository.class).to(ReportRepositoryImpl.class).in(Singleton.class);
         bind(DocumentRepository.class).to(DocumentRepositoryImpl.class).in(RequestScoped.class);
     }

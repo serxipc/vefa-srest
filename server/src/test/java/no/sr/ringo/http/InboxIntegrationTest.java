@@ -1,5 +1,6 @@
 package no.sr.ringo.http;
 
+import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
@@ -9,7 +10,6 @@ import no.sr.ringo.client.Message;
 import no.sr.ringo.client.Messages;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
-import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.PeppolMessageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,16 +1,21 @@
 package no.sr.ringo.usecase;
 
 import com.google.inject.Inject;
-import eu.peppol.persistence.jdbc.util.DatabaseHelper;
-import no.sr.ringo.email.EmailService;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.persistence.MessageNumber;
+import eu.peppol.persistence.jdbc.util.DatabaseHelper;
+import eu.peppol.persistence.queue.OutboundMessageQueueState;
+import eu.peppol.persistence.queue.QueueRepository;
 import no.sr.ringo.ObjectMother;
+import no.sr.ringo.email.EmailService;
 import no.sr.ringo.guice.TestModuleFactory;
-import no.sr.ringo.message.*;
+import no.sr.ringo.message.MessageMetaData;
+import no.sr.ringo.message.MessageWithLocations;
+import no.sr.ringo.message.OutboundPostParams;
+import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolProcessIdAcronym;
-import no.sr.ringo.queue.QueueRepository;
 import no.sr.ringo.smp.TestModeSmpLookupImpl;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Guice;
@@ -73,7 +78,7 @@ public class ReceiveMessageFromClientUseCaseIntegrationTest {
         assertNotNull(queuedMessage);
         assertNotNull(queuedMessage.getQueueId());
         assertEquals(message.getMsgNo(), queuedMessage.getMsgNo());
-        assertEquals(eu.peppol.persistence.api.OutboundMessageQueueState.QUEUED, queuedMessage.getState());
+        assertEquals(OutboundMessageQueueState.QUEUED, queuedMessage.getState());
 
         MessageMetaData metaData = peppolMessageRepository.findMessageByMessageNo(MessageNumber.create(message.getMsgNo()));
         assertNotNull(metaData);

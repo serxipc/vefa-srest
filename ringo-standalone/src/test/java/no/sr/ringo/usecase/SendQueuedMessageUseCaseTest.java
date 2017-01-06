@@ -1,17 +1,16 @@
 package no.sr.ringo.usecase;
 
 import eu.peppol.identifier.MessageId;
+import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.api.account.AccountRepository;
+import eu.peppol.persistence.queue.*;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.message.MessageMetaData;
-import no.sr.ringo.message.MessageNumber;
-import no.sr.ringo.message.OutboundMessageQueueState;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.oxalis.PeppolDocumentSender;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolHeader;
-import no.sr.ringo.queue.*;
 import org.easymock.EasyMock;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -214,7 +213,7 @@ public class SendQueuedMessageUseCaseTest {
         mockQueueRepository.changeQueuedMessageState(queueId, OutboundMessageQueueState.AOD);
 
         //send error notification
-        expect(mockAccountRepository.findAccountAsOwnerOfMessage(eu.peppol.persistence.api.MessageNumber.create(msgNo.toLong()))).andReturn(mockAccount);
+        expect(mockAccountRepository.findAccountAsOwnerOfMessage(MessageNumber.create(msgNo.toLong()))).andReturn(mockAccount);
         expect(mockEmailService.sendProcessingErrorNotification(mockAccount, "Exception simulation", msgNo)).andReturn(null);
 
         // new entry in error table

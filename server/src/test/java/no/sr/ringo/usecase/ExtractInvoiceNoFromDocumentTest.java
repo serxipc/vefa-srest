@@ -1,11 +1,11 @@
 package no.sr.ringo.usecase;
 
 import eu.peppol.persistence.api.account.Account;
-import no.sr.ringo.email.EmailService;
+import eu.peppol.persistence.queue.QueueRepository;
 import no.sr.ringo.client.ClientObjectMother;
 import no.sr.ringo.common.RingoConstants;
+import no.sr.ringo.email.EmailService;
 import no.sr.ringo.message.PeppolMessageRepository;
-import no.sr.ringo.queue.QueueRepository;
 import no.sr.ringo.smp.RingoSmpLookup;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

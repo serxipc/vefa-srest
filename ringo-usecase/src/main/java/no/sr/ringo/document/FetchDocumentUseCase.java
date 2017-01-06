@@ -1,7 +1,7 @@
 package no.sr.ringo.document;
 
+import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.api.account.Account;
-import no.sr.ringo.message.MessageNumber;
 
 import javax.inject.Inject;
 
