@@ -9,6 +9,7 @@ import no.sr.ringo.client.Message;
 import no.sr.ringo.client.Messagebox;
 import no.sr.ringo.client.Messages;
 import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.persistence.DbmsTestHelper;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Guice;
@@ -30,6 +31,9 @@ public class MessagesIntegrationTest extends AbstractHttpClientServerTest {
 
     @Inject
     DatabaseHelper databaseHelper;
+
+    @Inject
+    DbmsTestHelper dbmsTestHelper;
 
     private List<Long> messageIds = new ArrayList<>();
 
@@ -86,7 +90,7 @@ public class MessagesIntegrationTest extends AbstractHttpClientServerTest {
     public void insertSample() throws SQLException {
         final Account account = ObjectMother.getTestAccount();
         for (int i = 0; i <= 26; i++) {
-            final Long message = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), null);
+            final Long message = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), null);
             messageIds.add(message);
         }
     }

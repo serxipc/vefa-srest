@@ -3,16 +3,10 @@ package no.sr.ringo.guice;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Provides;
 import com.google.inject.servlet.GuiceServletContextListener;
 import eu.peppol.persistence.RepositoryConfiguration;
-import eu.peppol.persistence.guice.AopJdbcTxManagerModule;
-import eu.peppol.persistence.guice.OxalisDataSourceModule;
 import eu.peppol.persistence.guice.RepositoryModule;
-import eu.peppol.smp.SmlHost;
-import eu.peppol.util.GlobalConfiguration;
 import eu.peppol.util.GlobalConfigurationImpl;
-import eu.peppol.util.OperationalMode;
 import eu.peppol.util.OxalisProductionConfigurationModule;
 import no.sr.ringo.common.PropertyHelper;
 import org.jetbrains.annotations.NotNull;

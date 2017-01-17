@@ -5,16 +5,17 @@ import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolDocumentTypeId;
 import eu.peppol.identifier.PeppolProcessTypeId;
 import eu.peppol.outbound.OxalisOutboundComponent;
-import eu.peppol.outbound.transmission.TransmissionRequest;
 import eu.peppol.outbound.transmission.TransmissionRequestBuilder;
-import eu.peppol.outbound.transmission.TransmissionResponse;
-import eu.peppol.outbound.transmission.Transmitter;
+import no.difi.oxalis.api.outbound.TransmissionRequest;
+import no.difi.oxalis.api.outbound.TransmissionResponse;
+import no.difi.oxalis.api.outbound.Transmitter;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.message.MessageMetaData;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.Date;
 
 public class OxalisDocumentSender implements PeppolDocumentSender {
@@ -33,7 +34,6 @@ public class OxalisDocumentSender implements PeppolDocumentSender {
         TransmissionRequestBuilder requestBuilder = oxalisOutboundModule.getTransmissionRequestBuilder();
 
         requestBuilder
-                .trace(true)
                 .receiver(new ParticipantId(messageMetaData.getPeppolHeader().getReceiver().stringValue()))
                 .sender((new ParticipantId(messageMetaData.getPeppolHeader().getSender().stringValue())))
                 .documentType(PeppolDocumentTypeId.valueOf(messageMetaData.getPeppolHeader().getPeppolDocumentTypeId().stringValue()))
@@ -43,21 +43,20 @@ public class OxalisDocumentSender implements PeppolDocumentSender {
 
 
         TransmissionRequest transmissionRequest = requestBuilder.build();
-        Transmitter transmitter = oxalisOutboundModule.getSimpleTransmitter();
+        Transmitter transmitter = oxalisOutboundModule.getTransmitter();
         TransmissionResponse transmissionResponse = transmitter.transmit(transmissionRequest);
 
         // Write the transmission id and where the message was delivered
         System.out.printf("Message sent to %s using %s was assigned transmissionId : %s\n",
                 transmissionRequest.getEndpointAddress().getUrl().toString(),
-                transmissionRequest.getEndpointAddress().getBusDoxProtocol().toString(),
+                transmissionRequest.getEndpointAddress().getTransportProfile().getValue(),
                 transmissionResponse.getMessageId()
         );
 
         return new TransmissionReceipt(transmissionResponse.getMessageId(),
-                transmissionResponse.getURL(),
+                new URL(transmissionResponse.getEndpoint().getAddress()),
                 new Date(),
-                transmissionResponse.getNativeEvidenceBytes(),
-                transmissionResponse.getRemEvidenceBytes());
+                transmissionResponse.getNativeEvidenceBytes()     );
 
     }
 

@@ -3,7 +3,7 @@ package no.sr.ringo.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.RequestScoped;
-import eu.peppol.smp.*;
+import eu.peppol.outbound.lookup.LookupModule;
 import no.sr.ringo.common.IsProductionServer;
 import no.sr.ringo.document.*;
 import no.sr.ringo.email.EmailService;
@@ -34,9 +34,7 @@ public class RingoServiceModule extends AbstractModule {
     }
 
     private void bindSmpLookup() {
-        bind(SmpContentRetriever.class).to(SmpContentRetrieverImpl.class);
-        bind(BusDoxProtocolSelectionStrategy.class).to(DefaultBusDoxProtocolSelectionStrategyImpl.class);
-        bind(SmpLookupManager.class).to(SmpLookupManagerImpl.class);
+        binder().install(new LookupModule());
     }
 
     private void bindRepositories() {

@@ -35,6 +35,7 @@ public class AccountRepositoryImplTest {
 
 
     private AccountRepository accountRepository;
+    private final DbmsTestHelper dbmsTestHelper;
     private Account account;
     private ParticipantId participantId;
     private DatabaseHelper databaseHelper;
@@ -42,9 +43,10 @@ public class AccountRepositoryImplTest {
     Account adamsAccount;
 
     @Inject
-    public AccountRepositoryImplTest(DatabaseHelper databaseHelper, AccountRepository accountRepository) {
+    public AccountRepositoryImplTest(DatabaseHelper databaseHelper, AccountRepository accountRepository, DbmsTestHelper dbmsTestHelper) {
         this.databaseHelper = databaseHelper;
         this.accountRepository = accountRepository;
+        this.dbmsTestHelper = dbmsTestHelper;
     }
 
     @BeforeMethod(groups = {"persistence"})
@@ -147,7 +149,7 @@ public class AccountRepositoryImplTest {
 
     @Test(groups = {"persistence"})
     public void findMessageOwner(){
-        Long messageNumber = databaseHelper.createMessage(adamsAccount.getAccountId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null);
+        Long messageNumber = dbmsTestHelper.createMessage(adamsAccount.getAccountId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null);
         assertEquals(adamsAccount, accountRepository.findAccountAsOwnerOfMessage(MessageNumber.create(messageNumber)));
 
     }

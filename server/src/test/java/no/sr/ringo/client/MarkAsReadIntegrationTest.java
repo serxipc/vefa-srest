@@ -9,6 +9,7 @@ import no.sr.ringo.ObjectMother;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.http.AbstractHttpClientServerTest;
 import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.persistence.DbmsTestHelper;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Guice;
@@ -44,6 +45,9 @@ public class MarkAsReadIntegrationTest extends AbstractHttpClientServerTest {
     @Inject
     DatabaseHelper databaseHelper;
 
+    @Inject
+    DbmsTestHelper dbmsTestHelper;
+
     private Account account;
 
     private String receiver1 = "9908:976098897";
@@ -51,7 +55,7 @@ public class MarkAsReadIntegrationTest extends AbstractHttpClientServerTest {
     @BeforeTest(groups = {"persistence"})
     public void setUp() throws Exception {
         account = accountRepository.findAccountByParticipantId(ObjectMother.getTestParticipantId());
-        databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), receiver1, UUID.randomUUID().toString(), new Date());
+        dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), receiver1, UUID.randomUUID().toString(), new Date());
     }
 
     @AfterTest(groups = {"persistence"})

@@ -5,15 +5,15 @@ import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import eu.peppol.smp.*;
+import eu.peppol.outbound.lookup.LookupModule;
 import eu.peppol.util.OperationalMode;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.message.FetchMessagesUseCase;
-import no.sr.ringo.usecase.ReceiveMessageFromClientUseCase;
 import no.sr.ringo.peppol.DummySender;
 import no.sr.ringo.peppol.PeppolDocumentSender;
 import no.sr.ringo.resource.*;
 import no.sr.ringo.smp.RingoSmpLookup;
+import no.sr.ringo.usecase.ReceiveMessageFromClientUseCase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +49,7 @@ public class RingoRestModule extends JerseyServletModule {
         bindSmpDependencies();
         bindDocumentSendingDependencies();
         bindExceptionHandlers();
+        binder().install(new LookupModule());
 
         // Serves everything under inbox, outbox, messages, events etc using (JAX-RS)
         serveRegex("(^\\/(?:register|directory|inbox|outbox|messages|admin|statistics|notify)(?!.*\\.ico.*).*$)").with(GuiceContainer.class, initalisationParams);
@@ -98,9 +99,6 @@ public class RingoRestModule extends JerseyServletModule {
     }
 
     private void bindSmpLookup() {
-        bind(SmpContentRetriever.class).to(SmpContentRetrieverImpl.class);
-        bind(BusDoxProtocolSelectionStrategy.class).to(DefaultBusDoxProtocolSelectionStrategyImpl.class);
-        bind(SmpLookupManager.class).to(SmpLookupManagerImpl.class);
     }
 
     private void bindSmpDependencies() {
@@ -111,11 +109,5 @@ public class RingoRestModule extends JerseyServletModule {
     OperationalMode getOperationalMode() {
         return OperationalMode.PRODUCTION;
     }
-
-    @Provides
-    SmlHost getSmlHost() {
-        return SmlHost.PRODUCTION_SML;
-    }
-
 
 }

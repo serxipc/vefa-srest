@@ -10,6 +10,7 @@ import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.http.AbstractHttpClientServerTest;
 import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.persistence.DbmsTestHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
@@ -46,6 +47,9 @@ public class DownloadXmlDocumentIntegrationTest extends AbstractHttpClientServer
     @Inject
     DatabaseHelper databaseHelper;
 
+    @Inject
+    DbmsTestHelper dbmsTestHelper;
+
     private Long messageNumber;
 
     @BeforeMethod(groups = {"integration"})
@@ -53,7 +57,7 @@ public class DownloadXmlDocumentIntegrationTest extends AbstractHttpClientServer
         Account account = accountRepository.findAccountByParticipantId(ObjectMother.getTestParticipantId());
         String uuid = UUID.randomUUID().toString();
         String receiver1 = "9908:976098897";
-        messageNumber = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantId().stringValue(), receiver1, uuid, null);
+        messageNumber = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantId().stringValue(), receiver1, uuid, null);
     }
 
 

@@ -281,11 +281,11 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     }
 
     @Override
-    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, MessageId messageId, Date delivered, byte[] nativeEvidenceBytes, byte[] remEvidenceBytes) {
+    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, MessageId messageId, Date delivered, byte[] nativeEvidenceBytes) {
 
         // Persists the evidence, after which the DBMS is updated
         try {
-            persistOutboundEvidence(messageId, delivered, nativeEvidenceBytes, remEvidenceBytes);
+            persistOutboundEvidence(messageId, delivered, nativeEvidenceBytes);
         } catch (OxalisMessagePersistenceException e) {
             throw new IllegalStateException("Unable to persist evidence bytes to database");
         }
@@ -305,7 +305,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         }
     }
 
-    void persistOutboundEvidence(final MessageId messageId, final Date delivered, final byte[] nativeEvidenceBytes, final byte[] remEvidenceBytes) throws OxalisMessagePersistenceException {
+    void persistOutboundEvidence(final MessageId messageId, final Date delivered, final byte[] nativeEvidenceBytes) throws OxalisMessagePersistenceException {
 
         TransmissionEvidence transmissionEvidence = new TransmissionEvidence() {
             @Override
@@ -314,15 +314,11 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             }
 
             @Override
-            public InputStream getInputStream() {
-                return new ByteArrayInputStream(remEvidenceBytes);
-            }
-
-            @Override
             public InputStream getNativeEvidenceStream() {
                 return new ByteArrayInputStream(nativeEvidenceBytes);
             }
         };
+
         oxalisMessageRepository.saveOutboundTransportReceipt(transmissionEvidence,messageId);
     }
 

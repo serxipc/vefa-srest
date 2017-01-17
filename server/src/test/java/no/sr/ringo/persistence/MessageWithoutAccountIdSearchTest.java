@@ -4,7 +4,6 @@ package no.sr.ringo.persistence;
 import com.google.inject.Inject;
 import eu.peppol.identifier.WellKnownParticipant;
 import eu.peppol.persistence.TransferDirection;
-import eu.peppol.persistence.api.account.AccountRepository;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
@@ -29,11 +28,13 @@ public class MessageWithoutAccountIdSearchTest {
 
     final PeppolMessageRepository peppolMessageRepository;
     final DatabaseHelper databaseHelper;
+    private final DbmsTestHelper dbmsTestHelper;
 
     @Inject
-    public MessageWithoutAccountIdSearchTest(AccountRepository accountRepository, PeppolMessageRepository peppolMessageRepository, DatabaseHelper databaseHelper) {
+    public MessageWithoutAccountIdSearchTest(PeppolMessageRepository peppolMessageRepository, DatabaseHelper databaseHelper, DbmsTestHelper dbmsTestHelper) {
         this.peppolMessageRepository = peppolMessageRepository;
         this.databaseHelper = databaseHelper;
+        this.dbmsTestHelper = dbmsTestHelper;
     }
 
     @Test(groups = {"persistence"})
@@ -45,7 +46,7 @@ public class MessageWithoutAccountIdSearchTest {
     @BeforeMethod
     public void setUp() throws Exception {
         databaseHelper.deleteAllMessagesWithoutAccountId();
-        databaseHelper.createMessage(null, TransferDirection.IN, WellKnownParticipant.U4_TEST.stringValue()  ,WellKnownParticipant.U4_TEST.stringValue() , "12345", null);
+        dbmsTestHelper.createMessage(null, TransferDirection.IN, WellKnownParticipant.U4_TEST.stringValue()  ,WellKnownParticipant.U4_TEST.stringValue() , "12345", null);
 
     }
 

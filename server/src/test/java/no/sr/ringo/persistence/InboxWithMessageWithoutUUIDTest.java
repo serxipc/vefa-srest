@@ -40,6 +40,7 @@ public class InboxWithMessageWithoutUUIDTest {
     private final DatabaseHelper databaseHelper;
     private final PeppolMessageRepository peppolMessageRepository;
     private final DataSource dataSource;
+    private final DbmsTestHelper dbmsTestHelper;
 
     private Long messageNo;
     private Long messageNo2;
@@ -49,11 +50,12 @@ public class InboxWithMessageWithoutUUIDTest {
     private ParticipantId sender;
 
     @Inject
-    public InboxWithMessageWithoutUUIDTest(AccountRepository accountRepository, DatabaseHelper databaseHelper, PeppolMessageRepository peppolMessageRepository, DataSource dataSource) {
+    public InboxWithMessageWithoutUUIDTest(AccountRepository accountRepository, DatabaseHelper databaseHelper, PeppolMessageRepository peppolMessageRepository, DataSource dataSource, DbmsTestHelper dbmsTestHelper) {
         this.accountRepository = accountRepository;
         this.databaseHelper = databaseHelper;
         this.peppolMessageRepository = peppolMessageRepository;
         this.dataSource = dataSource;
+        this.dbmsTestHelper = dbmsTestHelper;
     }
 
     @BeforeMethod
@@ -69,11 +71,11 @@ public class InboxWithMessageWithoutUUIDTest {
     public void testMessageIdWithNoUUID() throws PeppolMessageNotFoundException, SQLException {
 
         //proper message
-        messageNo = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, UUID.randomUUID().toString(), null);
+        messageNo = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, UUID.randomUUID().toString(), null);
         //uuid = null
-        messageNo2 = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, null, null);
+        messageNo2 = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, null, null);
         //uuid = ''
-        messageNo3 = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, "", null);
+        messageNo3 = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, "", null);
 
         inspectDbms();
         // We used to expect only a single message as message_uuid was required to be null in order to be deemed in the /inbox

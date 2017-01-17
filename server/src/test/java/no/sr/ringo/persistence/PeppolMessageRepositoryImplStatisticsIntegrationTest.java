@@ -3,6 +3,8 @@ package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
+import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
@@ -31,11 +33,9 @@ import static org.testng.Assert.*;
 @Guice(moduleFactory = TestModuleFactory.class)
 public class PeppolMessageRepositoryImplStatisticsIntegrationTest {
 
-    Logger logger = LoggerFactory.getLogger(PeppolMessageRepositoryImplStatisticsIntegrationTest.class);
-
     private final PeppolMessageRepository peppolMessageRepository;
     private final DatabaseHelper databaseHelper;
-
+    Logger logger = LoggerFactory.getLogger(PeppolMessageRepositoryImplStatisticsIntegrationTest.class);
     private Account account = ObjectMother.getTestAccount();
     private ParticipantId participantId = ObjectMother.getTestParticipantIdForSMPLookup();
 
@@ -43,6 +43,12 @@ public class PeppolMessageRepositoryImplStatisticsIntegrationTest {
     private Date downloadedDate;
     private Date receivedDate;
     private Date oldestUndeliveredDate;
+
+    @Inject
+    public PeppolMessageRepositoryImplStatisticsIntegrationTest(PeppolMessageRepository peppolMessageRepository, DatabaseHelper databaseHelper) {
+        this.peppolMessageRepository = peppolMessageRepository;
+        this.databaseHelper = databaseHelper;
+    }
 
     @BeforeMethod(groups = {"persistence"})
     public void setup() throws ParseException {
@@ -52,12 +58,6 @@ public class PeppolMessageRepositoryImplStatisticsIntegrationTest {
         receivedDate = parseDate("2012-01-03");
         oldestUndeliveredDate = parseDate("2010-01-03");
         createTestMessages();
-    }
-
-    @Inject
-    public PeppolMessageRepositoryImplStatisticsIntegrationTest(PeppolMessageRepository peppolMessageRepository, DatabaseHelper databaseHelper) {
-        this.peppolMessageRepository = peppolMessageRepository;
-        this.databaseHelper = databaseHelper;
     }
 
     @AfterMethod(groups = {"persistence"})
@@ -103,10 +103,18 @@ public class PeppolMessageRepositoryImplStatisticsIntegrationTest {
     }
 
     private void createTestMessages() {
-        databaseHelper.createDummyMessage(account.getAccountId().toInteger(), TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), sentDate, receivedDate);
-        databaseHelper.createDummyMessage(account.getAccountId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), downloadedDate, receivedDate);
-        databaseHelper.createDummyMessage(account.getAccountId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null, oldestUndeliveredDate);
-        databaseHelper.createDummyMessage(account.getAccountId().toInteger(), TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null, oldestUndeliveredDate);
+
+        for (int i = 0; i < 3; i++) {
+
+            databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
+                    PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
+                    "<test>\u00E5</test>",
+                    account.getAccountId().toInteger(),
+                    TransferDirection.OUT,
+                    participantId.stringValue(),
+                    participantId.stringValue(),
+                    UUID.randomUUID().toString(), sentDate, receivedDate);
+        }
     }
 
     /**

@@ -7,7 +7,7 @@
     <cac:AccountingCustomerParty>
         <cac:Party>
                 <cac:PartyLegalEntity>
-                    <cbc:CompanyID schemeAgencyID="82" schemeID="NO:ORGNR">NO976098897</cbc:CompanyID>
+                    <cbc:CompanyID schemeAgencyID="82" schemeID="NO:ORGNR">976098897</cbc:CompanyID>
                 </cac:PartyLegalEntity>
         </cac:Party>
     </cac:AccountingCustomerParty>

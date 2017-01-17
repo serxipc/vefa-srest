@@ -60,7 +60,7 @@ public class SendQueuedMessageUseCaseTest {
 
         String message = "a fancy invoice";
         PeppolDocumentSender.TransmissionReceipt receipt = new PeppolDocumentSender.TransmissionReceipt(new MessageId(), null, new Date(),
-                    "native evidence bytes".getBytes(), "REM evidence bytes".getBytes());
+                    "native evidence bytes".getBytes());
 
         SendQueuedMessagesUseCase useCase = new SendQueuedMessagesUseCase(mockDocumentSender, mockMessageRepository, mockQueueRepository, mockEmailService, mockAccountRepository);
         //creates a mock message so that we can check the correct data is being inspected
@@ -79,8 +79,8 @@ public class SendQueuedMessageUseCaseTest {
                 eq(receipt.getRemoteAccessPoint()),
                 eq(receipt.getMessageId()),
                 eq(receipt.getDate()),
-                eq(receipt.getNativeEvidenceBytes()),
-                eq(receipt.getRemEvidenceBytes()));
+                eq(receipt.getNativeEvidenceBytes())
+                );
 
         expectLastCall();
 
@@ -156,11 +156,11 @@ public class SendQueuedMessageUseCaseTest {
         byte[] nativeEvidenceBytes = "native evidence bytes".getBytes();
         byte[] remEvidenceBytes = "REM evidence bytes".getBytes();
         expect(mockDocumentSender.sendDocument(mockMessage, messageXml)).andStubReturn(new PeppolDocumentSender.TransmissionReceipt(messageId, new URL("http://ringo.domain.com/"), new Date(),
-                nativeEvidenceBytes, remEvidenceBytes));
+                nativeEvidenceBytes));
 
         // update message to delivered
-        mockMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(EasyMock.eq(msgNo), EasyMock.eq("http://ringo.domain.com/"), EasyMock.eq(messageId), isA(Date.class), EasyMock.eq(nativeEvidenceBytes),
-                EasyMock.eq(remEvidenceBytes));
+        mockMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(EasyMock.eq(msgNo), EasyMock.eq("http://ringo.domain.com/"), EasyMock.eq(messageId), isA(Date.class), EasyMock.eq(nativeEvidenceBytes)
+                );
         expectLastCall();
 
         // update state to OK

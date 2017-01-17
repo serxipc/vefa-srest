@@ -67,7 +67,13 @@
             <dependency>
                 <groupId>no.difi.oxalis</groupId>
                 <artifactId>oxalis-persistence</artifactId>
-                <version>4.0.0-SNAPSHOT</version>
+                <version>${oxalis.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.difi.oxalis</groupId>
+                <artifactId>oxalis-test-impl</artifactId>
+                <version>${oxalis.version}</version>
             </dependency>
 
             <!-- standard jee javax.inject annotations (for non jee applications) -->
@@ -322,6 +328,12 @@
                 <artifactId>jersey-client</artifactId>
                 <version>${jersey.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>no.difi.vefa</groupId>
+                <artifactId>commons-bdxr</artifactId>
+                <version>0.9.0</version>
             </dependency>
 
         </dependencies>

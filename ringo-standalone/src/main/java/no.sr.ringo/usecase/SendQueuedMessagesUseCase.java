@@ -179,8 +179,8 @@ public class SendQueuedMessagesUseCase {
                 transmissionReceipt.getRemoteAccessPoint(),
                 transmissionReceipt.getMessageId(),
                 transmissionReceipt.getDate(),
-                transmissionReceipt.getNativeEvidenceBytes(),
-                transmissionReceipt.getRemEvidenceBytes());
+                transmissionReceipt.getNativeEvidenceBytes()
+                );
 
         // we got this far so delivery was ok
 

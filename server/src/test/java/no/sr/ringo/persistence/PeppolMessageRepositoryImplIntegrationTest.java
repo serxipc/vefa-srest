@@ -57,6 +57,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     private final DocumentRepository documentRepository;
     private final DatabaseHelper databaseHelper;
     private final MessageRepository oxalisMessageRepository;
+    private final DbmsTestHelper dbmsTestHelper;
     Logger logger = LoggerFactory.getLogger(PeppolMessageRepositoryImplIntegrationTest.class);
     private Account account = ObjectMother.getTestAccount();
     private ParticipantId participantId = ObjectMother.getTestParticipantIdForSMPLookup();
@@ -68,20 +69,21 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     private MessageId messageOutUuid;
 
     @Inject
-    public PeppolMessageRepositoryImplIntegrationTest(PeppolMessageRepository peppolMessageRepository, DocumentRepository documentRepository, DatabaseHelper databaseHelper, MessageRepository oxalisMessageRepository) {
+    public PeppolMessageRepositoryImplIntegrationTest(PeppolMessageRepository peppolMessageRepository, DocumentRepository documentRepository, DatabaseHelper databaseHelper, MessageRepository oxalisMessageRepository, DbmsTestHelper dbmsTestHelper) {
         this.peppolMessageRepository = peppolMessageRepository;
         this.documentRepository = documentRepository;
         this.databaseHelper = databaseHelper;
         this.oxalisMessageRepository = oxalisMessageRepository;
+        this.dbmsTestHelper = dbmsTestHelper;
     }
 
     @BeforeMethod(groups = {"persistence"})
     public void insertSample() throws SQLException {
         databaseHelper.deleteAllMessagesForAccount(account);
         messageInUuid = UUID.randomUUID().toString();
-        messageId = databaseHelper.createMessage(1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), messageInUuid, null);
+        messageId = dbmsTestHelper.createMessage(1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), messageInUuid, null);
         messageOutUuid = new MessageId();
-        messageOut = databaseHelper.createMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), messageOutUuid.stringValue(), null);
+        messageOut = dbmsTestHelper.createMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), messageOutUuid.stringValue(), null);
     }
 
     @AfterMethod(groups = {"persistence"})
@@ -239,8 +241,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         Date date = cal.getTime();
         byte[] nativeEvidenceBytes = "Native evidence bytes".getBytes();
         byte[] remEvidenceBytes = "REM evidence bytes".getBytes();
-        peppolMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(MessageNumber.create(messageOut), null, messageOutUuid, date,
-                nativeEvidenceBytes, remEvidenceBytes);
+        peppolMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(MessageNumber.create(messageOut), null, messageOutUuid, date, nativeEvidenceBytes);
 
         MessageMetaData messageOutbound = peppolMessageRepository.findMessageByMessageNo(account, messageOut);
 
@@ -275,7 +276,6 @@ public class PeppolMessageRepositoryImplIntegrationTest {
             eu.peppol.persistence.MessageMetaData m = messages.get(0);
 
             verifyEvidence(m::getNativeEvidenceUri, nativeEvidenceBytes);
-            verifyEvidence(m::getGenericEvidenceUri, remEvidenceBytes);
         }
 
         String xmlOut = peppolMessageRepository.findDocumentByMessageNoWithoutAccountCheck(messageOut);

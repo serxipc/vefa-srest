@@ -11,6 +11,7 @@ import no.sr.ringo.client.Messages;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.persistence.DbmsTestHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -38,6 +39,9 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
 
     @Inject
     DatabaseHelper databaseHelper;
+
+    @com.google.inject.Inject
+    DbmsTestHelper dbmsTestHelper;
 
     @Inject
     PeppolMessageRepository peppolMessageRepository;
@@ -84,7 +88,7 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
     @BeforeMethod(groups = {"integration"})
     public void insertSample() throws SQLException {
         final Account account = ObjectMother.getTestAccount();
-        messageId = databaseHelper.createMessage(1, TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), null);
+        messageId = dbmsTestHelper.createMessage(1, TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), null);
         MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(MessageNumber.create(messageId));
 
     }

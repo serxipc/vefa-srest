@@ -2,10 +2,10 @@ package no.sr.ringo;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import eu.peppol.outbound.lookup.LookupModule;
 import eu.peppol.persistence.guice.OxalisDataSourceModule;
 import eu.peppol.persistence.guice.RepositoryModule;
 import eu.peppol.persistence.queue.OutboundMessageQueueId;
-import eu.peppol.smp.SmpModule;
 import eu.peppol.util.OxalisProductionConfigurationModule;
 import no.sr.ringo.guice.RingoServiceModule;
 import no.sr.ringo.parser.CommandLineParser;
@@ -67,10 +67,8 @@ public class Main {
 
     static Injector getInjector(boolean isProduction) {
         return Guice.createInjector(
-                    // Needs to be modified
-                    // new RingoDataSourceGuiceModule(params.getDbHost(),params.getDbUser(),params.getDbPass(), params.getDbName()),
                     new RingoServiceModule(isProduction),
-                    new SmpModule(),
+                    new LookupModule(),
 
                     new OxalisProductionConfigurationModule(),
                     new OxalisDataSourceModule(),

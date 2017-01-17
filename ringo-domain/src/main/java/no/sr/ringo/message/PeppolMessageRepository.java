@@ -117,7 +117,7 @@ public interface PeppolMessageRepository {
      * REM evidence is persisted.
      *
      */
-    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, MessageId messageId, Date delivered, byte[] nativeEvidenceBytes, byte[] remEvidenceBytes);
+    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, MessageId messageId, Date delivered, byte[] nativeEvidenceBytes);
 
     /**
      * Creates inbound message as copy of outbound one with delivered being null

@@ -1,13 +1,12 @@
 package no.sr.ringo.smp;
 
 import eu.peppol.identifier.ParticipantId;
-import eu.peppol.smp.ParticipantNotRegisteredException;
-import eu.peppol.smp.SmpLookupException;
-import eu.peppol.smp.SmpLookupManager;
-import no.sr.ringo.peppol.CustomizationIdentifier;
+import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.difi.vefa.peppol.lookup.LookupClient;
+import no.difi.vefa.peppol.lookup.api.LookupException;
 import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
-import no.sr.ringo.peppol.RootNameSpace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,31 +23,29 @@ import java.util.List;
 public class RingoSmpLookupImpl implements RingoSmpLookup {
 
     private static Logger logger = LoggerFactory.getLogger(RingoSmpLookupImpl.class);
+    private final LookupClient lookupClient;
 
-    private final SmpLookupManager smpLookupManager;
 
     @Inject
-    public RingoSmpLookupImpl(SmpLookupManager smpLookupManager) {
-        this.smpLookupManager = smpLookupManager;
+    public RingoSmpLookupImpl(LookupClient lookupClient) {
+
+        this.lookupClient = lookupClient;
     }
 
     @Override
     public boolean isRegistered(ParticipantId participantId) {
-        try {
-            fetchAcceptedDocumentTypesFromManager(participantId);
-        } catch (ParticipantNotRegisteredException e) {
-            return false;
-        }
+        fetchAcceptedDocumentTypesFromManager(participantId);
         return true;
     }
 
     @Override
     public SmpLookupResult fetchSmpMetaData(ParticipantId peppolParticipantId, LocalName localName) {
         SmpLookupResult result = new SmpLookupResult(Collections.<PeppolDocumentTypeId>emptyList());
+
         List<PeppolDocumentTypeId> documentTypes;
         try {
             documentTypes = fetchAcceptedDocumentTypesFromManager(peppolParticipantId);
-        } catch (ParticipantNotRegisteredException e) {
+        } catch (Exception e) {
             return result;
         }
         if (!documentTypes.isEmpty()) {
@@ -63,7 +60,7 @@ public class RingoSmpLookupImpl implements RingoSmpLookup {
         List<PeppolDocumentTypeId> documentTypes;
         try {
             documentTypes = fetchAcceptedDocumentTypesFromManager(participantId);
-        } catch (ParticipantNotRegisteredException e) {
+        } catch (Exception e) {
             return false;
         }
         return documentTypes.contains(peppolDocumentTypeId);
@@ -79,31 +76,28 @@ public class RingoSmpLookupImpl implements RingoSmpLookup {
         return result;
     }
 
-    private List<PeppolDocumentTypeId> fetchAcceptedDocumentTypesFromManager(ParticipantId peppolParticipantId) throws ParticipantNotRegisteredException {
+    private List<PeppolDocumentTypeId> fetchAcceptedDocumentTypesFromManager(ParticipantId peppolParticipantId)  {
         try {
-            ParticipantId participant = new ParticipantId(peppolParticipantId.stringValue());
-            List<eu.peppol.identifier.PeppolDocumentTypeId> serviceGroups = smpLookupManager.getServiceGroups(participant);
-            return convertOxalisDocumentTypesToRingoDocumentTypes(serviceGroups);
-        } catch (SmpLookupException e) {
+            ParticipantIdentifier participantIdentifier = ParticipantIdentifier.of(peppolParticipantId.stringValue());
+            List<DocumentTypeIdentifier> documentIdentifiers = lookupClient.getDocumentIdentifiers(participantIdentifier);
+
+
+            return convertOxalisDocumentTypesToRingoDocumentTypes(documentIdentifiers);
+        } catch (LookupException e) {
             logger.error("Error performing SMP lookup", e.getMessage());
             throw new IllegalStateException("Error occurred when performing SMP lookup", e);
         }
     }
 
-    private List<PeppolDocumentTypeId> convertOxalisDocumentTypesToRingoDocumentTypes(List<eu.peppol.identifier.PeppolDocumentTypeId> serviceGroups) {
+    private List<PeppolDocumentTypeId> convertOxalisDocumentTypesToRingoDocumentTypes(List<DocumentTypeIdentifier> serviceGroups) {
         List<PeppolDocumentTypeId> documentTypeIds = new ArrayList<PeppolDocumentTypeId>();
-        for (eu.peppol.identifier.PeppolDocumentTypeId serviceGroup : serviceGroups) {
-            try {
-                PeppolDocumentTypeId peppolDocumentTypeId = new PeppolDocumentTypeId(
-                        new RootNameSpace(serviceGroup.getRootNameSpace()),
-                        LocalName.valueOf(serviceGroup.getLocalName()),
-                        CustomizationIdentifier.valueOf(serviceGroup.getCustomizationIdentifier().toString()),
-                        serviceGroup.getVersion()
-                    );
-                documentTypeIds.add(peppolDocumentTypeId);
-            } catch (Exception ex) {
-                logger.warn("Unable to convertOxalisDocumentTypesToRingoDocumentTypes() for : " + serviceGroup.toDebugString());
-            }
+        for (PeppolDocumentTypeId documentTypeId : documentTypeIds) {
+
+        }
+        for (DocumentTypeIdentifier documentTypeIdentifier : serviceGroups) {
+
+            PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.valueOf(documentTypeIdentifier.getIdentifier());
+            documentTypeIds.add(peppolDocumentTypeId);
         }
         return documentTypeIds;
     }

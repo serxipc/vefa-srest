@@ -33,6 +33,7 @@ public class MarkAsReadPersistenceTest {
     private final AccountRepository accountRepository;
     private final DatabaseHelper databaseHelper;
     private final PeppolMessageRepository peppolMessageRepository;
+    private final DbmsTestHelper dbmsTestHelper;
 
     private Long messageNo;
     private String receiver1 = ObjectMother.getAdamsParticipantId().stringValue();
@@ -40,10 +41,11 @@ public class MarkAsReadPersistenceTest {
     private ParticipantId sender;
 
     @Inject
-    public MarkAsReadPersistenceTest(AccountRepository accountRepository, DatabaseHelper databaseHelper, PeppolMessageRepository peppolMessageRepository) {
+    public MarkAsReadPersistenceTest(AccountRepository accountRepository, DatabaseHelper databaseHelper, PeppolMessageRepository peppolMessageRepository, DbmsTestHelper dbmsTestHelper) {
         this.accountRepository = accountRepository;
         this.databaseHelper = databaseHelper;
         this.peppolMessageRepository = peppolMessageRepository;
+        this.dbmsTestHelper = dbmsTestHelper;
     }
 
     /**
@@ -69,7 +71,7 @@ public class MarkAsReadPersistenceTest {
     public void setUp() throws Exception {
         account = accountRepository.createAccount(ObjectMother.getAdamsAccount(), ObjectMother.getAdamsParticipantId());
         sender = ObjectMother.getAdamsParticipantId();
-        messageNo = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, UUID.randomUUID().toString(), null);
+        messageNo = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, UUID.randomUUID().toString(), null);
     }
 
     @AfterMethod

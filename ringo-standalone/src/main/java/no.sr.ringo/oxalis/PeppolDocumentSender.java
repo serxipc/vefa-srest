@@ -32,14 +32,12 @@ public interface PeppolDocumentSender {
         private final String remoteAccessPoint;
         private final Date date;
         private final byte[] nativeEvidenceBytes;
-        private final byte[] remEvidenceBytes;
 
-        public TransmissionReceipt(MessageId messageId, URL remoteAccessPoint, Date date, byte[] nativeEvidenceBytes, byte[] remEvidenceBytes) {
+        public TransmissionReceipt(MessageId messageId, URL remoteAccessPoint, Date date, byte[] nativeEvidenceBytes) {
             this.messageId = messageId;
             this.remoteAccessPoint = remoteAccessPoint != null ? remoteAccessPoint.toExternalForm() : "n/a";
             this.date = date;
             this.nativeEvidenceBytes = nativeEvidenceBytes;
-            this.remEvidenceBytes = remEvidenceBytes;
         }
 
         public MessageId getMessageId() {
@@ -58,9 +56,6 @@ public interface PeppolDocumentSender {
             return nativeEvidenceBytes;
         }
 
-        public byte[] getRemEvidenceBytes() {
-            return remEvidenceBytes;
-        }
 
         @Override
         public boolean equals(Object o) {

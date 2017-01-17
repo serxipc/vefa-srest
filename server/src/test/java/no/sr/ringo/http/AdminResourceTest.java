@@ -8,6 +8,7 @@ import no.sr.ringo.ObjectMother;
 import no.sr.ringo.guice.TestModuleFactory;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.message.statistics.RingoStatistics;
+import no.sr.ringo.persistence.DbmsTestHelper;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
@@ -43,6 +44,9 @@ public class AdminResourceTest extends AbstractHttpClientServerTest {
 
     @Inject
     PeppolMessageRepository peppolMessageRepository;
+
+    @Inject
+    DbmsTestHelper dbmsTestHelper;
 
     private List<Long> messageIds = new ArrayList<>();
     private Account testAccount = ObjectMother.getTestAccount();
@@ -105,7 +109,7 @@ public class AdminResourceTest extends AbstractHttpClientServerTest {
         databaseHelper.deleteAllMessagesForAccount(testAccount);
         //creates 2 messages
         for (int i = 0; i <= 1; i++) {
-            final Long message = databaseHelper.createMessage(testAccount.getAccountId().toInteger(), TransferDirection.OUT, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), new Date());
+            final Long message = dbmsTestHelper.createMessage(testAccount.getAccountId().toInteger(), TransferDirection.OUT, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), new Date());
             messageIds.add(message);
         }
     }

@@ -39,6 +39,7 @@ public class QueueRepositoryImplIntegrationTest {
     private final PeppolMessageRepository peppolMessageRepository;
     private final QueueRepository queueRepository;
     private final DatabaseHelper databaseHelper;
+    private final DbmsTestHelper dbmsTestHelper;
 
     private Account account = ObjectMother.getTestAccount();
     private ParticipantId participantId = ObjectMother.getTestParticipantIdForSMPLookup();
@@ -50,17 +51,18 @@ public class QueueRepositoryImplIntegrationTest {
 
 
     @Inject
-    public QueueRepositoryImplIntegrationTest(PeppolMessageRepository peppolMessageRepository, QueueRepository queueRepository, DatabaseHelper databaseHelper) {
+    public QueueRepositoryImplIntegrationTest(PeppolMessageRepository peppolMessageRepository, QueueRepository queueRepository, DatabaseHelper databaseHelper, DbmsTestHelper dbmsTestHelper) {
         this.peppolMessageRepository = peppolMessageRepository;
         this.queueRepository = queueRepository;
         this.databaseHelper = databaseHelper;
+        this.dbmsTestHelper = dbmsTestHelper;
     }
 
     @BeforeMethod(groups = {"persistence"})
     public void insertSample() throws SQLException {
         databaseHelper.deleteAllMessagesForAccount(account);
-        messageId = databaseHelper.createMessage(1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null);
-        messageOut = databaseHelper.createMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), null, null);
+        messageId = dbmsTestHelper.createMessage(1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null);
+        messageOut = dbmsTestHelper.createMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), null, null);
     }
 
     @AfterMethod(groups = {"persistence"})

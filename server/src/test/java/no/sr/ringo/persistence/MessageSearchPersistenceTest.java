@@ -40,6 +40,7 @@ public class MessageSearchPersistenceTest {
     final AccountRepository accountRepository;
     final PeppolMessageRepository peppolMessageRepository;
     final DatabaseHelper databaseHelper;
+    private final DbmsTestHelper dbmsTestHelper;
 
     private Account account;
     private ParticipantId participantId;
@@ -49,10 +50,11 @@ public class MessageSearchPersistenceTest {
     String receiver2 = WellKnownParticipant.DIFI_TEST.stringValue();
 
     @Inject
-    public MessageSearchPersistenceTest(AccountRepository accountRepository, PeppolMessageRepository peppolMessageRepository, DatabaseHelper databaseHelper) {
+    public MessageSearchPersistenceTest(AccountRepository accountRepository, PeppolMessageRepository peppolMessageRepository, DatabaseHelper databaseHelper, DbmsTestHelper dbmsTestHelper) {
         this.accountRepository = accountRepository;
         this.peppolMessageRepository = peppolMessageRepository;
         this.databaseHelper = databaseHelper;
+        this.dbmsTestHelper = dbmsTestHelper;
     }
 
     @Test(groups = {"persistence"})
@@ -223,8 +225,8 @@ public class MessageSearchPersistenceTest {
 
         boolean validNorwegianOrgNum = ParticipantId.isValidParticipantIdentifierPattern(receiver1);
 
-        firstMessageNo = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, sender, receiver1, UUID.randomUUID().toString(), null);
-        secondMessageNo = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.OUT, sender, receiver2, UUID.randomUUID().toString(), null);
+        firstMessageNo = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, sender, receiver1, UUID.randomUUID().toString(), null);
+        secondMessageNo = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.OUT, sender, receiver2, UUID.randomUUID().toString(), null);
     }
 
     @AfterMethod

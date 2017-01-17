@@ -2,7 +2,7 @@ package no.sr.ringo.guice;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
-import eu.peppol.smp.SmpLookupManager;
+import no.difi.vefa.peppol.lookup.LookupClient;
 import no.sr.ringo.smp.RingoSmpLookup;
 import no.sr.ringo.smp.RingoSmpLookupImpl;
 import no.sr.ringo.smp.TestModeSmpLookupImpl;
@@ -19,12 +19,12 @@ import javax.servlet.ServletContext;
 public class SmpLookupProvider implements Provider<RingoSmpLookup> {
 
     private ServletContext sc;
-    private final SmpLookupManager smpLookupManager;
+    private final LookupClient lookupClient;
 
     @Inject
-    public SmpLookupProvider(ServletContext sc, SmpLookupManager smpLookupManager) {
+    public SmpLookupProvider(ServletContext sc, LookupClient lookupClient) {
         this.sc = sc;
-        this.smpLookupManager = smpLookupManager;
+        this.lookupClient = lookupClient;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class SmpLookupProvider implements Provider<RingoSmpLookup> {
         if (mockSmp != null && mockSmp) {
             return new TestModeSmpLookupImpl();
         }
-        return new RingoSmpLookupImpl(smpLookupManager);
+        return new RingoSmpLookupImpl(lookupClient);
     }
     
 }
