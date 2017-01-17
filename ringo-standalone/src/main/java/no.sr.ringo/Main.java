@@ -7,6 +7,7 @@ import eu.peppol.persistence.guice.OxalisDataSourceModule;
 import eu.peppol.persistence.guice.RepositoryModule;
 import eu.peppol.persistence.queue.OutboundMessageQueueId;
 import eu.peppol.util.OxalisProductionConfigurationModule;
+import no.sr.ringo.guice.OxalisOutboundModule;
 import no.sr.ringo.guice.RingoServiceModule;
 import no.sr.ringo.parser.CommandLineParser;
 import no.sr.ringo.parser.ParserResult;
@@ -68,7 +69,7 @@ public class Main {
     static Injector getInjector(boolean isProduction) {
         return Guice.createInjector(
                     new RingoServiceModule(isProduction),
-                    new LookupModule(),
+                    new OxalisOutboundModule(),
 
                     new OxalisProductionConfigurationModule(),
                     new OxalisDataSourceModule(),

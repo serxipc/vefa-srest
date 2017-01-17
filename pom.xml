@@ -45,6 +45,12 @@
 
         <dependencies>
 
+            <dependency>
+                <groupId>no.difi.vefa</groupId>
+                <artifactId>commons-bdxr</artifactId>
+                <version>0.9.0</version>
+            </dependency>
+
             <!-- Oxalis -->
             <dependency>
                 <groupId>no.difi.oxalis</groupId>
@@ -74,6 +80,7 @@
                 <groupId>no.difi.oxalis</groupId>
                 <artifactId>oxalis-test-impl</artifactId>
                 <version>${oxalis.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <!-- standard jee javax.inject annotations (for non jee applications) -->
@@ -262,12 +269,11 @@
             </dependency>
 
             <!--
-
-                        <dependency>
-                            <groupId>mysql</groupId>
-                            <artifactId>mysql-connector-java</artifactId>
-                            <version>5.1.39</version>
-                        </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>5.1.39</version>
+            </dependency>
             -->
 
 
@@ -335,6 +341,30 @@
                 <artifactId>commons-bdxr</artifactId>
                 <version>0.9.0</version>
             </dependency>
+
+            <!-- jitpack.io -->
+            <dependency>
+                <groupId>com.github.difi.vefa-peppol</groupId>
+                <artifactId>peppol-sbdh</artifactId>
+                <version>22fcd032f9</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>no.difi.vefa</groupId>
+                        <artifactId>peppol-common</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.github.difi.vefa-peppol</groupId>
+                <artifactId>peppol-common</artifactId>
+                <version>22fcd032f9</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.difi.vefa-peppol</groupId>
+                <artifactId>peppol-lookup</artifactId>
+                <version>22fcd032f9</version>
+            </dependency>
+
 
         </dependencies>
 
@@ -492,5 +522,12 @@
         </plugins>
 
     </build>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
 </project>

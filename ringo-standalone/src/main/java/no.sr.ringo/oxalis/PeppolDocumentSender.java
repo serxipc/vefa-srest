@@ -3,6 +3,7 @@ package no.sr.ringo.oxalis;
 import eu.peppol.identifier.MessageId;
 import no.sr.ringo.message.MessageMetaData;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.Date;
 
@@ -33,9 +34,9 @@ public interface PeppolDocumentSender {
         private final Date date;
         private final byte[] nativeEvidenceBytes;
 
-        public TransmissionReceipt(MessageId messageId, URL remoteAccessPoint, Date date, byte[] nativeEvidenceBytes) {
+        public TransmissionReceipt(MessageId messageId, URI remoteAccessPoint, Date date, byte[] nativeEvidenceBytes) {
             this.messageId = messageId;
-            this.remoteAccessPoint = remoteAccessPoint != null ? remoteAccessPoint.toExternalForm() : "n/a";
+            this.remoteAccessPoint = remoteAccessPoint != null ? remoteAccessPoint.toString() : "n/a";
             this.date = date;
             this.nativeEvidenceBytes = nativeEvidenceBytes;
         }

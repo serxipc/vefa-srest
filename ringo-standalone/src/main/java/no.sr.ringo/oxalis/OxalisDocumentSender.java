@@ -15,7 +15,7 @@ import no.sr.ringo.message.MessageMetaData;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
+import java.net.URI;
 import java.util.Date;
 
 public class OxalisDocumentSender implements PeppolDocumentSender {
@@ -48,16 +48,17 @@ public class OxalisDocumentSender implements PeppolDocumentSender {
 
         // Write the transmission id and where the message was delivered
         System.out.printf("Message sent to %s using %s was assigned transmissionId : %s\n",
-                transmissionRequest.getEndpointAddress().getUrl().toString(),
-                transmissionRequest.getEndpointAddress().getTransportProfile().getValue(),
+                transmissionRequest.getEndpoint().getAddress().toString(),
+                transmissionRequest.getEndpoint().getTransportProfile().getValue(),
                 transmissionResponse.getMessageId()
         );
 
-        return new TransmissionReceipt(transmissionResponse.getMessageId(),
-                new URL(transmissionResponse.getEndpoint().getAddress()),
+        return new TransmissionReceipt(
+                transmissionResponse.getMessageId(),
+                transmissionResponse.getEndpoint().getAddress(),
                 new Date(),
-                transmissionResponse.getNativeEvidenceBytes()     );
-
+                transmissionResponse.getNativeEvidenceBytes()
+        );
     }
 
     private InputStream getXmlDocumentAsStream(String xmlMessage) {

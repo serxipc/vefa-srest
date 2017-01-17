@@ -11,7 +11,6 @@ import no.sr.ringo.guice.RingoServiceModule;
 import no.sr.ringo.oxalis.DummySender;
 import no.sr.ringo.oxalis.OxalisDocumentSender;
 import no.sr.ringo.oxalis.PeppolDocumentSender;
-import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.Test;
 
 import java.net.URI;
