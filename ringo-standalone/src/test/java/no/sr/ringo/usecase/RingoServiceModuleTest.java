@@ -8,7 +8,6 @@ import eu.peppol.persistence.RepositoryConfiguration;
 import eu.peppol.persistence.guice.RepositoryModule;
 import no.sr.ringo.guice.RingoDataSourceGuiceModule;
 import no.sr.ringo.guice.RingoServiceModule;
-import no.sr.ringo.oxalis.DummySender;
 import no.sr.ringo.oxalis.OxalisDocumentSender;
 import no.sr.ringo.oxalis.PeppolDocumentSender;
 import org.testng.annotations.Test;
@@ -17,7 +16,6 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -27,24 +25,6 @@ import static org.testng.Assert.assertTrue;
  */
 public class RingoServiceModuleTest {
 
-    @Test
-    public void testDummySenderInjected() {
-
-        Injector injector = Guice.createInjector(
-
-                new RingoDataSourceGuiceModule("host", "user", "pass", "dbName"),
-                new RingoServiceModule(false),   // Not production
-                new RepositoryModule(),
-                new DummyConfigModule()
-        );
-
-        SendQueuedMessagesUseCase useCase = injector.getInstance(SendQueuedMessagesUseCase.class);
-        PeppolDocumentSender documentSender = useCase.getDocumentSender();
-
-        assertTrue(documentSender instanceof DummySender);
-        assertFalse(documentSender instanceof OxalisDocumentSender);
-
-    }
 
 
     @Test
@@ -52,7 +32,7 @@ public class RingoServiceModuleTest {
 
         Injector injector = Guice.createInjector(
                 new RingoDataSourceGuiceModule("host", "user", "pass", "dbName"),
-                new RingoServiceModule(true),    // Production
+                new RingoServiceModule(),    // Production
                 new RepositoryModule(),
                 new DummyConfigModule()
         );
@@ -61,7 +41,6 @@ public class RingoServiceModuleTest {
         PeppolDocumentSender documentSender = useCase.getDocumentSender();
 
         assertTrue(documentSender instanceof OxalisDocumentSender);
-        assertFalse(documentSender instanceof DummySender);
 
     }
 

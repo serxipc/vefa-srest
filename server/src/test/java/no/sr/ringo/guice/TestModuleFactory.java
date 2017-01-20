@@ -6,9 +6,6 @@ import eu.peppol.persistence.guice.RepositoryModule;
 import eu.peppol.util.OxalisProductionConfigurationModule;
 import no.sr.ringo.security.CredentialHandler;
 import no.sr.ringo.security.SecretKeyCredentialHandler;
-import no.sr.ringo.smp.RingoSmpLookup;
-import no.sr.ringo.smp.RingoSmpLookupImpl;
-import no.sr.ringo.smp.TestModeSmpLookupImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.IModuleFactory;
@@ -26,7 +23,7 @@ public class TestModuleFactory implements IModuleFactory {
 
     @Override
     public Module createModule(ITestContext context, Class<?> testClass) {
-        return new TestModule(false);
+        return new TestModule();
     }
 
     /**
@@ -36,12 +33,7 @@ public class TestModuleFactory implements IModuleFactory {
      */
     private class TestModule extends TestDataSourceModule {
 
-        private final boolean mockSmp;
         public  final Logger log = LoggerFactory.getLogger(TestModule.class);
-
-        public TestModule(boolean mockSmp) {
-            this.mockSmp = mockSmp;
-        }
 
         @Override
         protected void configure() {
@@ -63,14 +55,6 @@ public class TestModuleFactory implements IModuleFactory {
             binder.install(new RepositoryModule());
             //set up the repositories email service etc.
             binder.install(new RingoServiceModule());
-
-            //sets up either the real smp lookup or the fake one
-            if (mockSmp) {
-                System.err.println("Binding to TestModeSmpLookupImpl");
-                bind(RingoSmpLookup.class).to(TestModeSmpLookupImpl.class);
-            } else {
-                bind(RingoSmpLookup.class).to(RingoSmpLookupImpl.class);
-            }
 
         }
     }

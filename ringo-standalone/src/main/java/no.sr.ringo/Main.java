@@ -37,7 +37,7 @@ public class Main {
             System.exit(-1);
         }
 
-        Injector injector = getInjector(params.isProduction());
+        Injector injector = getInjector();
 
         SendQueuedMessagesUseCase useCase = injector.getInstance(SendQueuedMessagesUseCase.class);
         QueuedMessageSenderResult result = null;
@@ -65,9 +65,9 @@ public class Main {
 
     }
 
-    static Injector getInjector(boolean isProduction) {
+    static Injector getInjector() {
         return Guice.createInjector(
-                    new RingoServiceModule(isProduction),
+                    new RingoServiceModule(),
                     new OxalisOutboundModule(),
 
                     new OxalisProductionConfigurationModule(),

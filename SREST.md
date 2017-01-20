@@ -48,12 +48,6 @@ GET   /messages/count                                   TEXT_PLAIN             R
 GET   /messages/{message_no}/rem                        APPLICATION_XML        Returns REM evidence, if available (TODO)
 ```
 
-Represents the "directory" resource, which allows clients to check whether participant is registered in peppol network.
-```
-GET   /directory/{participantId}/{localName}  APPLICATION_XML   Retrieves acceptable document types for given participant and localName
-GET   /directory/{participantId}/             HTTP CODE         Checks whether participant is registered in SMP
-      Returns HTTP_OK if exists in some SMP - HTTP_NC (no content) if not registered
-```
 
 Exposing resources allowing to send notification emails when something goes wrong in ringo client
 ```

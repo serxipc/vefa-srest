@@ -12,7 +12,6 @@ import no.sr.ringo.message.FetchMessagesUseCase;
 import no.sr.ringo.peppol.DummySender;
 import no.sr.ringo.peppol.PeppolDocumentSender;
 import no.sr.ringo.resource.*;
-import no.sr.ringo.smp.RingoSmpLookup;
 import no.sr.ringo.usecase.ReceiveMessageFromClientUseCase;
 
 import java.util.HashMap;
@@ -46,7 +45,6 @@ public class RingoRestModule extends JerseyServletModule {
         bindJerseyResources();
         bindUseCases();
         bindSmpLookup();
-        bindSmpDependencies();
         bindDocumentSendingDependencies();
         bindExceptionHandlers();
         binder().install(new LookupModule());
@@ -80,7 +78,6 @@ public class RingoRestModule extends JerseyServletModule {
         bind(OutboxResource.class);
         bind(InboxResource.class);
         bind(MessagesResource.class);
-        bind(DirectoryResource.class);
         bind(AdminResource.class);
         bind(RegisterResource.class);
         bind(StatisticsResource.class);
@@ -101,9 +98,6 @@ public class RingoRestModule extends JerseyServletModule {
     private void bindSmpLookup() {
     }
 
-    private void bindSmpDependencies() {
-        bind(RingoSmpLookup.class).toProvider(SmpLookupProvider.class);
-    }
 
     @Provides
     OperationalMode getOperationalMode() {

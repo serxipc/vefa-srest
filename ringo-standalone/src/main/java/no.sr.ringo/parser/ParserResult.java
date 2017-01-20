@@ -1,15 +1,11 @@
 package no.sr.ringo.parser;
 
-import java.io.File;
-
 /**
  * User: adam
  * Date: 3/9/13
  * Time: 2:06 PM
  */
 public class ParserResult {
-
-
 
     public enum PROCESSING_TYPE {ALL, SINGLE}
 
@@ -30,10 +26,6 @@ public class ParserResult {
 
     public Integer getQueueId() {
         return msgNo;
-    }
-
-    public boolean isProduction() {
-        return production;
     }
 
     @Override

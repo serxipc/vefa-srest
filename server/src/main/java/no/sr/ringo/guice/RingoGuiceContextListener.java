@@ -132,11 +132,9 @@ public class RingoGuiceContextListener extends GuiceServletContextListener {
         String isProductionServer = servletContext.getInitParameter("isProductionServer");
 
         if ("true".equalsIgnoreCase(isProductionServer)) {
-            servletContext.setAttribute("mockSmp", Boolean.FALSE);
             servletContext.setAttribute("mockDifi", Boolean.FALSE); // What is this used for?
         }
         else {
-            servletContext.setAttribute("mockSmp",Boolean.TRUE);
             servletContext.setAttribute("mockDifi", Boolean.TRUE);
         }
     }

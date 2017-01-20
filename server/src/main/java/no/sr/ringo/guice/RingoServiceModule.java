@@ -3,8 +3,6 @@ package no.sr.ringo.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.RequestScoped;
-import eu.peppol.outbound.lookup.LookupModule;
-import no.sr.ringo.common.IsProductionServer;
 import no.sr.ringo.document.*;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.email.NoEmailServiceImpl;
@@ -26,16 +24,11 @@ public class RingoServiceModule extends AbstractModule {
      */
     @Override
     protected void configure() {
-        bind(IsProductionServer.class).toProvider(IsProductionServerProvider.class);
-        bindSmpLookup();
         bindRepositories();
         bindPeppolDocumentFactories();
         bindEmailService();
     }
 
-    private void bindSmpLookup() {
-        binder().install(new LookupModule());
-    }
 
     private void bindRepositories() {
         // The main workhorse

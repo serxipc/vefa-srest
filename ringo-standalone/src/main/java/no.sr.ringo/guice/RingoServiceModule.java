@@ -2,19 +2,17 @@ package no.sr.ringo.guice;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
-import no.sr.ringo.common.IsProductionServer;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.email.NoEmailServiceImpl;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.message.PeppolMessageRepositoryImpl;
-import no.sr.ringo.oxalis.DummySender;
 import no.sr.ringo.oxalis.OxalisDocumentSender;
 import no.sr.ringo.oxalis.PeppolDocumentSender;
 
 /**
  * Bindings for our service objects as used in RingoStandalone.
- *
- *
+ * <p>
+ * <p>
  * e.g.
  * Repositories
  * Stateless UseCases
@@ -23,7 +21,7 @@ import no.sr.ringo.oxalis.PeppolDocumentSender;
  * <p>
  * Configured for production or test through the constructor.
  * </p>
- *
+ * <p>
  * <p>TODO: This class should be refactored as it violates Google Guice best practice by introducing conditional logic.
  * This could be fixed by creating an abstract Ringo service module with two decendant classes; one for production and one for non-production.
  * </p>
@@ -33,18 +31,11 @@ import no.sr.ringo.oxalis.PeppolDocumentSender;
  */
 public class RingoServiceModule extends AbstractModule {
 
-    private boolean production;
-
-    public RingoServiceModule(boolean production) {
-        this.production = production;
-    }
-
     /**
      * Configures a {@link com.google.inject.Binder} via the exposed methods.
      */
     @Override
     protected void configure() {
-        bind(IsProductionServer.class).toInstance(new IsProductionServer(production));
         bindRepositories();
         bindPeppolDocumentSender();
         bindEmailService();
@@ -55,11 +46,7 @@ public class RingoServiceModule extends AbstractModule {
     }
 
     private void bindPeppolDocumentSender() {
-        if (production) {
-            bind(PeppolDocumentSender.class).to(OxalisDocumentSender.class);
-        } else {
-            bind(PeppolDocumentSender.class).to(DummySender.class);
-        }
+        bind(PeppolDocumentSender.class).to(OxalisDocumentSender.class);
     }
 
     private void bindEmailService() {
