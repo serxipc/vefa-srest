@@ -6,7 +6,6 @@ import no.sr.ringo.client.ClientObjectMother;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.message.PeppolMessageRepository;
-import no.sr.ringo.smp.RingoSmpLookup;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
@@ -37,11 +36,10 @@ public class ExtractInvoiceNoFromDocumentTest {
     public void setUp() throws Exception {
         this.documentString = readTestDocumentToFile();
         Account mockRingoAccount = createStrictMock(Account.class);
-        RingoSmpLookup mockRingoSmpLookup = createStrictMock(RingoSmpLookup.class);
         QueueRepository mockQueueRepository = createStrictMock(QueueRepository.class);
         PeppolMessageRepository mockPeppolMessageRepository = createStrictMock(PeppolMessageRepository.class);
         EmailService mockEmailService = createStrictMock(EmailService.class);
-        this.receiveMessageFromClientUseCase = new ReceiveMessageFromClientUseCase(mockRingoAccount, mockPeppolMessageRepository, mockQueueRepository, mockRingoSmpLookup, mockEmailService);
+        this.receiveMessageFromClientUseCase = new ReceiveMessageFromClientUseCase(mockRingoAccount, mockPeppolMessageRepository, mockQueueRepository, mockEmailService);
         this.document = parseInputStream(getStream());
     }
 

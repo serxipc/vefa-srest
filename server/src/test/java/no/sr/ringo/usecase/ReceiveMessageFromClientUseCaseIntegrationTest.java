@@ -16,7 +16,6 @@ import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolProcessIdAcronym;
-import no.sr.ringo.smp.TestModeSmpLookupImpl;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
@@ -50,7 +49,7 @@ public class ReceiveMessageFromClientUseCaseIntegrationTest {
     public ReceiveMessageFromClientUseCaseIntegrationTest(DatabaseHelper databaseHelper, QueueRepository queueRepository, PeppolMessageRepository peppolMessageRepository, EmailService emailService) {
         this.databaseHelper = databaseHelper;
         this.peppolMessageRepository = peppolMessageRepository;
-        this.receiveMessageFromClientUseCase = new ReceiveMessageFromClientUseCase(ObjectMother.getTestAccount(), peppolMessageRepository, queueRepository, new TestModeSmpLookupImpl(), emailService);
+        this.receiveMessageFromClientUseCase = new ReceiveMessageFromClientUseCase(ObjectMother.getTestAccount(), peppolMessageRepository, queueRepository, emailService);
     }
 
     @BeforeMethod

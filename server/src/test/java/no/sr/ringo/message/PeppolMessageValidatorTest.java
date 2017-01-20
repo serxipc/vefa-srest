@@ -7,7 +7,6 @@ import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.resource.InvalidUserInputWebException;
-import no.sr.ringo.smp.RingoSmpLookup;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -26,7 +25,6 @@ public class PeppolMessageValidatorTest {
 
     PeppolMessage mockPeppolMessage;
     PeppolHeader mockPeppolHeader;
-    RingoSmpLookup mockRingoSmpLookup;
     Account mockRingoAccount;
 
     PeppolMessageValidator validator;
@@ -36,7 +34,6 @@ public class PeppolMessageValidatorTest {
     public void setUp() throws Exception {
         mockPeppolMessage = createStrictMock(PeppolMessage.class);
         mockPeppolHeader = createStrictMock(PeppolHeader.class);
-        mockRingoSmpLookup = createStrictMock(RingoSmpLookup.class);
         mockRingoAccount = createStrictMock(Account.class);
 
         participantId = new ParticipantId(SchemeId.NO_ORGNR, "976098897");
@@ -47,12 +44,11 @@ public class PeppolMessageValidatorTest {
     @Test
     public void testValidateRecipientNotInSmp() throws Exception {
         OutboundPostParams params = new OutboundPostParams.Builder().recipientId("9908:976098897").build();
-        validator = new PeppolMessageValidator(mockRingoSmpLookup, mockPeppolMessage, params);
+        validator = new PeppolMessageValidator(mockPeppolMessage, params);
         expect(mockPeppolMessage.getPeppolHeader()).andStubReturn(mockPeppolHeader);
         expect(mockPeppolHeader.getReceiver()).andReturn(participantId);
-        expect(mockRingoSmpLookup.isRegistered(participantId)).andReturn(false);
 
-        replay(mockPeppolMessage, mockPeppolHeader, mockRingoSmpLookup);
+        replay(mockPeppolMessage, mockPeppolHeader);
 
         try{
             validator.validateHeader();
@@ -60,21 +56,17 @@ public class PeppolMessageValidatorTest {
         } catch (InvalidUserInputWebException e) {
             assertEquals(e.getMessage(), "recipient 9908:976098897 is not registered in the SMP with an accesspoint for receiving INVOICE documents");
         }
-
-        verify(mockPeppolMessage, mockPeppolHeader, mockRingoSmpLookup);
-
     }
 
     @Test
     public void testValidateWrongSender() throws Exception {
         OutboundPostParams params = new OutboundPostParams.Builder().recipientId("9908:976098897").senderId("InvalidSenderId").build();
-        validator = new PeppolMessageValidator(mockRingoSmpLookup, mockPeppolMessage, params);
+        validator = new PeppolMessageValidator( mockPeppolMessage, params);
         expect(mockPeppolMessage.getPeppolHeader()).andStubReturn(mockPeppolHeader);
         expect(mockPeppolHeader.getReceiver()).andReturn(participantId);
-        expect(mockRingoSmpLookup.isRegistered(participantId)).andReturn(true);
         expect(mockPeppolHeader.getSender()).andReturn(null);
 
-        replay(mockPeppolMessage, mockPeppolHeader, mockRingoSmpLookup);
+        replay(mockPeppolMessage, mockPeppolHeader);
 
         try{
             validator.validateHeader();
@@ -83,21 +75,20 @@ public class PeppolMessageValidatorTest {
             assertEquals(e.getMessage(), "Wrong senderId value: InvalidSenderId");
         }
 
-        verify(mockPeppolMessage, mockPeppolHeader, mockRingoSmpLookup);
+        verify(mockPeppolMessage, mockPeppolHeader);
 
     }
 
     @Test
     public void testValidateDocumentId() throws Exception {
         OutboundPostParams params = new OutboundPostParams.Builder().recipientId("9908:976098897").senderId("9908:976098897").documentId("invalidDocumentId").build();
-        validator = new PeppolMessageValidator(mockRingoSmpLookup, mockPeppolMessage, params);
+        validator = new PeppolMessageValidator( mockPeppolMessage, params);
         expect(mockPeppolMessage.getPeppolHeader()).andStubReturn(mockPeppolHeader);
         expect(mockPeppolHeader.getReceiver()).andReturn(participantId);
-        expect(mockRingoSmpLookup.isRegistered(participantId)).andReturn(true);
         expect(mockPeppolHeader.getSender()).andReturn(participantId);
         expect(mockPeppolHeader.getPeppolDocumentTypeId()).andReturn(null);
 
-        replay(mockPeppolMessage, mockPeppolHeader, mockRingoSmpLookup);
+        replay(mockPeppolMessage, mockPeppolHeader);
 
         try{
             validator.validateHeader();
@@ -106,22 +97,21 @@ public class PeppolMessageValidatorTest {
             assertEquals(e.getMessage(), "Wrong documentId value: invalidDocumentId");
         }
 
-        verify(mockPeppolMessage, mockPeppolHeader, mockRingoSmpLookup);
+        verify(mockPeppolMessage, mockPeppolHeader);
 
     }
 
     @Test
     public void testValidateProcessId() throws Exception {
         OutboundPostParams params = new OutboundPostParams.Builder().recipientId("9908:976098897").senderId("9908:976098897").documentId(PeppolDocumentTypeId.EHF_INVOICE.stringValue()).processId("invalidProcessId").build();
-        validator = new PeppolMessageValidator(mockRingoSmpLookup, mockPeppolMessage, params);
+        validator = new PeppolMessageValidator(mockPeppolMessage, params);
         expect(mockPeppolMessage.getPeppolHeader()).andStubReturn(mockPeppolHeader);
         expect(mockPeppolHeader.getReceiver()).andReturn(participantId);
-        expect(mockRingoSmpLookup.isRegistered(participantId)).andReturn(true);
         expect(mockPeppolHeader.getSender()).andReturn(participantId);
         expect(mockPeppolHeader.getPeppolDocumentTypeId()).andReturn(PeppolDocumentTypeId.EHF_INVOICE);
         expect(mockPeppolHeader.getProfileId()).andReturn(null);
 
-        replay(mockPeppolMessage, mockPeppolHeader, mockRingoSmpLookup);
+        replay(mockPeppolMessage, mockPeppolHeader);
 
         try{
             validator.validateHeader();
@@ -130,25 +120,24 @@ public class PeppolMessageValidatorTest {
             assertEquals(e.getMessage(), "Wrong processId value: invalidProcessId");
         }
 
-        verify(mockPeppolMessage, mockPeppolHeader, mockRingoSmpLookup);
+        verify(mockPeppolMessage, mockPeppolHeader);
 
     }
     @Test
     public void testValidData() throws Exception {
         OutboundPostParams params = new OutboundPostParams.Builder().recipientId("9908:976098897").senderId("9908:976098897").documentId(PeppolDocumentTypeId.EHF_INVOICE.stringValue()).processId(ProfileId.Predefined.BII04_INVOICE_ONLY.stringValue()).build();
-        validator = new PeppolMessageValidator(mockRingoSmpLookup, mockPeppolMessage, params);
+        validator = new PeppolMessageValidator(mockPeppolMessage, params);
         expect(mockPeppolMessage.getPeppolHeader()).andStubReturn(mockPeppolHeader);
         expect(mockPeppolHeader.getReceiver()).andReturn(participantId);
-        expect(mockRingoSmpLookup.isRegistered(participantId)).andReturn(true);
         expect(mockPeppolHeader.getSender()).andReturn(participantId);
         expect(mockPeppolHeader.getPeppolDocumentTypeId()).andReturn(PeppolDocumentTypeId.EHF_INVOICE);
         expect(mockPeppolHeader.getProfileId()).andReturn(ProfileId.Predefined.BII04_INVOICE_ONLY);
 
-        replay(mockPeppolMessage, mockPeppolHeader, mockRingoSmpLookup);
+        replay(mockPeppolMessage, mockPeppolHeader);
 
         validator.validateHeader();
 
-        verify(mockPeppolMessage, mockPeppolHeader, mockRingoSmpLookup);
+        verify(mockPeppolMessage, mockPeppolHeader);
 
     }
 
@@ -159,10 +148,10 @@ public class PeppolMessageValidatorTest {
         InputStream inputStream = new ByteArrayInputStream(xmlString.getBytes());
 
         OutboundPostParams params = new OutboundPostParams.Builder().recipientId("9908:976098897").senderId("9908:976098897").documentId(PeppolDocumentTypeId.EHF_INVOICE.stringValue()).processId(ProfileId.Predefined.BII04_INVOICE_ONLY.stringValue()).inputStream(inputStream).build();
-        PeppolMessage message = new PeppolMessageCreator(mockRingoSmpLookup, mockRingoAccount, params).extractDocument();
+        PeppolMessage message = new PeppolMessageCreator(mockRingoAccount, params).extractDocument();
 
-        validator = new PeppolMessageValidator(mockRingoSmpLookup, message, params);
-        replay(mockPeppolHeader, mockRingoSmpLookup);
+        validator = new PeppolMessageValidator(message, params);
+        replay(mockPeppolHeader);
 
         try {
             validator.validateDocument();
@@ -171,7 +160,7 @@ public class PeppolMessageValidatorTest {
             assertTrue(e.getMessage().contains("Unable to validate the XML document"));
         }
 
-        verify(mockPeppolHeader, mockRingoSmpLookup);
+        verify(mockPeppolHeader);
 
     }
 }

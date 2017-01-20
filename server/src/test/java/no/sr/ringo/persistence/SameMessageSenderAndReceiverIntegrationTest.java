@@ -16,6 +16,7 @@ import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.UUID;
 
 import static org.testng.Assert.assertFalse;
@@ -28,6 +29,7 @@ public class SameMessageSenderAndReceiverIntegrationTest {
 
     private final PeppolMessageRepository peppolMessageRepository;
     private final DatabaseHelper databaseHelper;
+    private final DbmsTestHelper dbmsTestHelper;
 
     private Account account = ObjectMother.getTestAccount();
     private ParticipantId participantId = ObjectMother.getTestParticipantId();
@@ -37,14 +39,15 @@ public class SameMessageSenderAndReceiverIntegrationTest {
 
 
     @Inject
-    public SameMessageSenderAndReceiverIntegrationTest(PeppolMessageRepository peppolMessageRepository, DatabaseHelper databaseHelper) {
+    public SameMessageSenderAndReceiverIntegrationTest(PeppolMessageRepository peppolMessageRepository, DatabaseHelper databaseHelper, DbmsTestHelper dbmsTestHelper) {
         this.peppolMessageRepository = peppolMessageRepository;
         this.databaseHelper = databaseHelper;
+        this.dbmsTestHelper = dbmsTestHelper;
     }
 
     @BeforeMethod(groups = {"persistence"})
     public void insertSample() throws SQLException {
-        messageOut = databaseHelper.createMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null);
+        messageOut = dbmsTestHelper.createMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), (Date)null);
     }
 
     @AfterMethod(groups = {"persistence"})

@@ -2,7 +2,6 @@ package no.sr.ringo.message;
 
 import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.resource.InvalidUserInputWebException;
-import no.sr.ringo.smp.RingoSmpLookup;
 import org.apache.commons.lang.StringUtils;
 
 import javax.xml.transform.Result;
@@ -21,18 +20,17 @@ import java.net.URL;
  * Validator used to validateHeader outbound post parameters.
  * This includes performing smpLookup to check if recipient is registered and whether documentType is supported
  * <p/>
+ *
  * @author Adam
  * @author Thore
  */
 public class PeppolMessageValidator {
 
-    private final RingoSmpLookup ringoSmpLookup;
     private final PeppolMessage peppolMessage;
     private final OutboundPostParams postParams;
     private final String LOCAL_VALIDATOR = "http://127.0.0.1:9090/validate";
 
-    public PeppolMessageValidator(RingoSmpLookup ringoSmpLookup, PeppolMessage peppolMessage, OutboundPostParams postParams) {
-        this.ringoSmpLookup = ringoSmpLookup;
+    public PeppolMessageValidator(PeppolMessage peppolMessage, OutboundPostParams postParams) {
         this.peppolMessage = peppolMessage;
         this.postParams = postParams;
     }
@@ -41,21 +39,11 @@ public class PeppolMessageValidator {
      * Validates all post parameters
      */
     public PeppolMessage validateHeader() {
-        if (skipSmpLookup()) {
-            validateRecipientWithoutSmpLookup();
-        } else {
-            validateRecipientAndDoSmpLookup();
-        }
+        validateRecipientWithoutSmpLookup();
         validateSender();
         validateDocumentIdAndResolveDocumentTypeUsingSmpLookupIfOldStyleAcronymIsUsed();
         validateProcessId();
         return peppolMessage;
-    }
-
-    private boolean skipSmpLookup() {
-        String channel = "" + postParams.getChannelIdString();
-        if ("TEST_ONLY".equals(channel)) return true; // no need to lookup messages marked as test messages
-        return false;
     }
 
     public void validateDocument() {
@@ -72,9 +60,12 @@ public class PeppolMessageValidator {
             throw new InvalidUserInputWebException("Unable to validate the XML document", e);
         }
 
-        if (result == null) throw new InvalidUserInputWebException("XmlDocument was not validated - got null response\n");
-        if (result.contains("<status>error</status>")) throw new InvalidUserInputWebException(getErrorMessage("XmlDocument contains error", result));
-        if (result.contains("<status>fatal</status>")) throw new InvalidUserInputWebException(getErrorMessage("XmlDocument was unknown or corrupt", result));
+        if (result == null)
+            throw new InvalidUserInputWebException("XmlDocument was not validated - got null response\n");
+        if (result.contains("<status>error</status>"))
+            throw new InvalidUserInputWebException(getErrorMessage("XmlDocument contains error", result));
+        if (result.contains("<status>fatal</status>"))
+            throw new InvalidUserInputWebException(getErrorMessage("XmlDocument was unknown or corrupt", result));
 
     }
 
@@ -150,20 +141,4 @@ public class PeppolMessageValidator {
         }
         return receiver;
     }
-
-    /**
-     * Validates recipient - performs SMPLookup to see if participant is registered
-     */
-    private ParticipantId validateRecipientAndDoSmpLookup() {
-        //recipient id
-        ParticipantId receiver = ParticipantId.valueOf(postParams.getRecipientIdString());
-        if (peppolMessage.getPeppolHeader().getReceiver() == null) {
-            throw new InvalidUserInputWebException(String.format("Wrong recipientId value: %s", postParams.getRecipientIdString()));
-        }
-        if (!ringoSmpLookup.isRegistered(receiver)) {
-            throw new InvalidUserInputWebException(String.format("recipient %s is not registered in the SMP with an accesspoint for receiving INVOICE documents", receiver));
-        }
-        return receiver;
-    }
-
 }

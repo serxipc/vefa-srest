@@ -5,11 +5,9 @@ import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.ProfileIdResolver;
 import no.sr.ringo.common.RingoConstants;
-import no.sr.ringo.peppol.DocumentTypeIdResolver;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.resource.InvalidUserInputWebException;
-import no.sr.ringo.smp.RingoSmpLookup;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,13 +27,11 @@ public class PeppolMessageCreator {
 
     static final Logger log = LoggerFactory.getLogger(PeppolMessageCreator.class);
 
-    RingoSmpLookup ringoSmpLookup;
     Account account;
     PeppolMessage peppolMessage;
     OutboundPostParams postParams;
 
-    public PeppolMessageCreator(RingoSmpLookup ringoSmpLookup, Account account, OutboundPostParams postParams) {
-        this.ringoSmpLookup = ringoSmpLookup;
+    public PeppolMessageCreator(Account account, OutboundPostParams postParams) {
         this.account = account;
         this.peppolMessage = new PeppolMessage();
         this.postParams = postParams;
@@ -74,9 +70,8 @@ public class PeppolMessageCreator {
 
     private void extractDocumentTypeId() {
         if (StringUtils.isNotBlank(postParams.getDocumentIdString())) {
-            DocumentTypeIdResolver documentIdResolver = new DocumentTypeIdResolver(ringoSmpLookup);
             try {
-                PeppolDocumentTypeId documentTypeId = documentIdResolver.resolve(peppolMessage.getPeppolHeader().getReceiver(), postParams.getDocumentIdString());
+                PeppolDocumentTypeId documentTypeId = PeppolDocumentTypeId.valueOf( postParams.getDocumentIdString());
                 peppolMessage.getPeppolHeader().setPeppolDocumentTypeId(documentTypeId);
             } catch (Exception e) {
                 log.warn(String.format("Cannot extractHeader documentId for value: %s", postParams.getDocumentIdString()));

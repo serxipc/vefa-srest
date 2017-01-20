@@ -2,7 +2,6 @@ package no.sr.ringo;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import eu.peppol.outbound.lookup.LookupModule;
 import eu.peppol.persistence.guice.OxalisDataSourceModule;
 import eu.peppol.persistence.guice.RepositoryModule;
 import eu.peppol.persistence.queue.OutboundMessageQueueId;

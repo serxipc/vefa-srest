@@ -2,8 +2,6 @@ package no.sr.ringo.guice;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
-import com.google.inject.servlet.RequestScoped;
-import eu.peppol.persistence.guice.AopJdbcTxManagerModule;
 import eu.peppol.persistence.guice.RepositoryModule;
 import eu.peppol.util.OxalisProductionConfigurationModule;
 import no.sr.ringo.security.CredentialHandler;
@@ -52,7 +50,6 @@ public class TestModuleFactory implements IModuleFactory {
             super.configure();
 
             //we need to fake the request scope and ServletContext when not running in a web container.
-            bindScope(RequestScoped.class, new FakeScope(mockSmp));
             bind(ServletContext.class).toInstance(new FakeServletContext());
 
             bind(CredentialHandler.class).to(SecretKeyCredentialHandler.class);
@@ -66,8 +63,6 @@ public class TestModuleFactory implements IModuleFactory {
             binder.install(new RepositoryModule());
             //set up the repositories email service etc.
             binder.install(new RingoServiceModule());
-
-            binder.install(new SmpInTestModeModule());
 
             //sets up either the real smp lookup or the fake one
             if (mockSmp) {

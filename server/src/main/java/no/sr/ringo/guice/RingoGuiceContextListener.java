@@ -9,7 +9,6 @@ import eu.peppol.persistence.guice.RepositoryModule;
 import eu.peppol.util.GlobalConfigurationImpl;
 import eu.peppol.util.OxalisProductionConfigurationModule;
 import no.sr.ringo.common.PropertyHelper;
-import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -69,7 +68,6 @@ public class RingoGuiceContextListener extends GuiceServletContextListener {
         );
     }
 
-    @NotNull
     RepositoryConfiguration getRepositoryConfiguration() {
         return new RepositoryConfiguration() {
             @Override

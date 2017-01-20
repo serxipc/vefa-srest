@@ -3,18 +3,20 @@ package no.sr.ringo.resource;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import eu.peppol.persistence.api.account.Account;
-import no.sr.ringo.message.*;
-import no.sr.ringo.peppol.RingoUtils;
+import no.sr.ringo.message.FetchMessagesUseCase;
+import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.message.statistics.RingoStatistics;
 import no.sr.ringo.report.RingoReportUtils;
 import no.sr.ringo.report.SendReportUseCase;
 import no.sr.ringo.response.MessagesQueryResponse;
-import no.sr.ringo.smp.RingoSmpLookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -34,16 +36,14 @@ public class AdminResource extends AbstractMessageResource {
     private final Account account;
     private final FetchMessagesUseCase fetchMessagesUseCase;
     private final PeppolMessageRepository peppolMessageRepository;
-    private final RingoSmpLookup ringoSmpLookup;
     private final SendReportUseCase sendReportUseCase;
 
     @Inject
-    public AdminResource(FetchMessagesUseCase fetchMessagesUseCase, Account account, PeppolMessageRepository peppolMessageRepository, RingoSmpLookup ringoSmpLookup, SendReportUseCase sendReportUseCase) {
+    public AdminResource(FetchMessagesUseCase fetchMessagesUseCase, Account account, PeppolMessageRepository peppolMessageRepository, SendReportUseCase sendReportUseCase) {
         super();
         this.fetchMessagesUseCase = fetchMessagesUseCase;
         this.account = account;
         this.peppolMessageRepository = peppolMessageRepository;
-        this.ringoSmpLookup = ringoSmpLookup;
         this.sendReportUseCase = sendReportUseCase;
     }
 
@@ -57,7 +57,9 @@ public class AdminResource extends AbstractMessageResource {
 
         MessagesQueryResponse messagesQueryResponse = fetchMessagesUseCase.init(this, uriInfo).messagesWithoutAccountId().getMessages();
 
-        String entity = String.format("<status><is-production-server>%s</is-production-server><smp-lookup>%s</smp-lookup>%s</status>", servletContext.getInitParameter("isProductionServer"), RingoUtils.encodePredefinedXmlEntities(ringoSmpLookup.getClass().getName()), messagesQueryResponse.asXml());
+        String entity = String.format("<status><is-production-server>%s</is-production-server>%s</status>",
+                servletContext.getInitParameter("isProductionServer"),
+                messagesQueryResponse.asXml());
         return SrResponse.ok().entity(entity).build();
     }
 

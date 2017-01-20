@@ -10,7 +10,6 @@ import no.sr.ringo.common.UploadMode;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.message.*;
 import no.sr.ringo.resource.InvalidUserInputWebException;
-import no.sr.ringo.smp.RingoSmpLookup;
 import no.sr.ringo.xml.EhfEntityExtractor;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -33,7 +32,6 @@ public class ReceiveMessageFromClientUseCase {
     private final Account account;
     private final PeppolMessageRepository messageRepository;
     private final QueueRepository queueRepository;
-    private final RingoSmpLookup ringoSmpLookup;
     private PeppolMessage peppolMessage;
     private OutboundPostParams postParams;
     private UploadMode uploadMode;
@@ -43,11 +41,10 @@ public class ReceiveMessageFromClientUseCase {
 
 
     @Inject
-    ReceiveMessageFromClientUseCase(Account account, PeppolMessageRepository messageRepository, QueueRepository queueRepository, RingoSmpLookup ringoSmpLookup, EmailService emailService) {
+    ReceiveMessageFromClientUseCase(Account account, PeppolMessageRepository messageRepository, QueueRepository queueRepository, EmailService emailService) {
         this.account = account;
         this.messageRepository = messageRepository;
         this.queueRepository = queueRepository;
-        this.ringoSmpLookup = ringoSmpLookup;
         this.emailService = emailService;
     }
 
@@ -100,12 +97,12 @@ public class ReceiveMessageFromClientUseCase {
     }
 
     private void validateHeader(OutboundPostParams postParams) {
-        peppolMessageValidator = new PeppolMessageValidator(ringoSmpLookup, peppolMessage, postParams);
+        peppolMessageValidator = new PeppolMessageValidator(peppolMessage, postParams);
         peppolMessageValidator.validateHeader();
     }
 
     private void extractHeader(OutboundPostParams postParams) {
-        peppolMessageCreator = new PeppolMessageCreator(ringoSmpLookup, account, postParams);
+        peppolMessageCreator = new PeppolMessageCreator(account, postParams);
         try {
             peppolMessage = peppolMessageCreator.extractHeader();
         } catch (Exception e) {
