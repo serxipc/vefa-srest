@@ -16,8 +16,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <java.version>1.8</java.version>
         <slf4j.version>1.7.2</slf4j.version>
         <oxalis.version>4.0.0-SNAPSHOT</oxalis.version>
         <jersey.version>1.19.2</jersey.version>
@@ -48,7 +47,7 @@
             <dependency>
                 <groupId>no.difi.vefa</groupId>
                 <artifactId>commons-bdxr</artifactId>
-                <version>0.9.0</version>
+                <version>0.9.1</version>
             </dependency>
 
             <!-- Oxalis -->
@@ -169,8 +168,8 @@
             <!-- java servlets api -->
             <dependency>
                 <groupId>javax.servlet</groupId>
-                <artifactId>servlet-api</artifactId>
-                <version>3.0</version>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>3.1.0</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -336,12 +335,6 @@
                 <scope>test</scope>
             </dependency>
 
-            <dependency>
-                <groupId>no.difi.vefa</groupId>
-                <artifactId>commons-bdxr</artifactId>
-                <version>0.9.0</version>
-            </dependency>
-
             <!-- jitpack.io -->
             <dependency>
                 <groupId>com.github.difi.vefa-peppol</groupId>
@@ -359,12 +352,6 @@
                 <artifactId>peppol-common</artifactId>
                 <version>22fcd032f9</version>
             </dependency>
-            <dependency>
-                <groupId>com.github.difi.vefa-peppol</groupId>
-                <artifactId>peppol-lookup</artifactId>
-                <version>22fcd032f9</version>
-            </dependency>
-
 
         </dependencies>
 
@@ -419,8 +406,9 @@
                     <version>3.6.0</version>
                     <inherited>true</inherited>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <encoding>UTF-8</encoding>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
                     </configuration>
                 </plugin>
                 <plugin>

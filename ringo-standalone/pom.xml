@@ -47,11 +47,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>no.difi.vefa</groupId>
-            <artifactId>commons-bdxr</artifactId>
-        </dependency>
-
         <!-- oxalis -->
 
         <dependency>

@@ -271,4 +271,9 @@ class FakeServletContext implements ServletContext {
     public JspConfigDescriptor getJspConfigDescriptor() {
         return null;
     }
+
+    @Override
+    public String getVirtualServerName() {
+        return "Virtual Server Name";
+    }
 }
