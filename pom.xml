@@ -80,6 +80,16 @@
                 <artifactId>oxalis-test-impl</artifactId>
                 <version>${oxalis.version}</version>
                 <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-server</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-servlet</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- standard jee javax.inject annotations (for non jee applications) -->
