@@ -42,9 +42,9 @@ public class TestModuleFactory implements IModuleFactory {
             //sets up the datasource
             super.configure();
 
-            bindScope(RequestScoped.class, new FakeScope());
 
             //we need to fake the request scope and ServletContext when not running in a web container.
+            bindScope(RequestScoped.class, new FakeScope());
             bind(ServletContext.class).toInstance(new FakeServletContext());
 
             bind(CredentialHandler.class).to(SecretKeyCredentialHandler.class);
