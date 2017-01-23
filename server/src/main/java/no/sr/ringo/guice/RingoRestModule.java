@@ -18,7 +18,7 @@ import java.util.Map;
 
 /**
  * Creates the REST bindings for the Server at the given WebContexts.
- *
+ * <p>
  * This module is only used in Production
  *
  * @author andy
