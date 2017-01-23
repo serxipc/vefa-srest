@@ -41,22 +41,6 @@ public class PeppolMessageValidatorTest {
     }
 
 
-    @Test
-    public void testValidateRecipientNotInSmp() throws Exception {
-        OutboundPostParams params = new OutboundPostParams.Builder().recipientId("9908:976098897").build();
-        validator = new PeppolMessageValidator(mockPeppolMessage, params);
-        expect(mockPeppolMessage.getPeppolHeader()).andStubReturn(mockPeppolHeader);
-        expect(mockPeppolHeader.getReceiver()).andReturn(participantId);
-
-        replay(mockPeppolMessage, mockPeppolHeader);
-
-        try{
-            validator.validateHeader();
-            fail();
-        } catch (InvalidUserInputWebException e) {
-            assertEquals(e.getMessage(), "recipient 9908:976098897 is not registered in the SMP with an accesspoint for receiving INVOICE documents");
-        }
-    }
 
     @Test
     public void testValidateWrongSender() throws Exception {

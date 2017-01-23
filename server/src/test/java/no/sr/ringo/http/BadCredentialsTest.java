@@ -17,7 +17,7 @@ public class BadCredentialsTest extends AbstractHttpClientServerTest {
 
 
 
-    @Test(groups = {"integration"})
+    @Test(groups = {"integration"}, enabled = false)
     public void testInvalidUserNameAndPassword() throws Exception {
         RingoClientImpl client = new RingoClientImpl(new DefaultRingoConfig(PEPPOL_BASE_URL, null), "rubbish", "more rubbish");
 
