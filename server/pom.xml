@@ -15,18 +15,6 @@
     <name>Ringo - Access point Rest Service</name>
     <description>The Ringo Server with the REST API</description>
 
-    <profiles>
-        <profile>
-            <id>prod</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <isProduction>true</isProduction> <!-- isProduction is referenced in web.xml -->
-            </properties>
-        </profile>
-    </profiles>
-
     <build>
         <plugins>
             <plugin>

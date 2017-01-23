@@ -155,7 +155,7 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
      *
      * @throws IOException
      */
-    @Test(groups = {"integration","external"})
+    @Test(groups = {"external"})
     public void verifyUploadHtmlPage() throws IOException {
 
         HttpGet httpGet = new HttpGet(PEPPOL_BASE_URL + "/upload/upload.do");

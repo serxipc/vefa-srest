@@ -447,7 +447,9 @@
                     <version>2.19.1</version>
                     <configuration>
                         <!-- maven-surefire-plugin runs unit tests, triggered by mvn test -->
-                        <excludedGroups>integration,persistence,external,broken</excludedGroups>
+
+                        <excludedGroups>external,broken</excludedGroups>
+                        <!--<excludedGroups>integration,persistence</excludedGroups>-->
                     </configuration>
                 </plugin>
                 <plugin>
