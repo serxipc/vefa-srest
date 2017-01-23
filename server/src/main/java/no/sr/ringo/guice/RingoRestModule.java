@@ -5,7 +5,6 @@ import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import eu.peppol.outbound.lookup.LookupModule;
 import eu.peppol.util.OperationalMode;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.message.FetchMessagesUseCase;
@@ -46,7 +45,6 @@ public class RingoRestModule extends JerseyServletModule {
         bindUseCases();
         bindDocumentSendingDependencies();
         bindExceptionHandlers();
-        binder().install(new LookupModule());
 
         // Serves everything under inbox, outbox, messages, events etc using (JAX-RS)
         serveRegex("(^\\/(?:register|directory|inbox|outbox|messages|admin|statistics|notify)(?!.*\\.ico.*).*$)").with(GuiceContainer.class, initalisationParams);
