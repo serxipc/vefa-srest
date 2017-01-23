@@ -20,7 +20,7 @@ import static org.testng.Assert.assertTrue;
  * Date: 1/19/12
  * Time: 11:41 AM
  */
-@Guice(modules = {RingoServiceModule.class, RepositoryModule.class, OxalisProductionConfigurationModule.class,TestDataSourceModule.class})
+@Guice(modules = {RingoServiceModule.class, RepositoryModule.class, OxalisProductionConfigurationModule.class,TestDataSourceModule.class, FakeScopesModule.class})
 public class RingoServiceModuleTest {
 
     @Inject

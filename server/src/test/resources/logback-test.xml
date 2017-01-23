@@ -15,7 +15,7 @@
     <logger name="no.sr.ringo.resource" level="info"/>
 
     <!-- For Jetty -->
-    <logger name="org.eclipse" level="info" />
+    <logger name="org.eclipse" level="debug" />
     <logger name="org.apache" level="info" />
 
 

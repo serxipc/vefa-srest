@@ -1,5 +1,6 @@
 package no.sr.ringo.persistence;
 
+import com.google.inject.Inject;
 import eu.peppol.identifier.PeppolDocumentTypeId;
 import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
 import eu.peppol.identifier.PeppolProcessTypeId;
@@ -18,6 +19,7 @@ public class DbmsTestHelper {
 
     private final DatabaseHelper databaseHelper;
 
+    @Inject
     public DbmsTestHelper(DatabaseHelper databaseHelper) {
         this.databaseHelper = databaseHelper;
     }

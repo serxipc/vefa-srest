@@ -2,6 +2,7 @@ package no.sr.ringo.guice;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
+import com.google.inject.servlet.RequestScoped;
 import eu.peppol.persistence.guice.RepositoryModule;
 import eu.peppol.util.OxalisProductionConfigurationModule;
 import no.sr.ringo.security.CredentialHandler;
@@ -40,6 +41,8 @@ public class TestModuleFactory implements IModuleFactory {
 
             //sets up the datasource
             super.configure();
+
+            bindScope(RequestScoped.class, new FakeScope());
 
             //we need to fake the request scope and ServletContext when not running in a web container.
             bind(ServletContext.class).toInstance(new FakeServletContext());
