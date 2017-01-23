@@ -57,13 +57,6 @@ public class VersionHeaderTest extends AbstractHttpClientServerTest {
         verify(mockOutputStream);
     }
 
-    @Test(groups = {"integration"})
-    public void testOutOfDateSMP() throws IOException, URISyntaxException {
-
-        ringoRestClientImpl.isParticipantRegistered(new ParticipantId(SchemeId.NO_ORGNR, "976098897"));
-
-        verify(mockOutputStream);
-    }
 
     @Test(groups = {"integration"})
     public void testOutOfDateMessages() throws IOException, URISyntaxException {

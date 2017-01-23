@@ -76,7 +76,7 @@ public class RegisterUseCase {
             return new RegistrationProcessResult(RegistrationProcessResult.RegistrationSource.RINGO, false, MessageHelper.getMessage("reg.user.exists"));
         }
 
-        //Prefix given orgNo with 9908
+        // Prefix given orgNo with 9908
         final ParticipantId peppolParticipantId = ParticipantId.valueOf(registrationData.getOrgNo());
         if (peppolParticipantId == null) {
             throw new IllegalArgumentException("Provided organisation number is invalid");

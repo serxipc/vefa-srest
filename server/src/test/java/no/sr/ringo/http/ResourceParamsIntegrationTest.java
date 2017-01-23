@@ -162,8 +162,8 @@ public class ResourceParamsIntegrationTest extends AbstractHttpClientServerTest 
         multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("ChannelID", new StringBody("CHTEST", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.name(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.name(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.getDocumentTypeIdentifier().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
 
         httpPost.setEntity(multipartEntity);
 
@@ -187,7 +187,7 @@ public class ResourceParamsIntegrationTest extends AbstractHttpClientServerTest 
         multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("ChannelID", new StringBody("CHTEST", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.name(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.getDocumentTypeIdentifier().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
 
         httpPost.setEntity(multipartEntity);
 
@@ -211,8 +211,8 @@ public class ResourceParamsIntegrationTest extends AbstractHttpClientServerTest 
         multipartEntity.addPart("RecipientID", new StringBody("WrongRecipientId", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("ChannelID", new StringBody("CHTEST", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.name(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.name(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.getDocumentTypeIdentifier().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
 
         httpPost.setEntity(multipartEntity);
 
@@ -235,8 +235,8 @@ public class ResourceParamsIntegrationTest extends AbstractHttpClientServerTest 
         multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("SenderID", new StringBody("WrongSenderId",  "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("ChannelID", new StringBody("CHTEST", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.name(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.name(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.getDocumentTypeIdentifier().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
 
         httpPost.setEntity(multipartEntity);
 
@@ -261,14 +261,13 @@ public class ResourceParamsIntegrationTest extends AbstractHttpClientServerTest 
         multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("ChannelID", new StringBody("CHTEST", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.name(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("DocumentID", new StringBody("WrongDocumentId", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
 
         httpPost.setEntity(multipartEntity);
 
         HttpResponse response = httpClient.execute(httpPost);
 
-        assertEquals("Wrong documentId value: WrongDocumentId", ResponseUtils.writeResponseToString(response, RingoConstants.DEFAULT_CHARACTER_SET));
         assertEquals(response.getStatusLine().getStatusCode(), 400);
     }
 
@@ -293,23 +292,6 @@ public class ResourceParamsIntegrationTest extends AbstractHttpClientServerTest 
         HttpResponse response = httpClient.execute(httpPost);
         assertEquals(response.getStatusLine().getStatusCode(), 201);
 
-    }
-
-
-    /**
-     * directory/participantId returns 400 BAD REQUEST
-     */
-    @Test(groups = {"integration"})
-    public void testDirectoryWrongParticipantId() throws URISyntaxException, IOException, SQLException {
-
-        String s = PEPPOL_BASE_URL.toString() + "/directory/wrongParticipantId";
-        URI directoryLookupUri = new URI(s);
-        HttpGet httpGet = new HttpGet(directoryLookupUri);
-
-        HttpResponse response = httpClient.execute(httpGet);
-
-        assertEquals("Invalid peppol participant id 'wrongParticipantId'", ResponseUtils.writeResponseToString(response, RingoConstants.DEFAULT_CHARACTER_SET));
-        assertEquals(response.getStatusLine().getStatusCode(), 400);
     }
 
 }

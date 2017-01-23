@@ -104,17 +104,41 @@ public class PeppolMessageRepositoryImplStatisticsIntegrationTest {
 
     private void createTestMessages() {
 
-        for (int i = 0; i < 3; i++) {
 
-            databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
-                    PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
-                    "<test>\u00E5</test>",
-                    account.getAccountId().toInteger(),
-                    TransferDirection.OUT,
-                    participantId.stringValue(),
-                    participantId.stringValue(),
-                    UUID.randomUUID().toString(), sentDate, receivedDate);
-        }
+        databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
+                PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
+                "<test>\u00E5</test>",
+                account.getAccountId().toInteger(),
+                TransferDirection.OUT,
+                participantId.stringValue(),
+                participantId.stringValue(),
+                UUID.randomUUID().toString(), sentDate, receivedDate);
+        databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
+                PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
+                "<test>\u00E5</test>",
+                account.getAccountId().toInteger(),
+                TransferDirection.IN,
+                participantId.stringValue(),
+                participantId.stringValue(),
+                UUID.randomUUID().toString(), downloadedDate, receivedDate);
+
+        databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
+                PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
+                "<test>\u00E5</test>",
+                account.getAccountId().toInteger(),
+                TransferDirection.IN,
+                participantId.stringValue(),
+                participantId.stringValue(),
+                UUID.randomUUID().toString(), null, oldestUndeliveredDate);
+        databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
+                PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
+                "<test>\u00E5</test>",
+                account.getAccountId().toInteger(),
+                TransferDirection.OUT,
+                participantId.stringValue(),
+                participantId.stringValue(),
+                UUID.randomUUID().toString(), null, oldestUndeliveredDate);
+
     }
 
     /**

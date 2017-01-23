@@ -12,7 +12,7 @@
     <logger name="no.sr" level="debug"/>
     <logger name="no.sr.ringo.resource.ClientVersionHelper" level="warn"/>
     <logger name="no.sr.ringo.account.RingoAccountProvider" level="warn"/>
-    <logger name="no.sr.ringo.resource" level="info"/>
+    <logger name="no.sr.ringo.resource" level="debug"/>
 
     <!-- For Jetty -->
     <logger name="org.eclipse" level="debug" />
