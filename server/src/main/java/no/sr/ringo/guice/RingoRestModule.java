@@ -5,7 +5,6 @@ import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import eu.peppol.outbound.lookup.LookupModule;
 import eu.peppol.util.OperationalMode;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.message.FetchMessagesUseCase;
@@ -19,7 +18,7 @@ import java.util.Map;
 
 /**
  * Creates the REST bindings for the Server at the given WebContexts.
- *
+ * <p>
  * This module is only used in Production
  *
  * @author andy
@@ -47,7 +46,6 @@ public class RingoRestModule extends JerseyServletModule {
         bindSmpLookup();
         bindDocumentSendingDependencies();
         bindExceptionHandlers();
-        binder().install(new LookupModule());
 
         // Serves everything under inbox, outbox, messages, events etc using (JAX-RS)
         serveRegex("(^\\/(?:register|directory|inbox|outbox|messages|admin|statistics|notify)(?!.*\\.ico.*).*$)").with(GuiceContainer.class, initalisationParams);
