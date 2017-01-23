@@ -43,7 +43,6 @@ public class RingoRestModule extends JerseyServletModule {
         bindClientVersion();
         bindJerseyResources();
         bindUseCases();
-        bindSmpLookup();
         bindDocumentSendingDependencies();
         bindExceptionHandlers();
 
@@ -91,9 +90,6 @@ public class RingoRestModule extends JerseyServletModule {
         bind(FetchMessagesUseCase.class).in(RequestScoped.class);
         bind(ReceiveMessageFromClientUseCase.class).in(RequestScoped.class);
         bind(FetchDocumentUseCase.class).in(RequestScoped.class);
-    }
-
-    private void bindSmpLookup() {
     }
 
 
