@@ -15,7 +15,7 @@ node "Message payload repository" as r <<File system>> {
     outbound -> archive
 }
 
-package "Spiralis" {
+package "vefa-srest" {
     component "ringo-server" as rs
     rs - HTTPS
     rs ..> account

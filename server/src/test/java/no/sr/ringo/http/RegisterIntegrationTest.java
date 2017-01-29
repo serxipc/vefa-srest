@@ -6,7 +6,7 @@ import eu.peppol.persistence.api.SrAccountNotFoundException;
 import eu.peppol.persistence.api.UserName;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.api.account.AccountRepository;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -28,7 +28,7 @@ import static org.testng.Assert.assertEquals;
  *         Date: 13.10.2016
  *         Time: 09.28
  */
-@Guice(moduleFactory = TestModuleFactory.class)
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class RegisterIntegrationTest extends AbstractHttpClientServerTest {
 
     public static final String ACCOUNT_USERNAME = "Difi_test";

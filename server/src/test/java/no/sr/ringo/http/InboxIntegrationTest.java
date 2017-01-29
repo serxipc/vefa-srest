@@ -8,7 +8,7 @@ import no.sr.ringo.ObjectMother;
 import no.sr.ringo.client.Inbox;
 import no.sr.ringo.client.Message;
 import no.sr.ringo.client.Messages;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.persistence.DbmsTestHelper;
@@ -31,7 +31,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * @author Steinar Overbeck Cook steinar@sendregning.no
  */
-@Guice(moduleFactory = TestModuleFactory.class)
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class InboxIntegrationTest extends AbstractHttpClientServerTest {
 
     static final Logger log = LoggerFactory.getLogger(InboxIntegrationTest.class);

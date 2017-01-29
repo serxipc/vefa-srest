@@ -13,7 +13,7 @@ import eu.peppol.persistence.queue.*;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.PeppolMessageTestdataGenerator;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.message.PeppolMessage;
 import no.sr.ringo.message.PeppolMessageRepository;
@@ -31,7 +31,7 @@ import java.util.UUID;
 
 import static org.testng.Assert.*;
 
-@Guice(moduleFactory = TestModuleFactory.class)
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class QueueRepositoryImplIntegrationTest {
 
     Logger logger = LoggerFactory.getLogger(QueueRepositoryImplIntegrationTest.class);

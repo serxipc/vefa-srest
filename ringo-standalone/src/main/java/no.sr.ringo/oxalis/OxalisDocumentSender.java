@@ -1,6 +1,5 @@
 package no.sr.ringo.oxalis;
 
-import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolDocumentTypeId;
 import eu.peppol.identifier.PeppolProcessTypeId;
@@ -15,7 +14,6 @@ import no.sr.ringo.message.MessageMetaData;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.util.Date;
 
 public class OxalisDocumentSender implements PeppolDocumentSender {
@@ -38,7 +36,6 @@ public class OxalisDocumentSender implements PeppolDocumentSender {
                 .sender((new ParticipantId(messageMetaData.getPeppolHeader().getSender().stringValue())))
                 .documentType(PeppolDocumentTypeId.valueOf(messageMetaData.getPeppolHeader().getPeppolDocumentTypeId().stringValue()))
                 .processType(PeppolProcessTypeId.valueOf(messageMetaData.getPeppolHeader().getProfileId().stringValue()))
-                .messageId(new MessageId(messageMetaData.getUuid()))
                 .payLoad(getXmlDocumentAsStream(xmlMessage));
 
 

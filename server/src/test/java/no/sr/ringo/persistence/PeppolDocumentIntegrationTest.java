@@ -14,7 +14,7 @@ import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.document.DocumentRepository;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.document.PeppolDocument;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.PeppolMessageNotFoundException;
 import no.sr.ringo.peppol.*;
 import org.testng.annotations.BeforeMethod;
@@ -30,7 +30,7 @@ import java.util.UUID;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-@Guice(moduleFactory = TestModuleFactory.class)
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class PeppolDocumentIntegrationTest {
 
     private final DatabaseHelper databaseHelper;

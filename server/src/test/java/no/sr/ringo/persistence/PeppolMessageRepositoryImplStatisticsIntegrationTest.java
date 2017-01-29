@@ -9,7 +9,7 @@ import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.message.statistics.RingoAccountStatistics;
 import no.sr.ringo.message.statistics.RingoStatistics;
@@ -30,7 +30,7 @@ import java.util.UUID;
 
 import static org.testng.Assert.*;
 
-@Guice(moduleFactory = TestModuleFactory.class)
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class PeppolMessageRepositoryImplStatisticsIntegrationTest {
 
     private final PeppolMessageRepository peppolMessageRepository;

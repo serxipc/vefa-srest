@@ -6,7 +6,7 @@ import no.sr.ringo.ObjectMother;
 import no.sr.ringo.client.ClientObjectMother;
 import no.sr.ringo.common.ResponseUtils;
 import no.sr.ringo.common.RingoConstants;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -31,8 +31,8 @@ import static org.testng.Assert.assertEquals;
  *         <p/>
  *         Tests that wrong parameters passed to resources will cause 400
  */
-//@Guice(modules = {TestDataSourceModule.class, RingoServiceModule.class})
-@Guice(moduleFactory = TestModuleFactory.class)
+//@Guice(modules = {ServerTestDataSourceModule.class, RingoServiceModule.class})
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 
 public class ResourceParamsIntegrationTest extends AbstractHttpClientServerTest {
 

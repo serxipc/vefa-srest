@@ -8,7 +8,7 @@ import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.api.account.AccountRepository;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageNotFoundException;
 import no.sr.ringo.message.PeppolMessageRepository;
@@ -27,7 +27,7 @@ import static org.testng.Assert.assertNull;
  *
  * @author Adam Mscisz adam@sendregning.no
  */
-@Guice(moduleFactory = TestModuleFactory.class)
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class MarkAsReadPersistenceTest {
 
     private final AccountRepository accountRepository;
@@ -49,7 +49,7 @@ public class MarkAsReadPersistenceTest {
     }
 
     /**
-     * This test must be run as last one, because it creates new message which would impact other tests
+     * This test_ must be run as last one, because it creates new message which would impact other tests
      */
     @Test(groups = {"persistence"})
     public void testMarkAsRead() throws PeppolMessageNotFoundException {

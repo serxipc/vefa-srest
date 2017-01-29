@@ -5,10 +5,10 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import eu.peppol.persistence.RepositoryConfiguration;
-import eu.peppol.persistence.guice.RepositoryModule;
+import eu.peppol.persistence.RingoRepositoryModule;
 import eu.peppol.util.GlobalConfigurationImpl;
-import eu.peppol.util.OxalisProductionConfigurationModule;
 import no.sr.ringo.common.PropertyHelper;
+import no.sr.ringo.config.RingoConfigModule;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -54,17 +54,12 @@ public class RingoGuiceContextListener extends GuiceServletContextListener {
                 //the ringo service
                 new RingoServiceModule(),
 
-
-                /**  Stuff from oxalis-persistence */
-
                 // The repositories
-                new RepositoryModule(),
+                new RingoRepositoryModule(),
                 // The JDBC datasource to be obtained via JNDI
                 new RingoJndiDataSourceGuiceModule(jndiName),
 
-                /** Stuff from Oxalis-commons */
-                // The configuration
-                new OxalisProductionConfigurationModule()
+                new RingoConfigModule()
         );
     }
 

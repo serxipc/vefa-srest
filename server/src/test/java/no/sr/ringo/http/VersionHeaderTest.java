@@ -8,7 +8,7 @@ import no.sr.ringo.client.Messagebox;
 import no.sr.ringo.client.RingoServiceRestImpl;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.common.RingoLoggingStream;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolHeader;
 import org.apache.commons.io.input.ReaderInputStream;
@@ -30,8 +30,8 @@ import static org.easymock.EasyMock.*;
 /**
  * @author adam
  */
-//@Guice(modules = {TestDataSourceModule.class,RingoServiceModule.class})
-@Guice(moduleFactory = TestModuleFactory.class)
+//@Guice(modules = {ServerTestDataSourceModule.class,RingoServiceModule.class})
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 
 public class VersionHeaderTest extends AbstractHttpClientServerTest {
 

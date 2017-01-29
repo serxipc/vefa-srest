@@ -2,8 +2,8 @@ package no.sr.ringo;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import eu.peppol.persistence.RingoRepositoryModule;
 import eu.peppol.persistence.guice.OxalisDataSourceModule;
-import eu.peppol.persistence.guice.RepositoryModule;
 import eu.peppol.persistence.queue.OutboundMessageQueueId;
 import eu.peppol.util.OxalisProductionConfigurationModule;
 import no.sr.ringo.guice.OxalisOutboundModule;
@@ -72,7 +72,7 @@ public class Main {
 
                     new OxalisProductionConfigurationModule(),
                     new OxalisDataSourceModule(),
-                    new RepositoryModule()
+                    new RingoRepositoryModule()
 
                 );
     }

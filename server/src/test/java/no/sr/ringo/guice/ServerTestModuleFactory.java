@@ -3,8 +3,8 @@ package no.sr.ringo.guice;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.servlet.RequestScoped;
-import eu.peppol.persistence.guice.RepositoryModule;
-import eu.peppol.util.OxalisProductionConfigurationModule;
+import eu.peppol.persistence.RingoRepositoryModule;
+import no.difi.ringo.UnitTestConfigModule;
 import no.sr.ringo.security.CredentialHandler;
 import no.sr.ringo.security.SecretKeyCredentialHandler;
 import org.slf4j.Logger;
@@ -20,11 +20,11 @@ import javax.servlet.ServletContext;
  * Our factory will also receive a test context, which allows you to look up some values
  * on the environment you were invoked with.
  */
-public class TestModuleFactory implements IModuleFactory {
+public class ServerTestModuleFactory implements IModuleFactory {
 
     @Override
     public Module createModule(ITestContext context, Class<?> testClass) {
-        return new TestModule();
+        return new ServerTestModule();
     }
 
     /**
@@ -32,9 +32,9 @@ public class TestModuleFactory implements IModuleFactory {
      * Repositories, test datasource, fake ElmaRegistration
      * optionally fake SMP lookup.
      */
-    private class TestModule extends TestDataSourceModule {
+    private class ServerTestModule extends ServerTestDataSourceModule {
 
-        public  final Logger log = LoggerFactory.getLogger(TestModule.class);
+        public  final Logger log = LoggerFactory.getLogger(ServerTestModule.class);
 
         @Override
         protected void configure() {
@@ -53,13 +53,15 @@ public class TestModuleFactory implements IModuleFactory {
             // like an "include" statement
             Binder binder = binder();
 
-            binder.install(new OxalisProductionConfigurationModule());
+            binder.install(new UnitTestConfigModule());
+            binder.install(new RingoRepositoryModule());
 
-            binder.install(new RepositoryModule());
             //set up the repositories email service etc.
             binder.install(new RingoServiceModule());
 
         }
+
+     
     }
 
 }

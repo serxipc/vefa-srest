@@ -6,7 +6,7 @@ import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.PeppolMessageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ import java.util.UUID;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-@Guice(moduleFactory = TestModuleFactory.class)
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class SameMessageSenderAndReceiverIntegrationTest {
 
     Logger logger = LoggerFactory.getLogger(SameMessageSenderAndReceiverIntegrationTest.class);

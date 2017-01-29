@@ -11,7 +11,7 @@ import eu.peppol.persistence.api.account.Customer;
 import eu.peppol.persistence.api.account.CustomerId;
 import no.sr.ringo.RingoConstant;
 import no.sr.ringo.common.MessageHelper;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import org.easymock.EasyMock;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
@@ -23,7 +23,7 @@ import java.util.Date;
 import static org.easymock.EasyMock.*;
 import static org.testng.Assert.*;
 
-@Guice(moduleFactory = TestModuleFactory.class)
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class RegisterUseCaseTest {
 
     final RegisterUseCase registerUseCase;

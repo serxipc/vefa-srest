@@ -10,7 +10,7 @@ import no.sr.ringo.ObjectMother;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.common.UploadMode;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.http.AbstractHttpClientServerTest;
 import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.peppol.PeppolChannelId;
@@ -44,7 +44,7 @@ import static org.testng.Assert.*;
  * @author Steinar Overbeck Cook
  * @author Thore Johnsen
  */
-@Guice(moduleFactory = TestModuleFactory.class)
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
 
     PeppolDocumentTypeId ehfInvoicePeppolDocumentTypeId = PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1::2.0");

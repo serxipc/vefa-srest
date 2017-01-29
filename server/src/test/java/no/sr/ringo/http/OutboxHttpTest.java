@@ -4,7 +4,7 @@ import no.sr.ringo.ObjectMother;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.client.ClientObjectMother;
 import no.sr.ringo.common.RingoConstants;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -36,7 +36,7 @@ import static org.testng.Assert.assertTrue;
  */
 
 // The test database will be initialized with initial scheme
-@Guice(moduleFactory = TestModuleFactory.class)
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class OutboxHttpTest extends AbstractHttpClientServerTest {
 
     static final Logger log = LoggerFactory.getLogger(OutboxHttpTest.class);

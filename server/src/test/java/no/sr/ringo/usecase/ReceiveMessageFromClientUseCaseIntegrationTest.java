@@ -8,7 +8,7 @@ import eu.peppol.persistence.queue.OutboundMessageQueueState;
 import eu.peppol.persistence.queue.QueueRepository;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.email.EmailService;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.message.OutboundPostParams;
@@ -33,7 +33,7 @@ import static org.testng.Assert.assertNotNull;
  *
  * @author Steinar Overbeck Cook steinar@sendregning.no
  */
-@Guice(moduleFactory = TestModuleFactory.class)
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class ReceiveMessageFromClientUseCaseIntegrationTest {
 
     private static final String EHF_TEST_SEND_REGNING_HELSE_VEST2_XML = "ehf-test-sendregning.xml";

@@ -13,7 +13,7 @@ import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.PeppolMessageTestdataGenerator;
 import no.sr.ringo.document.DocumentRepository;
 import no.sr.ringo.document.PeppolDocument;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.*;
 import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.resource.InvalidUserInputWebException;
@@ -50,7 +50,7 @@ import static org.testng.Assert.*;
  * @author steinar
  * @author thore
  */
-@Guice(moduleFactory = TestModuleFactory.class)
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class PeppolMessageRepositoryImplIntegrationTest {
 
     private final PeppolMessageRepository peppolMessageRepository;

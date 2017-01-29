@@ -5,7 +5,7 @@ import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.persistence.DbmsTestHelper;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -25,8 +25,8 @@ import static org.testng.Assert.assertEquals;
  * Tests HTTP status code returned by resource
  * insertSample and deleteSample methods used only in those tests that require it
  */
-//@Guice(modules = {TestDataSourceModule.class,RingoServiceModule.class})
-@Guice(moduleFactory = TestModuleFactory.class)
+//@Guice(modules = {ServerTestDataSourceModule.class,RingoServiceModule.class})
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 
 public class HttpStatusCodeIntegrationTest extends AbstractHttpClientServerTest {
 

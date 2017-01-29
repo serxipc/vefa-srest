@@ -5,7 +5,7 @@ import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.message.statistics.RingoStatistics;
 import no.sr.ringo.persistence.DbmsTestHelper;
@@ -36,7 +36,7 @@ import static org.testng.Assert.assertTrue;
  * Date: 2/20/12
  * Time: 3:14 PM
  */
-@Guice(moduleFactory = TestModuleFactory.class)
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class AdminResourceTest extends AbstractHttpClientServerTest {
 
     @Inject

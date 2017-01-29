@@ -5,7 +5,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import eu.peppol.persistence.RepositoryConfiguration;
-import eu.peppol.persistence.guice.RepositoryModule;
+import eu.peppol.persistence.RingoRepositoryModule;
+import no.difi.ringo.UnitTestConfigModule;
 import no.sr.ringo.guice.RingoDataSourceGuiceModule;
 import no.sr.ringo.guice.RingoServiceModule;
 import no.sr.ringo.oxalis.OxalisDocumentSender;
@@ -31,9 +32,10 @@ public class RingoServiceModuleTest {
     public void testOxalisSenderInjected() {
 
         Injector injector = Guice.createInjector(
+                new UnitTestConfigModule(),
                 new RingoDataSourceGuiceModule("host", "user", "pass", "dbName"),
                 new RingoServiceModule(),    // Production
-                new RepositoryModule(),
+                new RingoRepositoryModule(),
                 new DummyConfigModule()
         );
 

@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import eu.peppol.identifier.WellKnownParticipant;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageRepository;
 import org.testng.annotations.AfterMethod;
@@ -22,7 +22,7 @@ import static org.testng.Assert.assertEquals;
  *
  * @author Adam Mscisz adam@sendregning.no
  */
-@Guice(moduleFactory = TestModuleFactory.class)
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class MessageWithoutAccountIdSearchTest {
 
 

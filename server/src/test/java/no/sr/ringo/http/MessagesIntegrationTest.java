@@ -8,7 +8,7 @@ import no.sr.ringo.ObjectMother;
 import no.sr.ringo.client.Message;
 import no.sr.ringo.client.Messagebox;
 import no.sr.ringo.client.Messages;
-import no.sr.ringo.guice.TestModuleFactory;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.persistence.DbmsTestHelper;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -26,7 +26,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 // The test database will be initialized with initial scheme
-@Guice(moduleFactory = TestModuleFactory.class)
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class MessagesIntegrationTest extends AbstractHttpClientServerTest {
 
     @Inject
