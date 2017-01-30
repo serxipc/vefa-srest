@@ -56,10 +56,6 @@ public class RegisterUseCaseTest {
         assertFalse(res.isValid());
         assertEquals(MessageHelper.getMessage("reg.username.required"), res.getMessage());
 
-        data = new RegistrationData("name", "pass", "username", null, null, null, null, null, null, null, null, "orgNo", true);
-        res = registerUseCase.validateData(data);
-        assertFalse(res.isValid());
-        assertEquals("orgNo er ikke et gyldig norsk organisasjonsnummer", res.getMessage());
 
         data = new RegistrationData("name", "pass", "username", null, null, null, null, null, null, null, null, "NO976098897", true);
         res = registerUseCase.validateData(data);

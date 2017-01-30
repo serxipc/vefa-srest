@@ -4,6 +4,7 @@ import eu.peppol.identifier.MessageId;
 import eu.peppol.persistence.AccountId;
 import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.api.account.Account;
+import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.message.statistics.RingoStatistics;
 
 import java.util.Date;
@@ -117,7 +118,7 @@ public interface PeppolMessageRepository {
      * REM evidence is persisted.
      *
      */
-    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, MessageId messageId, Date delivered, byte[] nativeEvidenceBytes);
+    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, MessageId messageId, Date delivered, Receipt receipt);
 
     /**
      * Creates inbound message as copy of outbound one with delivered being null

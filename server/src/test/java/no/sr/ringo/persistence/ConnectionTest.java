@@ -4,7 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import eu.peppol.persistence.RingoRepositoryModule;
-import eu.peppol.util.OxalisProductionConfigurationModule;
 import no.difi.ringo.UnitTestConfigModule;
 import no.sr.ringo.guice.ServerTestDataSourceModule;
 import no.sr.ringo.persistence.repo.TestRepo;
@@ -24,7 +23,7 @@ import static org.testng.Assert.fail;
 /**
  * Sets up guice with Test datasource and aop
  */
-@Guice(modules = {ServerTestDataSourceModule.class, UnitTestConfigModule.class,ConnectionTest.ConnectionTestModule.class, RingoRepositoryModule.class, OxalisProductionConfigurationModule.class})
+@Guice(modules = {ServerTestDataSourceModule.class, UnitTestConfigModule.class,ConnectionTest.ConnectionTestModule.class, RingoRepositoryModule.class})
 public class ConnectionTest {
 
     @Inject TestRepo testRepo;

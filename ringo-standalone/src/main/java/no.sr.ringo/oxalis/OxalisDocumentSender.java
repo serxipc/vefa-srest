@@ -8,6 +8,7 @@ import eu.peppol.outbound.transmission.TransmissionRequestBuilder;
 import no.difi.oxalis.api.outbound.TransmissionRequest;
 import no.difi.oxalis.api.outbound.TransmissionResponse;
 import no.difi.oxalis.api.outbound.Transmitter;
+import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.message.MessageMetaData;
 
@@ -50,11 +51,13 @@ public class OxalisDocumentSender implements PeppolDocumentSender {
                 transmissionResponse.getMessageId()
         );
 
+        Receipt receipt = transmissionResponse.primaryReceipt();
+        
         return new TransmissionReceipt(
                 transmissionResponse.getMessageId(),
                 transmissionResponse.getEndpoint().getAddress(),
                 new Date(),
-                transmissionResponse.getNativeEvidenceBytes()
+                transmissionResponse.primaryReceipt()
         );
     }
 

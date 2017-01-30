@@ -23,8 +23,8 @@
 package eu.peppol.persistence;
 
 import eu.peppol.PeppolTransmissionMetaData;
-import eu.peppol.evidence.TransmissionEvidence;
 import eu.peppol.identifier.MessageId;
+import no.difi.vefa.peppol.common.model.Receipt;
 import org.w3c.dom.Document;
 
 import java.io.InputStream;
@@ -73,11 +73,11 @@ public interface MessageRepository {
      *
      * @param transmissionEvidence
      */
-    void saveInboundTransportReceipt(TransmissionEvidence transmissionEvidence,
+    void saveInboundTransportReceipt(Receipt transmissionEvidence,
                                      PeppolTransmissionMetaData peppolTransmissionMetaData)
             throws OxalisMessagePersistenceException;
 
-    void saveOutboundTransportReceipt(TransmissionEvidence transmissionEvidence, MessageId messageId)
+    void saveOutboundTransportReceipt(Receipt transmissionEvidence, MessageId messageId)
             throws OxalisMessagePersistenceException;
 
     MessageMetaData findByMessageNo(Long msgNo);

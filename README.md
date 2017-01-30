@@ -101,3 +101,6 @@ Brief refactoring plan (remember to x out finished items).
 - [ ] Implement persistent queue system for inbound messages, shared between vefa-srest and Oxalis.
 - [ ] All references to "Ringo" should be renamed to whatever name we decide upon.
 
+### Notes from refactoring and integration with Oxalis
+- [ ] Organisation numbers should be validated. Determine the extent of such validation.
+

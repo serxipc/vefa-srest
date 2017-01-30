@@ -8,6 +8,7 @@ import eu.peppol.persistence.MessageRepository;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
+import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.PeppolMessageTestdataGenerator;
@@ -239,9 +240,9 @@ public class PeppolMessageRepositoryImplIntegrationTest {
 
         //update the message
         Date date = cal.getTime();
-        byte[] nativeEvidenceBytes = "Native evidence bytes".getBytes();
-        byte[] remEvidenceBytes = "REM evidence bytes".getBytes();
-        peppolMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(MessageNumber.create(messageOut), null, messageOutUuid, date, nativeEvidenceBytes);
+        Receipt receipt = Receipt.of("Native evidence bytes".getBytes());
+        
+        peppolMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(MessageNumber.create(messageOut), null, messageOutUuid, date, receipt);
 
         MessageMetaData messageOutbound = peppolMessageRepository.findMessageByMessageNo(account, messageOut);
 
@@ -275,7 +276,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
             assertEquals(messages.size(), 1);
             eu.peppol.persistence.MessageMetaData m = messages.get(0);
 
-            verifyEvidence(m::getNativeEvidenceUri, nativeEvidenceBytes);
+            verifyEvidence(m::getNativeEvidenceUri, receipt.getValue());
         }
 
         String xmlOut = peppolMessageRepository.findDocumentByMessageNoWithoutAccountCheck(messageOut);

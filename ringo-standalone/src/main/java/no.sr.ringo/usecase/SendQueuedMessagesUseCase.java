@@ -179,7 +179,7 @@ public class SendQueuedMessagesUseCase {
                 transmissionReceipt.getRemoteAccessPoint(),
                 transmissionReceipt.getMessageId(),
                 transmissionReceipt.getDate(),
-                transmissionReceipt.getNativeEvidenceBytes()
+                transmissionReceipt.getReceipt()
                 );
 
         // we got this far so delivery was ok

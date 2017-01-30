@@ -23,7 +23,6 @@
 package eu.peppol.persistence.jdbc;
 
 import eu.peppol.PeppolTransmissionMetaData;
-import eu.peppol.evidence.TransmissionEvidence;
 import eu.peppol.identifier.*;
 import eu.peppol.persistence.*;
 import eu.peppol.persistence.api.PeppolPrincipal;
@@ -32,6 +31,7 @@ import eu.peppol.persistence.file.ArtifactType;
 import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
 import eu.peppol.persistence.guice.jdbc.Repository;
 import eu.peppol.persistence.jdbc.util.MessageMetaDataHelper;
+import no.difi.vefa.peppol.common.model.Receipt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -42,6 +42,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -161,20 +162,22 @@ public class MessageRepositoryH2Impl implements MessageRepository {
 
 
     @Override
-    public void saveInboundTransportReceipt(TransmissionEvidence transmissionEvidence, PeppolTransmissionMetaData peppolTransmissionMetaData) throws OxalisMessagePersistenceException {
+    public void saveInboundTransportReceipt(Receipt receipt, PeppolTransmissionMetaData peppolTransmissionMetaData) throws OxalisMessagePersistenceException {
         TransferDirection transferDirection = TransferDirection.IN;
 
-        log.info("Transmission evidence data to be persisted");
+        log.info("Transmission receipt data to be persisted");
 
         ArtifactPathComputer.FileRepoKey fileRepoKey = fileRepoKeyFrom(transferDirection, peppolTransmissionMetaData);
 
-        Path nativeEvidencePath = persistArtifact(ArtifactType.NATIVE_EVIDENCE, transmissionEvidence.getNativeEvidenceStream(), fileRepoKey);
+        ByteArrayInputStream receiptInputStream = new ByteArrayInputStream(receipt.getValue());
+
+        Path nativeEvidencePath = persistArtifact(ArtifactType.NATIVE_EVIDENCE, receiptInputStream, fileRepoKey);
 
         updateMetadataForEvidence(transferDirection, peppolTransmissionMetaData.getMessageId(), nativeEvidencePath);
     }
 
     @Override
-    public void saveOutboundTransportReceipt(TransmissionEvidence transmissionEvidence, MessageId messageId) {
+    public void saveOutboundTransportReceipt(Receipt transmissionEvidence, MessageId messageId) {
         TransferDirection transferDirection = TransferDirection.OUT;
 
         Optional<MessageMetaData> messageMetaDataOptional = findByMessageId(transferDirection, messageId);
@@ -183,7 +186,8 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             MessageMetaData mmd = messageMetaDataOptional.get();
             ArtifactPathComputer.FileRepoKey fileRepoKey = fileRepoKeyFrom(messageId, transferDirection, mmd.getSender(), mmd.getReceiver(), mmd.getReceived());
             try {
-                Path nativeEvidencePath = persistArtifact(ArtifactType.NATIVE_EVIDENCE, transmissionEvidence.getNativeEvidenceStream(), fileRepoKey);
+                InputStream receiptInputStream = new ByteArrayInputStream(transmissionEvidence.getValue());
+                Path nativeEvidencePath = persistArtifact(ArtifactType.NATIVE_EVIDENCE, receiptInputStream, fileRepoKey);
 
                 updateMetadataForEvidence(transferDirection, messageId, nativeEvidencePath);
             } catch (OxalisMessagePersistenceException e) {

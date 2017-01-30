@@ -1,7 +1,6 @@
 package no.sr.ringo.message;
 
 import com.google.inject.Inject;
-import eu.peppol.evidence.TransmissionEvidence;
 import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolProcessTypeId;
@@ -11,6 +10,7 @@ import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
 import eu.peppol.persistence.guice.jdbc.Repository;
 import eu.peppol.persistence.jdbc.platform.DbmsPlatform;
 import eu.peppol.persistence.jdbc.platform.DbmsPlatformFactory;
+import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.message.statistics.InboxStatistics;
 import no.sr.ringo.message.statistics.OutboxStatistics;
@@ -23,9 +23,7 @@ import no.sr.ringo.utils.SbdhUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -281,11 +279,11 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     }
 
     @Override
-    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, MessageId messageId, Date delivered, byte[] nativeEvidenceBytes) {
+    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, MessageId messageId, Date delivered, Receipt receipt) {
 
         // Persists the evidence, after which the DBMS is updated
         try {
-            persistOutboundEvidence(messageId, delivered, nativeEvidenceBytes);
+            persistOutboundEvidence(messageId, delivered, receipt);
         } catch (OxalisMessagePersistenceException e) {
             throw new IllegalStateException("Unable to persist evidence bytes to database");
         }
@@ -305,21 +303,9 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         }
     }
 
-    void persistOutboundEvidence(final MessageId messageId, final Date delivered, final byte[] nativeEvidenceBytes) throws OxalisMessagePersistenceException {
+    void persistOutboundEvidence(final MessageId messageId, final Date delivered, final Receipt receipt) throws OxalisMessagePersistenceException {
 
-        TransmissionEvidence transmissionEvidence = new TransmissionEvidence() {
-            @Override
-            public Date getReceptionTimeStamp() {
-                return delivered;
-            }
-
-            @Override
-            public InputStream getNativeEvidenceStream() {
-                return new ByteArrayInputStream(nativeEvidenceBytes);
-            }
-        };
-
-        oxalisMessageRepository.saveOutboundTransportReceipt(transmissionEvidence,messageId);
+        oxalisMessageRepository.saveOutboundTransportReceipt(receipt, messageId);
     }
 
     @Override

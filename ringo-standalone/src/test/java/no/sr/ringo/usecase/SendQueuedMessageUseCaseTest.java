@@ -5,6 +5,7 @@ import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.api.account.AccountRepository;
 import eu.peppol.persistence.queue.*;
+import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageRepository;
@@ -59,8 +60,9 @@ public class SendQueuedMessageUseCaseTest {
         final OutboundMessageQueueId queueId = new OutboundMessageQueueId(10);
 
         String message = "a fancy invoice";
+        Receipt receipt1 = Receipt.of("native evidence bytes".getBytes());
         PeppolDocumentSender.TransmissionReceipt receipt = new PeppolDocumentSender.TransmissionReceipt(new MessageId(), null, new Date(),
-                    "native evidence bytes".getBytes());
+                receipt1);
 
         SendQueuedMessagesUseCase useCase = new SendQueuedMessagesUseCase(mockDocumentSender, mockMessageRepository, mockQueueRepository, mockEmailService, mockAccountRepository);
         //creates a mock message so that we can check the correct data is being inspected
@@ -79,7 +81,7 @@ public class SendQueuedMessageUseCaseTest {
                 eq(receipt.getRemoteAccessPoint()),
                 eq(receipt.getMessageId()),
                 eq(receipt.getDate()),
-                eq(receipt.getNativeEvidenceBytes())
+                eq(receipt1)
                 );
 
         expectLastCall();
@@ -153,13 +155,12 @@ public class SendQueuedMessageUseCaseTest {
 
         // expect message to be sent by oxalis
         MessageId messageId = new MessageId();
-        byte[] nativeEvidenceBytes = "native evidence bytes".getBytes();
-        byte[] remEvidenceBytes = "REM evidence bytes".getBytes();
+        Receipt receipt = Receipt.of("native evidence bytes".getBytes());
         expect(mockDocumentSender.sendDocument(mockMessage, messageXml)).andStubReturn(new PeppolDocumentSender.TransmissionReceipt(messageId, URI.create("http://ringo.domain.com/"), new Date(),
-                nativeEvidenceBytes));
+                receipt));
 
         // update message to delivered
-        mockMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(EasyMock.eq(msgNo), EasyMock.eq("http://ringo.domain.com/"), EasyMock.eq(messageId), isA(Date.class), EasyMock.eq(nativeEvidenceBytes)
+        mockMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(EasyMock.eq(msgNo), EasyMock.eq("http://ringo.domain.com/"), EasyMock.eq(messageId), isA(Date.class), EasyMock.eq(receipt)
                 );
         expectLastCall();
 

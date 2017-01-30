@@ -13,6 +13,10 @@ import java.nio.file.Paths;
  */
 public class RingoConfigModule extends AbstractModule{
 
+    public RingoConfigModule() {
+
+    }
+
     @Override
     protected void configure() {
 

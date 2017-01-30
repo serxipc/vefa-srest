@@ -1,6 +1,7 @@
 package no.sr.ringo.oxalis;
 
 import eu.peppol.identifier.MessageId;
+import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageRepository;
 
@@ -43,7 +44,7 @@ public class DummySender implements PeppolDocumentSender {
         //returns the receipt specified in the constructor (so we can test) if not null
         //otherwise generate a new Transmission receipt
         TransmissionReceipt result = transmissionReceipt == null ? new TransmissionReceipt(new MessageId(),
-                null, new Date(), "native bytes".getBytes()) : transmissionReceipt;
+                null, new Date(), Receipt.of("native bytes".getBytes())) : transmissionReceipt;
 
         //if sending to yourself
         if (messageRepository.isSenderAndReceiverAccountTheSame(message.getMsgNo().longValue())) {

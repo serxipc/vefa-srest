@@ -4,18 +4,13 @@ package no.sr.ringo.guice;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
-import eu.peppol.persistence.RepositoryConfiguration;
 import eu.peppol.persistence.RingoRepositoryModule;
-import eu.peppol.util.GlobalConfigurationImpl;
 import no.sr.ringo.common.PropertyHelper;
 import no.sr.ringo.config.RingoConfigModule;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
@@ -61,45 +56,6 @@ public class RingoGuiceContextListener extends GuiceServletContextListener {
 
                 new RingoConfigModule()
         );
-    }
-
-    RepositoryConfiguration getRepositoryConfiguration() {
-        return new RepositoryConfiguration() {
-            @Override
-            public Path getBasePath() {
-                return Paths.get(GlobalConfigurationImpl.getInstance().getInboundMessageStore());
-            }
-
-            @Override
-            public URI getJdbcConnectionUri() {
-                return null;
-            }
-
-            @Override
-            public String getJdbcDriverClassPath() {
-                return null;
-            }
-
-            @Override
-            public String getJdbcDriverClassName() {
-                return null;
-            }
-
-            @Override
-            public String getJdbcUsername() {
-                return null;
-            }
-
-            @Override
-            public String getJdbcPassword() {
-                return null;
-            }
-
-            @Override
-            public String getValidationQuery() {
-                return null;
-            }
-        };
     }
 
 

@@ -24,19 +24,15 @@ package eu.peppol.persistence.guice;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
-import com.google.inject.Provides;
 import com.google.inject.name.Names;
-import eu.peppol.persistence.RepositoryConfiguration;
 import eu.peppol.persistence.RingoRepositoryModule;
 import eu.peppol.persistence.test.InMemoryTestDatabaseModule;
-import eu.peppol.util.GlobalConfiguration;
 import no.sr.ringo.config.RingoConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.IModuleFactory;
 import org.testng.ITestContext;
 
-import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -93,46 +89,6 @@ public class PersistenceTestModuleFactory implements IModuleFactory {
 
         }
 
-
-        @Provides
-        RepositoryConfiguration repositoryConfiguration(GlobalConfiguration c) {
-            return new RepositoryConfiguration() {
-                @Override
-                public Path getBasePath() {
-                    return Paths.get(c.getInboundMessageStore());
-                }
-
-                @Override
-                public URI getJdbcConnectionUri() {
-                    return URI.create(c.getJdbcConnectionURI());
-                }
-
-                @Override
-                public String getJdbcDriverClassPath() {
-                    return c.getJdbcDriverClassPath();
-                }
-
-                @Override
-                public String getJdbcDriverClassName() {
-                    return c.getJdbcDriverClassName();
-                }
-
-                @Override
-                public String getJdbcUsername() {
-                    return c.getJdbcUsername();
-                }
-
-                @Override
-                public String getJdbcPassword() {
-                    return c.getJdbcPassword();
-                }
-
-                @Override
-                public String getValidationQuery() {
-                    return c.getValidationQuery();
-                }
-            };
-        }
 
 
     }

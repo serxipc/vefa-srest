@@ -1,10 +1,10 @@
 package no.sr.ringo.oxalis;
 
 import eu.peppol.identifier.MessageId;
+import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.message.MessageMetaData;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.Date;
 
 /**
@@ -32,13 +32,13 @@ public interface PeppolDocumentSender {
         private final MessageId messageId;
         private final String remoteAccessPoint;
         private final Date date;
-        private final byte[] nativeEvidenceBytes;
+        private final Receipt receipt;
 
-        public TransmissionReceipt(MessageId messageId, URI remoteAccessPoint, Date date, byte[] nativeEvidenceBytes) {
+        public TransmissionReceipt(MessageId messageId, URI remoteAccessPoint, Date date, Receipt receipt) {
             this.messageId = messageId;
             this.remoteAccessPoint = remoteAccessPoint != null ? remoteAccessPoint.toString() : "n/a";
             this.date = date;
-            this.nativeEvidenceBytes = nativeEvidenceBytes;
+            this.receipt = receipt;
         }
 
         public MessageId getMessageId() {
@@ -53,10 +53,9 @@ public interface PeppolDocumentSender {
             return date;
         }
 
-        public byte[] getNativeEvidenceBytes() {
-            return nativeEvidenceBytes;
+        public Receipt getReceipt() {
+            return receipt;
         }
-
 
         @Override
         public boolean equals(Object o) {

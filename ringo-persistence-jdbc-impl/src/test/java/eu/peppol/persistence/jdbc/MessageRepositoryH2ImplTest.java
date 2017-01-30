@@ -23,11 +23,11 @@
 package eu.peppol.persistence.jdbc;
 
 import eu.peppol.PeppolTransmissionMetaData;
-import eu.peppol.evidence.TransmissionEvidence;
 import eu.peppol.identifier.*;
 import eu.peppol.persistence.*;
 import eu.peppol.persistence.file.ArtifactType;
 import eu.peppol.persistence.guice.PersistenceTestModuleFactory;
+import no.difi.vefa.peppol.common.model.Receipt;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 import org.w3c.dom.Comment;
@@ -52,7 +52,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.sql.*;
-import java.util.Date;
 
 import static org.testng.Assert.*;
 import static org.testng.AssertJUnit.fail;
@@ -110,25 +109,15 @@ public class MessageRepositoryH2ImplTest {
     public void testSaveInboundMessageWithArtifactsInFileStore() throws ParserConfigurationException, SQLException {
 
         PeppolTransmissionMetaData peppolTransmissionMetaData = sampleMessageHeader();
-        TransmissionEvidence transmissionEvidence = new TransmissionEvidence() {
-            @Override
-            public Date getReceptionTimeStamp() {
-                return new Date();
-            }
 
-
-            @Override
-            public InputStream getNativeEvidenceStream() {
-                return new ByteArrayInputStream("Smime rubbish".getBytes());
-            }
-        };
+        Receipt receipt = Receipt.of("Smime rubbish".getBytes());
 
         Long messageNo = null;
         try {
             messageNo = messageDbmsRepository.saveInboundMessage(peppolTransmissionMetaData, sampeXmlDocumentAsInputStream());
             assertNotNull(messageNo);
 
-            messageDbmsRepository.saveInboundTransportReceipt(transmissionEvidence, peppolTransmissionMetaData);
+            messageDbmsRepository.saveInboundTransportReceipt(receipt, peppolTransmissionMetaData);
 
         } catch (OxalisMessagePersistenceException e) {
             fail(e.getMessage());

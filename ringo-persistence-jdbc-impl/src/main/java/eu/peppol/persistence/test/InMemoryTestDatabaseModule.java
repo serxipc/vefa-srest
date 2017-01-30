@@ -24,12 +24,8 @@ package eu.peppol.persistence.test;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import eu.peppol.persistence.RepositoryConfiguration;
 
 import javax.sql.DataSource;
-import java.net.URI;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * Guice module which will create a new fresh database with schema, in memory
@@ -42,8 +38,6 @@ public class InMemoryTestDatabaseModule extends AbstractModule {
 
     @Override
     protected void configure() {
-
-        bind(RepositoryConfiguration.class).to(DummyRepositoryConfiguration.class);
     }
 
     @Provides
@@ -52,40 +46,3 @@ public class InMemoryTestDatabaseModule extends AbstractModule {
     }
 }
 
-class DummyRepositoryConfiguration implements RepositoryConfiguration {
-    @Override
-    public Path getBasePath() {
-        String tmpdir = System.getProperty("java.io.tmpdir");
-        return Paths.get(tmpdir, "peppol");
-    }
-
-    @Override
-    public URI getJdbcConnectionUri() {
-        return null;
-    }
-
-    @Override
-    public String getJdbcDriverClassPath() {
-        return null;
-    }
-
-    @Override
-    public String getJdbcDriverClassName() {
-        return null;
-    }
-
-    @Override
-    public String getJdbcUsername() {
-        return null;
-    }
-
-    @Override
-    public String getJdbcPassword() {
-        return null;
-    }
-
-    @Override
-    public String getValidationQuery() {
-        return null;
-    }
-};

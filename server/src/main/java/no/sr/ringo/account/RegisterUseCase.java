@@ -54,7 +54,9 @@ public class RegisterUseCase {
         } else if (isEmpty(registrationData.getUsername())) {
             message = MessageHelper.getMessage("reg.username.required");
         } else {
-            if (!ParticipantId.isValidParticipantIdentifier(registrationData.getOrgNo())) {
+
+            // TODO: validate the organisation number?
+            if (registrationData.getOrgNo() == null || registrationData.getOrgNo().trim().length() == 0) {
                 message = MessageHelper.getMessage("reg.orgNo.invalid", registrationData.getOrgNo());
             }
         }
