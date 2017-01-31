@@ -23,7 +23,7 @@
 package eu.peppol.persistence.api;
 
 import eu.peppol.identifier.ParticipantId;
-import eu.peppol.persistence.AccountId;
+import eu.peppol.persistence.api.account.AccountId;
 
 /**
  * @author Steinar Overbeck Cook

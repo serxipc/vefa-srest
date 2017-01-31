@@ -25,6 +25,7 @@ package eu.peppol.persistence.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.name.Names;
+import eu.peppol.persistence.jdbc.RingoDataSourceModule;
 import eu.peppol.persistence.jdbc.RingoRepositoryModule;
 import eu.peppol.persistence.test.InMemoryTestDatabaseModule;
 import no.sr.ringo.config.RingoConfigProperty;
@@ -85,7 +86,7 @@ public class PersistenceTestModuleFactory implements IModuleFactory {
         protected void configure() {
 
             binder().install(new RingoRepositoryModule());
-            binder().install(new OxalisDataSourceModule());
+            binder().install(new RingoDataSourceModule());
 
         }
 

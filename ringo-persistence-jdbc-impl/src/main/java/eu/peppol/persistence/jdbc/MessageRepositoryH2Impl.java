@@ -26,6 +26,7 @@ import eu.peppol.PeppolTransmissionMetaData;
 import eu.peppol.identifier.*;
 import eu.peppol.persistence.*;
 import eu.peppol.persistence.api.PeppolPrincipal;
+import eu.peppol.persistence.api.account.AccountId;
 import eu.peppol.persistence.file.ArtifactPathComputer;
 import eu.peppol.persistence.file.ArtifactType;
 import eu.peppol.persistence.guice.jdbc.JdbcTxManager;

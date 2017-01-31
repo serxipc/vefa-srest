@@ -24,6 +24,7 @@ package eu.peppol.persistence;
 
 import eu.peppol.PeppolTransmissionMetaData;
 import eu.peppol.identifier.*;
+import eu.peppol.persistence.api.account.AccountId;
 
 import java.io.Serializable;
 import java.net.URI;

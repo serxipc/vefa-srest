@@ -6,6 +6,7 @@ import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolProcessTypeId;
 import eu.peppol.persistence.*;
 import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountId;
 import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
 import eu.peppol.persistence.guice.jdbc.Repository;
 import eu.peppol.persistence.jdbc.platform.DbmsPlatform;

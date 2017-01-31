@@ -25,6 +25,7 @@ package eu.peppol.persistence.jdbc;
 import eu.peppol.PeppolTransmissionMetaData;
 import eu.peppol.identifier.*;
 import eu.peppol.persistence.*;
+import eu.peppol.persistence.api.account.AccountId;
 import eu.peppol.persistence.file.ArtifactType;
 import eu.peppol.persistence.guice.PersistenceTestModuleFactory;
 import no.difi.vefa.peppol.common.model.Receipt;

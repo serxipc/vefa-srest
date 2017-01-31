@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Loads the configuration and provides bindings for certain important stuff.
@@ -28,6 +29,7 @@ public class RingoConfigModule extends AbstractModule{
     @Override
     protected void configure() {
         // No action for now
+        
     }
 
 
@@ -82,4 +84,11 @@ public class RingoConfigModule extends AbstractModule{
         return ConfigFactory.parseFile(configPath.toFile());
     }
 
+
+    @Provides
+    @Singleton
+    @Named(RingoConfigProperty.PAYLOAD_BASE_PATH)
+    protected Path provideBaseDirPath(Config config) {
+        return Paths.get(config.getString(RingoConfigProperty.PAYLOAD_BASE_PATH));
+    }
 }

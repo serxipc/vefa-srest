@@ -1,9 +1,9 @@
 package no.sr.ringo.common;
 
 import eu.peppol.identifier.ParticipantId;
-import eu.peppol.persistence.AccountId;
 import eu.peppol.persistence.ChannelProtocol;
 import eu.peppol.persistence.TransferDirection;
+import eu.peppol.persistence.api.account.AccountId;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.message.MessageMetaDataImpl;
 import no.sr.ringo.message.MessageWithLocations;

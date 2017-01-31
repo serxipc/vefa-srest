@@ -2,9 +2,9 @@ package no.sr.ringo.client;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
-import eu.peppol.persistence.AccountId;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.account.Account;
+import eu.peppol.persistence.api.account.AccountId;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.cenbiimeta.ProfileId;

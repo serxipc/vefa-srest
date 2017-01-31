@@ -61,19 +61,13 @@
         </dependency>
 
         <dependency>
-            <groupId>no.difi.oxalis</groupId>
-            <artifactId>oxalis-persistence</artifactId>
-        </dependency>
-
-
-        <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
         </dependency>
 
         <!-- Dynamic loading of the JDBC driver is outside the scope of this sample application -->

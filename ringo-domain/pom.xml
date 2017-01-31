@@ -21,16 +21,11 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>no.difi.oxalis</groupId>
-            <artifactId>oxalis-persistence</artifactId>
-        </dependency>
 
-
+        <!-- TODO: remove this and refactor dependant classes to ringo-commons -->
         <dependency>
-            <!-- få bort denne avhengigheten, søk etter "import eu.peppol", finnes Ringo varianter av de samme -->
-            <groupId>no.difi.oxalis</groupId>
-            <artifactId>oxalis-api</artifactId>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
         </dependency>
 
 

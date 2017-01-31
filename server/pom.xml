@@ -169,22 +169,12 @@
 
         <dependency>
             <groupId>no.difi.oxalis</groupId>
-            <artifactId>oxalis-commons</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.difi.oxalis</groupId>
             <artifactId>oxalis-api</artifactId>
         </dependency>
 
         <dependency>
             <groupId>no.difi.oxalis</groupId>
             <artifactId>oxalis-test-impl</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.difi.oxalis</groupId>
-            <artifactId>oxalis-persistence</artifactId>
         </dependency>
 
 
