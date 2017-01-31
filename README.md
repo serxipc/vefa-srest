@@ -103,4 +103,6 @@ Brief refactoring plan (remember to x out finished items).
 
 ### Notes from refactoring and integration with Oxalis
 - [ ] Organisation numbers should be validated. Determine the extent of such validation.
+- [ ] Allow for external configuration of logging. This should happen in RingoGuiceContextListener
+- [ ] Refactor package names in accordance with domain
 

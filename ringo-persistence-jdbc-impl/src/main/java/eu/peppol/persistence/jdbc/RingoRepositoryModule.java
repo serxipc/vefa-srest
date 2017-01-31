@@ -1,11 +1,11 @@
-package eu.peppol.persistence;
+package eu.peppol.persistence.jdbc;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
+import eu.peppol.persistence.MessageRepository;
 import eu.peppol.persistence.api.account.AccountRepository;
+import eu.peppol.persistence.file.ArtifactPathComputer;
 import eu.peppol.persistence.guice.AopJdbcTxManagerModule;
-import eu.peppol.persistence.jdbc.AccountRepositoryImpl;
-import eu.peppol.persistence.jdbc.MessageRepositoryH2Impl;
 import eu.peppol.persistence.queue.QueueRepository;
 import eu.peppol.persistence.queue.QueueRepositoryImpl;
 
@@ -25,7 +25,7 @@ public class RingoRepositoryModule extends AbstractModule {
 
         // Binds the Guice JDBC Tx stuff
         binder().install(new AopJdbcTxManagerModule());
-
+        bind(ArtifactPathComputer.class);
         bind(MessageRepository.class).to(MessageRepositoryH2Impl.class);
         bind(AccountRepository.class).to(AccountRepositoryImpl.class);
         bind(QueueRepository.class).to(QueueRepositoryImpl.class).in(Singleton.class);

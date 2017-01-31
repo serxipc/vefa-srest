@@ -3,7 +3,7 @@ package no.sr.ringo.guice;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.servlet.RequestScoped;
-import eu.peppol.persistence.RingoRepositoryModule;
+import eu.peppol.persistence.jdbc.RingoRepositoryModule;
 import no.difi.ringo.UnitTestConfigModule;
 import no.sr.ringo.security.CredentialHandler;
 import no.sr.ringo.security.SecretKeyCredentialHandler;
@@ -54,6 +54,7 @@ public class ServerTestModuleFactory implements IModuleFactory {
             Binder binder = binder();
 
             binder.install(new UnitTestConfigModule());
+            
             binder.install(new RingoRepositoryModule());
 
             //set up the repositories email service etc.

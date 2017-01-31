@@ -44,7 +44,7 @@ public class InMemoryDataSourceHelper {
 
     public static final Logger log = LoggerFactory.getLogger(eu.peppol.persistence.jdbc.util.InMemoryDatabaseHelper.class);
 
-    public static final String CREATE_OXALIS_DBMS_H2_SQL = "create-oxalis-dbms-h2.sql";
+    public static final String CREATE_OXALIS_DBMS_H2_SQL = "create-ringo-dbms-h2.sql";
 
     public static DataSource createInMemoryDatabase() {
 

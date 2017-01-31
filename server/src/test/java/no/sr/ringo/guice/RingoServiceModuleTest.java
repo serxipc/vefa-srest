@@ -1,6 +1,6 @@
 package no.sr.ringo.guice;
 
-import eu.peppol.persistence.RingoRepositoryModule;
+import eu.peppol.persistence.jdbc.RingoRepositoryModule;
 import no.difi.ringo.UnitTestConfigModule;
 import no.sr.ringo.document.DocumentRepository;
 import no.sr.ringo.document.PeppolDocumentDecoratorFactory;

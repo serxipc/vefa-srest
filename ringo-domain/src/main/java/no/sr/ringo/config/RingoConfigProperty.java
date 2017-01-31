@@ -27,6 +27,7 @@ public final class RingoConfigProperty {
     public static final String JDBC_CLASS_PATH = "ringo.jdbc.class.path";
     public static final String JDBC_USER = "ringo.jdbc.user";
     public static final String JDBC_PASSWORD = "ringo.jdbc.password";
+    public static final String JDBC_VALIDATION_QUERY = "ringo.jdbc.validation.query";
 
     private RingoConfigProperty() { // restricts instantiation
     }

@@ -9,7 +9,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 /**
- * The DataSource provided by this module is used within appservers via JNDI lookup
+ * The DataSource provided by this module is used within app servers via JNDI lookup
  *
  * @author Steinar Overbeck Cook
  */

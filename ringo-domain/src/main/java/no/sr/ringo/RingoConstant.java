@@ -9,7 +9,8 @@ package no.sr.ringo;
  */
 public class RingoConstant {
     public static final String DIFI_ORG_NO = "991825827";
-    public static final String SR_ORG_NO = "976098897";
-    public static final String PEPPOL_PARTICIPANT_PREFIX = "9908:";
-	public static final String SUPPORT_EMAIL = "hjelp@sendregning.no";
+
+    // Org.no of Balder Programvare -> SendRegning before Unit4 take over
+    public static final String DUMMY_ORG_NO = "976098897";
+    public static final String NORWEGIAN_PEPPOL_PARTICIPANT_PREFIX = "9908:";
 }

@@ -3,7 +3,7 @@ package no.sr.ringo.persistence;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import eu.peppol.persistence.RingoRepositoryModule;
+import eu.peppol.persistence.jdbc.RingoRepositoryModule;
 import no.difi.ringo.UnitTestConfigModule;
 import no.sr.ringo.guice.ServerTestDataSourceModule;
 import no.sr.ringo.persistence.repo.TestRepo;

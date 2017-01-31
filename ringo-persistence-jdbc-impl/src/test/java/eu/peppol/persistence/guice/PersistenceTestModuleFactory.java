@@ -25,7 +25,7 @@ package eu.peppol.persistence.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.name.Names;
-import eu.peppol.persistence.RingoRepositoryModule;
+import eu.peppol.persistence.jdbc.RingoRepositoryModule;
 import eu.peppol.persistence.test.InMemoryTestDatabaseModule;
 import no.sr.ringo.config.RingoConfigProperty;
 import org.slf4j.Logger;
@@ -48,7 +48,7 @@ public class PersistenceTestModuleFactory implements IModuleFactory {
 
     public static final Logger log = LoggerFactory.getLogger(PersistenceTestModuleFactory.class);
 
-    public static final String CREATE_OXALIS_DBMS_H2_SQL = "sql/create-oxalis-dbms-h2.sql";
+    public static final String CREATE_OXALIS_DBMS_H2_SQL = "sql/create-ringo-dbms-h2.sql";
 
 
     @Override

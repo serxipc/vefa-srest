@@ -41,7 +41,7 @@ public class ObjectMother {
     }
 
     public static ParticipantId getTestParticipantIdForSMPLookup() {
-        return new ParticipantId(RingoConstant.PEPPOL_PARTICIPANT_PREFIX+RingoConstant.DIFI_ORG_NO);
+        return new ParticipantId(RingoConstant.NORWEGIAN_PEPPOL_PARTICIPANT_PREFIX +RingoConstant.DIFI_ORG_NO);
     }
 
     public static ParticipantId getTestParticipantIdForConsumerReceiver() {
@@ -49,11 +49,11 @@ public class ObjectMother {
     }
 
     public static ParticipantId getTestParticipantId() {
-        return new ParticipantId(RingoConstant.PEPPOL_PARTICIPANT_PREFIX+RingoConstant.SR_ORG_NO);
+        return new ParticipantId(RingoConstant.NORWEGIAN_PEPPOL_PARTICIPANT_PREFIX +RingoConstant.DUMMY_ORG_NO);
     }
 
     public static ParticipantId getAdamsParticipantId() {
-        return new ParticipantId(RingoConstant.PEPPOL_PARTICIPANT_PREFIX+"988890081");
+        return new ParticipantId(RingoConstant.NORWEGIAN_PEPPOL_PARTICIPANT_PREFIX +"988890081");
     }
 
     public static final PeppolDocumentTypeId getDocumentIdForBisInvoice() {

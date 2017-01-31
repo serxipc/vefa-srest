@@ -9,8 +9,8 @@ drop table if exists customer;
 
 drop user if exists skrue;
 
-/** To create TEST database : Create a new database called oxalis_test and run this script */
-/** To create PROD database : Create a new database called oxalis and run this script */
+/** To create TEST database : Create a new database called ringo_test and run this script */
+/** To create PROD database : Create a new database called ringo and run this script */
 
 /** Customer paying for the connection */
 CREATE TABLE `customer` (

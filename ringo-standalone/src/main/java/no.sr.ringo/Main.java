@@ -2,10 +2,10 @@ package no.sr.ringo;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import eu.peppol.persistence.RingoRepositoryModule;
-import eu.peppol.persistence.guice.OxalisDataSourceModule;
+import eu.peppol.persistence.jdbc.RingoDataSourceModule;
+import eu.peppol.persistence.jdbc.RingoRepositoryModule;
 import eu.peppol.persistence.queue.OutboundMessageQueueId;
-import eu.peppol.util.OxalisProductionConfigurationModule;
+import no.sr.ringo.config.RingoConfigModule;
 import no.sr.ringo.guice.OxalisOutboundModule;
 import no.sr.ringo.guice.RingoServiceModule;
 import no.sr.ringo.parser.CommandLineParser;
@@ -70,8 +70,8 @@ public class Main {
                     new RingoServiceModule(),
                     new OxalisOutboundModule(),
 
-                    new OxalisProductionConfigurationModule(),
-                    new OxalisDataSourceModule(),
+                    new RingoConfigModule(),
+                    new RingoDataSourceModule(),
                     new RingoRepositoryModule()
 
                 );

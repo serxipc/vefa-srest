@@ -2,7 +2,11 @@ package no.difi.ringo.test_util;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigValue;
 import org.testng.annotations.Test;
+
+import java.util.Map;
+import java.util.Set;
 
 import static org.testng.Assert.*;
 
@@ -32,5 +36,12 @@ public class TypeSafeConfigTest
         assertEquals(string, "14");
 
         System.out.println(config.getString("foo"));
+
+        Set<Map.Entry<String, ConfigValue>> entries = config.entrySet();
+        for (Map.Entry<String, ConfigValue> entry : entries) {
+
+            System.out.printf("%-32s = %-32s\n", entry.getKey(), entry.getValue().render());
+        }
+
     }
 }

@@ -92,7 +92,7 @@ public class RegisterUseCaseTest {
         registerUseCase.setAccountRepository(mockAccountRepository);
 
         expect(mockAccountRepository.accountExists(new UserName("username"))).andReturn(false);
-        expect(mockAccountRepository.findAccountByParticipantId(new ParticipantId(RingoConstant.PEPPOL_PARTICIPANT_PREFIX + orgNo))).andReturn(null);
+        expect(mockAccountRepository.findAccountByParticipantId(new ParticipantId(RingoConstant.NORWEGIAN_PEPPOL_PARTICIPANT_PREFIX + orgNo))).andReturn(null);
 
         Customer customer = new Customer(customerId.toInteger(), "name", new Date(), null, "email", "phone", "country", "add1", "add2", "zip", "city", orgNo);
 
