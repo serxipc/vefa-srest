@@ -1,6 +1,4 @@
-package eu.peppol.persistence.api.account;
-
-import eu.peppol.persistence.api.UserName;
+package no.sr.ringo.account;
 
 import java.util.Date;
 

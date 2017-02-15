@@ -3,14 +3,10 @@ package no.sr.ringo.resource;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.spi.container.ResourceFilters;
-import eu.peppol.persistence.MessageNumber;
-import eu.peppol.persistence.api.account.Account;
+import no.sr.ringo.account.Account;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.document.PeppolDocument;
-import no.sr.ringo.message.FetchMessagesUseCase;
-import no.sr.ringo.message.MessageMetaData;
-import no.sr.ringo.message.PeppolMessageRepository;
-import no.sr.ringo.message.SearchParams;
+import no.sr.ringo.message.*;
 import no.sr.ringo.response.MessagesQueryResponse;
 import no.sr.ringo.usecase.ReceiveMessageFromClientUseCase;
 

@@ -2,12 +2,12 @@ package eu.peppol.persistence.jdbc;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
-import eu.peppol.persistence.MessageRepository;
-import eu.peppol.persistence.api.account.AccountRepository;
 import eu.peppol.persistence.file.ArtifactPathComputer;
 import eu.peppol.persistence.guice.AopJdbcTxManagerModule;
 import eu.peppol.persistence.queue.QueueRepository;
 import eu.peppol.persistence.queue.QueueRepositoryImpl;
+import no.sr.ringo.account.AccountRepository;
+import no.sr.ringo.message.MessageRepository;
 
 /**
  * Provides the classes needed for persistence.

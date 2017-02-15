@@ -2,7 +2,7 @@ package no.sr.ringo.resource;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
-import eu.peppol.persistence.api.account.Account;
+import no.sr.ringo.account.Account;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.message.statistics.RingoStatistics;
 import org.slf4j.Logger;

@@ -3,8 +3,6 @@ package no.sr.ringo.account;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
-import eu.peppol.persistence.api.UserName;
-import eu.peppol.persistence.api.account.*;
 import no.sr.ringo.RingoConstant;
 import no.sr.ringo.common.MessageHelper;
 import no.sr.ringo.guice.ServerTestModuleFactory;

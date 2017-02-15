@@ -1,8 +1,8 @@
 package no.sr.ringo.document;
 
-import eu.peppol.persistence.MessageNumber;
-import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
+import no.sr.ringo.account.Account;
+import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.PeppolMessageNotFoundException;
 import no.sr.ringo.peppol.PeppolDocumentTest;
 import org.easymock.EasyMock;

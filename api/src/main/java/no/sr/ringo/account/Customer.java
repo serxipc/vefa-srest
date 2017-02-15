@@ -20,7 +20,7 @@
  * permissions and limitations under the Licence.
  */
 
-package eu.peppol.persistence.api.account;
+package no.sr.ringo.account;
 
 import java.util.Date;
 

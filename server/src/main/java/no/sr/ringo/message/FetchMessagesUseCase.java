@@ -1,14 +1,14 @@
 package no.sr.ringo.message;
 
 import com.google.inject.Inject;
-import eu.peppol.persistence.TransferDirection;
-import eu.peppol.persistence.api.account.Account;
-import eu.peppol.persistence.api.account.AccountId;
+import no.sr.ringo.account.Account;
+import no.sr.ringo.account.AccountId;
 import no.sr.ringo.resource.UriLocationAware;
 import no.sr.ringo.response.InboxQueryResponse;
 import no.sr.ringo.response.MessagesQueryResponse;
 import no.sr.ringo.response.Navigation;
 import no.sr.ringo.response.OutboxQueryResponse;
+import no.sr.ringo.transport.TransferDirection;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;

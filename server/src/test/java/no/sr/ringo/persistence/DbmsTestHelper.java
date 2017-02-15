@@ -5,8 +5,8 @@ import eu.peppol.identifier.PeppolDocumentTypeId;
 import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
 import eu.peppol.identifier.PeppolProcessTypeId;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
-import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
+import no.sr.ringo.transport.TransferDirection;
 
 import java.util.Date;
 

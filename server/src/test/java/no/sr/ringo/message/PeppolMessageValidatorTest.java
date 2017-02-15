@@ -2,7 +2,7 @@ package no.sr.ringo.message;
 
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.SchemeId;
-import eu.peppol.persistence.api.account.Account;
+import no.sr.ringo.account.Account;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolHeader;

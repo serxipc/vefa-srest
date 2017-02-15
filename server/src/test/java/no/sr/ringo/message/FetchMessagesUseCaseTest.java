@@ -1,12 +1,12 @@
 package no.sr.ringo.message;
 
 import eu.peppol.identifier.WellKnownParticipant;
-import eu.peppol.persistence.TransferDirection;
-import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
+import no.sr.ringo.account.Account;
 import no.sr.ringo.resource.UriLocationAware;
 import no.sr.ringo.response.MessagesQueryResponse;
 import no.sr.ringo.response.Navigation;
+import no.sr.ringo.transport.TransferDirection;
 import org.easymock.EasyMock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

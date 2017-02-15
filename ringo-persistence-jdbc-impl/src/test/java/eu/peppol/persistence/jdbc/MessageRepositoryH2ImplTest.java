@@ -22,13 +22,14 @@
 
 package eu.peppol.persistence.jdbc;
 
-import eu.peppol.PeppolTransmissionMetaData;
 import eu.peppol.identifier.*;
-import eu.peppol.persistence.*;
-import eu.peppol.persistence.api.account.AccountId;
 import eu.peppol.persistence.file.ArtifactType;
 import eu.peppol.persistence.guice.PersistenceTestModuleFactory;
 import no.difi.vefa.peppol.common.model.Receipt;
+import no.sr.ringo.account.AccountId;
+import no.sr.ringo.message.MessageMetaDataEntity;
+import no.sr.ringo.message.MessageRepository;
+import no.sr.ringo.peppol.PeppolTransmissionMetaData;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 import org.w3c.dom.Comment;
@@ -120,7 +121,7 @@ public class MessageRepositoryH2ImplTest {
 
             messageDbmsRepository.saveInboundTransportReceipt(receipt, peppolTransmissionMetaData);
 
-        } catch (OxalisMessagePersistenceException e) {
+        } catch (no.sr.ringo.message.OxalisMessagePersistenceException e) {
             fail(e.getMessage());
         }
 
@@ -174,7 +175,7 @@ public class MessageRepositoryH2ImplTest {
      * @throws ParserConfigurationException
      */
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testSaveInboundMessageWithoutSenderNull() throws ParserConfigurationException, OxalisMessagePersistenceException {
+    public void testSaveInboundMessageWithoutSenderNull() throws ParserConfigurationException, no.sr.ringo.message.OxalisMessagePersistenceException {
         PeppolTransmissionMetaData h = sampleMessageHeader();
         h.setSenderId(null);
         messageDbmsRepository.saveInboundMessage(h, sampeXmlDocumentAsInputStream());
@@ -186,14 +187,14 @@ public class MessageRepositoryH2ImplTest {
      * @throws ParserConfigurationException
      */
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testSaveInboundMessageWithoutRecipientIdNull() throws ParserConfigurationException, OxalisMessagePersistenceException {
+    public void testSaveInboundMessageWithoutRecipientIdNull() throws ParserConfigurationException, no.sr.ringo.message.OxalisMessagePersistenceException {
         PeppolTransmissionMetaData h = sampleMessageHeader();
         h.setRecipientId(null);
         messageDbmsRepository.saveInboundMessage(h, sampeXmlDocumentAsInputStream());
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testSaveInboundMessageWithoutDocumentId() throws ParserConfigurationException, OxalisMessagePersistenceException {
+    public void testSaveInboundMessageWithoutDocumentId() throws ParserConfigurationException, no.sr.ringo.message.OxalisMessagePersistenceException {
         PeppolTransmissionMetaData h = sampleMessageHeader();
         h.setDocumentTypeIdentifier(null);
         messageDbmsRepository.saveInboundMessage(h, sampeXmlDocumentAsInputStream());
@@ -201,7 +202,7 @@ public class MessageRepositoryH2ImplTest {
     }
 
     @Test
-    public void testSaveOutboundMessage() throws ParserConfigurationException, SQLException, IOException, OxalisMessagePersistenceException {
+    public void testSaveOutboundMessage() throws ParserConfigurationException, SQLException, IOException, no.sr.ringo.message.OxalisMessagePersistenceException {
 
         Long messageNo = messageDbmsRepository.saveOutboundMessage(sampleMessageMetaData(), sampeXmlDocumentAsInputStream());
 
@@ -233,7 +234,7 @@ public class MessageRepositoryH2ImplTest {
     }
 
     private MessageMetaDataEntity sampleMessageMetaData() {
-        MessageMetaDataEntity.Builder builder = new MessageMetaDataEntity.Builder(TransferDirection.OUT, WellKnownParticipant.DIFI, WellKnownParticipant.DIFI_TEST, PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(), ChannelProtocol.SREST);
+        MessageMetaDataEntity.Builder builder = new MessageMetaDataEntity.Builder(no.sr.ringo.transport.TransferDirection.OUT, WellKnownParticipant.DIFI, WellKnownParticipant.DIFI_TEST, PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(), no.sr.ringo.peppol.ChannelProtocol.SREST);
         MessageMetaDataEntity messageMetaDataEntity = builder.accountId(1)
                 .build();
         return messageMetaDataEntity;

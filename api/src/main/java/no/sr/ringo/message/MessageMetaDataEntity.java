@@ -20,11 +20,13 @@
  * permissions and limitations under the Licence.
  */
 
-package eu.peppol.persistence;
+package no.sr.ringo.message;
 
-import eu.peppol.PeppolTransmissionMetaData;
 import eu.peppol.identifier.*;
-import eu.peppol.persistence.api.account.AccountId;
+import no.sr.ringo.account.AccountId;
+import no.sr.ringo.peppol.ChannelProtocol;
+import no.sr.ringo.peppol.PeppolTransmissionMetaData;
+import no.sr.ringo.transport.TransferDirection;
 
 import java.io.Serializable;
 import java.net.URI;

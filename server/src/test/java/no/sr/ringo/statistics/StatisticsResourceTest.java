@@ -1,7 +1,7 @@
 package no.sr.ringo.statistics;
 
-import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
+import no.sr.ringo.account.Account;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.message.statistics.InboxStatistics;
 import no.sr.ringo.message.statistics.OutboxStatistics;

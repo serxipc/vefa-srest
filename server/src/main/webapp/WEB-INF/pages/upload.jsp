@@ -1,4 +1,4 @@
-<%@ page import="eu.peppol.persistence.api.account.Account" %>
+<%@ page import="no.sr.ringo.account.Account" %>
 <%--
   Created by IntelliJ IDEA.
   User: steinar

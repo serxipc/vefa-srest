@@ -20,7 +20,7 @@
  * permissions and limitations under the Licence.
  */
 
-package eu.peppol.persistence;
+package no.sr.ringo.transport;
 
 /**
  * @author steinar

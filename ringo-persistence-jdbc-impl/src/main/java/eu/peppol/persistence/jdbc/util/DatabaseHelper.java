@@ -28,15 +28,15 @@ import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolDocumentTypeId;
 import eu.peppol.identifier.PeppolProcessTypeId;
-import eu.peppol.persistence.*;
-import eu.peppol.persistence.api.UserName;
-import eu.peppol.persistence.api.account.*;
 import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
 import eu.peppol.persistence.guice.jdbc.Repository;
 import eu.peppol.persistence.queue.OutboundMessageQueueErrorId;
 import eu.peppol.persistence.queue.OutboundMessageQueueId;
 import eu.peppol.persistence.queue.OutboundMessageQueueState;
 import eu.peppol.persistence.queue.QueuedOutboundMessageError;
+import no.sr.ringo.account.*;
+import no.sr.ringo.message.MessageMetaDataEntity;
+import no.sr.ringo.message.MessageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +79,7 @@ public class DatabaseHelper {
     }
 
 
-    public Long createMessage(PeppolDocumentTypeId documentId, PeppolProcessTypeId processTypeId, String message, Integer accountId, TransferDirection direction,
+    public Long createMessage(PeppolDocumentTypeId documentId, PeppolProcessTypeId processTypeId, String message, Integer accountId, no.sr.ringo.transport.TransferDirection direction,
                               String senderValue, String receiverValue,
                               final String uuid, Date delivered, Date received) {
 
@@ -87,9 +87,9 @@ public class DatabaseHelper {
             throw new IllegalArgumentException("received date is required");
         }
 
-        MessageMetaDataEntity.Builder builder = new MessageMetaDataEntity.Builder(TransferDirection.valueOf(direction.name()),
+        MessageMetaDataEntity.Builder builder = new MessageMetaDataEntity.Builder(no.sr.ringo.transport.TransferDirection.valueOf(direction.name()),
                 new ParticipantId(senderValue), new ParticipantId(receiverValue), documentId,
-                ChannelProtocol.SREST);
+                no.sr.ringo.peppol.ChannelProtocol.SREST);
 
         if (uuid != null && uuid.trim().length() > 0) {
             builder.messageId(new MessageId(uuid));
@@ -110,26 +110,26 @@ public class DatabaseHelper {
         MessageMetaDataEntity messageMetaDataEntity = builder.build();
 
         try {
-            if (messageMetaDataEntity.getTransferDirection() == TransferDirection.IN) {
+            if (messageMetaDataEntity.getTransferDirection() == no.sr.ringo.transport.TransferDirection.IN) {
                 return messageRepository.saveInboundMessage(messageMetaDataEntity, new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8"))));
-            } else if (messageMetaDataEntity.getTransferDirection() == TransferDirection.OUT) {
+            } else if (messageMetaDataEntity.getTransferDirection() == no.sr.ringo.transport.TransferDirection.OUT) {
                 return messageRepository.saveOutboundMessage(messageMetaDataEntity, new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8"))));
             } else
                 throw new IllegalStateException("No support for transfer direction " + messageMetaDataEntity.getTransferDirection().name());
-        } catch (OxalisMessagePersistenceException e) {
+        } catch (no.sr.ringo.message.OxalisMessagePersistenceException e) {
             throw new IllegalStateException("Unable to save message " + e.getMessage());
         }
 
     }
 
     /**
-     * Helper method creating simple sample message. If the direction is {@link TransferDirection#IN} the accountId
+     * Helper method creating simple sample message. If the direction is {@link no.sr.ringo.transport.TransferDirection#IN} the accountId
      * parameter will be ignored. The accountId will be set based upon the contents of the {@code account_receiver} table in
      * the database.
      *
      * @param direction indicates whether the message is inbound or outbound with respect to the PEPPOL network.
      */
-    public Long createMessage(Integer accountId, TransferDirection direction, String senderValue, String receiverValue, final String uuid, Date delivered, PeppolDocumentTypeId peppolDocumentTypeId, PeppolProcessTypeId peppolProcessTypeId) {
+    public Long createMessage(Integer accountId, no.sr.ringo.transport.TransferDirection direction, String senderValue, String receiverValue, final String uuid, Date delivered, PeppolDocumentTypeId peppolDocumentTypeId, PeppolProcessTypeId peppolProcessTypeId) {
         PeppolDocumentTypeId invoiceDocumentType =peppolDocumentTypeId;
         PeppolProcessTypeId processTypeId = peppolProcessTypeId;
 

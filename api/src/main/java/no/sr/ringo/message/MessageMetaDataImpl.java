@@ -1,10 +1,9 @@
 /* Created by steinar on 08.01.12 at 19:55 */
 package no.sr.ringo.message;
 
-import eu.peppol.persistence.MessageMetaDataEntity;
-import eu.peppol.persistence.TransferDirection;
-import eu.peppol.persistence.api.account.AccountId;
+import no.sr.ringo.account.AccountId;
 import no.sr.ringo.peppol.PeppolHeader;
+import no.sr.ringo.transport.TransferDirection;
 
 import java.util.Date;
 

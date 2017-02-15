@@ -24,8 +24,8 @@ package eu.peppol.persistence.file;
 
 import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
-import eu.peppol.persistence.TransferDirection;
 import no.sr.ringo.config.RingoConfigProperty;
+import no.sr.ringo.transport.TransferDirection;
 
 import javax.inject.Inject;
 import javax.inject.Named;

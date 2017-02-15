@@ -1,6 +1,6 @@
 package no.sr.ringo.message;
 
-import eu.peppol.persistence.TransferDirection;
+import no.sr.ringo.transport.TransferDirection;
 
 import java.util.List;
 

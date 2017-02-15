@@ -2,12 +2,12 @@ package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
-import eu.peppol.persistence.TransferDirection;
-import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
+import no.sr.ringo.account.Account;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.transport.TransferDirection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;

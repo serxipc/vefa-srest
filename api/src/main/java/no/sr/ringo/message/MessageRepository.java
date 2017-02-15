@@ -20,11 +20,12 @@
  * permissions and limitations under the Licence.
  */
 
-package eu.peppol.persistence;
+package no.sr.ringo.message;
 
-import eu.peppol.PeppolTransmissionMetaData;
 import eu.peppol.identifier.MessageId;
 import no.difi.vefa.peppol.common.model.Receipt;
+import no.sr.ringo.peppol.PeppolTransmissionMetaData;
+import no.sr.ringo.transport.TransferDirection;
 import org.w3c.dom.Document;
 
 import java.io.InputStream;

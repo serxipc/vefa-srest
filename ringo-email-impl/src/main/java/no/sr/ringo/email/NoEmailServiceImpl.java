@@ -1,7 +1,7 @@
 package no.sr.ringo.email;
 
-import eu.peppol.persistence.MessageNumber;
-import eu.peppol.persistence.api.account.Account;
+import no.sr.ringo.account.Account;
+import no.sr.ringo.message.MessageNumber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

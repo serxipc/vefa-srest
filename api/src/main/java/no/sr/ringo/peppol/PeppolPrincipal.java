@@ -20,25 +20,24 @@
  * permissions and limitations under the Licence.
  */
 
-package eu.peppol.persistence.api;
+package no.sr.ringo.peppol;
 
-import eu.peppol.identifier.ParticipantId;
-import eu.peppol.persistence.api.account.AccountId;
+import java.security.Principal;
 
 /**
- * @author Steinar Overbeck Cook
+ * @author steinar
+ *         Date: 11.11.2016
+ *         Time: 11.34
  */
-public class SrAccountNotFoundException extends Exception {
+public class PeppolPrincipal implements Principal {
+    private final String ap_name;
 
-    public SrAccountNotFoundException(AccountId id) {
-        super("SR Account " + id + " not found");
+    public PeppolPrincipal(String ap_name) {
+        this.ap_name = ap_name;
     }
 
-    public SrAccountNotFoundException(ParticipantId participantId) {
-        super("SR Account for participant id " + participantId + " not found");
-    }
-
-    public SrAccountNotFoundException(UserName username) {
-        super("SR Account for username" + username + " not found");
+    @Override
+    public String getName() {
+        return ap_name;
     }
 }

@@ -7,7 +7,6 @@ package no.sr.ringo.response.xml;
  */
 
 import eu.peppol.identifier.ParticipantId;
-import eu.peppol.persistence.TransferDirection;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.XmlSpecification;
 import no.sr.ringo.message.MessageMetaDataImpl;
@@ -17,6 +16,7 @@ import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.peppol.RingoUtils;
+import no.sr.ringo.transport.TransferDirection;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Parent;

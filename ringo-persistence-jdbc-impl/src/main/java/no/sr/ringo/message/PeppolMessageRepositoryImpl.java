@@ -4,14 +4,13 @@ import com.google.inject.Inject;
 import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolProcessTypeId;
-import eu.peppol.persistence.*;
-import eu.peppol.persistence.api.account.Account;
-import eu.peppol.persistence.api.account.AccountId;
 import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
 import eu.peppol.persistence.guice.jdbc.Repository;
 import eu.peppol.persistence.jdbc.platform.DbmsPlatform;
 import eu.peppol.persistence.jdbc.platform.DbmsPlatformFactory;
 import no.difi.vefa.peppol.common.model.Receipt;
+import no.sr.ringo.account.Account;
+import no.sr.ringo.account.AccountId;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.message.statistics.InboxStatistics;
 import no.sr.ringo.message.statistics.OutboxStatistics;
@@ -81,11 +80,11 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         String profileId = peppolHeader.getProfileId() != null ? peppolHeader.getProfileId().stringValue() : null;
 
         // Converts from our Ringo Types to the Oxalis types and instantiates a builder.
-        MessageMetaDataEntity.Builder builder = new MessageMetaDataEntity.Builder(TransferDirection.OUT,
+        MessageMetaDataEntity.Builder builder = new MessageMetaDataEntity.Builder(no.sr.ringo.transport.TransferDirection.OUT,
                 new ParticipantId(sender),
                 new ParticipantId(receiver),
                 eu.peppol.identifier.PeppolDocumentTypeId.valueOf(documentTypeId),
-                ChannelProtocol.SREST);
+                no.sr.ringo.peppol.ChannelProtocol.SREST);
 
         // Connects the data to the right account.
         builder.accountId(account.getAccountId().toInteger());
@@ -104,7 +103,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
 
         MessageMetaDataImpl messageMetaData = new MessageMetaDataImpl();
         messageMetaData.setPeppolHeader(peppolHeader);
-        messageMetaData.setTransferDirection(TransferDirection.OUT);
+        messageMetaData.setTransferDirection(no.sr.ringo.transport.TransferDirection.OUT);
         messageMetaData.setMsgNo(msgNo);
         messageMetaData.setUuid(metaData.getMessageId().stringValue());
 
@@ -160,7 +159,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             Connection connection = jdbcTxManager.getConnection();
             PreparedStatement ps = sql.prepareStatement(connection);
             ps.setInt(1, accountId.toInteger());
-            ps.setString(2, TransferDirection.IN.name());
+            ps.setString(2, no.sr.ringo.transport.TransferDirection.IN.name());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 result = rs.getInt(1);
@@ -173,18 +172,18 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
 
     @Override
     public List<MessageMetaData> findUndeliveredOutboundMessagesByAccount(AccountId accountId) {
-        return findUndeliveredMessagesByAccount(accountId, TransferDirection.OUT);
+        return findUndeliveredMessagesByAccount(accountId, no.sr.ringo.transport.TransferDirection.OUT);
     }
 
     @Override
     public List<MessageMetaData> findUndeliveredInboundMessagesByAccount(AccountId accountId) {
-        return findUndeliveredMessagesByAccount(accountId, TransferDirection.IN);
+        return findUndeliveredMessagesByAccount(accountId, no.sr.ringo.transport.TransferDirection.IN);
     }
 
     /**
      * Helper method for finding undelivered messages, which are either outbound or inbound.
      */
-    List<MessageMetaData> findUndeliveredMessagesByAccount(AccountId accountId, TransferDirection transferDirection) {
+    List<MessageMetaData> findUndeliveredMessagesByAccount(AccountId accountId, no.sr.ringo.transport.TransferDirection transferDirection) {
         final SqlHelper sql = SqlHelper.create(getDbmsPlatform()).undeliveredMessagesSql(transferDirection);
         try {
             PreparedStatement ps = sql.prepareStatement(jdbcTxManager.getConnection());
@@ -489,7 +488,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         MessageMetaDataImpl messageMetaData = new MessageMetaDataImpl();
         messageMetaData.setMsgNo(rs.getLong("msg_no"));
         messageMetaData.setAccountId(new AccountId(rs.getInt("account_id")));
-        messageMetaData.setTransferDirection(TransferDirection.valueOf(rs.getString("direction")));
+        messageMetaData.setTransferDirection(no.sr.ringo.transport.TransferDirection.valueOf(rs.getString("direction")));
         messageMetaData.setReceived(rs.getTimestamp("received"));
         messageMetaData.setDelivered(rs.getTimestamp("delivered"));
         messageMetaData.getPeppolHeader().setSender(ParticipantId.valueOf(rs.getString("sender")));
@@ -516,7 +515,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     private MessageMetaDataImpl extractMessageForResultSetWithoutAccountId(ResultSet rs) throws SQLException {
         MessageMetaDataImpl m = new MessageMetaDataImpl();
         m.setMsgNo(rs.getLong("msg_no"));
-        m.setTransferDirection(TransferDirection.valueOf(rs.getString("direction")));
+        m.setTransferDirection(no.sr.ringo.transport.TransferDirection.valueOf(rs.getString("direction")));
         m.setReceived(rs.getTimestamp("received"));
         m.setDelivered(rs.getTimestamp("delivered"));
         m.getPeppolHeader().setSender(ParticipantId.valueOf(rs.getString("sender")));
@@ -589,12 +588,12 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             return this;
         }
 
-        private SqlHelper undeliveredMessagesSql(TransferDirection transferDirection) {
+        private SqlHelper undeliveredMessagesSql(no.sr.ringo.transport.TransferDirection transferDirection) {
 
             String limitCondition = dbmsPlatform.getLimitClause(0, DEFAULT_PAGE_SIZE);
 
 
-            if (TransferDirection.IN.equals(transferDirection)) {
+            if (no.sr.ringo.transport.TransferDirection.IN.equals(transferDirection)) {
                 // Delivered must be null and uuid must not be null for valid undelivered incoming messages
                 sql = selectMessage() +
                         "where delivered is null and message_uuid is not null and message_uuid != '' and account_id=? and direction=? order by msg_no " + limitCondition;

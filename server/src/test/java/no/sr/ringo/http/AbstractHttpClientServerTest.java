@@ -1,8 +1,8 @@
 /* Created by steinar on 04.01.12 at 22:20 */
 package no.sr.ringo.http;
 
-import eu.peppol.persistence.api.account.Account;
 import no.sr.ringo.ObjectMother;
+import no.sr.ringo.account.Account;
 import no.sr.ringo.client.RingoClientImpl;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.common.TestFileHelper;

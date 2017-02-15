@@ -2,10 +2,9 @@ package no.sr.ringo.message;
 
 import com.sun.jersey.api.uri.UriBuilderImpl;
 import eu.peppol.identifier.WellKnownParticipant;
-import eu.peppol.persistence.MessageNumber;
-import eu.peppol.persistence.api.account.Account;
-import eu.peppol.persistence.api.account.AccountId;
 import no.sr.ringo.ObjectMother;
+import no.sr.ringo.account.Account;
+import no.sr.ringo.account.AccountId;
 import no.sr.ringo.document.DefaultPeppolDocument;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.resource.MessagesResource;

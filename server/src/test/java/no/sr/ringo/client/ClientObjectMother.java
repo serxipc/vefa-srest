@@ -3,7 +3,7 @@ package no.sr.ringo.client;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
-import eu.peppol.persistence.api.account.Account;
+import no.sr.ringo.account.Account;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.http.AbstractHttpClientServerTest;
 import org.apache.http.client.methods.HttpPost;

@@ -20,9 +20,10 @@
  * permissions and limitations under the Licence.
  */
 
-package eu.peppol;
+package no.sr.ringo.peppol;
 
 import eu.peppol.identifier.*;
+import eu.peppol.identifier.PeppolDocumentTypeId;
 import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
@@ -57,7 +58,7 @@ public class PeppolTransmissionMetaData implements Serializable {
     /** PEPPOL Participant Identifier of the senders end point, i.e. C1 */
     private ParticipantId senderId;
 
-    private PeppolDocumentTypeId documentTypeIdentifier;
+    private eu.peppol.identifier.PeppolDocumentTypeId documentTypeIdentifier;
     private PeppolProcessTypeId profileTypeIdentifier;
 
     /** Senders access point, i.e. C2 */
@@ -107,7 +108,7 @@ public class PeppolTransmissionMetaData implements Serializable {
         this.senderId = new ParticipantId(senderId);
     }
 
-    public PeppolDocumentTypeId getDocumentTypeIdentifier() {
+    public eu.peppol.identifier.PeppolDocumentTypeId getDocumentTypeIdentifier() {
         return documentTypeIdentifier;
     }
 

@@ -22,7 +22,7 @@
 
 package eu.peppol.persistence.queue;
 
-import eu.peppol.persistence.MessageNumber;
+import no.sr.ringo.message.MessageNumber;
 
 /**
  * User: adam

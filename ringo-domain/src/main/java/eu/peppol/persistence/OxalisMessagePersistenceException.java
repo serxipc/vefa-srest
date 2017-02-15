@@ -18,7 +18,7 @@
 
 package eu.peppol.persistence;
 
-import eu.peppol.PeppolTransmissionMetaData;
+import no.sr.ringo.peppol.PeppolTransmissionMetaData;
 
 /**
  * @author steinar

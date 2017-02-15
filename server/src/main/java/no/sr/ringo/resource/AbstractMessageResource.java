@@ -1,11 +1,7 @@
 /* Created by steinar on 08.01.12 at 20:41 */
 package no.sr.ringo.resource;
 
-import eu.peppol.persistence.MessageNumber;
-import no.sr.ringo.message.MessageMetaData;
-import no.sr.ringo.message.MessageWithLocations;
-import no.sr.ringo.message.MessageWithLocationsImpl;
-import no.sr.ringo.message.SearchParams;
+import no.sr.ringo.message.*;
 import no.sr.ringo.response.SingleMessagesResponse;
 import org.apache.commons.lang.StringUtils;
 

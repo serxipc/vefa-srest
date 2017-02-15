@@ -20,12 +20,10 @@
  * permissions and limitations under the Licence.
  */
 
-package eu.peppol.persistence.api.account;
+package no.sr.ringo.account;
 
 import eu.peppol.identifier.ParticipantId;
-import eu.peppol.persistence.MessageNumber;
-import eu.peppol.persistence.api.SrAccountNotFoundException;
-import eu.peppol.persistence.api.UserName;
+import no.sr.ringo.message.MessageNumber;
 
 /**
  * @author Steinar Overbeck Cook

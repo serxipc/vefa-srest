@@ -2,11 +2,6 @@
 package no.sr.ringo.account;
 
 import com.google.inject.Inject;
-import eu.peppol.persistence.api.SrAccountNotFoundException;
-import eu.peppol.persistence.api.UserName;
-import eu.peppol.persistence.api.account.Account;
-import eu.peppol.persistence.api.account.AccountRepository;
-import eu.peppol.persistence.api.account.Customer;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import org.testng.annotations.AfterMethod;

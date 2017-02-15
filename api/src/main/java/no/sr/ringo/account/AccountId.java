@@ -17,7 +17,7 @@
  */
 
 /* Created by steinar on 01.01.12 at 14:29 */
-package eu.peppol.persistence.api.account;
+package no.sr.ringo.account;
 
 import java.io.Serializable;
 

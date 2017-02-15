@@ -20,53 +20,51 @@
  * permissions and limitations under the Licence.
  */
 
-/* Created by steinar on 01.01.12 at 14:29 */
-package eu.peppol.persistence.api;
+package no.sr.ringo.account;
 
-/**
- * Value object representing username
- *
- * @author adam
- */
-public class UserName {
-    private final String username;
+import java.io.Serializable;
 
-    public UserName(String username) {
-        if (username == null) {
-            throw new IllegalArgumentException("username required");
+public class CustomerId implements Serializable {
+    private Integer id;
+
+    public CustomerId(String id) {
+        if (id == null) {
+            throw new IllegalArgumentException("id required");
         }
-        this.username = username.toLowerCase();
+        this.id = Integer.parseInt(id);
+    }
+
+    public CustomerId(Integer id){
+        if (id == null) {
+            throw new IllegalArgumentException("id required");
+        }
+
+        this.id = id;
+    }
+
+    public Integer toInteger(){
+        return id;
     }
 
 
-    public String stringValue() {
-        return username.toString();
-    }
-
-
-    @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("UserName");
-        sb.append("{username='").append(username).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return id.toString();
     }
 
-    @Override
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserName userName = (UserName) o;
+        CustomerId that = (CustomerId) o;
 
-        if (username != null ? !username.equals(userName.username) : userName.username != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
 
         return true;
     }
 
-    @Override
+
     public int hashCode() {
-        return username != null ? username.hashCode() : 0;
+        return id != null ? id.hashCode() : 0;
     }
 }

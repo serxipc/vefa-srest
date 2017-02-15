@@ -3,9 +3,9 @@ package no.sr.ringo.usecase;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
-import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.queue.OutboundMessageQueueId;
 import eu.peppol.persistence.queue.QueueRepository;
+import no.sr.ringo.account.Account;
 import no.sr.ringo.common.UploadMode;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.message.*;

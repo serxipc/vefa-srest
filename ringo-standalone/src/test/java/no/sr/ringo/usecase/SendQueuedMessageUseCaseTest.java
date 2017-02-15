@@ -1,13 +1,13 @@
 package no.sr.ringo.usecase;
 
 import eu.peppol.identifier.MessageId;
-import eu.peppol.persistence.MessageNumber;
-import eu.peppol.persistence.api.account.Account;
-import eu.peppol.persistence.api.account.AccountRepository;
 import eu.peppol.persistence.queue.*;
 import no.difi.vefa.peppol.common.model.Receipt;
+import no.sr.ringo.account.Account;
+import no.sr.ringo.account.AccountRepository;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.message.MessageMetaData;
+import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.oxalis.PeppolDocumentSender;
 import no.sr.ringo.peppol.PeppolChannelId;

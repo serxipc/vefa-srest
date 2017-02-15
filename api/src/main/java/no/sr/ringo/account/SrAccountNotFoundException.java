@@ -20,13 +20,24 @@
  * permissions and limitations under the Licence.
  */
 
-package eu.peppol.persistence.api;
+package no.sr.ringo.account;
+
+import eu.peppol.identifier.ParticipantId;
 
 /**
- * @author steinar
- *         Date: 22.10.2016
- *         Time: 17.56
+ * @author Steinar Overbeck Cook
  */
-public enum TransferDirection {
-    IN, OUT
+public class SrAccountNotFoundException extends Exception {
+
+    public SrAccountNotFoundException(AccountId id) {
+        super("SR Account " + id + " not found");
+    }
+
+    public SrAccountNotFoundException(ParticipantId participantId) {
+        super("SR Account for participant id " + participantId + " not found");
+    }
+
+    public SrAccountNotFoundException(UserName username) {
+        super("SR Account for username" + username + " not found");
+    }
 }

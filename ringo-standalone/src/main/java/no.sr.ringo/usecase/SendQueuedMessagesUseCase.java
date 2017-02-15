@@ -1,13 +1,13 @@
 package no.sr.ringo.usecase;
 
 import com.google.inject.Inject;
-import eu.peppol.persistence.MessageNumber;
-import eu.peppol.persistence.api.account.Account;
-import eu.peppol.persistence.api.account.AccountRepository;
 import eu.peppol.persistence.guice.jdbc.Transactional;
 import eu.peppol.persistence.queue.*;
+import no.sr.ringo.account.Account;
+import no.sr.ringo.account.AccountRepository;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.message.MessageMetaData;
+import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.oxalis.PeppolDocumentSender;
 import org.apache.commons.lang.exception.ExceptionUtils;

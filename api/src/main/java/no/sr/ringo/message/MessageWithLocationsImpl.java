@@ -1,12 +1,11 @@
 /* Created by steinar on 08.01.12 at 20:18 */
 package no.sr.ringo.message;
 
-import eu.peppol.persistence.TransferDirection;
 import no.sr.ringo.peppol.PeppolHeader;
+import no.sr.ringo.transport.TransferDirection;
 
 import java.net.URI;
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * Decorates a PeppolMessageResultImpl object and adds two more methods

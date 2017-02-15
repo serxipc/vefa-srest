@@ -2,11 +2,14 @@ package no.sr.ringo.resource;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
-import eu.peppol.persistence.api.account.Account;
+import no.sr.ringo.account.Account;
 import no.sr.ringo.email.EmailService;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * Exposing resources allowing to send notification emails when something goes wrong in ringo client

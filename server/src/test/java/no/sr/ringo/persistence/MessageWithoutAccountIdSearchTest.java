@@ -3,11 +3,11 @@ package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.WellKnownParticipant;
-import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.transport.TransferDirection;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Guice;

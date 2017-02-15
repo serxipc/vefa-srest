@@ -1,7 +1,7 @@
 package no.sr.ringo.message;
 
 import eu.peppol.identifier.ParticipantId;
-import eu.peppol.persistence.api.account.Account;
+import no.sr.ringo.account.Account;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.ProfileIdResolver;
 import no.sr.ringo.common.RingoConstants;

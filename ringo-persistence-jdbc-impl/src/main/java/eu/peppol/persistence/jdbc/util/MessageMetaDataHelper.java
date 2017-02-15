@@ -22,10 +22,10 @@
 
 package eu.peppol.persistence.jdbc.util;
 
-import eu.peppol.PeppolTransmissionMetaData;
-import eu.peppol.persistence.ChannelProtocol;
-import eu.peppol.persistence.MessageMetaDataEntity;
-import eu.peppol.persistence.TransferDirection;
+import no.sr.ringo.message.MessageMetaDataEntity;
+import no.sr.ringo.peppol.ChannelProtocol;
+import no.sr.ringo.peppol.PeppolTransmissionMetaData;
+import no.sr.ringo.transport.TransferDirection;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -40,7 +40,7 @@ public class MessageMetaDataHelper {
     /**
      * Converts an instance of {@link PeppolTransmissionMetaData} into a {@link MessageMetaDataEntity} object.
      * <p>
-     * The direction of the message transfer, typically always {@link eu.peppol.persistence.TransferDirection#IN} when you receive from the PEPPOL network,
+     * The direction of the message transfer, typically always {@link TransferDirection#IN} when you receive from the PEPPOL network,
      * hence this is the default.
      *
      * @param pm the {@link PeppolTransmissionMetaData} instance

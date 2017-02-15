@@ -1,18 +1,18 @@
 package no.sr.ringo.common;
 
 import eu.peppol.identifier.ParticipantId;
-import eu.peppol.persistence.ChannelProtocol;
-import eu.peppol.persistence.TransferDirection;
-import eu.peppol.persistence.api.account.AccountId;
+import no.sr.ringo.account.AccountId;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.message.MessageMetaDataImpl;
 import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.message.MessageWithLocationsImpl;
 import no.sr.ringo.message.PeppolMessage;
+import no.sr.ringo.peppol.ChannelProtocol;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolProcessIdAcronym;
 import no.sr.ringo.response.OutboxQueryResponse;
+import no.sr.ringo.transport.TransferDirection;
 import no.sr.ringo.usecase.ReceiveMessageFromClientUseCaseIntegrationTest;
 import org.w3c.dom.Document;
 

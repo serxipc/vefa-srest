@@ -1,12 +1,12 @@
 package no.sr.ringo.http;
 
 import com.google.inject.Inject;
-import eu.peppol.persistence.TransferDirection;
-import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
+import no.sr.ringo.account.Account;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.persistence.DbmsTestHelper;
+import no.sr.ringo.transport.TransferDirection;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.testng.annotations.Guice;

@@ -65,7 +65,7 @@ public class ArtifactPathComputerTest {
 
     ArtifactPathComputer.FileRepoKey sampleMetadata() {
         UUID uuid = UUID.randomUUID();
-        ArtifactPathComputer.FileRepoKey fileRepoKey = new ArtifactPathComputer.FileRepoKey(TransferDirection.IN, new MessageId(), new ParticipantId("9908:976098897"),new ParticipantId("9908:976098897"),LocalDateTime.now());
+        ArtifactPathComputer.FileRepoKey fileRepoKey = new ArtifactPathComputer.FileRepoKey(no.sr.ringo.transport.TransferDirection.IN, new MessageId(), new ParticipantId("9908:976098897"),new ParticipantId("9908:976098897"),LocalDateTime.now());
         return fileRepoKey;
     }
 

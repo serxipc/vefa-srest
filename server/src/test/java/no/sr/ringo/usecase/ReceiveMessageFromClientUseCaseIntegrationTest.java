@@ -2,17 +2,13 @@ package no.sr.ringo.usecase;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
-import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import eu.peppol.persistence.queue.OutboundMessageQueueState;
 import eu.peppol.persistence.queue.QueueRepository;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.guice.ServerTestModuleFactory;
-import no.sr.ringo.message.MessageMetaData;
-import no.sr.ringo.message.MessageWithLocations;
-import no.sr.ringo.message.OutboundPostParams;
-import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.message.*;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolProcessIdAcronym;

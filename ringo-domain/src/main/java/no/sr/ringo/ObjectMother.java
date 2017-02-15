@@ -2,10 +2,10 @@ package no.sr.ringo;
 
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolDocumentTypeId;
-import eu.peppol.persistence.api.UserName;
-import eu.peppol.persistence.api.account.Account;
-import eu.peppol.persistence.api.account.AccountId;
-import eu.peppol.persistence.api.account.CustomerId;
+import no.sr.ringo.account.Account;
+import no.sr.ringo.account.AccountId;
+import no.sr.ringo.account.CustomerId;
+import no.sr.ringo.account.UserName;
 
 import java.util.Date;
 

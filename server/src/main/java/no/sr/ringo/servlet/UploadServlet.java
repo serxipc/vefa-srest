@@ -2,9 +2,9 @@ package no.sr.ringo.servlet;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import eu.peppol.persistence.api.SrAccountNotFoundException;
-import eu.peppol.persistence.api.account.Account;
+import no.sr.ringo.account.Account;
 import no.sr.ringo.account.RingoAccountProvider;
+import no.sr.ringo.account.SrAccountNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

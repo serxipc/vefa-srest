@@ -24,11 +24,11 @@
 package eu.peppol.persistence.queue;
 
 import com.google.inject.Inject;
-import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.guice.jdbc.JdbcTxManager;
 import eu.peppol.persistence.guice.jdbc.Repository;
 import eu.peppol.persistence.jdbc.platform.DbmsPlatform;
 import eu.peppol.persistence.jdbc.platform.DbmsPlatformFactory;
+import no.sr.ringo.message.MessageNumber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

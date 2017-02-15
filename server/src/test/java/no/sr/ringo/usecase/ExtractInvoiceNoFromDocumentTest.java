@@ -1,7 +1,7 @@
 package no.sr.ringo.usecase;
 
-import eu.peppol.persistence.api.account.Account;
 import eu.peppol.persistence.queue.QueueRepository;
+import no.sr.ringo.account.Account;
 import no.sr.ringo.client.ClientObjectMother;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.email.EmailService;

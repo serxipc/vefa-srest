@@ -1,7 +1,7 @@
 package no.sr.ringo.resource;
 
 import com.sun.jersey.api.uri.UriBuilderImpl;
-import eu.peppol.persistence.api.account.Account;
+import no.sr.ringo.account.Account;
 import no.sr.ringo.email.EmailService;
 import org.easymock.EasyMock;
 import org.testng.annotations.BeforeMethod;

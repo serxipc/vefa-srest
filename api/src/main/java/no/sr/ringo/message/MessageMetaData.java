@@ -1,10 +1,9 @@
 package no.sr.ringo.message;
 
-import eu.peppol.persistence.TransferDirection;
 import no.sr.ringo.peppol.PeppolHeader;
+import no.sr.ringo.transport.TransferDirection;
 
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * User: andy
