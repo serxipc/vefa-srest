@@ -2,13 +2,13 @@ package no.sr.ringo.usecase;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import eu.peppol.persistence.jdbc.RingoDataSourceModule;
-import eu.peppol.persistence.jdbc.RingoRepositoryModule;
 import no.difi.ringo.UnitTestConfigModule;
 import no.sr.ringo.guice.OxalisOutboundModule;
 import no.sr.ringo.guice.RingoServiceModule;
 import no.sr.ringo.oxalis.OxalisDocumentSender;
 import no.sr.ringo.oxalis.PeppolDocumentSender;
+import no.sr.ringo.persistence.jdbc.RingoDataSourceModule;
+import no.sr.ringo.persistence.jdbc.RingoRepositoryModule;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertTrue;

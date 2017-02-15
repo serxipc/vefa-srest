@@ -2,14 +2,14 @@ package no.sr.ringo;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import eu.peppol.persistence.jdbc.RingoDataSourceModule;
-import eu.peppol.persistence.jdbc.RingoRepositoryModule;
-import eu.peppol.persistence.queue.OutboundMessageQueueId;
 import no.sr.ringo.config.RingoConfigModule;
 import no.sr.ringo.guice.OxalisOutboundModule;
 import no.sr.ringo.guice.RingoServiceModule;
 import no.sr.ringo.parser.CommandLineParser;
 import no.sr.ringo.parser.ParserResult;
+import no.sr.ringo.persistence.jdbc.RingoDataSourceModule;
+import no.sr.ringo.persistence.jdbc.RingoRepositoryModule;
+import no.sr.ringo.persistence.queue.OutboundMessageQueueId;
 import no.sr.ringo.usecase.QueuedMessageSenderResult;
 import no.sr.ringo.usecase.SendQueuedMessagesUseCase;
 import org.slf4j.Logger;

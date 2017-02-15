@@ -4,9 +4,9 @@ package no.sr.ringo.guice;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
-import eu.peppol.persistence.jdbc.RingoRepositoryModule;
 import no.sr.ringo.common.PropertyHelper;
 import no.sr.ringo.config.RingoConfigModule;
+import no.sr.ringo.persistence.jdbc.RingoRepositoryModule;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;

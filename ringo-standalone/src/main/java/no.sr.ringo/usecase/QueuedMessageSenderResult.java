@@ -1,7 +1,7 @@
 package no.sr.ringo.usecase;
 
-import eu.peppol.persistence.queue.OutboundMessageQueueId;
 import no.sr.ringo.peppol.RingoUtils;
+import no.sr.ringo.persistence.queue.OutboundMessageQueueId;
 
 import java.util.Iterator;
 import java.util.Map;

@@ -1,7 +1,6 @@
 package no.sr.ringo.usecase;
 
 import eu.peppol.identifier.MessageId;
-import eu.peppol.persistence.queue.*;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountRepository;
@@ -12,6 +11,7 @@ import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.oxalis.PeppolDocumentSender;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolHeader;
+import no.sr.ringo.persistence.queue.*;
 import org.easymock.EasyMock;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;

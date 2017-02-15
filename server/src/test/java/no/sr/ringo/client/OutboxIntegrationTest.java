@@ -2,7 +2,6 @@ package no.sr.ringo.client;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
-import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountId;
@@ -15,6 +14,7 @@ import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolHeader;
+import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
 import org.apache.commons.io.input.ReaderInputStream;
 import org.apache.http.HttpResponse;

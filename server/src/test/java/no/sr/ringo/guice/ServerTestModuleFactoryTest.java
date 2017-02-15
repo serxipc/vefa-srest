@@ -1,8 +1,8 @@
 package no.sr.ringo.guice;
 
 import com.google.inject.Inject;
-import eu.peppol.persistence.file.ArtifactPathComputer;
 import no.sr.ringo.config.RingoConfigProperty;
+import no.sr.ringo.persistence.file.ArtifactPathComputer;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 

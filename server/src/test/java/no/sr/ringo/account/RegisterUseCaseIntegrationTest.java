@@ -2,8 +2,8 @@
 package no.sr.ringo.account;
 
 import com.google.inject.Inject;
-import eu.peppol.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.guice.ServerTestModuleFactory;
+import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;

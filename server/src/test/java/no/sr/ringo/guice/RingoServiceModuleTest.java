@@ -1,10 +1,10 @@
 package no.sr.ringo.guice;
 
-import eu.peppol.persistence.jdbc.RingoRepositoryModule;
 import no.difi.ringo.UnitTestConfigModule;
 import no.sr.ringo.document.DocumentRepository;
 import no.sr.ringo.document.PeppolDocumentDecoratorFactory;
 import no.sr.ringo.document.PeppolDocumentFactory;
+import no.sr.ringo.persistence.jdbc.RingoRepositoryModule;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 

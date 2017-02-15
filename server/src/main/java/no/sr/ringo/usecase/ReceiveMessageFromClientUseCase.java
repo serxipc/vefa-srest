@@ -3,12 +3,12 @@ package no.sr.ringo.usecase;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
-import eu.peppol.persistence.queue.OutboundMessageQueueId;
-import eu.peppol.persistence.queue.QueueRepository;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.common.UploadMode;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.message.*;
+import no.sr.ringo.persistence.queue.OutboundMessageQueueId;
+import no.sr.ringo.persistence.queue.QueueRepository;
 import no.sr.ringo.resource.InvalidUserInputWebException;
 import no.sr.ringo.xml.EhfEntityExtractor;
 import org.apache.commons.lang.StringUtils;
