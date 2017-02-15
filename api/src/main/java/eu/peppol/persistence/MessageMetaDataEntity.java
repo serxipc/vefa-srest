@@ -1,19 +1,23 @@
 /*
- * Copyright (c) 2010 - 2016 Norwegian Agency for Public Government and eGovernment (Difi)
+ * Copyright 2010-2017 Norwegian Agency for Public Management and eGovernment (Difi)
  *
- * This file is part of Oxalis.
+ * Licensed under the EUPL, Version 1.1 or – as soon they
+ * will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
  *
- * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by the European Commission
- * - subsequent versions of the EUPL (the "Licence"); You may not use this work except in compliance with the Licence.
+ * You may not use this work except in compliance with the Licence.
  *
  * You may obtain a copy of the Licence at:
  *
- * https://joinup.ec.europa.eu/software/page/eupl5
+ * https://joinup.ec.europa.eu/community/eupl/og_page/eupl
  *
- *  Unless required by applicable law or agreed to in writing, software distributed under the Licence
- *  is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the Licence for the specific language governing permissions and limitations under the Licence.
- *
+ * Unless required by applicable law or agreed to in
+ * writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ * See the Licence for the specific language governing
+ * permissions and limitations under the Licence.
  */
 
 package eu.peppol.persistence;
@@ -47,11 +51,11 @@ import java.time.LocalDateTime;
  *         Date: 22.10.2016
  *         Time: 17.51
  */
-public class MessageMetaData implements Serializable {
+public class MessageMetaDataEntity implements Serializable {
 
     MessageNumber messageNumber;
     AccountId accessPointAccountId;
-    eu.peppol.persistence.TransferDirection transferDirection;
+    TransferDirection transferDirection;
     LocalDateTime received = LocalDateTime.now();
     LocalDateTime delivered;
     ParticipantId sender;
@@ -64,14 +68,13 @@ public class MessageMetaData implements Serializable {
     AccessPointIdentifier accessPointIdentifier;
     Principal principal;
     URI payloadUri;
-    URI genericEvidenceUri;
     URI nativeEvidenceUri ;
 
     public void setAccountId(AccountId accessPointAccountId) {
         this.accessPointAccountId = accessPointAccountId;
     }
 
-    public MessageMetaData(Builder builder) {
+    public MessageMetaDataEntity(Builder builder) {
 
         messageNumber = builder.messageNumber;
         accessPointAccountId = builder.accessPointAccountId;
@@ -87,7 +90,6 @@ public class MessageMetaData implements Serializable {
         accessPointIdentifier = builder.accessPointIdentifier;
         principal = builder.principal;
         payloadUri = builder.payloadUri;
-        genericEvidenceUri = builder.genericEvidenceUri;
         nativeEvidenceUri = builder.nativeEvidenceUri;
 
     }
@@ -100,7 +102,7 @@ public class MessageMetaData implements Serializable {
         return accessPointAccountId;
     }
 
-    public eu.peppol.persistence.TransferDirection getTransferDirection() {
+    public TransferDirection getTransferDirection() {
         return transferDirection;
     }
 
@@ -148,17 +150,13 @@ public class MessageMetaData implements Serializable {
         return payloadUri;
     }
 
-    public URI getGenericEvidenceUri() {
-        return genericEvidenceUri;
-    }
-
     public URI getNativeEvidenceUri() {
         return nativeEvidenceUri;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("MessageMetaData{");
+        final StringBuilder sb = new StringBuilder("MessageMetaDataEntity{");
         sb.append("messageNumber=").append(messageNumber);
         sb.append(", accessPointAccountId=").append(accessPointAccountId);
         sb.append(", transferDirection=").append(transferDirection);
@@ -173,7 +171,6 @@ public class MessageMetaData implements Serializable {
         sb.append(", accessPointIdentifier=").append(accessPointIdentifier);
         sb.append(", principal=").append(principal);
         sb.append(", payloadUri=").append(payloadUri);
-        sb.append(", genericEvidenceUri=").append(genericEvidenceUri);
         sb.append(", nativeEvidenceUri=").append(nativeEvidenceUri);
         sb.append('}');
         return sb.toString();
@@ -181,7 +178,7 @@ public class MessageMetaData implements Serializable {
 
     public static class Builder {
         // Required
-        private final eu.peppol.persistence.TransferDirection transferDirection;
+        private final TransferDirection transferDirection;
         private final ParticipantId sender;
         private final ParticipantId receiver;
         private final PeppolDocumentTypeId documentTypeId;
@@ -229,8 +226,8 @@ public class MessageMetaData implements Serializable {
             }
         }
 
-        public eu.peppol.persistence.MessageMetaData build() {
-            eu.peppol.persistence.MessageMetaData m = new eu.peppol.persistence.MessageMetaData(this);
+        public MessageMetaDataEntity build() {
+            MessageMetaDataEntity m = new MessageMetaDataEntity(this);
 
 
             if (m.messageId == null) {
@@ -286,10 +283,6 @@ public class MessageMetaData implements Serializable {
             return this;
         }
 
-        public Builder genericEvidenceUri(URI genericEvidenceUri) {
-            this.genericEvidenceUri = genericEvidenceUri;
-            return this;
-        }
 
         public Builder nativeEvidenceUri(URI nativeEvidenceUri) {
             this.nativeEvidenceUri = nativeEvidenceUri;

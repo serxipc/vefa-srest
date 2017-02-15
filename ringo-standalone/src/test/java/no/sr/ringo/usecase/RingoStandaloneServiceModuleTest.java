@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import eu.peppol.persistence.jdbc.RingoDataSourceModule;
 import eu.peppol.persistence.jdbc.RingoRepositoryModule;
 import no.difi.ringo.UnitTestConfigModule;
+import no.sr.ringo.guice.OxalisOutboundModule;
 import no.sr.ringo.guice.RingoServiceModule;
 import no.sr.ringo.oxalis.OxalisDocumentSender;
 import no.sr.ringo.oxalis.PeppolDocumentSender;
@@ -24,7 +25,8 @@ public class RingoStandaloneServiceModuleTest {
 
         Injector injector = Guice.createInjector(
                 new UnitTestConfigModule(),
-                
+
+                new OxalisOutboundModule(),
                 new RingoDataSourceModule(),
                 new RingoServiceModule(),    // Production
                 new RingoRepositoryModule()

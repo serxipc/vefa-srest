@@ -57,13 +57,13 @@ public interface MessageRepository {
     Long saveInboundMessage(PeppolTransmissionMetaData peppolTransmissionMetaData, InputStream payload)
             throws OxalisMessagePersistenceException;
 
-    Long saveOutboundMessage(MessageMetaData messageMetaData, InputStream payloadDocument)
+    Long saveOutboundMessage(MessageMetaDataEntity messageMetaDataEntity, InputStream payloadDocument)
             throws OxalisMessagePersistenceException;
 
-    Long saveOutboundMessage(MessageMetaData messageMetaData, Document payloadDocument)
+    Long saveOutboundMessage(MessageMetaDataEntity messageMetaDataEntity, Document payloadDocument)
             throws OxalisMessagePersistenceException;
 
-    Long saveInboundMessage(MessageMetaData messageMetaData, InputStream payload)
+    Long saveInboundMessage(MessageMetaDataEntity messageMetaDataEntity, InputStream payload)
             throws OxalisMessagePersistenceException;
 
 
@@ -80,21 +80,21 @@ public interface MessageRepository {
     void saveOutboundTransportReceipt(Receipt transmissionEvidence, MessageId messageId)
             throws OxalisMessagePersistenceException;
 
-    MessageMetaData findByMessageNo(Long msgNo);
+    MessageMetaDataEntity findByMessageNo(Long msgNo);
 
     /**
-     * Find an instance of {@link MessageMetaData} by {@link TransferDirection} and {@link MessageId}, i.e. the UUID assigned when we receive a message either
+     * Find an instance of {@link MessageMetaDataEntity} by {@link TransferDirection} and {@link MessageId}, i.e. the UUID assigned when we receive a message either
      * from PEPPOL or our back end.
      * The combination of arguments {@link TransferDirection} and {@link MessageId} ensures that messages sent and received by this access point are unique.
      *
      * @param transferDirection indicates whether the message is inbound or outbound.
      * @param messageId         the key
-     * @return an instance of {@link MessageMetaData} populated with data from the repository (DBMS)
+     * @return an instance of {@link MessageMetaDataEntity} populated with data from the repository (DBMS)
      * @throws IllegalStateException if a message with the given MessageId does not exist
      */
-    Optional<MessageMetaData> findByMessageId(TransferDirection transferDirection, MessageId messageId)
+    Optional<MessageMetaDataEntity> findByMessageId(TransferDirection transferDirection, MessageId messageId)
             throws IllegalStateException;
 
-    List<MessageMetaData> findByMessageId(MessageId messageId);
+    List<MessageMetaDataEntity> findByMessageId(MessageId messageId);
 
 }

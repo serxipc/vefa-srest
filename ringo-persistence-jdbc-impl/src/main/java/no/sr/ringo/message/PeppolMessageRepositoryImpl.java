@@ -81,7 +81,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         String profileId = peppolHeader.getProfileId() != null ? peppolHeader.getProfileId().stringValue() : null;
 
         // Converts from our Ringo Types to the Oxalis types and instantiates a builder.
-        eu.peppol.persistence.MessageMetaData.Builder builder = new eu.peppol.persistence.MessageMetaData.Builder(TransferDirection.OUT,
+        MessageMetaDataEntity.Builder builder = new MessageMetaDataEntity.Builder(TransferDirection.OUT,
                 new ParticipantId(sender),
                 new ParticipantId(receiver),
                 eu.peppol.identifier.PeppolDocumentTypeId.valueOf(documentTypeId),
@@ -91,7 +91,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         builder.accountId(account.getAccountId().toInteger());
 
         builder.processTypeId(PeppolProcessTypeId.valueOf(profileId));
-        eu.peppol.persistence.MessageMetaData metaData = builder.build();
+        MessageMetaDataEntity metaData = builder.build();
 
         // Delegates to the injected message repository
         Long msgNo = null;

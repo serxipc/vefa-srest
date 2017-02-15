@@ -25,7 +25,7 @@ package eu.peppol.persistence.jdbc.util;
 import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
 import eu.peppol.identifier.WellKnownParticipant;
-import eu.peppol.persistence.MessageMetaData;
+import eu.peppol.persistence.MessageMetaDataEntity;
 import eu.peppol.persistence.MessageRepository;
 import eu.peppol.persistence.TransferDirection;
 import eu.peppol.persistence.api.UserName;
@@ -88,7 +88,7 @@ public class DatabaseHelperTest {
         // even though the receivers ppid is bound to account #1
         Long msgNo = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.OUT, WellKnownParticipant.DUMMY.stringValue(), WellKnownParticipant.DUMMY.stringValue(), UUID.randomUUID().toString(), new Date(), PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(), PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId());
 
-        MessageMetaData messageByNo = messageRepository.findByMessageNo(msgNo);
+        MessageMetaDataEntity messageByNo = messageRepository.findByMessageNo(msgNo);
         assertEquals(messageByNo.getAccountId(), account.getAccountId());
     }
 

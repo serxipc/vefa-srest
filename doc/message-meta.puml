@@ -1,0 +1,67 @@
+@startuml
+
+class   MessageMetaDataEntity {
+        MessageNumber messageNumber;
+        AccountId accessPointAccountId;
+        TransferDirection transferDirection;
+        LocalDateTime received
+        LocalDateTime delivered;
+        ParticipantId sender;
+        ParticipantId receiver;
+        ChannelProtocol channelProtocol;
+        MessageId messageId  ;
+
+        PeppolDocumentTypeId documentTypeId;
+        PeppolProcessTypeId processTypeId ;
+        AccessPointIdentifier accessPointIdentifier;
+        Principal principal;
+        URI payloadUri;
+        URI nativeEvidenceUri ;
+}
+
+interface  MessageMetaData {
+          TransferDirection getTransferDirection();
+          Date getReceived();
+          Date getDelivered();
+          PeppolHeader getPeppolHeader();
+          Long getMsgNo();
+          String getUuid();
+}
+
+note top of MessageMetaData
+    Duplicates:
+    > ringo-domain
+    > ringo-api
+end note
+
+class MessageMetaDataImpl {
+    private Long msgNo;
+
+    private AccountId accountId;
+    private TransferDirection transferDirection;
+    private Date received = new Date();
+    private Date delivered;
+    private String uuid;
+
+    private PeppolHeader peppolHeader;
+}
+
+class PeppolHeader {
+    private ParticipantId sender;
+    private ParticipantId receiver;
+    private PeppolChannelId peppolChannel;
+    private PeppolDocumentTypeId peppolDocumentTypeId;
+    private ProfileId profileId;
+}
+
+class PeppolMessage {
+
+    private Integer msgNo;
+    private PeppolHeader peppolHeader;
+    private Document xmlMessage;
+}
+
+MessageMetaDataImpl -up-|> MessageMetaData
+
+
+@enduml

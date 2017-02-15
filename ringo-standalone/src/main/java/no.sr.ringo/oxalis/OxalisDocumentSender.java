@@ -3,11 +3,11 @@ package no.sr.ringo.oxalis;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolDocumentTypeId;
 import eu.peppol.identifier.PeppolProcessTypeId;
-import eu.peppol.outbound.OxalisOutboundComponent;
-import eu.peppol.outbound.transmission.TransmissionRequestBuilder;
 import no.difi.oxalis.api.outbound.TransmissionRequest;
 import no.difi.oxalis.api.outbound.TransmissionResponse;
 import no.difi.oxalis.api.outbound.Transmitter;
+import no.difi.oxalis.outbound.OxalisOutboundComponent;
+import no.difi.oxalis.outbound.transmission.TransmissionRequestBuilder;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.message.MessageMetaData;
@@ -23,8 +23,8 @@ public class OxalisDocumentSender implements PeppolDocumentSender {
     private final OxalisOutboundComponent oxalisOutboundModule;
 
     @javax.inject.Inject
-    public OxalisDocumentSender(OxalisOutboundComponent oxalisOutboundModule) {
-        this.oxalisOutboundModule = oxalisOutboundModule;
+    public OxalisDocumentSender(OxalisOutboundComponent oxalisOutboundComponent) {
+        this.oxalisOutboundModule = oxalisOutboundComponent;
     }
 
     @Override

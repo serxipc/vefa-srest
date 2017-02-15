@@ -3,6 +3,7 @@ package no.sr.ringo.persistence;
 import com.google.inject.Inject;
 import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
+import eu.peppol.persistence.MessageMetaDataEntity;
 import eu.peppol.persistence.MessageNumber;
 import eu.peppol.persistence.MessageRepository;
 import eu.peppol.persistence.TransferDirection;
@@ -272,9 +273,9 @@ public class PeppolMessageRepositoryImplIntegrationTest {
 
         // Verifies the contents of the evidence
         {
-            List<eu.peppol.persistence.MessageMetaData> messages = oxalisMessageRepository.findByMessageId(messageOutUuid);
+            List<MessageMetaDataEntity> messages = oxalisMessageRepository.findByMessageId(messageOutUuid);
             assertEquals(messages.size(), 1);
-            eu.peppol.persistence.MessageMetaData m = messages.get(0);
+            MessageMetaDataEntity m = messages.get(0);
 
             verifyEvidence(m::getNativeEvidenceUri, receipt.getValue());
         }

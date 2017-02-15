@@ -1,11 +1,9 @@
 package no.sr.ringo.guice;
 
-import com.google.inject.Provides;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import eu.peppol.util.OperationalMode;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.message.FetchMessagesUseCase;
 import no.sr.ringo.peppol.DummySender;
@@ -91,11 +89,4 @@ public class RingoRestModule extends JerseyServletModule {
         bind(ReceiveMessageFromClientUseCase.class).in(RequestScoped.class);
         bind(FetchDocumentUseCase.class).in(RequestScoped.class);
     }
-
-
-    @Provides
-    OperationalMode getOperationalMode() {
-        return OperationalMode.PRODUCTION;
-    }
-
 }

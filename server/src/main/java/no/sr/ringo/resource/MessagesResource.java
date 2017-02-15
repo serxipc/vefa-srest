@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 /**
- * Represents the "messages" resource, which allows clients to GET MessageMetaData from both inbox and outbox
+ * Represents the "messages" resource, which allows clients to GET MessageMetaDataEntity from both inbox and outbox
  * PEPPOL network.
  *
  * @author adam

@@ -88,34 +88,34 @@ public class MessageRepositoryH2Impl implements MessageRepository {
     /**
      * Saves an outbound message received from the back-end to the file system, with meta data saved into the DBMS.
      *
-     * @param messageMetaData
+     * @param messageMetaDataEntity
      * @param payloadInputStream
      * @return
      */
-    public Long saveOutboundMessage(MessageMetaData messageMetaData, InputStream payloadInputStream) throws OxalisMessagePersistenceException {
+    public Long saveOutboundMessage(MessageMetaDataEntity messageMetaDataEntity, InputStream payloadInputStream) throws OxalisMessagePersistenceException {
 
-        if (messageMetaData.getAccountId() == null) {
+        if (messageMetaDataEntity.getAccountId() == null) {
             throw new IllegalArgumentException("Outbound messages from back-end must have account id");
         }
 
-        ArtifactPathComputer.FileRepoKey fileRepoKey = fileRepoKeyFrom(messageMetaData);
+        ArtifactPathComputer.FileRepoKey fileRepoKey = fileRepoKeyFrom(messageMetaDataEntity);
 
         Path documentPath = persistArtifact(ArtifactType.PAYLOAD, payloadInputStream, fileRepoKey);
 
-        return createMetaDataEntry(messageMetaData, documentPath.toUri());
+        return createMetaDataEntry(messageMetaDataEntity, documentPath.toUri());
     }
 
     @Override
-    public Long saveOutboundMessage(MessageMetaData messageMetaData, Document payloadDocument) throws OxalisMessagePersistenceException {
+    public Long saveOutboundMessage(MessageMetaDataEntity messageMetaDataEntity, Document payloadDocument) throws OxalisMessagePersistenceException {
 
-        if (messageMetaData.getAccountId() == null) {
+        if (messageMetaDataEntity.getAccountId() == null) {
             throw new IllegalArgumentException("Outbound messages from back-end must have account id");
         }
-        ArtifactPathComputer.FileRepoKey fileRepoKey = fileRepoKeyFrom(messageMetaData);
+        ArtifactPathComputer.FileRepoKey fileRepoKey = fileRepoKeyFrom(messageMetaDataEntity);
 
         Path documentPath = persistArtifactFromDocument(ArtifactType.PAYLOAD, payloadDocument, fileRepoKey);
 
-        return createMetaDataEntry(messageMetaData, documentPath.toUri());
+        return createMetaDataEntry(messageMetaDataEntity, documentPath.toUri());
     }
 
 
@@ -129,24 +129,24 @@ public class MessageRepositoryH2Impl implements MessageRepository {
      * @throws OxalisMessagePersistenceException
      */
     @Override
-    public Long saveInboundMessage(MessageMetaData messageMetaData, InputStream payloadInputStream) throws OxalisMessagePersistenceException {
+    public Long saveInboundMessage(MessageMetaDataEntity messageMetaDataEntity, InputStream payloadInputStream) throws OxalisMessagePersistenceException {
 
-        ArtifactPathComputer.FileRepoKey fileRepositoryMetaData = fileRepoKeyFrom(messageMetaData.getMessageId(), TransferDirection.IN, messageMetaData.getSender(), messageMetaData.getReceiver(), messageMetaData.getReceived());
+        ArtifactPathComputer.FileRepoKey fileRepositoryMetaData = fileRepoKeyFrom(messageMetaDataEntity.getMessageId(), TransferDirection.IN, messageMetaDataEntity.getSender(), messageMetaDataEntity.getReceiver(), messageMetaDataEntity.getReceived());
 
         // Saves the payload to the file store
         Path documentPath = persistArtifact(ArtifactType.PAYLOAD, payloadInputStream, fileRepositoryMetaData);
         URI payloadUrl = documentPath.toUri();
 
         // Locates the account for which the received message should be attached to.
-        AccountId account = srAccountIdForReceiver(messageMetaData.getReceiver());
+        AccountId account = srAccountIdForReceiver(messageMetaDataEntity.getReceiver());
         if (account == null) {
-            log.warn("Message from " + messageMetaData.getSender() + " will be persisted without account_id");
+            log.warn("Message from " + messageMetaDataEntity.getSender() + " will be persisted without account_id");
         } else {
-            log.info("Inbound message from " + messageMetaData.getSender() + " will be saved to account " + account);
-            messageMetaData.setAccountId(account);
+            log.info("Inbound message from " + messageMetaDataEntity.getSender() + " will be saved to account " + account);
+            messageMetaDataEntity.setAccountId(account);
         }
 
-        return createMetaDataEntry(messageMetaData, payloadUrl);
+        return createMetaDataEntry(messageMetaDataEntity, payloadUrl);
     }
 
 
@@ -156,9 +156,9 @@ public class MessageRepositoryH2Impl implements MessageRepository {
     @Override
     public Long saveInboundMessage(PeppolTransmissionMetaData peppolTransmissionMetaData, InputStream payloadInputStream) throws OxalisMessagePersistenceException {
 
-        MessageMetaData messageMetaData = MessageMetaDataHelper.createMessageMetaDataFrom(peppolTransmissionMetaData);
+        MessageMetaDataEntity messageMetaDataEntity = MessageMetaDataHelper.createMessageMetaDataFrom(peppolTransmissionMetaData);
 
-        return saveInboundMessage(messageMetaData, payloadInputStream);
+        return saveInboundMessage(messageMetaDataEntity, payloadInputStream);
     }
 
 
@@ -181,10 +181,10 @@ public class MessageRepositoryH2Impl implements MessageRepository {
     public void saveOutboundTransportReceipt(Receipt transmissionEvidence, MessageId messageId) {
         TransferDirection transferDirection = TransferDirection.OUT;
 
-        Optional<MessageMetaData> messageMetaDataOptional = findByMessageId(transferDirection, messageId);
+        Optional<MessageMetaDataEntity> messageMetaDataOptional = findByMessageId(transferDirection, messageId);
 
         if (messageMetaDataOptional.isPresent()) {
-            MessageMetaData mmd = messageMetaDataOptional.get();
+            MessageMetaDataEntity mmd = messageMetaDataOptional.get();
             ArtifactPathComputer.FileRepoKey fileRepoKey = fileRepoKeyFrom(messageId, transferDirection, mmd.getSender(), mmd.getReceiver(), mmd.getReceived());
             try {
                 InputStream receiptInputStream = new ByteArrayInputStream(transmissionEvidence.getValue());
@@ -199,7 +199,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
     }
 
     @Override
-    public MessageMetaData findByMessageNo(Long msgNo) {
+    public MessageMetaDataEntity findByMessageNo(Long msgNo) {
         if (msgNo == null) {
             throw new IllegalArgumentException("msgNo parameter required");
         }
@@ -211,16 +211,16 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setLong(1, msgNo);
 
-            MessageMetaData result = null;
+            MessageMetaDataEntity result = null;
             ResultSet rs = preparedStatement.executeQuery();
 
-            List<MessageMetaData> messageMetaDataList = messageMetaDataFrom(rs);
+            List<MessageMetaDataEntity> messageMetaDataEntityList = messageMetaDataFrom(rs);
 
-            if (messageMetaDataList.size() == 1) {
-                result = messageMetaDataList.get(0);
-            } else if (messageMetaDataList.size() > 1) {
+            if (messageMetaDataEntityList.size() == 1) {
+                result = messageMetaDataEntityList.get(0);
+            } else if (messageMetaDataEntityList.size() > 1) {
                 throw new IllegalStateException("More than a single entry found for messageNo " + msgNo);
-            } else if (messageMetaDataList.isEmpty()) {
+            } else if (messageMetaDataEntityList.isEmpty()) {
                 throw new IllegalStateException("Message no " + msgNo + " not found");
             }
 
@@ -233,17 +233,17 @@ public class MessageRepositoryH2Impl implements MessageRepository {
 
 
     @Override
-    public Optional<MessageMetaData> findByMessageId(TransferDirection transferDirection, MessageId messageId) {
+    public Optional<MessageMetaDataEntity> findByMessageId(TransferDirection transferDirection, MessageId messageId) {
 
-        List<MessageMetaData> byMessageId = findByMessageId(messageId);
-        List<MessageMetaData> messageMetaDataList = byMessageId.stream().filter(messageMetaData -> messageMetaData.getTransferDirection() == transferDirection).collect(Collectors.toList());
+        List<MessageMetaDataEntity> byMessageId = findByMessageId(messageId);
+        List<MessageMetaDataEntity> messageMetaDataEntityList = byMessageId.stream().filter(messageMetaData -> messageMetaData.getTransferDirection() == transferDirection).collect(Collectors.toList());
 
-        Optional<MessageMetaData> result = Optional.empty();
+        Optional<MessageMetaDataEntity> result = Optional.empty();
 
-        if (messageMetaDataList.size() > 1) {
+        if (messageMetaDataEntityList.size() > 1) {
             throw new IllegalStateException("More than a single message entry found for messageId=" + messageId);
-        } else if (messageMetaDataList.size() == 1) {
-            result = Optional.of(messageMetaDataList.get(0));
+        } else if (messageMetaDataEntityList.size() == 1) {
+            result = Optional.of(messageMetaDataEntityList.get(0));
         }
 
         return result;
@@ -251,7 +251,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
     }
 
     @Override
-    public List<MessageMetaData> findByMessageId(MessageId messageId) {
+    public List<MessageMetaDataEntity> findByMessageId(MessageId messageId) {
         if (messageId == null) {
             throw new IllegalArgumentException("Argument messageId is required");
         }
@@ -284,20 +284,20 @@ public class MessageRepositoryH2Impl implements MessageRepository {
     }
 
 
-    private ArtifactPathComputer.FileRepoKey fileRepoKeyFrom(MessageMetaData messageMetaData) {
-        return new ArtifactPathComputer.FileRepoKey(messageMetaData.getTransferDirection(), messageMetaData.getMessageId(), messageMetaData.getSender(), messageMetaData.getReceiver(), messageMetaData.getReceived());
+    private ArtifactPathComputer.FileRepoKey fileRepoKeyFrom(MessageMetaDataEntity messageMetaDataEntity) {
+        return new ArtifactPathComputer.FileRepoKey(messageMetaDataEntity.getTransferDirection(), messageMetaDataEntity.getMessageId(), messageMetaDataEntity.getSender(), messageMetaDataEntity.getReceiver(), messageMetaDataEntity.getReceived());
     }
 
     /**
-     * Retrieves {@link MessageMetaData} instances from the provided {@link ResultSet}
+     * Retrieves {@link MessageMetaDataEntity} instances from the provided {@link ResultSet}
      *
      * @param rs the result set as returned from the  {@link PreparedStatement#executeQuery()}
-     * @return a list of {@link MessageMetaData}, which is empty if the result set is empty
+     * @return a list of {@link MessageMetaDataEntity}, which is empty if the result set is empty
      * @throws SQLException if any of the JDBC calls go wrong
      */
-    protected List<MessageMetaData> messageMetaDataFrom(ResultSet rs) throws SQLException {
+    protected List<MessageMetaDataEntity> messageMetaDataFrom(ResultSet rs) throws SQLException {
 
-        List<MessageMetaData> result = new ArrayList<>();
+        List<MessageMetaDataEntity> result = new ArrayList<>();
         while (rs.next()) {
             TransferDirection direction = TransferDirection.valueOf(rs.getString("direction"));
             ParticipantId sender = ParticipantId.valueOf(rs.getString("sender"));
@@ -306,7 +306,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             PeppolProcessTypeId process_id = PeppolProcessTypeId.valueOf(rs.getString("process_id"));
 
 
-            MessageMetaData.Builder builder = new MessageMetaData.Builder(direction, sender, receiver, document_id, ChannelProtocol.valueOf(rs.getString("channel")));
+            MessageMetaDataEntity.Builder builder = new MessageMetaDataEntity.Builder(direction, sender, receiver, document_id, ChannelProtocol.valueOf(rs.getString("channel")));
             builder.accountId(rs.getInt("account_id"))
                     .processTypeId(process_id)
                     .messageNumber(rs.getLong("msg_no"));
@@ -336,17 +336,17 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             if (native_evidence_url != null) {
                 builder.nativeEvidenceUri(URI.create(native_evidence_url));
             }
-            MessageMetaData messageMetaData = builder.build();
-            result.add(messageMetaData);
+            MessageMetaDataEntity messageMetaDataEntity = builder.build();
+            result.add(messageMetaDataEntity);
         }
 
         return result;
     }
 
 
-    private Long createMetaDataEntry(MessageMetaData mmd, URI payloadUrl) {
+    private Long createMetaDataEntry(MessageMetaDataEntity mmd, URI payloadUrl) {
         if (mmd == null) {
-            throw new IllegalArgumentException("MessageMetaData required argument");
+            throw new IllegalArgumentException("MessageMetaDataEntity required argument");
         }
         //
         //                                                            1           2           3       4       5       6               7           8           9           10          11           12

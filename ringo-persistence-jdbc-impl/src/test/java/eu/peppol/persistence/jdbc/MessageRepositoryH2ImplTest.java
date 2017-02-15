@@ -84,12 +84,12 @@ public class MessageRepositoryH2ImplTest {
     public void testSaveInboundMessage() throws Exception {
         PeppolTransmissionMetaData PeppolTransmissionMetaData = sampleMessageHeader();
         Long messageNo = messageDbmsRepository.saveInboundMessage(PeppolTransmissionMetaData, sampeXmlDocumentAsInputStream());
-        MessageMetaData metaData = messageDbmsRepository.findByMessageNo(messageNo);
+        MessageMetaDataEntity metaData = messageDbmsRepository.findByMessageNo(messageNo);
 
         removeFilesFor(metaData);
     }
 
-    void removeFilesFor(MessageMetaData metaData) {
+    void removeFilesFor(MessageMetaDataEntity metaData) {
 
         deleteUri(metaData.getPayloadUri());
         if (metaData.getNativeEvidenceUri() != null) {
@@ -126,7 +126,7 @@ public class MessageRepositoryH2ImplTest {
 
         // Verifies the contents of the database and directories
 
-        MessageMetaData metaData = messageDbmsRepository.findByMessageNo(messageNo);
+        MessageMetaDataEntity metaData = messageDbmsRepository.findByMessageNo(messageNo);
 
 
         Long msg_no = metaData.getMessageNumber().toLong();
@@ -232,11 +232,11 @@ public class MessageRepositoryH2ImplTest {
         // dumpRow(resultSet);
     }
 
-    private MessageMetaData sampleMessageMetaData() {
-        MessageMetaData.Builder builder = new MessageMetaData.Builder(TransferDirection.OUT, WellKnownParticipant.DIFI, WellKnownParticipant.DIFI_TEST, PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(), ChannelProtocol.SREST);
-        MessageMetaData messageMetaData = builder.accountId(1)
+    private MessageMetaDataEntity sampleMessageMetaData() {
+        MessageMetaDataEntity.Builder builder = new MessageMetaDataEntity.Builder(TransferDirection.OUT, WellKnownParticipant.DIFI, WellKnownParticipant.DIFI_TEST, PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(), ChannelProtocol.SREST);
+        MessageMetaDataEntity messageMetaDataEntity = builder.accountId(1)
                 .build();
-        return messageMetaData;
+        return messageMetaDataEntity;
     }
 
     @Test

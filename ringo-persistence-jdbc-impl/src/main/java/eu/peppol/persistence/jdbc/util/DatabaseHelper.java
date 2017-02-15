@@ -87,7 +87,7 @@ public class DatabaseHelper {
             throw new IllegalArgumentException("received date is required");
         }
 
-        MessageMetaData.Builder builder = new MessageMetaData.Builder(TransferDirection.valueOf(direction.name()),
+        MessageMetaDataEntity.Builder builder = new MessageMetaDataEntity.Builder(TransferDirection.valueOf(direction.name()),
                 new ParticipantId(senderValue), new ParticipantId(receiverValue), documentId,
                 ChannelProtocol.SREST);
 
@@ -107,15 +107,15 @@ public class DatabaseHelper {
         if (accountId != null) {
             builder.accountId(accountId);
         }
-        MessageMetaData messageMetaData = builder.build();
+        MessageMetaDataEntity messageMetaDataEntity = builder.build();
 
         try {
-            if (messageMetaData.getTransferDirection() == TransferDirection.IN) {
-                return messageRepository.saveInboundMessage(messageMetaData, new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8"))));
-            } else if (messageMetaData.getTransferDirection() == TransferDirection.OUT) {
-                return messageRepository.saveOutboundMessage(messageMetaData, new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8"))));
+            if (messageMetaDataEntity.getTransferDirection() == TransferDirection.IN) {
+                return messageRepository.saveInboundMessage(messageMetaDataEntity, new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8"))));
+            } else if (messageMetaDataEntity.getTransferDirection() == TransferDirection.OUT) {
+                return messageRepository.saveOutboundMessage(messageMetaDataEntity, new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8"))));
             } else
-                throw new IllegalStateException("No support for transfer direction " + messageMetaData.getTransferDirection().name());
+                throw new IllegalStateException("No support for transfer direction " + messageMetaDataEntity.getTransferDirection().name());
         } catch (OxalisMessagePersistenceException e) {
             throw new IllegalStateException("Unable to save message " + e.getMessage());
         }

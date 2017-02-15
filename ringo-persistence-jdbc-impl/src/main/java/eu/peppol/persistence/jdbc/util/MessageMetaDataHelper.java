@@ -24,7 +24,7 @@ package eu.peppol.persistence.jdbc.util;
 
 import eu.peppol.PeppolTransmissionMetaData;
 import eu.peppol.persistence.ChannelProtocol;
-import eu.peppol.persistence.MessageMetaData;
+import eu.peppol.persistence.MessageMetaDataEntity;
 import eu.peppol.persistence.TransferDirection;
 
 import java.time.LocalDateTime;
@@ -38,17 +38,17 @@ import java.time.ZoneId;
 public class MessageMetaDataHelper {
 
     /**
-     * Converts an instance of {@link PeppolTransmissionMetaData} into a {@link MessageMetaData} object.
+     * Converts an instance of {@link PeppolTransmissionMetaData} into a {@link MessageMetaDataEntity} object.
      * <p>
      * The direction of the message transfer, typically always {@link eu.peppol.persistence.TransferDirection#IN} when you receive from the PEPPOL network,
      * hence this is the default.
      *
      * @param pm the {@link PeppolTransmissionMetaData} instance
-     * @return instance of {@link MessageMetaData} with direction set to {@link TransferDirection#IN}
+     * @return instance of {@link MessageMetaDataEntity} with direction set to {@link TransferDirection#IN}
      */
-    public static MessageMetaData createMessageMetaDataFrom(PeppolTransmissionMetaData pm) {
+    public static MessageMetaDataEntity createMessageMetaDataFrom(PeppolTransmissionMetaData pm) {
 
-        MessageMetaData.Builder builder = new MessageMetaData.Builder(TransferDirection.IN, pm.getSenderId(), pm.getRecipientId(), pm.getDocumentTypeIdentifier(), ChannelProtocol.AS2);
+        MessageMetaDataEntity.Builder builder = new MessageMetaDataEntity.Builder(TransferDirection.IN, pm.getSenderId(), pm.getRecipientId(), pm.getDocumentTypeIdentifier(), ChannelProtocol.AS2);
 
         if (pm.getDocumentTypeIdentifier() == null) {
             throw new IllegalArgumentException("DocumentType identifier required");

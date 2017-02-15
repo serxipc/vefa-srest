@@ -22,7 +22,6 @@
 
 package eu.peppol.persistence.jdbc;
 
-import no.difi.oxalis.api.persistence.RepositoryConfiguration;
 import org.apache.commons.dbcp2.*;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.slf4j.Logger;
@@ -40,10 +39,6 @@ import java.util.Optional;
 import java.util.Properties;
 
 /**
- * Given a set configuration parameters represented by {@link RepositoryConfiguration}, this class will
- * provide a DataSource wrapped in a DataSource pool.
- * <p>
- * <p>
  * Thread safe and singleton. I.e. will always return the same DataSource.
  * </p>
  *
