@@ -105,7 +105,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         messageMetaData.setPeppolHeader(peppolHeader);
         messageMetaData.setTransferDirection(no.sr.ringo.transport.TransferDirection.OUT);
         messageMetaData.setMsgNo(msgNo);
-        messageMetaData.setUuid(metaData.getMessageId().stringValue());
+        messageMetaData.setTransmissionId(metaData.getMessageId().stringValue());
 
         return new MessageWithLocationsImpl(messageMetaData);
     }
@@ -119,7 +119,9 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     public MessageMetaData findMessageByMessageNo(MessageNumber msgNo) throws PeppolMessageNotFoundException {
         try {
             Connection connection = jdbcTxManager.getConnection();
+            
             SqlHelper sql = SqlHelper.create(getDbmsPlatform()).findMessageByMessageNo();
+
             PreparedStatement ps = sql.prepareStatement(connection);
             ps.setInt(1, msgNo.toInt());
             ResultSet rs = ps.executeQuery();
@@ -501,7 +503,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         messageMetaData.getPeppolHeader().setPeppolChannelId(new PeppolChannelId(rs.getString("channel")));
         String message_uuid = rs.getString("message_uuid");
         if (message_uuid != null) {
-            messageMetaData.setUuid(message_uuid);
+            messageMetaData.setTransmissionId(message_uuid);
         }
         messageMetaData.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.valueOf(rs.getString("document_id")));
 
@@ -526,7 +528,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         // UUIDs are heavy lifting, check for null values first.
         String uuidString = rs.getString("message_uuid");
         if (!rs.wasNull()) {
-            m.setUuid(uuidString);
+            m.setTransmissionId(uuidString);
         }
         return m;
     }
@@ -619,6 +621,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         }
 
         public PreparedStatement prepareStatement(Connection connection) throws SQLException {
+            log.debug("JDBC Connection URL {}", connection.getMetaData().getURL());
             log.debug("Preparing " + sql);
             return connection.prepareStatement(sql);
         }

@@ -1,9 +1,9 @@
 /* Created by steinar on 08.01.12 at 22:20 */
 package no.sr.ringo.response;
 
-import no.sr.ringo.peppol.RingoUtils;
 import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.peppol.PeppolHeader;
+import no.sr.ringo.peppol.RingoUtils;
 
 /**
  * Class representing the result of /messages/{msg_no} request
@@ -51,8 +51,8 @@ public class SingleMessagesResponse implements RestResponse {
         if (current.getDelivered() != null){
             xml.append("          <delivered>" + RingoUtils.formatDateTimeAsISO8601String(current.getDelivered()) + "</delivered>\n");
         }
-        if (current.getUuid() != null) {
-            xml.append("          <uuid>" + RingoUtils.encodePredefinedXmlEntities(current.getUuid()) + "</uuid>\n");
+        if (current.getTransmissionId() != null) {
+            xml.append("          <uuid>" + RingoUtils.encodePredefinedXmlEntities(current.getTransmissionId()) + "</uuid>\n");
         }
         peppolHeaderAsXml(xml, current.getPeppolHeader());
         xml.append("        </message-meta-data>\n");

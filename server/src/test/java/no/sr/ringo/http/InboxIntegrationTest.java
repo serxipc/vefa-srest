@@ -25,8 +25,7 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * @author Steinar Overbeck Cook steinar@sendregning.no
@@ -45,6 +44,7 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
 
     @Inject
     PeppolMessageRepository peppolMessageRepository;
+    private String receptionId;
 
 
     @Test(groups = {"integration"})
@@ -80,6 +80,8 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
         int count = 0;
         for (Message message : messages) {
             count++;
+            // Assumes there is only a single message, create by insertSample(), in the table
+            assertEquals(message.getMessageUUID(), receptionId);
         }
         assertTrue(count > 0, "Expected more than 0 messages");
 
@@ -88,8 +90,11 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
     @BeforeMethod(groups = {"integration"})
     public void insertSample() throws SQLException {
         final Account account = ObjectMother.getTestAccount();
-        messageId = dbmsTestHelper.createMessage(1, TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), null);
+        receptionId = UUID.randomUUID().toString();
+
+        messageId = dbmsTestHelper.createMessage(1, TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), receptionId, null);
         MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(MessageNumber.create(messageId));
+
 
     }
 

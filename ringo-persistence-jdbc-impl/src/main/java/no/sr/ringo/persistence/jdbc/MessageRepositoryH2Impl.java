@@ -360,6 +360,8 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             log.debug("Creating meta data entry:" + mmd);
             connection = jdbcTxManager.getConnection();
 
+            log.debug("Using JDBC URL:" + connection.getMetaData().getURL());
+
             PreparedStatement insertStatement = connection.prepareStatement(INSERT_INTO_MESSAGE_SQL, Statement.RETURN_GENERATED_KEYS);
             if (mmd.getAccountId() == null)
                 insertStatement.setNull(1, Types.INTEGER);

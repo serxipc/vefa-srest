@@ -61,6 +61,7 @@ public class RingoConfigModule extends AbstractModule{
     protected Config loadConfiguration(@Named("file") Config ringoConf) {
         Config referenceConfig = ConfigFactory.defaultReference();
 
+        ConfigFactory.invalidateCaches();   // Important for unit tests etc.
         return ConfigFactory.systemProperties()
                 .withFallback(ringoConf)
                 .withFallback(referenceConfig)

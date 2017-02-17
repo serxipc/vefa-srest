@@ -68,8 +68,8 @@ public class MessageWithLocationsImpl implements MessageWithLocations {
         return messageMetaData.getMsgNo();
     }
 
-    public String getUuid() {
-        return messageMetaData.getUuid();
+    public String getTransmissionId() {
+        return messageMetaData.getTransmissionId();
     }
 
     public void setMessageMetaData(MessageMetaData messageMetaData) {

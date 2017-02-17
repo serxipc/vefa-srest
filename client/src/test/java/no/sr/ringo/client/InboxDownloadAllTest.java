@@ -56,7 +56,7 @@ public class InboxDownloadAllTest {
         peppolHeader.setReceiver(new ParticipantId(SchemeId.NO_ORGNR,"976098897"));
         messageMetaData.setPeppolHeader(peppolHeader);
         uuid = UUID.randomUUID().toString();
-        messageMetaData.setUuid(uuid);
+        messageMetaData.setTransmissionId(uuid);
         messageWithLocation = new MessageWithLocationsImpl(messageMetaData, new URI("self"), new URI("xmlDoc"));
 
         mocks.add(mockStream);

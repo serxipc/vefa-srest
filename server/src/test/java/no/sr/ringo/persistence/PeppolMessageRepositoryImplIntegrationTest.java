@@ -141,7 +141,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         PeppolDocument docFromDatabase = documentRepository.getPeppolDocument(account, MessageNumber.create(messageByMessageNo.getMsgNo()));
         assertTrue(!docFromDatabase.getXml().contains("xmlns=\"\""), "We should not have added xmlns=\"\" anywhere in the message");
 
-        assertNotNull(messageWithLocations.getUuid(), "Missing UUID in MessageWithLocations");
+        assertNotNull(messageWithLocations.getTransmissionId(), "Missing UUID in MessageWithLocations");
     }
 
     @Test(groups = {"persistence"})
@@ -244,7 +244,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
 
         MessageMetaData messageOutbound = peppolMessageRepository.findMessageByMessageNo(account, messageOut);
 
-        assertEquals(messageOutUuid.stringValue(), messageOutbound.getUuid());
+        assertEquals(messageOutUuid.stringValue(), messageOutbound.getTransmissionId());
         Calendar c2 = Calendar.getInstance();
         c2.setTime(messageOutbound.getDelivered());
 
@@ -265,7 +265,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         assertEquals(messageOutbound.getPeppolHeader().getPeppolChannelId(), messageInbound.getPeppolHeader().getPeppolChannelId());
         assertEquals(messageOutbound.getPeppolHeader().getPeppolDocumentTypeId(), messageInbound.getPeppolHeader().getPeppolDocumentTypeId());
         assertEquals(messageOutbound.getPeppolHeader().getProfileId(), messageInbound.getPeppolHeader().getProfileId());
-        assertEquals(newUuid, messageInbound.getUuid());
+        assertEquals(newUuid, messageInbound.getTransmissionId());
         assertEquals(messageOutbound.getReceived(), messageInbound.getReceived());
 
         // Verifies the contents of the evidence

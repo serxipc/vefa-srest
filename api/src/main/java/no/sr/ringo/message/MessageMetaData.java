@@ -22,6 +22,6 @@ public interface MessageMetaData {
 
     Long getMsgNo();
 
-    String getUuid();
+    String getTransmissionId();         // AS2 Message-ID
 
 }

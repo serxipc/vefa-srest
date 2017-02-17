@@ -81,7 +81,7 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         assertNull(message.getContents().getDelivered());
         assertNotNull(message.getContents().getReceived());
         Assert.assertEquals(message.getContents().getTransferDirection(), TransferDirection.OUT);
-        assertNotNull(message.getContents().getUuid());
+        assertNotNull(message.getContents().getTransmissionId());
         assertNotNull(message.getContents().getMsgNo());
 
         final PeppolHeader peppolHeader = message.getContents().getPeppolHeader();
@@ -107,7 +107,7 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         assertNull(message.getContents().getDelivered());
         assertNotNull(message.getContents().getReceived());
         Assert.assertEquals(message.getContents().getTransferDirection(), TransferDirection.OUT);
-        assertNotNull(message.getContents().getUuid());
+        assertNotNull(message.getContents().getTransmissionId());
         assertNotNull(message.getContents().getMsgNo());
 
         final PeppolHeader peppolHeader = message.getContents().getPeppolHeader();
@@ -134,7 +134,7 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         assertNull(message.getContents().getDelivered());
         assertNotNull(message.getContents().getReceived());
         Assert.assertEquals(message.getContents().getTransferDirection(), TransferDirection.OUT);
-        assertNotNull(message.getContents().getUuid());
+        assertNotNull(message.getContents().getTransmissionId());
         assertNotNull(message.getContents().getMsgNo());
 
         final PeppolHeader peppolHeader = message.getContents().getPeppolHeader();
@@ -190,7 +190,7 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         assertNull(message.getContents().getDelivered());
         assertNotNull(message.getContents().getReceived());
         Assert.assertEquals(message.getContents().getTransferDirection(), TransferDirection.OUT);
-        assertNotNull(message.getContents().getUuid());
+        assertNotNull(message.getContents().getTransmissionId());
         assertNotNull(message.getContents().getMsgNo());
 
         final PeppolHeader peppolHeader = message.getContents().getPeppolHeader();
@@ -217,7 +217,7 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         assertNull(message.getContents().getDelivered());
         assertNotNull(message.getContents().getReceived());
         Assert.assertEquals(message.getContents().getTransferDirection(), TransferDirection.OUT);
-        assertNotNull(message.getContents().getUuid());
+        assertNotNull(message.getContents().getTransmissionId());
         assertNotNull(message.getContents().getMsgNo());
 
         final PeppolHeader peppolHeader = message.getContents().getPeppolHeader();

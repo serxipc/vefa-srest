@@ -83,7 +83,7 @@ public class Message {
     }
 
     public String getMessageUUID() {
-        return messageWithLocations.getUuid();
+        return messageWithLocations.getTransmissionId();
     }
 
     public String getMessageSelfUri() {
@@ -111,6 +111,6 @@ public class Message {
     }
 
     private String getFileName() {
-        return FileHelper.formatForFileName(messageWithLocations.getUuid()) + ".xml";
+        return FileHelper.formatForFileName(messageWithLocations.getTransmissionId()) + ".xml";
     }
 }

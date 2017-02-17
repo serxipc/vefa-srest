@@ -44,12 +44,11 @@ public abstract class AbstractMessageResource implements UriLocationAware {
     }
 
     protected URI computeXmlDocumentUri(UriInfo uriInfo, Long msgNo) {
-        // https....../outbox
+        // https....../messages
         UriBuilder uriBuilder = getUriBuilderForResource(uriInfo, MessagesResource.class);
 
-        // https....../outbox/{msgno}/xml-document
+        // https....../messages/{msgno}/xml-document
         URI documentUri = uriBuilder.clone().path("/{msgno}/xml-document").build(msgNo.toString());
-
 
         return documentUri;
     }
@@ -78,13 +77,13 @@ public abstract class AbstractMessageResource implements UriLocationAware {
      */
     protected Response createSingleMessageResponse(UriInfo uriInfo, MessageMetaData messageMetaData) {
 
-        //Messages with locators.
+        // Messages with locators.
         MessageWithLocations messageWithLocations = decorateWithLocators(messageMetaData,uriInfo);
 
-        //Creates the response
+        // Creates the response
         SingleMessagesResponse messageResponse = new SingleMessagesResponse(messageWithLocations);
 
-        //format the response as an XML String
+        // format the response as an XML String
         String entity = messageResponse.asXml();
 
         // Shoves the URI of this message into the HTTP header "Location" and supplies the XML response as the entity
@@ -124,8 +123,8 @@ public abstract class AbstractMessageResource implements UriLocationAware {
     }
 
     private UriBuilder getUriBuilderForResource(UriInfo uriInfo, Class<? extends AbstractMessageResource> resource) {
-        return uriInfo.getBaseUriBuilder()
-                .path(resource)
+        return uriInfo.getBaseUriBuilder()  // Gets the base URI of the application in the form of a UriBuilder
+                .path(resource)   // Appends the path from @Path-annotated class to the existing path
                 .scheme("https"); // Must use https (we are always behind a firewall)
     }
 

@@ -20,7 +20,11 @@ public class MessageMetaDataImpl implements MessageMetaData {
     private TransferDirection transferDirection;
     private Date received = new Date();
     private Date delivered;
-    private String uuid;
+    private String transmissionId;
+
+    
+
+    
 
     private PeppolHeader peppolHeader;
 
@@ -80,12 +84,12 @@ public class MessageMetaDataImpl implements MessageMetaData {
     }
 
 
-    public String getUuid() {
-        return uuid;
+    public String getTransmissionId() {
+        return transmissionId;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setTransmissionId(String transmissionId) {
+        this.transmissionId = transmissionId;
     }
 
     @Override
@@ -101,7 +105,7 @@ public class MessageMetaDataImpl implements MessageMetaData {
         if (peppolHeader != null ? !peppolHeader.equals(that.peppolHeader) : that.peppolHeader != null) return false;
         if (received != null ? !received.equals(that.received) : that.received != null) return false;
         if (transferDirection != that.transferDirection) return false;
-        if (uuid != null ? !uuid.equals(that.uuid) : that.uuid != null) return false;
+        if (transmissionId != null ? !transmissionId.equals(that.transmissionId) : that.transmissionId != null) return false;
 
         return true;
     }
@@ -113,7 +117,7 @@ public class MessageMetaDataImpl implements MessageMetaData {
         result = 31 * result + (transferDirection != null ? transferDirection.hashCode() : 0);
         result = 31 * result + (received != null ? received.hashCode() : 0);
         result = 31 * result + (delivered != null ? delivered.hashCode() : 0);
-        result = 31 * result + (uuid != null ? uuid.hashCode() : 0);
+        result = 31 * result + (transmissionId != null ? transmissionId.hashCode() : 0);
         result = 31 * result + (peppolHeader != null ? peppolHeader.hashCode() : 0);
         return result;
     }
@@ -126,7 +130,7 @@ public class MessageMetaDataImpl implements MessageMetaData {
                 ", transferDirection=" + transferDirection +
                 ", received=" + received +
                 ", delivered=" + delivered +
-                ", uuid='" + uuid + '\'' +
+                ", uuid='" + transmissionId + '\'' +
                 ", peppolHeader=" + peppolHeader +
                 '}';
     }

@@ -9,6 +9,8 @@
 <!--
                 <Set name="Url">jdbc:h2:~/.oxalis/ap;AUTO_SERVER=TRUE</Set>
 -->
+                <!-- For integration tests, this JDBC URL needs to be identical to the JDBC URL -->
+                <!-- set in ServerTestDataSourceModule.java -->
                 <Set name="Url">jdbc:h2:mem:test;DB_CLOSE_DELAY=-1</Set>
                 <Set name="User">SA</Set>
 <!--
