@@ -25,7 +25,8 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Steinar Overbeck Cook steinar@sendregning.no
@@ -78,13 +79,16 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
         final Messages messages = inbox.getMessages();
 
         int count = 0;
+        boolean foundOneOfTheInserted = false;
+
         for (Message message : messages) {
             count++;
             // Assumes there is only a single message, create by insertSample(), in the table
-            assertEquals(message.getMessageUUID(), receptionId);
+            if (message.getMessageUUID().equals(receptionId))
+                foundOneOfTheInserted = true;
         }
         assertTrue(count > 0, "Expected more than 0 messages");
-
+        assertTrue(foundOneOfTheInserted);
     }
 
     @BeforeMethod(groups = {"integration"})
