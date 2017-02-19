@@ -96,14 +96,11 @@ Brief refactoring plan (remember to x out finished items).
 
 ### Notes from meeting June 14th, 2016
 - [x] Added Oxalis-Persistence module (MessageRepository installed in Oxalis, will persist into Ringo database tables)
-- [ ] REM evidence resource and (JDBC) implementation (this need upgrade to Oxalis v4)
 - [ ] Support transmission of files wrapped in SBDH and ASiC archives with internal SBDH.
-- [ ] Implement persistent queue system for inbound messages, shared between vefa-srest and Oxalis.
-- [ ] All references to "Ringo" should be renamed to whatever name we decide upon.
 
 ### Notes from refactoring and integration with Oxalis
 - [ ] Organisation numbers should be validated. Determine the extent of such validation.
 - [ ] Allow for external configuration of logging. This should happen in RingoGuiceContextListener
 - [ ] Refactor package names in accordance with domain
-- [ ] Duplicate class/interface MessageMetaData
+- [X] Duplicate class/interface MessageMetaData
 

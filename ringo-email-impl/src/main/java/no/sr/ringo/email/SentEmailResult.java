@@ -7,8 +7,6 @@ package no.sr.ringo.email;
  */
 public interface SentEmailResult {
 
-    String getMessageId();
-
     EmailAddress getFrom();
 
     EmailAddress getReplyTo();

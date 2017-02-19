@@ -5,6 +5,7 @@ import eu.peppol.identifier.SchemeId;
 import no.sr.ringo.message.MessageMetaDataImpl;
 import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.message.MessageWithLocationsImpl;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.response.MessageListRingoResponseHandler;
 import no.sr.ringo.response.MessagesQueryResponse;
@@ -25,7 +26,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.easymock.EasyMock.*;
 
@@ -43,7 +43,7 @@ public class InboxDownloadAllTest {
     private List<Object> mocks;
     private RingoService mockRingoService;
     private MessageWithLocations messageWithLocation;
-    private String uuid;
+    private ReceptionId receptionId;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -55,8 +55,9 @@ public class InboxDownloadAllTest {
         PeppolHeader peppolHeader = new PeppolHeader();
         peppolHeader.setReceiver(new ParticipantId(SchemeId.NO_ORGNR,"976098897"));
         messageMetaData.setPeppolHeader(peppolHeader);
-        uuid = UUID.randomUUID().toString();
-        messageMetaData.setTransmissionId(uuid);
+
+        receptionId = new ReceptionId();
+        messageMetaData.setReceptionId(receptionId);
         messageWithLocation = new MessageWithLocationsImpl(messageMetaData, new URI("self"), new URI("xmlDoc"));
 
         mocks.add(mockStream);
@@ -99,8 +100,8 @@ public class InboxDownloadAllTest {
         expect(mockRingoService.count(isA(Inbox.class))).andReturn(0);
 
         //expectations for the print stream
-        mockStream.println("Downloading message with UUID: "+uuid);
-        mockStream.println("Downloading message with UUID: "+uuid);
+        mockStream.println("Downloading message with UUID: "+ receptionId);
+        mockStream.println("Downloading message with UUID: "+ receptionId);
 
         Path path = Paths.get(FileSystems.getDefault().getSeparator(),"tmp", "download");
         String s = path.toString();
@@ -148,8 +149,8 @@ public class InboxDownloadAllTest {
         expect(mockRingoService.count(isA(Inbox.class))).andReturn(1);
 
         //expectations for the print stream
-        mockStream.println("Downloading message with UUID: "+uuid);
-        mockStream.println(String.format("Message with UUID %s successfully downloaded, but marking as read failed.", uuid));
+        mockStream.println("Downloading message with UUID: "+ receptionId);
+        mockStream.println(String.format("Message with UUID %s successfully downloaded, but marking as read failed.", receptionId));
         mockStream.println("Downloaded 0 files to directory " + params.getInboxPath());
         replay(mocks.toArray());
 

@@ -159,20 +159,20 @@ public class RingoClientCommandExecutor {
             return false;
         }
 
-        if (message.getTransmissionId() == null) {
-            printStream.println(String.format("Skipping message '%s' because it has no messageID", message.getMessageSelfUri()));
+        if (message.getReceptionId() == null) {
+            printStream.println(String.format("Skipping message '%s' because it has no receptionId", message.getMessageSelfUri()));
             return false;
         }
         try {
-            printStream.println(String.format("Downloading message with UUID: %s", message.getTransmissionId().toString()));
+            printStream.println(String.format("Downloading message with UUID: %s", message.getReceptionId().toString()));
             message.saveToDirectory(participantDirectory);
             boolean marked = message.markAsRead();
             if (!marked) {
-                printStream.println(String.format("Message with UUID %s successfully downloaded, but marking as read failed.", message.getTransmissionId().toString()));
+                printStream.println(String.format("Message with UUID %s successfully downloaded, but marking as read failed.", message.getReceptionId().toString()));
             }
             return marked;
         } catch (IOException e) {
-            printStream.println(String.format("Unable to download message with UUID %s to directory %s", message.getTransmissionId().toString(), participantDirectory));
+            printStream.println(String.format("Unable to download message with UUID %s to directory %s", message.getReceptionId().toString(), participantDirectory));
             return false;
         }
 

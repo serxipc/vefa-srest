@@ -83,11 +83,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
 
         // Delegates to the injected message repository
         Long msgNo = null;
-        try {
-            msgNo = oxalisMessageRepository.saveOutboundMessage(mmd, peppolMessage.getXmlMessage());
-        } catch (OxalisMessagePersistenceException e) {
-            throw new IllegalStateException("Unable to persiste outbound message " + peppolMessage + "\n" + e.getMessage(), e);
-        }
+        msgNo = oxalisMessageRepository.saveOutboundMessage(mmd, peppolMessage.getXmlMessage());
 
 
         mmd.setMsgNo(msgNo);
@@ -269,11 +265,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, ReceptionId receptionId, Date delivered, Receipt receipt) {
 
         // Persists the evidence, after which the DBMS is updated
-        try {
-            persistOutboundEvidence(receptionId, delivered, receipt);
-        } catch (OxalisMessagePersistenceException e) {
-            throw new IllegalStateException("Unable to persist evidence bytes to database");
-        }
+        persistOutboundEvidence(receptionId, delivered, receipt);
 
         Connection con;
         String sql = "update message set delivered = ?, ap_name = ?, message_uuid = ? where msg_no = ?";
@@ -290,7 +282,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         }
     }
 
-    void persistOutboundEvidence(final ReceptionId receptionId, final Date delivered, final Receipt receipt) throws OxalisMessagePersistenceException {
+    void persistOutboundEvidence(final ReceptionId receptionId, final Date delivered, final Receipt receipt) {
 
         oxalisMessageRepository.saveOutboundTransportReceipt(receipt, receptionId);
     }

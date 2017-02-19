@@ -80,21 +80,21 @@ public class ArtifactPathComputer {
 
     Path createCompletePath(FileRepoKey fileRepoKey, String filename) {
         if (fileRepoKey == null) {
-            throw new IllegalArgumentException("PeppolTransmissionMetaData is required argument");
+            throw new IllegalArgumentException("Missing required argument fileRepoKey");
         }
         if (filename == null) {
             throw new IllegalArgumentException("filename is required argument");
         }
 
         if (fileRepoKey.getReceiver() == null) {
-            throw new IllegalArgumentException("recipientId is required property on PeppolTransmissionMetaData");
+            throw new IllegalArgumentException("recipientId is required property on fileRepoKey");
         }
         if (fileRepoKey.getSender() == null) {
-            throw new IllegalArgumentException("senderId is required property on PeppolTransmissionMetaData");
+            throw new IllegalArgumentException("senderId is required property on fileRepoKey");
         }
 
         if (fileRepoKey.getDate() == null) {
-            throw new IllegalArgumentException("receivedTimeStamp is required property on PeppolTransmissionMetaData");
+            throw new IllegalArgumentException("receivedTimeStamp is required property on fileRepoKey");
         }
 
         Path basePath = createBasePath(fileRepoKey.direction);

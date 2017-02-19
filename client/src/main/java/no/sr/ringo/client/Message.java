@@ -83,10 +83,6 @@ public class Message {
         return messageWithLocations.getPeppolHeader().getReceiver();
     }
 
-    public String getTransmissionId() {
-        return messageWithLocations.getTransmissionId();
-    }
-
     public ReceptionId getReceptionId() { return messageWithLocations.getReceptionId(); }
 
     public String getMessageSelfUri() {
@@ -116,6 +112,6 @@ public class Message {
     }
 
     private String getFileName() {
-        return FileHelper.formatForFileName(messageWithLocations.getReceptionId() + ".xml");
+        return FileHelper.formatForFileName(messageWithLocations.getReceptionId().stringValue()) + ".xml";
     }
 }

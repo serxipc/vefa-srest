@@ -22,7 +22,8 @@
 
 package no.sr.ringo.persistence.jdbc;
 
-import eu.peppol.identifier.*;
+import eu.peppol.identifier.ParticipantId;
+import eu.peppol.identifier.WellKnownParticipant;
 import no.sr.ringo.account.AccountId;
 import no.sr.ringo.message.MessageMetaDataImpl;
 import no.sr.ringo.message.MessageRepository;
@@ -30,7 +31,6 @@ import no.sr.ringo.message.TransmissionMetaData;
 import no.sr.ringo.peppol.ChannelProtocol;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
-import no.sr.ringo.peppol.PeppolTransmissionMetaData;
 import no.sr.ringo.persistence.guice.PersistenceTestModuleFactory;
 import no.sr.ringo.transport.TransferDirection;
 import org.testng.annotations.Guice;
@@ -55,7 +55,6 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.Principal;
 import java.sql.*;
 
 import static org.testng.Assert.*;
@@ -116,7 +115,7 @@ public class MessageRepositoryH2ImplTest {
 
 
     @Test
-    public void testSaveOutboundMessage() throws ParserConfigurationException, SQLException, IOException, no.sr.ringo.message.OxalisMessagePersistenceException {
+    public void testSaveOutboundMessage() throws ParserConfigurationException, SQLException, IOException {
 
         Long messageNo = messageDbmsRepository.saveOutboundMessage(sampleMessageMetaData(), sampeXmlDocumentAsInputStream());
 
@@ -185,22 +184,6 @@ public class MessageRepositoryH2ImplTest {
         return new ByteArrayInputStream(transformDocumentWithLSSerializer(sampleXmlDocument()));
     }
 
-    private PeppolTransmissionMetaData sampleMessageHeader() {
-        PeppolTransmissionMetaData PeppolTransmissionMetaData = new PeppolTransmissionMetaData();
-        PeppolTransmissionMetaData.setDocumentTypeIdentifier(PeppolDocumentTypeIdAcronym.INVOICE.getDocumentTypeIdentifier().toVefa());
-        PeppolTransmissionMetaData.setMessageId(new MessageId());
-        PeppolTransmissionMetaData.setProfileTypeIdentifier(PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId().toVefa());
-        PeppolTransmissionMetaData.setRecipientId(new ParticipantId("9908:976098897").toVefa());
-        PeppolTransmissionMetaData.setSenderId(new ParticipantId("9908:976098897").toVefa());
-        PeppolTransmissionMetaData.setSendingAccessPoint(new AccessPointIdentifier("AP_TEST"));
-        PeppolTransmissionMetaData.setSendingAccessPointPrincipal(new Principal() {
-            @Override
-            public String getName() {
-                return "CN=APP_1000000001, O=SendRegning, C=NO";
-            }
-        });
-        return PeppolTransmissionMetaData;
-    }
 
     private byte[] transformDocumentWithLSSerializer(Document document) {
         DOMImplementationLS domImplementationLS = (DOMImplementationLS) document.getImplementation();

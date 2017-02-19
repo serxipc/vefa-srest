@@ -1,6 +1,5 @@
 package no.sr.ringo.usecase;
 
-import eu.peppol.identifier.MessageId;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountRepository;
@@ -8,10 +7,12 @@ import no.sr.ringo.email.EmailService;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.oxalis.PeppolDocumentSender;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.persistence.queue.*;
+import no.sr.ringo.transport.TransmissionId;
 import org.easymock.EasyMock;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -61,7 +62,7 @@ public class SendQueuedMessageUseCaseTest {
 
         String message = "a fancy invoice";
         Receipt receipt1 = Receipt.of("native evidence bytes".getBytes());
-        PeppolDocumentSender.TransmissionReceipt receipt = new PeppolDocumentSender.TransmissionReceipt(new MessageId(), null, new Date(),
+        PeppolDocumentSender.TransmissionReceipt receipt = new PeppolDocumentSender.TransmissionReceipt(new ReceptionId(), new TransmissionId("rubbish"), null, new Date(),
                 receipt1);
 
         SendQueuedMessagesUseCase useCase = new SendQueuedMessagesUseCase(mockDocumentSender, mockMessageRepository, mockQueueRepository, mockEmailService, mockAccountRepository);
@@ -154,13 +155,13 @@ public class SendQueuedMessageUseCaseTest {
         expect(mockQueueRepository.lockQueueItemForDelivery(queueId)).andStubReturn(true);
 
         // expect message to be sent by oxalis
-        MessageId messageId = new MessageId();
         Receipt receipt = Receipt.of("native evidence bytes".getBytes());
-        expect(mockDocumentSender.sendDocument(mockMessage, messageXml)).andStubReturn(new PeppolDocumentSender.TransmissionReceipt(messageId, URI.create("http://ringo.domain.com/"), new Date(),
+        final ReceptionId receptionId = new ReceptionId();
+        expect(mockDocumentSender.sendDocument(mockMessage, messageXml)).andStubReturn(new PeppolDocumentSender.TransmissionReceipt(receptionId, new TransmissionId("test"), URI.create("http://ringo.domain.com/"), new Date(),
                 receipt));
 
         // update message to delivered
-        mockMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(EasyMock.eq(msgNo), EasyMock.eq("http://ringo.domain.com/"), EasyMock.eq(messageId), isA(Date.class), EasyMock.eq(receipt)
+        mockMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(EasyMock.eq(msgNo), EasyMock.eq("http://ringo.domain.com/"), EasyMock.eq(receptionId), isA(Date.class), EasyMock.eq(receipt)
                 );
         expectLastCall();
 

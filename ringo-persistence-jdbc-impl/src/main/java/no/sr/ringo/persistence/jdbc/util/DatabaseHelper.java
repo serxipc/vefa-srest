@@ -125,16 +125,12 @@ public class DatabaseHelper {
         mmd.setReceived(received);
 
 
-        try {
-            if (direction == IN) {
-                return messageRepository.saveInboundMessage(mmd, new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8"))));
-            } else if (direction == OUT) {
-                return messageRepository.saveOutboundMessage(mmd, new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8"))));
-            } else
-                throw new IllegalStateException("No support for transfer direction " + mmd.getTransferDirection().name());
-        } catch (no.sr.ringo.message.OxalisMessagePersistenceException e) {
-            throw new IllegalStateException("Unable to save message " + e.getMessage());
-        }
+        if (direction == IN) {
+            return messageRepository.saveInboundMessage(mmd, new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8"))));
+        } else if (direction == OUT) {
+            return messageRepository.saveOutboundMessage(mmd, new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8"))));
+        } else
+            throw new IllegalStateException("No support for transfer direction " + mmd.getTransferDirection().name());
 
     }
 

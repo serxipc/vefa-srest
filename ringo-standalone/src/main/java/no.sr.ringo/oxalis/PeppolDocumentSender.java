@@ -3,6 +3,7 @@ package no.sr.ringo.oxalis;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.ReceptionId;
+import no.sr.ringo.transport.TransmissionId;
 
 import java.net.URI;
 import java.util.Date;
@@ -30,12 +31,14 @@ public interface PeppolDocumentSender {
     public static final class TransmissionReceipt {
 
         private final ReceptionId receptionId;
+        private final TransmissionId transmissionId;
         private final String remoteAccessPoint;
         private final Date date;
         private final Receipt receipt;
 
-        public TransmissionReceipt(ReceptionId receptionId, URI remoteAccessPoint, Date date, Receipt receipt) {
+        public TransmissionReceipt(ReceptionId receptionId, TransmissionId transmissionId, URI remoteAccessPoint, Date date, Receipt receipt) {
             this.receptionId = receptionId;
+            this.transmissionId = transmissionId;
             this.remoteAccessPoint = remoteAccessPoint != null ? remoteAccessPoint.toString() : "n/a";
             this.date = date;
             this.receipt = receipt;
@@ -57,6 +60,22 @@ public interface PeppolDocumentSender {
             return receipt;
         }
 
+        public TransmissionId getTransmissionId() {
+            return transmissionId;
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("TransmissionReceipt{");
+            sb.append("receptionId=").append(receptionId);
+            sb.append(", transmissionId=").append(transmissionId);
+            sb.append(", remoteAccessPoint='").append(remoteAccessPoint).append('\'');
+            sb.append(", date=").append(date);
+            sb.append(", receipt=").append(receipt);
+            sb.append('}');
+            return sb.toString();
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -64,31 +83,22 @@ public interface PeppolDocumentSender {
 
             TransmissionReceipt that = (TransmissionReceipt) o;
 
-            if (receptionId != null ? !receptionId.equals(that.receptionId) : that.receptionId != null) return false;
-            if (remoteAccessPoint != null ? !remoteAccessPoint.equals(that.remoteAccessPoint) : that.remoteAccessPoint != null)
-                return false;
-            return date != null ? date.equals(that.date) : that.date == null;
+            if (!receptionId.equals(that.receptionId)) return false;
+            if (!transmissionId.equals(that.transmissionId)) return false;
+            if (!remoteAccessPoint.equals(that.remoteAccessPoint)) return false;
+            if (!date.equals(that.date)) return false;
+            return receipt.equals(that.receipt);
         }
 
         @Override
         public int hashCode() {
-            int result = receptionId != null ? receptionId.hashCode() : 0;
-            result = 31 * result + (remoteAccessPoint != null ? remoteAccessPoint.hashCode() : 0);
-            result = 31 * result + (date != null ? date.hashCode() : 0);
+            int result = receptionId.hashCode();
+            result = 31 * result + transmissionId.hashCode();
+            result = 31 * result + remoteAccessPoint.hashCode();
+            result = 31 * result + date.hashCode();
+            result = 31 * result + receipt.hashCode();
             return result;
         }
-
-        @Override
-        public String toString() {
-            final StringBuilder sb = new StringBuilder();
-            sb.append("TransmissionReceipt");
-            sb.append("{messageId=").append(receptionId);
-            sb.append(", remoteAccessPoint=").append(remoteAccessPoint);
-            sb.append(", date=").append(date);
-            sb.append('}');
-            return sb.toString();
-        }
-
     }
 
 }

@@ -68,7 +68,7 @@ public class InboxWithMessageWithoutUUIDTest {
      * This test must be run as last one, because it creates new message which would impact other tests
      */
     @Test(groups = {"persistence"})
-    public void testMessageIdWithNoUUID() throws PeppolMessageNotFoundException, SQLException {
+    public void testMessagesWithNoUUID() throws PeppolMessageNotFoundException, SQLException {
 
         //proper message
         messageNo = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, new ReceptionId(), null);

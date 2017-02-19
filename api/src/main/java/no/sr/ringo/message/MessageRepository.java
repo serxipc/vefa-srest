@@ -22,7 +22,6 @@
 
 package no.sr.ringo.message;
 
-import eu.peppol.identifier.MessageId;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.transport.TransferDirection;
 import org.w3c.dom.Document;
@@ -46,34 +45,36 @@ import java.util.Optional;
  */
 public interface MessageRepository {
 
-    Long saveOutboundMessage(TransmissionMetaData messageMetaData, InputStream payloadDocument)
-            throws OxalisMessagePersistenceException;
-
-    Long saveOutboundMessage(TransmissionMetaData messageMetaData, Document payloadDocument)
-            throws OxalisMessagePersistenceException;
-
-    Long saveInboundMessage(TransmissionMetaData messageMetaData, InputStream payload)
-            throws OxalisMessagePersistenceException;
+    Long saveOutboundMessage(TransmissionMetaData messageMetaData, InputStream payloadDocument);
 
 
-    void saveOutboundTransportReceipt(Receipt transmissionEvidence, ReceptionId receptionId)
-            throws OxalisMessagePersistenceException;
+    Long saveOutboundMessage(TransmissionMetaData messageMetaData, Document payloadDocument);
+
+    Long saveInboundMessage(TransmissionMetaData messageMetaData, InputStream payload);
+
+
+    void saveOutboundTransportReceipt(Receipt transmissionEvidence, ReceptionId receptionId);
 
     TransmissionMetaData findByMessageNo(Long msgNo);
 
     /**
-     * Find an instance of {@link MessageMetaData} by {@link TransferDirection} and {@link MessageId}, i.e. the UUID assigned when we receive a message either
+     * Finds an instance of {@link MessageMetaData} by {@link TransferDirection} and {@link ReceptionId}, i.e. the UUID assigned when we receive a message either
      * from PEPPOL or our back end.
-     * The combination of arguments {@link TransferDirection} and {@link MessageId} ensures that messages sent and received by this access point are unique.
      *
      * @param transferDirection indicates whether the message is inbound or outbound.
-     * @param receptionId         the key
+     * @param receptionId       the key
      * @return an instance of {@link MessageMetaData} populated with data from the repository (DBMS)
-     * @throws IllegalStateException if a message with the given MessageId does not exist
+     * @throws IllegalStateException if a message with the given {@link ReceptionId} does not exist
      */
     Optional<? extends MessageMetaData> findByReceptionId(TransferDirection transferDirection, ReceptionId receptionId)
             throws IllegalStateException;
 
-    List<TransmissionMetaData> findByReceptionId(ReceptionId messageId);
+    /**
+     * Finds a transmission by it's {@link ReceptionId}
+     *
+     * @param receptionId
+     * @return
+     */
+    List<TransmissionMetaData> findByReceptionId(ReceptionId receptionId);
 
 }

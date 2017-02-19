@@ -41,7 +41,7 @@ public class UploadResponseHandlerTest extends AbstractResponseHandlerTest{
         replay(mockRequest, mockResponse);
 
         final Message message = handler.handleResponse(mockResponse);
-        assertEquals(message.getTransmissionId(), "1743866e-62e0-43e6-901a-3bc670823ee4");
+        assertEquals(message.getReceptionId().stringValue(), "1743866e-62e0-43e6-901a-3bc670823ee4");
 
         verify(mockRequest, mockResponse);
     }

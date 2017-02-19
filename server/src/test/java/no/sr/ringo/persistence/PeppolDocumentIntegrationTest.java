@@ -56,14 +56,14 @@ public class PeppolDocumentIntegrationTest {
     }
 
     @Test(groups = {"persistence"})
-    public void testfindDocumentByMessageId() throws PeppolMessageNotFoundException {
+    public void testfindDocumentByMessageNumber() throws PeppolMessageNotFoundException {
         MessageNumber messageNumber = createMessageWithInvoiceDocument();
         final PeppolDocument xmlDoc = documentRepository.getPeppolDocument(account, messageNumber);
         assertNotNull(xmlDoc);
     }
 
     @Test(groups = {"persistence"}, expectedExceptions = PeppolMessageNotFoundException.class)
-    public void testDoesNotFindDocumentByMessageId() throws Exception {
+    public void testDoesNotFindDocumentByMessageNumber() throws Exception {
         //This should throw an exception as adam is not owner of message 1
         MessageNumber messageNumber = createMessageWithInvoiceDocument();
         documentRepository.getPeppolDocument(ObjectMother.getAdamsAccount(), messageNumber);
