@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 /**
- * Represents the "inbox" resource, which allows clients to GET MesssageMetaData messages
+ * Represents the "inbox" resource, which allows clients to GET messages
  *
  * @author $Author$ (of last change)
  */

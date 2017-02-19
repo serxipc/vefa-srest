@@ -179,8 +179,6 @@ public class FetchMessagesUseCase {
         return this;
     }
 
-
-
     /**
      * Fetches a batch of messages and then adds the links to self and download
      * @param searchParams

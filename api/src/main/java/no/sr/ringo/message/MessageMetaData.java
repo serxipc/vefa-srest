@@ -2,6 +2,7 @@ package no.sr.ringo.message;
 
 import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.transport.TransferDirection;
+import no.sr.ringo.transport.TransmissionId;
 
 import java.util.Date;
 
@@ -26,7 +27,7 @@ public interface MessageMetaData {
 
     Long getMsgNo();
 
-    String getTransmissionId();         // AS2 Message-ID
+    TransmissionId getTransmissionId();         // AS2 Message-ID
 
     ReceptionId getReceptionId();
 }

@@ -14,9 +14,14 @@ public class TransmissionId {
         this.transmissionId = transmissionId;
     }
 
+
+    public String stringValue() {
+        return transmissionId;
+    }
+
     @Override
     public String toString() {
-        return transmissionId;
+        return stringValue();
     }
 
     @Override

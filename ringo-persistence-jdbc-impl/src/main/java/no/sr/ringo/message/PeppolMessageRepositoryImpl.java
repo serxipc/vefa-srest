@@ -18,12 +18,14 @@ import no.sr.ringo.persistence.guice.jdbc.JdbcTxManager;
 import no.sr.ringo.persistence.guice.jdbc.Repository;
 import no.sr.ringo.persistence.jdbc.platform.DbmsPlatform;
 import no.sr.ringo.persistence.jdbc.platform.DbmsPlatformFactory;
+import no.sr.ringo.transport.TransmissionId;
 import no.sr.ringo.utils.SbdhUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -465,7 +467,8 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
 
     private MessageMetaDataImpl extractMessageFromResultSet(ResultSet rs) throws SQLException {
         MessageMetaDataImpl messageMetaData = new MessageMetaDataImpl();
-        messageMetaData.setMsgNo(rs.getLong("msg_no"));
+        final long msg_no = rs.getLong("msg_no");
+        messageMetaData.setMsgNo(msg_no);
         messageMetaData.setAccountId(new AccountId(rs.getInt("account_id")));
         messageMetaData.setTransferDirection(no.sr.ringo.transport.TransferDirection.valueOf(rs.getString("direction")));
         messageMetaData.setReceived(rs.getTimestamp("received"));
@@ -485,7 +488,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
 
         final String transmission_id = rs.getString("transmission_id");
         if (transmission_id != null) {
-            messageMetaData.setTransmissionId(transmission_id);
+            messageMetaData.setTransmissionId(new TransmissionId(transmission_id));
         }
         messageMetaData.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.valueOf(rs.getString("document_id")));
 
@@ -493,6 +496,16 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         if (processId != null) {
             messageMetaData.getPeppolHeader().setProfileId(new ProfileId(processId));
         }
+
+        final String payload_url = rs.getString("payload_url");
+        try {
+            if (payload_url != null) {
+                messageMetaData.setPayloadUri(new URI(payload_url));
+            }
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException("Invalid payload_url: '" + payload_url + "' for msg_no=" + msg_no);
+        }
+        
         return messageMetaData;
     }
 
@@ -508,10 +521,11 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         m.getPeppolHeader().setPeppolChannelId(new PeppolChannelId(rs.getString("channel")));
         m.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.valueOf(rs.getString("document_id")));
         m.getPeppolHeader().setProfileId(new ProfileId(rs.getString("process_id")));
+
         // UUIDs are heavy lifting, check for null values first.
         String uuidString = rs.getString("message_uuid");
         if (!rs.wasNull()) {
-            m.setTransmissionId(uuidString);
+            m.setReceptionId(new ReceptionId(uuidString));
         }
         return m;
     }
@@ -618,7 +632,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         }
 
         private String selectMessage() {
-            return "select account_id, msg_no, direction, received, delivered, sender, receiver, channel, document_id, process_id, message_uuid, transmission_id from message ";
+            return "select account_id, msg_no, direction, received, delivered, sender, receiver, channel, document_id, process_id, message_uuid, transmission_id, payload_url from message ";
         }
 
         private String generateWhereClause(MessageSearchParams searchParams) {

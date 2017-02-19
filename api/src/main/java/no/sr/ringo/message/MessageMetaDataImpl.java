@@ -5,6 +5,7 @@ import no.difi.vefa.peppol.common.model.InstanceIdentifier;
 import no.sr.ringo.account.AccountId;
 import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.transport.TransferDirection;
+import no.sr.ringo.transport.TransmissionId;
 
 import java.net.URI;
 import java.util.Date;
@@ -23,7 +24,7 @@ public class MessageMetaDataImpl implements TransmissionMetaData {
     private Date delivered;
 
     private ReceptionId receptionId = new ReceptionId();    // Our internal reception identification
-    private String transmissionId;      // AS2 Message-ID
+    private TransmissionId transmissionId;      // AS2 Message-ID
     private InstanceIdentifier sbdhInstanceIdentifier; // SBDH instance identifier
 
     URI payloadUri;
@@ -89,11 +90,11 @@ public class MessageMetaDataImpl implements TransmissionMetaData {
     }
 
 
-    public String getTransmissionId() {
+    public TransmissionId getTransmissionId() {
         return transmissionId;
     }
 
-    public void setTransmissionId(String transmissionId) {
+    public void setTransmissionId(TransmissionId transmissionId) {
         this.transmissionId = transmissionId;
     }
 

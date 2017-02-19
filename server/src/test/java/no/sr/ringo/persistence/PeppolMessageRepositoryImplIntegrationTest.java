@@ -2,19 +2,25 @@ package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
 import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.InstanceIdentifier;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
+import no.sr.ringo.account.AccountId;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.PeppolMessageTestdataGenerator;
 import no.sr.ringo.document.DocumentRepository;
 import no.sr.ringo.document.PeppolDocument;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.*;
+import no.sr.ringo.peppol.ChannelProtocol;
+import no.sr.ringo.peppol.PeppolChannelId;
+import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.resource.InvalidUserInputWebException;
 import no.sr.ringo.transport.TransferDirection;
+import no.sr.ringo.transport.TransmissionId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -30,6 +36,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
@@ -39,6 +47,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 import static org.testng.Assert.*;
@@ -104,6 +113,42 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         assertEquals(peppolHeader, persistedPeppolHeader);
 
     }
+
+    /**
+     * Persist a sample entry to the database and verifies that the contents are being retrieved correctly
+     *
+     * @throws Exception
+     */
+    @Test
+    public void verifyTransmissionIdAndPayloadUrl() throws Exception {
+        final File tempFile = File.createTempFile("test-", ".tst");
+
+        final MessageMetaDataImpl mmd = new MessageMetaDataImpl();
+        mmd.setAccountId(new AccountId(1));
+        mmd.setTransferDirection(TransferDirection.IN);
+        mmd.getPeppolHeader().setSender(ObjectMother.getTestParticipantId());
+        mmd.getPeppolHeader().setReceiver(ObjectMother.getAdamsParticipantId());
+        mmd.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.EHF_INVOICE);
+        mmd.getPeppolHeader().setPeppolChannelId(new PeppolChannelId(ChannelProtocol.AS2.name()));
+
+        mmd.getPeppolHeader().setProfileId(ProfileId.Predefined.PEPPOL_4A_INVOICE_ONLY);
+        mmd.setTransmissionId(new TransmissionId(UUID.randomUUID().toString()));
+        mmd.setReceived(new Date());
+        final InstanceIdentifier sbdhInstanceIdentifier = InstanceIdentifier.generateUUID();
+        mmd.setSbdhInstanceIdentifier(sbdhInstanceIdentifier);
+
+        // Saves entry to the database
+        final Long msgNo = oxalisMessageRepository.saveInboundMessage(mmd, new ByteArrayInputStream("Sample rubbish".getBytes()));
+        assertNotNull(msgNo);
+        final List<TransmissionMetaData> byReceptionId = oxalisMessageRepository.findByReceptionId(mmd.getReceptionId());
+        final TransmissionMetaData peristedMmd = oxalisMessageRepository.findByMessageNo(msgNo);
+
+        assertNotNull(peristedMmd.getTransmissionId(),"Transmission id is missing");
+        assertNotNull(peristedMmd.getPayloadUri(),"Payload uri is missing");
+
+        databaseHelper.deleteMessage(msgNo);
+    }
+
 
     /**
      * We had a bug where uploaded XML messages were persisted to the database with null-namespace defined (xmlns="") for every element.

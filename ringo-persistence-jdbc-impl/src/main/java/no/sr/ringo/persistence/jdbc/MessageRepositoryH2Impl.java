@@ -35,6 +35,7 @@ import no.sr.ringo.persistence.file.ArtifactType;
 import no.sr.ringo.persistence.guice.jdbc.JdbcTxManager;
 import no.sr.ringo.persistence.guice.jdbc.Repository;
 import no.sr.ringo.transport.TransferDirection;
+import no.sr.ringo.transport.TransmissionId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -312,7 +313,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             peppolHeader.setReceiver(receiver);
             peppolHeader.setPeppolChannelId(channel);
             mmd.setReceptionId(message_uuid);
-            mmd.setTransmissionId(transmission_id);
+            mmd.setTransmissionId(new TransmissionId(transmission_id));
             peppolHeader.setPeppolDocumentTypeId(document_id);
 
             if (process_id != null) {
@@ -344,8 +345,8 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             throw new IllegalArgumentException("MessageMetaData required argument");
         }
         //
-        //                                                            1           2           3       4       5            6               7           8           9           10          11  
-        final String INSERT_INTO_MESSAGE_SQL = "insert into message (account_id, direction, sender, receiver, channel, message_uuid, document_id, process_id, payload_url, received, delivered ) values(?,?,?,?,?,?,?,?,?,?,?)";
+        //                                                            1           2           3       4       5            6               7           8           9           10          11          12
+        final String INSERT_INTO_MESSAGE_SQL = "insert into message (account_id, direction, sender, receiver, channel, message_uuid, document_id, process_id, payload_url, received, delivered, transmission_id ) values(?,?,?,?,?,?,?,?,?,?,?,?)";
 
         Connection connection = null;
         try {
@@ -381,6 +382,11 @@ public class MessageRepositoryH2Impl implements MessageRepository {
                 insertStatement.setTimestamp(11, Timestamp.valueOf(LocalDateTime.ofInstant(tmd.getDelivered().toInstant(), ZoneId.systemDefault())));
             } else
                 insertStatement.setTimestamp(11, null);
+
+            if (tmd.getTransmissionId() != null) {
+                insertStatement.setString(12, tmd.getTransmissionId().toString());
+            } else
+                insertStatement.setString(12, null);
 
             insertStatement.executeUpdate();
 

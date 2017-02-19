@@ -3,6 +3,7 @@ package no.sr.ringo.message;
 
 import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.transport.TransferDirection;
+import no.sr.ringo.transport.TransmissionId;
 
 import java.net.URI;
 import java.util.Date;
@@ -68,7 +69,7 @@ public class MessageWithLocationsImpl implements MessageWithLocations {
         return messageMetaData.getMsgNo();
     }
 
-    public String getTransmissionId() {
+    public TransmissionId getTransmissionId() {
         return messageMetaData.getTransmissionId();
     }
 
