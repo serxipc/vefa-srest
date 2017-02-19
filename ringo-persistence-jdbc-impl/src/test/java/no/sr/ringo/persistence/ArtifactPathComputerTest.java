@@ -22,8 +22,8 @@
 
 package no.sr.ringo.persistence;
 
-import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.persistence.file.ArtifactPathComputer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -65,7 +65,7 @@ public class ArtifactPathComputerTest {
 
     ArtifactPathComputer.FileRepoKey sampleMetadata() {
         UUID uuid = UUID.randomUUID();
-        ArtifactPathComputer.FileRepoKey fileRepoKey = new ArtifactPathComputer.FileRepoKey(no.sr.ringo.transport.TransferDirection.IN, new MessageId(), new ParticipantId("9908:976098897"),new ParticipantId("9908:976098897"),LocalDateTime.now());
+        ArtifactPathComputer.FileRepoKey fileRepoKey = new ArtifactPathComputer.FileRepoKey(no.sr.ringo.transport.TransferDirection.IN, new ReceptionId(), new ParticipantId("9908:976098897"),new ParticipantId("9908:976098897"),new Date());
         return fileRepoKey;
     }
 

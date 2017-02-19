@@ -26,8 +26,9 @@ import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
 import eu.peppol.identifier.WellKnownParticipant;
 import no.sr.ringo.account.*;
-import no.sr.ringo.message.MessageMetaDataEntity;
 import no.sr.ringo.message.MessageRepository;
+import no.sr.ringo.message.ReceptionId;
+import no.sr.ringo.message.TransmissionMetaData;
 import no.sr.ringo.persistence.guice.PersistenceTestModuleFactory;
 import no.sr.ringo.transport.TransferDirection;
 import org.testng.annotations.BeforeMethod;
@@ -36,7 +37,6 @@ import org.testng.annotations.Test;
 
 import javax.inject.Inject;
 import java.util.Date;
-import java.util.UUID;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
@@ -82,9 +82,9 @@ public class DatabaseHelperTest {
     public void testCreateMessageVerifyAccount() throws Exception {
         // Creates an outbound message, which should be associated with account no #2
         // even though the receivers ppid is bound to account #1
-        Long msgNo = databaseHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.OUT, WellKnownParticipant.DUMMY.stringValue(), WellKnownParticipant.DUMMY.stringValue(), UUID.randomUUID().toString(), new Date(), PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(), PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId());
+        Long msgNo = databaseHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.OUT, WellKnownParticipant.DUMMY.stringValue(), WellKnownParticipant.DUMMY.stringValue(), new ReceptionId(), new Date(), PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(), PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId());
 
-        MessageMetaDataEntity messageByNo = messageRepository.findByMessageNo(msgNo);
+        TransmissionMetaData messageByNo = messageRepository.findByMessageNo(msgNo);
         assertEquals(messageByNo.getAccountId(), account.getAccountId());
     }
 

@@ -28,6 +28,7 @@ import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
 import no.sr.ringo.account.*;
 import no.sr.ringo.message.MessageNumber;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.persistence.ObjectMother;
 import no.sr.ringo.persistence.guice.PersistenceTestModuleFactory;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
@@ -36,8 +37,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
-
-import java.util.UUID;
 
 import static org.testng.Assert.*;
 
@@ -166,7 +165,7 @@ public class AccountRepositoryImplTest {
 
     @Test(groups = {"persistence"})
     public void findMessageOwner() {
-        Long messageNumber = databaseHelper.createMessage(adamsAccount.getAccountId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null, PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(), PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId());
+        Long messageNumber = databaseHelper.createSampleMessage(adamsAccount.getAccountId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), new ReceptionId(), null, PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(), PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId());
         assertEquals(adamsAccount, accountRepository.findAccountAsOwnerOfMessage(MessageNumber.create(messageNumber)));
 
     }

@@ -8,7 +8,7 @@ import java.net.URI;
 import java.util.Date;
 
 /**
- * Decorates a PeppolMessageResultImpl object and adds two more methods
+ * Decorates a {@link MessageMetaData} object and adds two more methods
  *
  * @author Steinar Overbeck Cook steinar@sendregning.no
  */
@@ -71,6 +71,12 @@ public class MessageWithLocationsImpl implements MessageWithLocations {
     public String getTransmissionId() {
         return messageMetaData.getTransmissionId();
     }
+
+    @Override
+    public ReceptionId getReceptionId() {
+        return messageMetaData.getReceptionId();
+    }
+
 
     public void setMessageMetaData(MessageMetaData messageMetaData) {
         this.messageMetaData = messageMetaData;

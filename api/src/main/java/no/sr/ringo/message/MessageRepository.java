@@ -24,7 +24,6 @@ package no.sr.ringo.message;
 
 import eu.peppol.identifier.MessageId;
 import no.difi.vefa.peppol.common.model.Receipt;
-import no.sr.ringo.peppol.PeppolTransmissionMetaData;
 import no.sr.ringo.transport.TransferDirection;
 import org.w3c.dom.Document;
 
@@ -47,55 +46,34 @@ import java.util.Optional;
  */
 public interface MessageRepository {
 
-    /**
-     * Saves the supplied message after successful reception, using the given arguments.
-     * This method is used when we have a streamed payload, as we do in the AS2 implementation.
-     *
-     * @param peppolTransmissionMetaData represents the message headers used for routing
-     * @param payload                    represents the payload received, which should be persisted
-     * @throws OxalisMessagePersistenceException if persistence fails for some reason or another
-     */
-    Long saveInboundMessage(PeppolTransmissionMetaData peppolTransmissionMetaData, InputStream payload)
+    Long saveOutboundMessage(TransmissionMetaData messageMetaData, InputStream payloadDocument)
             throws OxalisMessagePersistenceException;
 
-    Long saveOutboundMessage(MessageMetaDataEntity messageMetaDataEntity, InputStream payloadDocument)
+    Long saveOutboundMessage(TransmissionMetaData messageMetaData, Document payloadDocument)
             throws OxalisMessagePersistenceException;
 
-    Long saveOutboundMessage(MessageMetaDataEntity messageMetaDataEntity, Document payloadDocument)
+    Long saveInboundMessage(TransmissionMetaData messageMetaData, InputStream payload)
             throws OxalisMessagePersistenceException;
 
-    Long saveInboundMessage(MessageMetaDataEntity messageMetaDataEntity, InputStream payload)
+
+    void saveOutboundTransportReceipt(Receipt transmissionEvidence, ReceptionId receptionId)
             throws OxalisMessagePersistenceException;
 
+    TransmissionMetaData findByMessageNo(Long msgNo);
 
     /**
-     * Saves a generic transport receipt to persistent storage. This is typically used in C3 to persist the transport receipt
-     * being returned to C2. In C2, which is the sending Access Point, this generic receipt must be saved to persistent storage as a proof of delivery.
-     *
-     * @param transmissionEvidence
-     */
-    void saveInboundTransportReceipt(Receipt transmissionEvidence,
-                                     PeppolTransmissionMetaData peppolTransmissionMetaData)
-            throws OxalisMessagePersistenceException;
-
-    void saveOutboundTransportReceipt(Receipt transmissionEvidence, MessageId messageId)
-            throws OxalisMessagePersistenceException;
-
-    MessageMetaDataEntity findByMessageNo(Long msgNo);
-
-    /**
-     * Find an instance of {@link MessageMetaDataEntity} by {@link TransferDirection} and {@link MessageId}, i.e. the UUID assigned when we receive a message either
+     * Find an instance of {@link MessageMetaData} by {@link TransferDirection} and {@link MessageId}, i.e. the UUID assigned when we receive a message either
      * from PEPPOL or our back end.
      * The combination of arguments {@link TransferDirection} and {@link MessageId} ensures that messages sent and received by this access point are unique.
      *
      * @param transferDirection indicates whether the message is inbound or outbound.
-     * @param messageId         the key
-     * @return an instance of {@link MessageMetaDataEntity} populated with data from the repository (DBMS)
+     * @param receptionId         the key
+     * @return an instance of {@link MessageMetaData} populated with data from the repository (DBMS)
      * @throws IllegalStateException if a message with the given MessageId does not exist
      */
-    Optional<MessageMetaDataEntity> findByMessageId(TransferDirection transferDirection, MessageId messageId)
+    Optional<? extends MessageMetaData> findByReceptionId(TransferDirection transferDirection, ReceptionId receptionId)
             throws IllegalStateException;
 
-    List<MessageMetaDataEntity> findByMessageId(MessageId messageId);
+    List<TransmissionMetaData> findByReceptionId(ReceptionId messageId);
 
 }

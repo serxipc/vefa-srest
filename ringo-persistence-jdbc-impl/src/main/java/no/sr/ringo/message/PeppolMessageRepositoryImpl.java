@@ -1,9 +1,7 @@
 package no.sr.ringo.message;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
-import eu.peppol.identifier.PeppolProcessTypeId;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountId;
@@ -12,6 +10,7 @@ import no.sr.ringo.message.statistics.InboxStatistics;
 import no.sr.ringo.message.statistics.OutboxStatistics;
 import no.sr.ringo.message.statistics.RingoAccountStatistics;
 import no.sr.ringo.message.statistics.RingoStatistics;
+import no.sr.ringo.peppol.ChannelProtocol;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolHeader;
@@ -35,6 +34,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
+import static no.sr.ringo.transport.TransferDirection.OUT;
 
 /**
  * Repository for the message meta data entities.
@@ -73,45 +73,30 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
 
         PeppolHeader peppolHeader = peppolMessage.getPeppolHeader();
 
-        String sender = peppolHeader.getSender() != null ? peppolHeader.getSender().stringValue() : null;
-        String receiver = peppolHeader.getReceiver() != null ? peppolHeader.getReceiver().stringValue() : null;
-        String channelId = peppolHeader.getPeppolChannelId() != null ? peppolHeader.getPeppolChannelId().stringValue() : null;
-        String documentTypeId = peppolHeader.getPeppolDocumentTypeId() != null ? peppolHeader.getPeppolDocumentTypeId().stringValue() : null;
-        String profileId = peppolHeader.getProfileId() != null ? peppolHeader.getProfileId().stringValue() : null;
 
-        // Converts from our Ringo Types to the Oxalis types and instantiates a builder.
-        MessageMetaDataEntity.Builder builder = new MessageMetaDataEntity.Builder(no.sr.ringo.transport.TransferDirection.OUT,
-                new ParticipantId(sender),
-                new ParticipantId(receiver),
-                eu.peppol.identifier.PeppolDocumentTypeId.valueOf(documentTypeId),
-                no.sr.ringo.peppol.ChannelProtocol.SREST);
+        final MessageMetaDataImpl mmd = new MessageMetaDataImpl();
+        mmd.setPeppolHeader(peppolHeader);
+        mmd.setTransferDirection(OUT);
+        mmd.getPeppolHeader().setPeppolChannelId(new PeppolChannelId(ChannelProtocol.SREST.name()));
+        mmd.setAccountId(account.getAccountId());
 
-        // Connects the data to the right account.
-        builder.accountId(account.getAccountId().toInteger());
-
-        builder.processTypeId(PeppolProcessTypeId.valueOf(profileId));
-        MessageMetaDataEntity metaData = builder.build();
 
         // Delegates to the injected message repository
         Long msgNo = null;
         try {
-            msgNo = oxalisMessageRepository.saveOutboundMessage(metaData, peppolMessage.getXmlMessage());
+            msgNo = oxalisMessageRepository.saveOutboundMessage(mmd, peppolMessage.getXmlMessage());
         } catch (OxalisMessagePersistenceException e) {
             throw new IllegalStateException("Unable to persiste outbound message " + peppolMessage + "\n" + e.getMessage(), e);
         }
 
 
-        MessageMetaDataImpl messageMetaData = new MessageMetaDataImpl();
-        messageMetaData.setPeppolHeader(peppolHeader);
-        messageMetaData.setTransferDirection(no.sr.ringo.transport.TransferDirection.OUT);
-        messageMetaData.setMsgNo(msgNo);
-        messageMetaData.setTransmissionId(metaData.getMessageId().stringValue());
+        mmd.setMsgNo(msgNo);
 
-        return new MessageWithLocationsImpl(messageMetaData);
+        return new MessageWithLocationsImpl(mmd);
     }
 
 
-    DbmsPlatform getDbmsPlatform(){
+    DbmsPlatform getDbmsPlatform() {
         return DbmsPlatformFactory.platformFor(jdbcTxManager.getConnection());
     }
 
@@ -119,7 +104,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     public MessageMetaData findMessageByMessageNo(MessageNumber msgNo) throws PeppolMessageNotFoundException {
         try {
             Connection connection = jdbcTxManager.getConnection();
-            
+
             SqlHelper sql = SqlHelper.create(getDbmsPlatform()).findMessageByMessageNo();
 
             PreparedStatement ps = sql.prepareStatement(connection);
@@ -174,7 +159,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
 
     @Override
     public List<MessageMetaData> findUndeliveredOutboundMessagesByAccount(AccountId accountId) {
-        return findUndeliveredMessagesByAccount(accountId, no.sr.ringo.transport.TransferDirection.OUT);
+        return findUndeliveredMessagesByAccount(accountId, OUT);
     }
 
     @Override
@@ -281,11 +266,11 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     }
 
     @Override
-    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, MessageId messageId, Date delivered, Receipt receipt) {
+    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, ReceptionId receptionId, Date delivered, Receipt receipt) {
 
         // Persists the evidence, after which the DBMS is updated
         try {
-            persistOutboundEvidence(messageId, delivered, receipt);
+            persistOutboundEvidence(receptionId, delivered, receipt);
         } catch (OxalisMessagePersistenceException e) {
             throw new IllegalStateException("Unable to persist evidence bytes to database");
         }
@@ -297,7 +282,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setTimestamp(1, new Timestamp(delivered.getTime()));
             ps.setString(2, remoteAP);
-            ps.setString(3, messageId.stringValue());
+            ps.setString(3, receptionId.stringValue());
             ps.setLong(4, msgNo.toInt());
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -305,19 +290,19 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         }
     }
 
-    void persistOutboundEvidence(final MessageId messageId, final Date delivered, final Receipt receipt) throws OxalisMessagePersistenceException {
+    void persistOutboundEvidence(final ReceptionId receptionId, final Date delivered, final Receipt receipt) throws OxalisMessagePersistenceException {
 
-        oxalisMessageRepository.saveOutboundTransportReceipt(receipt, messageId);
+        oxalisMessageRepository.saveOutboundTransportReceipt(receipt, receptionId);
     }
 
     @Override
-    public Long copyOutboundMessageToInbound(Long outMsgNo, String uuid) {
+    public Long copyOutboundMessageToInbound(Long outMsgNo, ReceptionId re) {
         Connection con;
         String sql = "insert into message (account_id, direction, received, sender, receiver, channel, message_uuid, document_id, process_id, payload_url) (select account_id, 'IN', received, sender, receiver, channel, ?, document_id, process_id, payload_url from message where msg_no = ?);";
         try {
             con = jdbcTxManager.getConnection();
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, uuid);
+            ps.setString(1, re.stringValue());
             ps.setLong(2, outMsgNo);
             ps.execute();
             ResultSet rs = ps.getGeneratedKeys();
@@ -503,7 +488,12 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         messageMetaData.getPeppolHeader().setPeppolChannelId(new PeppolChannelId(rs.getString("channel")));
         String message_uuid = rs.getString("message_uuid");
         if (message_uuid != null) {
-            messageMetaData.setTransmissionId(message_uuid);
+            messageMetaData.setReceptionId(new ReceptionId(message_uuid));
+        }
+
+        final String transmission_id = rs.getString("transmission_id");
+        if (transmission_id != null) {
+            messageMetaData.setTransmissionId(transmission_id);
         }
         messageMetaData.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.valueOf(rs.getString("document_id")));
 
@@ -513,6 +503,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         }
         return messageMetaData;
     }
+
 
     private MessageMetaDataImpl extractMessageForResultSetWithoutAccountId(ResultSet rs) throws SQLException {
         MessageMetaDataImpl m = new MessageMetaDataImpl();
@@ -635,7 +626,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         }
 
         private String selectMessage() {
-            return "select account_id, msg_no, direction, received, delivered, sender, receiver, channel, document_id, process_id, message_uuid from message ";
+            return "select account_id, msg_no, direction, received, delivered, sender, receiver, channel, document_id, process_id, message_uuid, transmission_id from message ";
         }
 
         private String generateWhereClause(MessageSearchParams searchParams) {

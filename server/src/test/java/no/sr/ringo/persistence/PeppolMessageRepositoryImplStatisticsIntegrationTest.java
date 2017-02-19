@@ -9,6 +9,7 @@ import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.message.statistics.RingoAccountStatistics;
 import no.sr.ringo.message.statistics.RingoStatistics;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
@@ -26,7 +27,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import static org.testng.Assert.*;
 
@@ -105,39 +105,39 @@ public class PeppolMessageRepositoryImplStatisticsIntegrationTest {
     private void createTestMessages() {
 
 
-        databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
+        databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
                 PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
                 "<test>\u00E5</test>",
                 account.getAccountId().toInteger(),
                 TransferDirection.OUT,
                 participantId.stringValue(),
                 participantId.stringValue(),
-                UUID.randomUUID().toString(), sentDate, receivedDate);
-        databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
+                new ReceptionId(), sentDate, receivedDate);
+        databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
                 PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
                 "<test>\u00E5</test>",
                 account.getAccountId().toInteger(),
                 TransferDirection.IN,
                 participantId.stringValue(),
                 participantId.stringValue(),
-                UUID.randomUUID().toString(), downloadedDate, receivedDate);
+                new ReceptionId(), downloadedDate, receivedDate);
 
-        databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
+        databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
                 PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
                 "<test>\u00E5</test>",
                 account.getAccountId().toInteger(),
                 TransferDirection.IN,
                 participantId.stringValue(),
                 participantId.stringValue(),
-                UUID.randomUUID().toString(), null, oldestUndeliveredDate);
-        databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
+                new ReceptionId(), null, oldestUndeliveredDate);
+        databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
                 PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
                 "<test>\u00E5</test>",
                 account.getAccountId().toInteger(),
                 TransferDirection.OUT,
                 participantId.stringValue(),
                 participantId.stringValue(),
-                UUID.randomUUID().toString(), null, oldestUndeliveredDate);
+                new ReceptionId(), null, oldestUndeliveredDate);
 
     }
 

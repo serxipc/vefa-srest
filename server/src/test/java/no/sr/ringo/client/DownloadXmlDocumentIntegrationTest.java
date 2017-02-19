@@ -8,6 +8,7 @@ import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.http.AbstractHttpClientServerTest;
 import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.persistence.DbmsTestHelper;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
@@ -21,7 +22,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.UUID;
 
 import static org.testng.Assert.assertTrue;
 
@@ -55,9 +55,8 @@ public class DownloadXmlDocumentIntegrationTest extends AbstractHttpClientServer
     @BeforeMethod(groups = {"integration"})
     public void setUp() throws Exception {
         Account account = accountRepository.findAccountByParticipantId(ObjectMother.getTestParticipantId());
-        String uuid = UUID.randomUUID().toString();
         String receiver1 = "9908:976098897";
-        messageNumber = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantId().stringValue(), receiver1, uuid, null);
+        messageNumber = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantId().stringValue(), receiver1, new ReceptionId(), null);
     }
 
 

@@ -10,6 +10,7 @@ import no.sr.ringo.account.AccountRepository;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.message.SearchParams;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
@@ -23,7 +24,6 @@ import org.testng.annotations.Test;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-import java.util.UUID;
 
 import static org.testng.Assert.assertEquals;
 
@@ -225,8 +225,8 @@ public class MessageSearchPersistenceTest {
 
         boolean validNorwegianOrgNum = ParticipantId.isValidParticipantIdentifierPattern(receiver1);
 
-        firstMessageNo = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, sender, receiver1, UUID.randomUUID().toString(), null);
-        secondMessageNo = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.OUT, sender, receiver2, UUID.randomUUID().toString(), null);
+        firstMessageNo = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, sender, receiver1, new ReceptionId(), null);
+        secondMessageNo = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.OUT, sender, receiver2, new ReceptionId(), null);
     }
 
     @AfterMethod

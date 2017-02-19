@@ -119,9 +119,12 @@ public class PeppolMessageValidator {
         if (StringUtils.isEmpty(postParams.getDocumentIdString())) {
             throw new InvalidUserInputWebException("DocumentId required");
         }
+
         //not extracted by EHFDocumentExtractor
         if (peppolMessage.getPeppolHeader().getPeppolDocumentTypeId() == null) {
             throw new InvalidUserInputWebException(String.format("Wrong documentId value: %s", postParams.getDocumentIdString()));
+        } else if (!peppolMessage.getPeppolHeader().getPeppolDocumentTypeId().isKnown()) {
+            throw new InvalidUserInputWebException(String.format("Unknown document type: %s", postParams.getDocumentIdString()));
         }
     }
 

@@ -3,6 +3,7 @@ package no.sr.ringo.client;
 import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.common.FileHelper;
 import no.sr.ringo.message.MessageWithLocations;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.peppol.PeppolHeader;
 
 import java.io.File;
@@ -82,13 +83,17 @@ public class Message {
         return messageWithLocations.getPeppolHeader().getReceiver();
     }
 
-    public String getMessageUUID() {
+    public String getTransmissionId() {
         return messageWithLocations.getTransmissionId();
     }
+
+    public ReceptionId getReceptionId() { return messageWithLocations.getReceptionId(); }
 
     public String getMessageSelfUri() {
         return messageWithLocations.getSelfURI().toString();
     }
+
+
 
     @Override
     public boolean equals(Object o) {
@@ -111,6 +116,6 @@ public class Message {
     }
 
     private String getFileName() {
-        return FileHelper.formatForFileName(messageWithLocations.getTransmissionId()) + ".xml";
+        return FileHelper.formatForFileName(messageWithLocations.getReceptionId() + ".xml");
     }
 }

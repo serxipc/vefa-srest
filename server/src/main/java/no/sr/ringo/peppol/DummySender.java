@@ -5,7 +5,6 @@ import no.sr.ringo.message.PeppolMessageRepository;
 
 import javax.inject.Inject;
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * Sender used when operating in Test mode.
@@ -40,12 +39,12 @@ public class DummySender implements PeppolDocumentSender {
 
         //returns the receipt specified in the constructor (so we can test) if not null
         //otherwise generate a new Transmission receipt
-        TransmissionReceipt result = transmissionReceipt == null ? new TransmissionReceipt("uuid:" + UUID.randomUUID().toString(), new Date()) : transmissionReceipt;
+        TransmissionReceipt result = transmissionReceipt == null ? new TransmissionReceipt(message.getReceptionId(), new Date()) : transmissionReceipt;
 
         //if sending to yourself
         if (messageRepository.isSenderAndReceiverAccountTheSame(message.getMsgNo().longValue())){
             //duplicate out to in message without msg_id and delivered
-            messageRepository.copyOutboundMessageToInbound(message.getMsgNo().longValue(), result.getMessageId());
+            messageRepository.copyOutboundMessageToInbound(message.getMsgNo().longValue(), result.getReceptionId());
         }
 
         return result;

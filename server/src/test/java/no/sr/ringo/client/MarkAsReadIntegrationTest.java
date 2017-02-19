@@ -7,6 +7,7 @@ import no.sr.ringo.account.AccountRepository;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.http.AbstractHttpClientServerTest;
 import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.persistence.DbmsTestHelper;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
@@ -16,7 +17,6 @@ import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 
 import java.util.Date;
-import java.util.UUID;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -55,7 +55,7 @@ public class MarkAsReadIntegrationTest extends AbstractHttpClientServerTest {
     @BeforeTest(groups = {"persistence"})
     public void setUp() throws Exception {
         account = accountRepository.findAccountByParticipantId(ObjectMother.getTestParticipantId());
-        dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), receiver1, UUID.randomUUID().toString(), new Date());
+        dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), receiver1, new ReceptionId(), new Date());
     }
 
     @AfterTest(groups = {"persistence"})

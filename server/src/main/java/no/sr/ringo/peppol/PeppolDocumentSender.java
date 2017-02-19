@@ -1,6 +1,7 @@
 package no.sr.ringo.peppol;
 
 import no.sr.ringo.message.MessageMetaData;
+import no.sr.ringo.message.ReceptionId;
 
 import java.util.Date;
 
@@ -27,16 +28,16 @@ public interface PeppolDocumentSender {
      */
     public static final class TransmissionReceipt {
 
-        private final String messageId;
+        private final ReceptionId receptionId;
         private final Date date;
 
-        public TransmissionReceipt(String messageId, Date date) {
-            this.messageId = messageId;
+        public TransmissionReceipt(ReceptionId receptionId, Date date) {
+            this.receptionId = receptionId;
             this.date = date;
         }
 
-        public String getMessageId() {
-            return messageId;
+        public ReceptionId getReceptionId() {
+            return receptionId;
         }
 
         public Date getDate() {
@@ -51,14 +52,14 @@ public interface PeppolDocumentSender {
             TransmissionReceipt that = (TransmissionReceipt) o;
 
             if (date != null ? !date.equals(that.date) : that.date != null) return false;
-            if (messageId != null ? !messageId.equals(that.messageId) : that.messageId != null) return false;
+            if (receptionId != null ? !receptionId.equals(that.receptionId) : that.receptionId != null) return false;
 
             return true;
         }
 
         @Override
         public int hashCode() {
-            int result = messageId != null ? messageId.hashCode() : 0;
+            int result = receptionId != null ? receptionId.hashCode() : 0;
             result = 31 * result + (date != null ? date.hashCode() : 0);
             return result;
         }
@@ -67,7 +68,7 @@ public interface PeppolDocumentSender {
         public String toString() {
             final StringBuilder sb = new StringBuilder();
             sb.append("TransmissionReceipt");
-            sb.append("{messageId=").append(messageId);
+            sb.append("{messageId=").append(receptionId);
             sb.append(", date=").append(date);
             sb.append('}');
             return sb.toString();

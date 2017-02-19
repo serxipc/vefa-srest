@@ -10,10 +10,7 @@ import no.sr.ringo.account.Account;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.PeppolMessageTestdataGenerator;
 import no.sr.ringo.guice.ServerTestModuleFactory;
-import no.sr.ringo.message.MessageNumber;
-import no.sr.ringo.message.MessageWithLocations;
-import no.sr.ringo.message.PeppolMessage;
-import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.message.*;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.persistence.queue.*;
 import no.sr.ringo.transport.TransferDirection;
@@ -27,7 +24,6 @@ import org.testng.annotations.Test;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import static org.testng.Assert.*;
 
@@ -61,8 +57,8 @@ public class QueueRepositoryImplIntegrationTest {
     @BeforeMethod(groups = {"persistence"})
     public void insertSample() throws SQLException {
         databaseHelper.deleteAllMessagesForAccount(account);
-        messageId = dbmsTestHelper.createMessage(1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null);
-        messageOut = dbmsTestHelper.createMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), null, null);
+        messageId = dbmsTestHelper.createSampleMessage(1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), new ReceptionId(), null);
+        messageOut = dbmsTestHelper.createSampleMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), new ReceptionId(), null);
     }
 
     @AfterMethod(groups = {"persistence"})
@@ -164,9 +160,9 @@ public class QueueRepositoryImplIntegrationTest {
         //creates an outbound message
         final int accountId = 1;
 
-        msgIdInvoice = databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
+        msgIdInvoice = databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
                 PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
-                invoiceXml, accountId, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), null, null, new Date());
+                invoiceXml, accountId, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), new ReceptionId(), null, new Date());
         Integer queueId = databaseHelper.putMessageOnQueue(msgIdInvoice);
         final boolean lockOk = queueRepository.lockQueueItemForDelivery(new OutboundMessageQueueId(queueId));
 
@@ -180,9 +176,9 @@ public class QueueRepositoryImplIntegrationTest {
         String invoiceXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"text/xsl\" href=\"xxx.xslt\"?><Invoice>invoice</Invoice>";
         //creates an outbound message
         final int accountId = 1;
-        msgIdInvoice = databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
+        msgIdInvoice = databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
                 PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
-                invoiceXml, accountId, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), null, new Date(), new Date());
+                invoiceXml, accountId, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), new ReceptionId(), new Date(), new Date());
         assertNotNull(msgIdInvoice);
         Integer queueId = databaseHelper.putMessageOnQueue(msgIdInvoice);
 

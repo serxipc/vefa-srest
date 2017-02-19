@@ -6,6 +6,7 @@ import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
 import org.slf4j.Logger;
@@ -17,7 +18,6 @@ import org.testng.annotations.Test;
 
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.UUID;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -47,7 +47,7 @@ public class SameMessageSenderAndReceiverIntegrationTest {
 
     @BeforeMethod(groups = {"persistence"})
     public void insertSample() throws SQLException {
-        messageOut = dbmsTestHelper.createMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), (Date)null);
+        messageOut = dbmsTestHelper.createSampleMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), new ReceptionId(), (Date)null);
     }
 
     @AfterMethod(groups = {"persistence"})

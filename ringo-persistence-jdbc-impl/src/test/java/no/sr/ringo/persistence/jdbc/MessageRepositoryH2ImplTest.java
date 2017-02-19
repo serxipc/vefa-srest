@@ -23,13 +23,16 @@
 package no.sr.ringo.persistence.jdbc;
 
 import eu.peppol.identifier.*;
-import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.account.AccountId;
-import no.sr.ringo.message.MessageMetaDataEntity;
+import no.sr.ringo.message.MessageMetaDataImpl;
 import no.sr.ringo.message.MessageRepository;
+import no.sr.ringo.message.TransmissionMetaData;
+import no.sr.ringo.peppol.ChannelProtocol;
+import no.sr.ringo.peppol.PeppolChannelId;
+import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolTransmissionMetaData;
-import no.sr.ringo.persistence.file.ArtifactType;
 import no.sr.ringo.persistence.guice.PersistenceTestModuleFactory;
+import no.sr.ringo.transport.TransferDirection;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 import org.w3c.dom.Comment;
@@ -56,7 +59,6 @@ import java.security.Principal;
 import java.sql.*;
 
 import static org.testng.Assert.*;
-import static org.testng.AssertJUnit.fail;
 
 /**
  * @author Steinar Overbeck Cook
@@ -81,16 +83,8 @@ public class MessageRepositoryH2ImplTest {
     }
 
 
-    @Test
-    public void testSaveInboundMessage() throws Exception {
-        PeppolTransmissionMetaData PeppolTransmissionMetaData = sampleMessageHeader();
-        Long messageNo = messageDbmsRepository.saveInboundMessage(PeppolTransmissionMetaData, sampeXmlDocumentAsInputStream());
-        MessageMetaDataEntity metaData = messageDbmsRepository.findByMessageNo(messageNo);
 
-        removeFilesFor(metaData);
-    }
-
-    void removeFilesFor(MessageMetaDataEntity metaData) {
+    void removeFilesFor(TransmissionMetaData metaData) {
 
         deleteUri(metaData.getPayloadUri());
         if (metaData.getNativeEvidenceUri() != null) {
@@ -107,44 +101,6 @@ public class MessageRepositoryH2ImplTest {
     }
 
 
-    @Test
-    public void testSaveInboundMessageWithArtifactsInFileStore() throws ParserConfigurationException, SQLException {
-
-        PeppolTransmissionMetaData peppolTransmissionMetaData = sampleMessageHeader();
-
-        Receipt receipt = Receipt.of("Smime rubbish".getBytes());
-
-        Long messageNo = null;
-        try {
-            messageNo = messageDbmsRepository.saveInboundMessage(peppolTransmissionMetaData, sampeXmlDocumentAsInputStream());
-            assertNotNull(messageNo);
-
-            messageDbmsRepository.saveInboundTransportReceipt(receipt, peppolTransmissionMetaData);
-
-        } catch (no.sr.ringo.message.OxalisMessagePersistenceException e) {
-            fail(e.getMessage());
-        }
-
-        // Verifies the contents of the database and directories
-
-        MessageMetaDataEntity metaData = messageDbmsRepository.findByMessageNo(messageNo);
-
-
-        Long msg_no = metaData.getMessageNumber().toLong();
-        assertNotNull(msg_no);
-
-        // Verifies the path and existence of the message payload, the native receipt and the transport receipt
-        String payloadUrl = metaData.getPayloadUri().toString();
-        assertNotNull(payloadUrl, "No payload url found");
-        assertTrue(payloadUrl.endsWith(ArtifactType.PAYLOAD.getFileNameSuffix()), "Seems the payload suffix is wrong");
-
-        assertNotNull(metaData.getNativeEvidenceUri(), "Column " + ArtifactType.NATIVE_EVIDENCE.getColumnName() + " is null in DBMS");
-        assertTrue(metaData.getNativeEvidenceUri().toString().endsWith(ArtifactType.NATIVE_EVIDENCE.getFileNameSuffix()), "Invalid suffix for native evidence url");
-
-        // Removes the file artifacts
-        removeFilesFor(metaData);
-    }
-
 
     private void dumpRow(ResultSet resultSet) throws SQLException {
 
@@ -158,48 +114,6 @@ public class MessageRepositoryH2ImplTest {
         }
     }
 
-    /**
-     * The Participant ID does not exist in the database, and will thus cause the account_id to be null
-     * when persisting the message
-     */
-    @Test
-    public void testSaveInboundMessageWithoutAccountId() throws Exception {
-        PeppolTransmissionMetaData PeppolTransmissionMetaData = sampleMessageHeader();
-        PeppolTransmissionMetaData.setRecipientId(new ParticipantId("9908:917686688").toVefa());
-        messageDbmsRepository.saveInboundMessage(PeppolTransmissionMetaData, sampeXmlDocumentAsInputStream());
-    }
-
-    /**
-     * Sending a message without the participant id of the sender is absolutely illegal.
-     *
-     * @throws ParserConfigurationException
-     */
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testSaveInboundMessageWithoutSenderNull() throws ParserConfigurationException, no.sr.ringo.message.OxalisMessagePersistenceException {
-        PeppolTransmissionMetaData h = sampleMessageHeader();
-        h.setSenderId(null);
-        messageDbmsRepository.saveInboundMessage(h, sampeXmlDocumentAsInputStream());
-    }
-
-    /**
-     * Sending a message without specifying the Participant ID of the receiver is an error.
-     *
-     * @throws ParserConfigurationException
-     */
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testSaveInboundMessageWithoutRecipientIdNull() throws ParserConfigurationException, no.sr.ringo.message.OxalisMessagePersistenceException {
-        PeppolTransmissionMetaData h = sampleMessageHeader();
-        h.setRecipientId(null);
-        messageDbmsRepository.saveInboundMessage(h, sampeXmlDocumentAsInputStream());
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testSaveInboundMessageWithoutDocumentId() throws ParserConfigurationException, no.sr.ringo.message.OxalisMessagePersistenceException {
-        PeppolTransmissionMetaData h = sampleMessageHeader();
-        h.setDocumentTypeIdentifier(null);
-        messageDbmsRepository.saveInboundMessage(h, sampeXmlDocumentAsInputStream());
-        fail("Expected exception to be thrown here");
-    }
 
     @Test
     public void testSaveOutboundMessage() throws ParserConfigurationException, SQLException, IOException, no.sr.ringo.message.OxalisMessagePersistenceException {
@@ -233,11 +147,16 @@ public class MessageRepositoryH2ImplTest {
         // dumpRow(resultSet);
     }
 
-    private MessageMetaDataEntity sampleMessageMetaData() {
-        MessageMetaDataEntity.Builder builder = new MessageMetaDataEntity.Builder(no.sr.ringo.transport.TransferDirection.OUT, WellKnownParticipant.DIFI, WellKnownParticipant.DIFI_TEST, PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(), no.sr.ringo.peppol.ChannelProtocol.SREST);
-        MessageMetaDataEntity messageMetaDataEntity = builder.accountId(1)
-                .build();
-        return messageMetaDataEntity;
+    private TransmissionMetaData sampleMessageMetaData() {
+
+        final MessageMetaDataImpl mmd = new MessageMetaDataImpl();
+        mmd.setTransferDirection(TransferDirection.OUT);
+        mmd.getPeppolHeader().setSender(WellKnownParticipant.DIFI);
+        mmd.getPeppolHeader().setReceiver(WellKnownParticipant.DIFI_TEST);
+        mmd.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.EHF_INVOICE);
+        mmd.getPeppolHeader().setPeppolChannelId(new PeppolChannelId(ChannelProtocol.SREST.name()));
+        mmd.setAccountId(new AccountId(1));
+        return mmd;
     }
 
     @Test

@@ -10,6 +10,7 @@ import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageNotFoundException;
 import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
 import org.slf4j.Logger;
@@ -22,7 +23,6 @@ import org.testng.annotations.Test;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
-import java.util.UUID;
 
 import static org.testng.Assert.assertEquals;
 
@@ -71,11 +71,11 @@ public class InboxWithMessageWithoutUUIDTest {
     public void testMessageIdWithNoUUID() throws PeppolMessageNotFoundException, SQLException {
 
         //proper message
-        messageNo = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, UUID.randomUUID().toString(), null);
+        messageNo = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, new ReceptionId(), null);
         //uuid = null
-        messageNo2 = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, null, null);
+        messageNo2 = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, new ReceptionId(), null);
         //uuid = ''
-        messageNo3 = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, "", null);
+        messageNo3 = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, new ReceptionId(), null);
 
         inspectDbms();
         // We used to expect only a single message as message_uuid was required to be null in order to be deemed in the /inbox

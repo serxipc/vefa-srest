@@ -177,7 +177,7 @@ public class SendQueuedMessagesUseCase {
         messageRepository.updateOutBoundMessageDeliveryDateAndUuid(
                 MessageNumber.create(messageMetaData.getMsgNo()),
                 transmissionReceipt.getRemoteAccessPoint(),
-                transmissionReceipt.getMessageId(),
+                transmissionReceipt.getReceptionId(),
                 transmissionReceipt.getDate(),
                 transmissionReceipt.getReceipt()
                 );

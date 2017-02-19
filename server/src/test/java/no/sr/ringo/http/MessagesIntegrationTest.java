@@ -7,6 +7,7 @@ import no.sr.ringo.client.Message;
 import no.sr.ringo.client.Messagebox;
 import no.sr.ringo.client.Messages;
 import no.sr.ringo.guice.ServerTestModuleFactory;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.persistence.DbmsTestHelper;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
@@ -20,7 +21,6 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -90,7 +90,7 @@ public class MessagesIntegrationTest extends AbstractHttpClientServerTest {
     public void insertSample() throws SQLException {
         final Account account = ObjectMother.getTestAccount();
         for (int i = 0; i <= 26; i++) {
-            final Long message = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), null);
+            final Long message = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), new ReceptionId(), null);
             messageIds.add(message);
         }
     }

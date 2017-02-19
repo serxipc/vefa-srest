@@ -1,6 +1,5 @@
 package no.sr.ringo.message;
 
-import eu.peppol.identifier.MessageId;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountId;
@@ -117,17 +116,17 @@ public interface PeppolMessageRepository {
      * REM evidence is persisted.
      *
      */
-    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, MessageId messageId, Date delivered, Receipt receipt);
+    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, ReceptionId receptionId, Date delivered, Receipt receipt);
 
     /**
      * Creates inbound message as copy of outbound one with delivered being null
      *
      *
      * @param outMsgNo id of outbound message to copy
-     * @param uuid
+     * @param re
      * @return
      */
-    public Long copyOutboundMessageToInbound(Long outMsgNo, String uuid);
+    public Long copyOutboundMessageToInbound(Long outMsgNo, ReceptionId re);
 
     /**
      * Retrieves xml document from given message not checking the account_id

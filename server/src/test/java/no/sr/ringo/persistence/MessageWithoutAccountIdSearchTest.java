@@ -6,6 +6,7 @@ import eu.peppol.identifier.WellKnownParticipant;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
 import org.testng.annotations.AfterMethod;
@@ -46,7 +47,7 @@ public class MessageWithoutAccountIdSearchTest {
     @BeforeMethod
     public void setUp() throws Exception {
         databaseHelper.deleteAllMessagesWithoutAccountId();
-        dbmsTestHelper.createMessage(null, TransferDirection.IN, WellKnownParticipant.U4_TEST.stringValue()  ,WellKnownParticipant.U4_TEST.stringValue() , "12345", null);
+        dbmsTestHelper.createSampleMessage(null, TransferDirection.IN, WellKnownParticipant.U4_TEST.stringValue()  ,WellKnownParticipant.U4_TEST.stringValue() , new ReceptionId(), null);
 
     }
 

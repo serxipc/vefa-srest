@@ -79,7 +79,7 @@ public class SendQueuedMessageUseCaseTest {
         mockMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(
                 EasyMock.eq(MessageNumber.create(msgNo)),
                 eq(receipt.getRemoteAccessPoint()),
-                eq(receipt.getMessageId()),
+                eq(receipt.getReceptionId()),
                 eq(receipt.getDate()),
                 eq(receipt1)
                 );

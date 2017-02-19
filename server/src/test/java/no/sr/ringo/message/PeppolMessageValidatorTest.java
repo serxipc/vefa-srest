@@ -92,7 +92,7 @@ public class PeppolMessageValidatorTest {
         expect(mockPeppolMessage.getPeppolHeader()).andStubReturn(mockPeppolHeader);
         expect(mockPeppolHeader.getReceiver()).andReturn(participantId);
         expect(mockPeppolHeader.getSender()).andReturn(participantId);
-        expect(mockPeppolHeader.getPeppolDocumentTypeId()).andReturn(PeppolDocumentTypeId.EHF_INVOICE);
+        expect(mockPeppolHeader.getPeppolDocumentTypeId()).andReturn(PeppolDocumentTypeId.EHF_INVOICE).times(2);
         expect(mockPeppolHeader.getProfileId()).andReturn(null);
 
         replay(mockPeppolMessage, mockPeppolHeader);
@@ -112,9 +112,10 @@ public class PeppolMessageValidatorTest {
         OutboundPostParams params = new OutboundPostParams.Builder().recipientId("9908:976098897").senderId("9908:976098897").documentId(PeppolDocumentTypeId.EHF_INVOICE.stringValue()).processId(ProfileId.Predefined.BII04_INVOICE_ONLY.stringValue()).build();
         validator = new PeppolMessageValidator(mockPeppolMessage, params);
         expect(mockPeppolMessage.getPeppolHeader()).andStubReturn(mockPeppolHeader);
+
         expect(mockPeppolHeader.getReceiver()).andReturn(participantId);
         expect(mockPeppolHeader.getSender()).andReturn(participantId);
-        expect(mockPeppolHeader.getPeppolDocumentTypeId()).andReturn(PeppolDocumentTypeId.EHF_INVOICE);
+        expect(mockPeppolHeader.getPeppolDocumentTypeId()).andReturn(PeppolDocumentTypeId.EHF_INVOICE).times(2);
         expect(mockPeppolHeader.getProfileId()).andReturn(ProfileId.Predefined.BII04_INVOICE_ONLY);
 
         replay(mockPeppolMessage, mockPeppolHeader);

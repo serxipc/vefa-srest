@@ -12,6 +12,7 @@ import no.sr.ringo.common.XmlSpecification;
 import no.sr.ringo.message.MessageMetaDataImpl;
 import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.message.MessageWithLocationsImpl;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolHeader;
@@ -102,7 +103,7 @@ public class MessageXmlSpec implements XmlSpecification<MessageWithLocations> {
         MessageMetaDataImpl messageMetaData = new MessageMetaDataImpl();
 
         messageMetaData.setDelivered(RingoUtils.getDateTimeFromISO8601String(delivered));
-        messageMetaData.setTransmissionId(uuid);
+        messageMetaData.setReceptionId(new ReceptionId(uuid));
         messageMetaData.setMsgNo(Long.parseLong(messageNo));
         messageMetaData.setReceived(RingoUtils.getDateTimeFromISO8601String(received));
         messageMetaData.setTransferDirection(TransferDirection.valueOf(transferDirection));

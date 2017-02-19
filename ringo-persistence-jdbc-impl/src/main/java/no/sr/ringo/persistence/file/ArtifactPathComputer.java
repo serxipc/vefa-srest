@@ -22,9 +22,9 @@
 
 package no.sr.ringo.persistence.file;
 
-import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
 import no.sr.ringo.config.RingoConfigProperty;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.transport.TransferDirection;
 
 import javax.inject.Inject;
@@ -32,7 +32,9 @@ import javax.inject.Named;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  *   Computes the path for the various artifacts stored in the file system based upon the supplied {@link FileRepoKey}, which holdes
@@ -56,6 +58,9 @@ public class ArtifactPathComputer {
 
     public Path createPayloadPathFrom(FileRepoKey fileRepoKey) {
 
+        if (fileRepoKey == null) {
+            throw new IllegalArgumentException("Missing argument, null not allowed");
+        }
         String filename = createBaseFilename(fileRepoKey, ArtifactType.PAYLOAD.getFileNameSuffix());
 
         Path resolvedPath = createCompletePath(fileRepoKey, filename);
@@ -70,7 +75,7 @@ public class ArtifactPathComputer {
     }
 
     String createBaseFilename(FileRepoKey fileRepoKey, String suffix) {
-        return normalizeFilename(fileRepoKey.getMessageId().toString()) + suffix;
+        return normalizeFilename(fileRepoKey.getReceptionId().toString()) + suffix;
     }
 
     Path createCompletePath(FileRepoKey fileRepoKey, String filename) {
@@ -93,7 +98,9 @@ public class ArtifactPathComputer {
         }
 
         Path basePath = createBasePath(fileRepoKey.direction);
-        Path path = Paths.get(basePath.toString(),normalizeFilename(fileRepoKey.getReceiver().stringValue()), normalizeFilename(fileRepoKey.getSender().stringValue()), isoDateFormat.format(fileRepoKey.getDate()));
+        final Date date = fileRepoKey.getDate();
+        LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+        Path path = Paths.get(basePath.toString(),normalizeFilename(fileRepoKey.getReceiver().stringValue()), normalizeFilename(fileRepoKey.getSender().stringValue()), isoDateFormat.format(ldt));
         return path.resolve(filename);
     }
 
@@ -108,21 +115,21 @@ public class ArtifactPathComputer {
 
     public static class FileRepoKey {
         private final TransferDirection direction;
-        private final MessageId messageId;
+        private final ReceptionId receptionId;
         private final ParticipantId sender;
         private final ParticipantId receiver;
-        private final LocalDateTime date;
+        private final Date date;
 
-        public FileRepoKey(TransferDirection direction, MessageId messageId, ParticipantId sender, ParticipantId receiver, LocalDateTime date) {
+        public FileRepoKey(TransferDirection direction, ReceptionId receptionId, ParticipantId sender, ParticipantId receiver, Date date) {
             this.direction = direction;
-            this.messageId = messageId;
+            this.receptionId = receptionId;
             this.sender = sender;
             this.receiver = receiver;
             this.date = date;
         }
 
-        public MessageId getMessageId() {
-            return messageId;
+        public ReceptionId getReceptionId() {
+            return receptionId;
         }
 
         public ParticipantId getSender() {
@@ -133,7 +140,7 @@ public class ArtifactPathComputer {
             return receiver;
         }
 
-        public LocalDateTime getDate() {
+        public Date getDate() {
             return date;
         }
     }

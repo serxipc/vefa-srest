@@ -10,10 +10,7 @@ import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.common.UploadMode;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.http.AbstractHttpClientServerTest;
-import no.sr.ringo.peppol.LocalName;
-import no.sr.ringo.peppol.PeppolChannelId;
-import no.sr.ringo.peppol.PeppolDocumentTypeId;
-import no.sr.ringo.peppol.PeppolHeader;
+import no.sr.ringo.peppol.*;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
 import org.apache.commons.io.input.ReaderInputStream;
@@ -74,14 +71,15 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
 
         File file = ClientObjectMother.getTestInvoice();
 
-        final PeppolChannelId channel = new PeppolChannelId("Test");
+        final PeppolChannelId channel = new PeppolChannelId(ChannelProtocol.SREST.name());
         final Message message = ringoRestClientImpl.send(file, channel, ParticipantId.valueOf(sender.stringValue()), ParticipantId.valueOf(sender.stringValue()), uploadMode);
 
         assertNotNull(message);
         assertNull(message.getContents().getDelivered());
         assertNotNull(message.getContents().getReceived());
         Assert.assertEquals(message.getContents().getTransferDirection(), TransferDirection.OUT);
-        assertNotNull(message.getContents().getTransmissionId());
+
+        assertNotNull(message.getContents().getReceptionId());
         assertNotNull(message.getContents().getMsgNo());
 
         final PeppolHeader peppolHeader = message.getContents().getPeppolHeader();
@@ -99,7 +97,7 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
 
         File file = ClientObjectMother.getTestCreditNote();
 
-        final PeppolChannelId channel = new PeppolChannelId("Test");
+        final PeppolChannelId channel = new PeppolChannelId(ChannelProtocol.SREST.name());
 
         final Message message = ringoRestClientImpl.send(file, channel, ParticipantId.valueOf(sender.stringValue()), ParticipantId.valueOf(sender.stringValue()), uploadMode);
 
@@ -107,7 +105,7 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         assertNull(message.getContents().getDelivered());
         assertNotNull(message.getContents().getReceived());
         Assert.assertEquals(message.getContents().getTransferDirection(), TransferDirection.OUT);
-        assertNotNull(message.getContents().getTransmissionId());
+        assertNotNull(message.getContents().getReceptionId());
         assertNotNull(message.getContents().getMsgNo());
 
         final PeppolHeader peppolHeader = message.getContents().getPeppolHeader();
@@ -127,14 +125,14 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
 
         File file = ClientObjectMother.getTestInvoice();
 
-        final PeppolChannelId channel = new PeppolChannelId("Test");
+        final PeppolChannelId channel = new PeppolChannelId(ChannelProtocol.SREST.name());
         final Message message = ringoRestClientImpl.send(file, channel, null, null, uploadMode);
 
         assertNotNull(message);
         assertNull(message.getContents().getDelivered());
         assertNotNull(message.getContents().getReceived());
         Assert.assertEquals(message.getContents().getTransferDirection(), TransferDirection.OUT);
-        assertNotNull(message.getContents().getTransmissionId());
+        assertNotNull(message.getContents().getReceptionId());
         assertNotNull(message.getContents().getMsgNo());
 
         final PeppolHeader peppolHeader = message.getContents().getPeppolHeader();
@@ -190,13 +188,13 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         assertNull(message.getContents().getDelivered());
         assertNotNull(message.getContents().getReceived());
         Assert.assertEquals(message.getContents().getTransferDirection(), TransferDirection.OUT);
-        assertNotNull(message.getContents().getTransmissionId());
+        assertNotNull(message.getContents().getReceptionId());
         assertNotNull(message.getContents().getMsgNo());
 
         final PeppolHeader peppolHeader = message.getContents().getPeppolHeader();
         assertEquals(peppolHeader.getReceiver().stringValue(), participantId.stringValue());
         assertEquals(peppolHeader.getSender().stringValue(), participantId.stringValue());
-        assertEquals(peppolHeader.getPeppolChannelId(), new PeppolChannelId("SendRegning"));
+        assertEquals(peppolHeader.getPeppolChannelId(), new PeppolChannelId(ChannelProtocol.SREST.name()));
         assertEquals(peppolHeader.getPeppolDocumentTypeId(), ehfInvoicePeppolDocumentTypeId);
         assertEquals(peppolHeader.getProfileId(), BII04_INVOICE_ONLY);
 
@@ -207,7 +205,7 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
 
         File file = ClientObjectMother.getTestCreditNote();
         final ReaderInputStream readerInputStream = new ReaderInputStream(new InputStreamReader(new FileInputStream(file), "UTF-8"));
-        final PeppolChannelId channel = new PeppolChannelId("SendRegning");
+        final PeppolChannelId channel = new PeppolChannelId(ChannelProtocol.SREST.name());
 
         PeppolDocumentTypeId peppolDocumentTypeId = creditNotePeppolDocumentTypeId;
         ParticipantId participantId = ParticipantId.valueOf("0002:1234");
@@ -217,7 +215,7 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         assertNull(message.getContents().getDelivered());
         assertNotNull(message.getContents().getReceived());
         Assert.assertEquals(message.getContents().getTransferDirection(), TransferDirection.OUT);
-        assertNotNull(message.getContents().getTransmissionId());
+        assertNotNull(message.getContents().getReceptionId());
         assertNotNull(message.getContents().getMsgNo());
 
         final PeppolHeader peppolHeader = message.getContents().getPeppolHeader();
@@ -304,8 +302,6 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
 
             HttpResponse response = httpClient.execute(httpPost);
             assertEquals(response.getStatusLine().getStatusCode(), 400);
-            String message = convertEntityToString(response);
-            assertTrue(message.startsWith("XmlDocument was unknown or corrupt") || message.startsWith("Unable to validate the XML document"));
 
         } finally {
             databaseHelper.updateValidateFlagOnAccount(new AccountId(1), false);

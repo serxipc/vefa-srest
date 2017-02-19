@@ -51,8 +51,8 @@ public class SingleMessagesResponse implements RestResponse {
         if (current.getDelivered() != null){
             xml.append("          <delivered>" + RingoUtils.formatDateTimeAsISO8601String(current.getDelivered()) + "</delivered>\n");
         }
-        if (current.getTransmissionId() != null) {
-            xml.append("          <uuid>" + RingoUtils.encodePredefinedXmlEntities(current.getTransmissionId()) + "</uuid>\n");
+        if (current.getReceptionId() != null) {
+            xml.append("          <uuid>" + RingoUtils.encodePredefinedXmlEntities(current.getReceptionId().stringValue()) + "</uuid>\n");
         }
         peppolHeaderAsXml(xml, current.getPeppolHeader());
         xml.append("        </message-meta-data>\n");
@@ -70,6 +70,4 @@ public class SingleMessagesResponse implements RestResponse {
         xml.append("            <process-id>" + RingoUtils.toXml(peppolHeader.getProfileId()) + "</process-id>\n");
         xml.append("          </peppol-header>\n");
     }
-
-
 }

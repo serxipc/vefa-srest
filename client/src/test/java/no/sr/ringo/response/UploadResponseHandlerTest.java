@@ -11,9 +11,7 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.net.URL;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 import static org.testng.Assert.*;
 
 /**
@@ -43,7 +41,7 @@ public class UploadResponseHandlerTest extends AbstractResponseHandlerTest{
         replay(mockRequest, mockResponse);
 
         final Message message = handler.handleResponse(mockResponse);
-        assertEquals(message.getMessageUUID(), "1743866e-62e0-43e6-901a-3bc670823ee4");
+        assertEquals(message.getTransmissionId(), "1743866e-62e0-43e6-901a-3bc670823ee4");
 
         verify(mockRequest, mockResponse);
     }

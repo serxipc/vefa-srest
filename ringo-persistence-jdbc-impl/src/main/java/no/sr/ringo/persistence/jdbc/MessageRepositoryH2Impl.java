@@ -22,18 +22,21 @@
 
 package no.sr.ringo.persistence.jdbc;
 
-import eu.peppol.identifier.*;
+import eu.peppol.identifier.MessageId;
+import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.InstanceIdentifier;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.account.AccountId;
-import no.sr.ringo.message.MessageMetaDataEntity;
-import no.sr.ringo.message.MessageRepository;
-import no.sr.ringo.peppol.PeppolPrincipal;
+import no.sr.ringo.cenbiimeta.ProfileId;
+import no.sr.ringo.message.*;
+import no.sr.ringo.peppol.PeppolChannelId;
+import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.peppol.PeppolTransmissionMetaData;
 import no.sr.ringo.persistence.file.ArtifactPathComputer;
 import no.sr.ringo.persistence.file.ArtifactType;
 import no.sr.ringo.persistence.guice.jdbc.JdbcTxManager;
 import no.sr.ringo.persistence.guice.jdbc.Repository;
-import no.sr.ringo.persistence.jdbc.util.MessageMetaDataHelper;
+import no.sr.ringo.transport.TransferDirection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -48,6 +51,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -59,7 +63,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * MessageRepository implementation which will store the supplied messages in the file system and the meta data into a H2 database.
@@ -89,34 +92,34 @@ public class MessageRepositoryH2Impl implements MessageRepository {
     /**
      * Saves an outbound message received from the back-end to the file system, with meta data saved into the DBMS.
      *
-     * @param messageMetaDataEntity
+     * @param transmissionMetaData
      * @param payloadInputStream
      * @return
      */
-    public Long saveOutboundMessage(MessageMetaDataEntity messageMetaDataEntity, InputStream payloadInputStream) throws no.sr.ringo.message.OxalisMessagePersistenceException {
+    public Long saveOutboundMessage(TransmissionMetaData transmissionMetaData, InputStream payloadInputStream) throws no.sr.ringo.message.OxalisMessagePersistenceException {
 
-        if (messageMetaDataEntity.getAccountId() == null) {
+        if (transmissionMetaData.getAccountId() == null) {
             throw new IllegalArgumentException("Outbound messages from back-end must have account id");
         }
 
-        ArtifactPathComputer.FileRepoKey fileRepoKey = fileRepoKeyFrom(messageMetaDataEntity);
+        ArtifactPathComputer.FileRepoKey fileRepoKey = fileRepoKeyFrom(transmissionMetaData);
 
         Path documentPath = persistArtifact(ArtifactType.PAYLOAD, payloadInputStream, fileRepoKey);
 
-        return createMetaDataEntry(messageMetaDataEntity, documentPath.toUri());
+        return createMetaDataEntry(transmissionMetaData, documentPath.toUri());
     }
 
     @Override
-    public Long saveOutboundMessage(MessageMetaDataEntity messageMetaDataEntity, Document payloadDocument) throws no.sr.ringo.message.OxalisMessagePersistenceException {
+    public Long saveOutboundMessage(TransmissionMetaData transmissionMetaData, Document payloadDocument) throws no.sr.ringo.message.OxalisMessagePersistenceException {
 
-        if (messageMetaDataEntity.getAccountId() == null) {
+        if (transmissionMetaData.getAccountId() == null) {
             throw new IllegalArgumentException("Outbound messages from back-end must have account id");
         }
-        ArtifactPathComputer.FileRepoKey fileRepoKey = fileRepoKeyFrom(messageMetaDataEntity);
+        ArtifactPathComputer.FileRepoKey fileRepoKey = fileRepoKeyFrom(transmissionMetaData);
 
         Path documentPath = persistArtifactFromDocument(ArtifactType.PAYLOAD, payloadDocument, fileRepoKey);
 
-        return createMetaDataEntry(messageMetaDataEntity, documentPath.toUri());
+        return createMetaDataEntry(transmissionMetaData, documentPath.toUri());
     }
 
 
@@ -130,77 +133,57 @@ public class MessageRepositoryH2Impl implements MessageRepository {
      * @throws no.sr.ringo.message.OxalisMessagePersistenceException
      */
     @Override
-    public Long saveInboundMessage(MessageMetaDataEntity messageMetaDataEntity, InputStream payloadInputStream) throws no.sr.ringo.message.OxalisMessagePersistenceException {
+    public Long saveInboundMessage(TransmissionMetaData mmd, InputStream payloadInputStream) throws no.sr.ringo.message.OxalisMessagePersistenceException {
 
-        ArtifactPathComputer.FileRepoKey fileRepositoryMetaData = fileRepoKeyFrom(messageMetaDataEntity.getMessageId(), no.sr.ringo.transport.TransferDirection.IN, messageMetaDataEntity.getSender(), messageMetaDataEntity.getReceiver(), messageMetaDataEntity.getReceived());
+        if (mmd.getReceptionId() == null) {
+            throw new IllegalArgumentException("Missing ReceptionId value in TransmissionMetaData");
+        }
+        ArtifactPathComputer.FileRepoKey fileRepositoryMetaData = fileRepoKeyFrom(mmd.getReceptionId(), no.sr.ringo.transport.TransferDirection.IN, mmd.getPeppolHeader().getSender(), mmd.getPeppolHeader().getReceiver(), mmd.getReceived());
 
         // Saves the payload to the file store
         Path documentPath = persistArtifact(ArtifactType.PAYLOAD, payloadInputStream, fileRepositoryMetaData);
         URI payloadUrl = documentPath.toUri();
 
         // Locates the account for which the received message should be attached to.
-        AccountId account = srAccountIdForReceiver(messageMetaDataEntity.getReceiver());
+        AccountId account = srAccountIdForReceiver(mmd.getPeppolHeader().getReceiver());
         if (account == null) {
-            log.warn("Message from " + messageMetaDataEntity.getSender() + " will be persisted without account_id");
+            log.warn("Message from " + mmd.getPeppolHeader().getSender() + " will be persisted without account_id");
         } else {
-            log.info("Inbound message from " + messageMetaDataEntity.getSender() + " will be saved to account " + account);
-            messageMetaDataEntity.setAccountId(account);
+            log.info("Inbound message from " + mmd.getPeppolHeader().getSender() + " will be saved to account " + account);
+
+            // Must cat to the actual implementation
+            // TODO: remove this once this is handled in the INSERT statement
+            MessageMetaDataImpl messageMetaData = (MessageMetaDataImpl) mmd;
+            messageMetaData.setAccountId(account);
         }
 
-        return createMetaDataEntry(messageMetaDataEntity, payloadUrl);
-    }
-
-
-    /**
-     * Saves the payload to the file store, finds the account by looking up the receivers participant id and creates a new meta data entry.
-     */
-    @Override
-    public Long saveInboundMessage(PeppolTransmissionMetaData peppolTransmissionMetaData, InputStream payloadInputStream) throws no.sr.ringo.message.OxalisMessagePersistenceException {
-
-        MessageMetaDataEntity messageMetaDataEntity = MessageMetaDataHelper.createMessageMetaDataFrom(peppolTransmissionMetaData);
-
-        return saveInboundMessage(messageMetaDataEntity, payloadInputStream);
+        return createMetaDataEntry(mmd, payloadUrl);
     }
 
 
     @Override
-    public void saveInboundTransportReceipt(Receipt receipt, PeppolTransmissionMetaData peppolTransmissionMetaData) throws no.sr.ringo.message.OxalisMessagePersistenceException {
-        no.sr.ringo.transport.TransferDirection transferDirection = no.sr.ringo.transport.TransferDirection.IN;
-
-        log.info("Transmission receipt data to be persisted");
-
-        ArtifactPathComputer.FileRepoKey fileRepoKey = fileRepoKeyFrom(transferDirection, peppolTransmissionMetaData);
-
-        ByteArrayInputStream receiptInputStream = new ByteArrayInputStream(receipt.getValue());
-
-        Path nativeEvidencePath = persistArtifact(ArtifactType.NATIVE_EVIDENCE, receiptInputStream, fileRepoKey);
-
-        updateMetadataForEvidence(transferDirection, peppolTransmissionMetaData.getMessageId(), nativeEvidencePath);
-    }
-
-    @Override
-    public void saveOutboundTransportReceipt(Receipt transmissionEvidence, MessageId messageId) {
+    public void saveOutboundTransportReceipt(Receipt transmissionEvidence, ReceptionId receptionId) {
         no.sr.ringo.transport.TransferDirection transferDirection = no.sr.ringo.transport.TransferDirection.OUT;
 
-        Optional<MessageMetaDataEntity> messageMetaDataOptional = findByMessageId(transferDirection, messageId);
+        Optional<? extends MessageMetaData> messageMetaDataOptional = findByReceptionId(transferDirection, receptionId);
 
         if (messageMetaDataOptional.isPresent()) {
-            MessageMetaDataEntity mmd = messageMetaDataOptional.get();
-            ArtifactPathComputer.FileRepoKey fileRepoKey = fileRepoKeyFrom(messageId, transferDirection, mmd.getSender(), mmd.getReceiver(), mmd.getReceived());
+            MessageMetaData mmd = messageMetaDataOptional.get();
+            ArtifactPathComputer.FileRepoKey fileRepoKey = fileRepoKeyFrom(new ReceptionId(receptionId.stringValue()), transferDirection, mmd.getPeppolHeader().getSender(), mmd.getPeppolHeader().getReceiver(), mmd.getReceived());
             try {
                 InputStream receiptInputStream = new ByteArrayInputStream(transmissionEvidence.getValue());
                 Path nativeEvidencePath = persistArtifact(ArtifactType.NATIVE_EVIDENCE, receiptInputStream, fileRepoKey);
 
-                updateMetadataForEvidence(transferDirection, messageId, nativeEvidencePath);
+                updateMetadataForEvidence(transferDirection, receptionId, nativeEvidencePath);
             } catch (no.sr.ringo.message.OxalisMessagePersistenceException e) {
-                throw new IllegalStateException("Unable to persist native transport evidence for messageId=" + messageId + ", reason:" + e.getMessage(), e);
+                throw new IllegalStateException("Unable to persist native transport evidence for messageId=" + receptionId + ", reason:" + e.getMessage(), e);
             }
         } else
-            throw new IllegalStateException("Can not persist native transport evidence for non-existent messageId " + messageId);
+            throw new IllegalStateException("Can not persist native transport evidence for non-existent messageId " + receptionId);
     }
 
     @Override
-    public MessageMetaDataEntity findByMessageNo(Long msgNo) {
+    public TransmissionMetaData findByMessageNo(Long msgNo) {
         if (msgNo == null) {
             throw new IllegalArgumentException("msgNo parameter required");
         }
@@ -212,16 +195,16 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setLong(1, msgNo);
 
-            MessageMetaDataEntity result = null;
+            TransmissionMetaData result = null;
             ResultSet rs = preparedStatement.executeQuery();
 
-            List<MessageMetaDataEntity> messageMetaDataEntityList = messageMetaDataFrom(rs);
+            List<TransmissionMetaData> MessageMetaDataList = messageMetaDataFrom(rs);
 
-            if (messageMetaDataEntityList.size() == 1) {
-                result = messageMetaDataEntityList.get(0);
-            } else if (messageMetaDataEntityList.size() > 1) {
+            if (MessageMetaDataList.size() == 1) {
+                result = MessageMetaDataList.get(0);
+            } else if (MessageMetaDataList.size() > 1) {
                 throw new IllegalStateException("More than a single entry found for messageNo " + msgNo);
-            } else if (messageMetaDataEntityList.isEmpty()) {
+            } else if (MessageMetaDataList.isEmpty()) {
                 throw new IllegalStateException("Message no " + msgNo + " not found");
             }
 
@@ -234,26 +217,20 @@ public class MessageRepositoryH2Impl implements MessageRepository {
 
 
     @Override
-    public Optional<MessageMetaDataEntity> findByMessageId(no.sr.ringo.transport.TransferDirection transferDirection, MessageId messageId) {
+    public Optional<? extends MessageMetaData> findByReceptionId(no.sr.ringo.transport.TransferDirection transferDirection, ReceptionId receptionId) {
 
-        List<MessageMetaDataEntity> byMessageId = findByMessageId(messageId);
-        List<MessageMetaDataEntity> messageMetaDataEntityList = byMessageId.stream().filter(messageMetaData -> messageMetaData.getTransferDirection() == transferDirection).collect(Collectors.toList());
-
-        Optional<MessageMetaDataEntity> result = Optional.empty();
-
-        if (messageMetaDataEntityList.size() > 1) {
-            throw new IllegalStateException("More than a single message entry found for messageId=" + messageId);
-        } else if (messageMetaDataEntityList.size() == 1) {
-            result = Optional.of(messageMetaDataEntityList.get(0));
+        List<? extends MessageMetaData> byMessageId = findByReceptionId(receptionId);
+        for (MessageMetaData messageMetaData : byMessageId) {
+            if (messageMetaData.getTransferDirection() == transferDirection) {
+                return Optional.of(messageMetaData);
+            }
         }
-
-        return result;
-
+        return Optional.empty();
     }
 
     @Override
-    public List<MessageMetaDataEntity> findByMessageId(MessageId messageId) {
-        if (messageId == null) {
+    public List<TransmissionMetaData> findByReceptionId(ReceptionId receptionId) {
+        if (receptionId == null) {
             throw new IllegalArgumentException("Argument messageId is required");
         }
 
@@ -261,129 +238,156 @@ public class MessageRepositoryH2Impl implements MessageRepository {
         Connection con = jdbcTxManager.getConnection();
         try {
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, messageId.stringValue());
+            ps.setString(1, receptionId.stringValue());
             ResultSet rs = ps.executeQuery();
 
-            return messageMetaDataFrom(rs);
+            final List<TransmissionMetaData> transmissionMetaDataList = messageMetaDataFrom(rs);
 
+
+            return transmissionMetaDataList;
 
         } catch (SQLException e) {
             throw new IllegalStateException(sql + " failed: " + e.getMessage(), e);
         }
+
     }
 
-    // Helper methods
-    ArtifactPathComputer.FileRepoKey fileRepoKeyFrom(no.sr.ringo.transport.TransferDirection transferDirection, PeppolTransmissionMetaData peppolTransmissionMetaData) {
-        return fileRepoKeyFrom(new MessageId(peppolTransmissionMetaData.getMessageId().toString()),
-                transferDirection,
-                peppolTransmissionMetaData.getSenderId(), peppolTransmissionMetaData.getRecipientId(),
-                LocalDateTime.ofInstant(peppolTransmissionMetaData.getReceivedTimeStamp().toInstant(), ZoneId.systemDefault()));
-    }
-
-    private ArtifactPathComputer.FileRepoKey fileRepoKeyFrom(MessageId messageId, no.sr.ringo.transport.TransferDirection transferDirection, ParticipantId sender, ParticipantId receiver, LocalDateTime received) {
-        return new ArtifactPathComputer.FileRepoKey(transferDirection, messageId, sender, receiver, received);
+    private ArtifactPathComputer.FileRepoKey fileRepoKeyFrom(ReceptionId receptionId, no.sr.ringo.transport.TransferDirection transferDirection, ParticipantId sender, ParticipantId receiver, java.util.Date received) {
+        if (receptionId == null) {
+            throw new IllegalArgumentException("Missing argument receptionId");
+        }
+        return new ArtifactPathComputer.FileRepoKey(transferDirection, receptionId, sender, receiver, received);
     }
 
 
-    private ArtifactPathComputer.FileRepoKey fileRepoKeyFrom(MessageMetaDataEntity messageMetaDataEntity) {
-        return new ArtifactPathComputer.FileRepoKey(messageMetaDataEntity.getTransferDirection(), messageMetaDataEntity.getMessageId(), messageMetaDataEntity.getSender(), messageMetaDataEntity.getReceiver(), messageMetaDataEntity.getReceived());
+    private ArtifactPathComputer.FileRepoKey fileRepoKeyFrom(TransmissionMetaData transmissionMetaData) {
+        return new ArtifactPathComputer.FileRepoKey(transmissionMetaData.getTransferDirection(),
+                transmissionMetaData.getReceptionId(),
+                transmissionMetaData.getPeppolHeader().getSender(),
+                transmissionMetaData.getPeppolHeader().getReceiver(),
+                transmissionMetaData.getReceived());
     }
 
     /**
-     * Retrieves {@link MessageMetaDataEntity} instances from the provided {@link ResultSet}
+     * Retrieves {@link MessageMetaData} instances from the provided {@link ResultSet}
      *
      * @param rs the result set as returned from the  {@link PreparedStatement#executeQuery()}
-     * @return a list of {@link MessageMetaDataEntity}, which is empty if the result set is empty
+     * @return a list of {@link MessageMetaData}, which is empty if the result set is empty
      * @throws SQLException if any of the JDBC calls go wrong
      */
-    protected List<MessageMetaDataEntity> messageMetaDataFrom(ResultSet rs) throws SQLException {
+    protected List<TransmissionMetaData> messageMetaDataFrom(ResultSet rs) throws SQLException {
 
-        List<MessageMetaDataEntity> result = new ArrayList<>();
+        List<TransmissionMetaData> result = new ArrayList<>();
         while (rs.next()) {
-            no.sr.ringo.transport.TransferDirection direction = no.sr.ringo.transport.TransferDirection.valueOf(rs.getString("direction"));
-            ParticipantId sender = ParticipantId.valueOf(rs.getString("sender"));
-            ParticipantId receiver = ParticipantId.valueOf(rs.getString("receiver"));
-            PeppolDocumentTypeId document_id = PeppolDocumentTypeId.valueOf(rs.getString("document_id"));
-            PeppolProcessTypeId process_id = PeppolProcessTypeId.valueOf(rs.getString("process_id"));
 
-
-            MessageMetaDataEntity.Builder builder = new MessageMetaDataEntity.Builder(direction, sender, receiver, document_id, no.sr.ringo.peppol.ChannelProtocol.valueOf(rs.getString("channel")));
-            builder.accountId(rs.getInt("account_id"))
-                    .processTypeId(process_id)
-                    .messageNumber(rs.getLong("msg_no"));
+            final long msg_no = rs.getLong("msg_no");
+            final AccountId account_id = new AccountId(rs.getInt("account_id"));
+            final TransferDirection direction = TransferDirection.valueOf(rs.getString("direction"));
 
             // Received time stamp should never be null, but just in case.
-            Timestamp received = rs.getTimestamp("received");
-            if (received != null) {
+            final Timestamp received = rs.getTimestamp("received");
+            final Timestamp delivered = rs.getTimestamp("delivered");
 
-                LocalDateTime receivedLocalDt = LocalDateTime.ofInstant(received.toInstant(), ZoneId.systemDefault());
+            final ParticipantId sender = ParticipantId.valueOf(rs.getString("sender"));
+            final ParticipantId receiver = ParticipantId.valueOf(rs.getString("receiver"));
+            final PeppolChannelId channel = new PeppolChannelId(rs.getString("channel"));
 
-                builder.received(receivedLocalDt);
-            } else
-                throw new IllegalStateException("Column received should never be null!");
+            final ReceptionId message_uuid = new ReceptionId(rs.getString("message_uuid"));
+            final String transmission_id = rs.getString("transmission_id");
+            final String instance_id = rs.getString("instance_id");
 
-            Timestamp delivered = rs.getTimestamp("delivered");
-            if (delivered != null) {
-                LocalDateTime dlv = LocalDateTime.ofInstant(delivered.toInstant(), ZoneId.systemDefault());
-                builder.delivered(dlv);
-            }
-            builder.accountId(rs.getInt("account_id"));
-            builder.apPrincipal(new PeppolPrincipal(rs.getString("ap_name")));
-            builder.messageId(new MessageId(rs.getString("message_uuid")));
-            builder.accessPointIdentifier(new AccessPointIdentifier(rs.getString("remote_host")));
-            builder.payloadUri(URI.create(rs.getString("payload_url")));
+            final no.sr.ringo.peppol.PeppolDocumentTypeId document_id = no.sr.ringo.peppol.PeppolDocumentTypeId.valueOf(rs.getString("document_id"));
+
+            final String process_id = rs.getString("process_id");
+            final String ap_name = rs.getString("ap_name");
+
+            final URI payload_url = URI.create(rs.getString("payload_url"));
 
             String native_evidence_url = rs.getString("native_evidence_url");
-            if (native_evidence_url != null) {
-                builder.nativeEvidenceUri(URI.create(native_evidence_url));
+
+
+            final MessageMetaDataImpl mmd = new MessageMetaDataImpl();
+            final PeppolHeader peppolHeader = new PeppolHeader();
+            mmd.setPeppolHeader(peppolHeader);
+
+            mmd.setMsgNo(msg_no);
+            mmd.setAccountId(account_id);
+            mmd.setTransferDirection(direction);
+            mmd.setReceived(received);
+            mmd.setDelivered(delivered);
+            peppolHeader.setSender(sender);
+            peppolHeader.setReceiver(receiver);
+            peppolHeader.setPeppolChannelId(channel);
+            mmd.setReceptionId(message_uuid);
+            mmd.setTransmissionId(transmission_id);
+            peppolHeader.setPeppolDocumentTypeId(document_id);
+
+            if (process_id != null) {
+                peppolHeader.setProfileId(new ProfileId(process_id));
             }
-            MessageMetaDataEntity messageMetaDataEntity = builder.build();
-            result.add(messageMetaDataEntity);
+
+            if (instance_id != null) {
+                mmd.setSbdhInstanceIdentifier(InstanceIdentifier.of(instance_id));
+            }
+
+            mmd.setPayloadUri(payload_url);
+            if (native_evidence_url != null) {
+                try {
+                    mmd.setNativeEvidenceUri(new URI(native_evidence_url));
+                } catch (URISyntaxException e) {
+                    throw new IllegalStateException("Invalid native evidence URI for msg_no=" + msg_no + "; value=" + native_evidence_url + ", cause=" + e.getMessage(),e);
+                }
+            }
+
+            result.add(mmd);
         }
 
         return result;
     }
 
 
-    private Long createMetaDataEntry(MessageMetaDataEntity mmd, URI payloadUrl) {
-        if (mmd == null) {
-            throw new IllegalArgumentException("MessageMetaDataEntity required argument");
+    private Long createMetaDataEntry(TransmissionMetaData tmd, URI payloadUrl) {
+        if (tmd == null) {
+            throw new IllegalArgumentException("MessageMetaData required argument");
         }
         //
-        //                                                            1           2           3       4       5       6               7           8           9           10          11           12
-        final String INSERT_INTO_MESSAGE_SQL = "insert into message (account_id, direction, sender, receiver, channel, message_uuid, document_id, process_id, ap_name, payload_url, received, delivered ) values(?,?,?,?,?,?,?,?,?,?,?,?)";
+        //                                                            1           2           3       4       5            6               7           8           9           10          11  
+        final String INSERT_INTO_MESSAGE_SQL = "insert into message (account_id, direction, sender, receiver, channel, message_uuid, document_id, process_id, payload_url, received, delivered ) values(?,?,?,?,?,?,?,?,?,?,?)";
 
         Connection connection = null;
         try {
             long start = System.nanoTime();
 
-            log.debug("Creating meta data entry:" + mmd);
+            log.debug("Creating meta data entry:" + tmd);
             connection = jdbcTxManager.getConnection();
 
             log.debug("Using JDBC URL:" + connection.getMetaData().getURL());
 
             PreparedStatement insertStatement = connection.prepareStatement(INSERT_INTO_MESSAGE_SQL, Statement.RETURN_GENERATED_KEYS);
-            if (mmd.getAccountId() == null)
+            if (tmd.getAccountId() == null)
                 insertStatement.setNull(1, Types.INTEGER);
             else
-                insertStatement.setInt(1, mmd.getAccountId().toInteger());
+                insertStatement.setInt(1, tmd.getAccountId().toInteger());
 
-            insertStatement.setString(2, mmd.getTransferDirection().name());
-            insertStatement.setString(3, mmd.getSender() != null ? mmd.getSender().stringValue() : null);
-            insertStatement.setString(4, mmd.getReceiver() != null ? mmd.getReceiver().stringValue() : null);
-            insertStatement.setString(5, mmd.getChannelProtocol().name());
-            insertStatement.setString(6, mmd.getMessageId().stringValue());     // Unique id of message not to be mixed up with transmission id
-            insertStatement.setString(7, mmd.getDocumentTypeId().toString());
-            insertStatement.setString(8, mmd.getProcessTypeId() != null ? mmd.getProcessTypeId().toString() : (null));   // Optional
-            insertStatement.setString(9, mmd.getAccessPointIdentifier() != null ? mmd.getAccessPointIdentifier().toString() : null); // Optional
-            insertStatement.setString(10, payloadUrl.toString());
+            insertStatement.setString(2, tmd.getTransferDirection().name());
+            insertStatement.setString(3, tmd.getPeppolHeader().getSender() != null ? tmd.getPeppolHeader().getSender().stringValue() : null);
+            insertStatement.setString(4, tmd.getPeppolHeader().getReceiver() != null ? tmd.getPeppolHeader().getReceiver().stringValue() : null);
+            if (tmd.getPeppolHeader().getPeppolChannelId() != null)
+                insertStatement.setString(5, tmd.getPeppolHeader().getPeppolChannelId().stringValue());
+            else
+                insertStatement.setString(5, null);
 
-            insertStatement.setTimestamp(11, Timestamp.valueOf(mmd.getReceived()));
+            insertStatement.setString(6, tmd.getReceptionId().stringValue());     // Unique id of message not to be mixed up with transmission id
+            insertStatement.setString(7, tmd.getPeppolHeader().getPeppolDocumentTypeId().toString());
+            insertStatement.setString(8, tmd.getPeppolHeader().getProfileId() != null ? tmd.getPeppolHeader().getProfileId().toString() : (null));   // Optional
+            insertStatement.setString(9, payloadUrl.toString());
 
-            if (mmd.getDelivered() != null) {
-                insertStatement.setTimestamp(12, Timestamp.valueOf(mmd.getDelivered()));
+            insertStatement.setTimestamp(10, Timestamp.valueOf(LocalDateTime.ofInstant(tmd.getReceived().toInstant(), ZoneId.systemDefault()))) ;
+
+            if (tmd.getDelivered() != null) {
+                insertStatement.setTimestamp(11, Timestamp.valueOf(LocalDateTime.ofInstant(tmd.getDelivered().toInstant(), ZoneId.systemDefault())));
             } else
-                insertStatement.setTimestamp(12, null);
+                insertStatement.setTimestamp(11, null);
 
             insertStatement.executeUpdate();
 
@@ -516,7 +520,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
         }
     }
 
-    private void updateMetadataForEvidence(no.sr.ringo.transport.TransferDirection transferDirection, MessageId messageId, Path nativeEvidencePath) {
+    private void updateMetadataForEvidence(no.sr.ringo.transport.TransferDirection transferDirection, ReceptionId receptionId, Path nativeEvidencePath) {
 
         String dateColumnName = dateColumnNameFor(transferDirection);
 
@@ -532,17 +536,17 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, nativeEvidencePath.toUri().toString());
             ps.setTimestamp(2, new Timestamp(new java.util.Date().getTime()));
-            ps.setString(3, messageId.stringValue());
+            ps.setString(3, receptionId.stringValue());
             ps.setString(4, transferDirection.name());
             int i = ps.executeUpdate();
             if (i != 1) {
-                throw new IllegalStateException("Unable to update message table for message_uuid=" + messageId);
+                throw new IllegalStateException("Unable to update message table for message_uuid=" + receptionId);
             }
             con.commit();
 
         } catch (SQLException e) {
             log.error("Unable to update message table." + e.getMessage(), e);
-            throw new IllegalStateException("Unable to update database for storing genric and native evidene for message " + messageId, e);
+            throw new IllegalStateException("Unable to update database for storing genric and native evidene for message " + receptionId, e);
         }
     }
 

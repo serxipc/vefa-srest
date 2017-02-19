@@ -27,7 +27,7 @@ public class AccountId implements Serializable {
 
     public AccountId(Integer id){
         if (id == null) {
-            throw new IllegalArgumentException("id required");
+            throw new IllegalArgumentException("Account id required");
         }
 
         this.id = id;

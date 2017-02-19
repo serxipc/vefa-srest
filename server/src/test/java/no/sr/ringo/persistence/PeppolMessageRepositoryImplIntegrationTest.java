@@ -1,7 +1,6 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.ObjectMother;
@@ -40,7 +39,6 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Supplier;
 
 import static org.testng.Assert.*;
@@ -64,8 +62,8 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     private Long messageId;
     private Long messageOut;
     private Long messageIn;
-    private String messageInUuid;
-    private MessageId messageOutUuid;
+    private ReceptionId messageInReceptionId;
+    private ReceptionId receptionId;
 
     @Inject
     public PeppolMessageRepositoryImplIntegrationTest(PeppolMessageRepository peppolMessageRepository, DocumentRepository documentRepository, DatabaseHelper databaseHelper, MessageRepository oxalisMessageRepository, DbmsTestHelper dbmsTestHelper) {
@@ -79,10 +77,10 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     @BeforeMethod(groups = {"persistence"})
     public void insertSample() throws SQLException {
         databaseHelper.deleteAllMessagesForAccount(account);
-        messageInUuid = UUID.randomUUID().toString();
-        messageId = dbmsTestHelper.createMessage(1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), messageInUuid, null);
-        messageOutUuid = new MessageId();
-        messageOut = dbmsTestHelper.createMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), messageOutUuid.stringValue(), null);
+        messageInReceptionId = new ReceptionId();
+        messageId = dbmsTestHelper.createSampleMessage(1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), messageInReceptionId, null);
+        receptionId = new ReceptionId();
+        messageOut = dbmsTestHelper.createSampleMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), receptionId, null);
     }
 
     @AfterMethod(groups = {"persistence"})
@@ -141,7 +139,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         PeppolDocument docFromDatabase = documentRepository.getPeppolDocument(account, MessageNumber.create(messageByMessageNo.getMsgNo()));
         assertTrue(!docFromDatabase.getXml().contains("xmlns=\"\""), "We should not have added xmlns=\"\" anywhere in the message");
 
-        assertNotNull(messageWithLocations.getTransmissionId(), "Missing UUID in MessageWithLocations");
+        assertNotNull(messageWithLocations.getReceptionId(), "Missing ReceptionId in MessageWithLocations");
     }
 
     @Test(groups = {"persistence"})
@@ -240,11 +238,11 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         Date date = cal.getTime();
         Receipt receipt = Receipt.of("Native evidence bytes".getBytes());
         
-        peppolMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(MessageNumber.create(messageOut), null, messageOutUuid, date, receipt);
+        peppolMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(MessageNumber.create(messageOut), null, receptionId, date, receipt);
 
         MessageMetaData messageOutbound = peppolMessageRepository.findMessageByMessageNo(account, messageOut);
 
-        assertEquals(messageOutUuid.stringValue(), messageOutbound.getTransmissionId());
+        assertEquals(receptionId, messageOutbound.getReceptionId());
         Calendar c2 = Calendar.getInstance();
         c2.setTime(messageOutbound.getDelivered());
 
@@ -252,10 +250,10 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         assertEquals(cal.get(Calendar.MONTH), c2.get(Calendar.MONTH));
         assertEquals(cal.get(Calendar.DAY_OF_MONTH), c2.get(Calendar.DAY_OF_MONTH));
 
-        String newUuid = UUID.randomUUID().toString();
+        ReceptionId receptionid = new ReceptionId();
 
         //copy from out to in while assigning a new UUID
-        messageIn = peppolMessageRepository.copyOutboundMessageToInbound(this.messageOut, newUuid);
+        messageIn = peppolMessageRepository.copyOutboundMessageToInbound(this.messageOut, receptionid);
 
         MessageMetaData messageInbound = peppolMessageRepository.findMessageByMessageNo(account, messageIn);
         assertNull(messageInbound.getDelivered());
@@ -265,14 +263,14 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         assertEquals(messageOutbound.getPeppolHeader().getPeppolChannelId(), messageInbound.getPeppolHeader().getPeppolChannelId());
         assertEquals(messageOutbound.getPeppolHeader().getPeppolDocumentTypeId(), messageInbound.getPeppolHeader().getPeppolDocumentTypeId());
         assertEquals(messageOutbound.getPeppolHeader().getProfileId(), messageInbound.getPeppolHeader().getProfileId());
-        assertEquals(newUuid, messageInbound.getTransmissionId());
+        assertEquals(receptionid, messageInbound.getReceptionId());
         assertEquals(messageOutbound.getReceived(), messageInbound.getReceived());
 
         // Verifies the contents of the evidence
         {
-            List<MessageMetaDataEntity> messages = oxalisMessageRepository.findByMessageId(messageOutUuid);
+            List<TransmissionMetaData> messages = oxalisMessageRepository.findByReceptionId(receptionId);
             assertEquals(messages.size(), 1);
-            MessageMetaDataEntity m = messages.get(0);
+            TransmissionMetaData m = messages.get(0);
 
             verifyEvidence(m::getNativeEvidenceUri, receipt.getValue());
         }

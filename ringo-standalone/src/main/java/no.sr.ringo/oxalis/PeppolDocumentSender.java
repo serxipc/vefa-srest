@@ -1,8 +1,8 @@
 package no.sr.ringo.oxalis;
 
-import eu.peppol.identifier.MessageId;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.message.MessageMetaData;
+import no.sr.ringo.message.ReceptionId;
 
 import java.net.URI;
 import java.util.Date;
@@ -29,20 +29,20 @@ public interface PeppolDocumentSender {
      */
     public static final class TransmissionReceipt {
 
-        private final MessageId messageId;
+        private final ReceptionId receptionId;
         private final String remoteAccessPoint;
         private final Date date;
         private final Receipt receipt;
 
-        public TransmissionReceipt(MessageId messageId, URI remoteAccessPoint, Date date, Receipt receipt) {
-            this.messageId = messageId;
+        public TransmissionReceipt(ReceptionId receptionId, URI remoteAccessPoint, Date date, Receipt receipt) {
+            this.receptionId = receptionId;
             this.remoteAccessPoint = remoteAccessPoint != null ? remoteAccessPoint.toString() : "n/a";
             this.date = date;
             this.receipt = receipt;
         }
 
-        public MessageId getMessageId() {
-            return messageId;
+        public ReceptionId getReceptionId() {
+            return receptionId;
         }
 
         public String getRemoteAccessPoint() {
@@ -64,7 +64,7 @@ public interface PeppolDocumentSender {
 
             TransmissionReceipt that = (TransmissionReceipt) o;
 
-            if (messageId != null ? !messageId.equals(that.messageId) : that.messageId != null) return false;
+            if (receptionId != null ? !receptionId.equals(that.receptionId) : that.receptionId != null) return false;
             if (remoteAccessPoint != null ? !remoteAccessPoint.equals(that.remoteAccessPoint) : that.remoteAccessPoint != null)
                 return false;
             return date != null ? date.equals(that.date) : that.date == null;
@@ -72,7 +72,7 @@ public interface PeppolDocumentSender {
 
         @Override
         public int hashCode() {
-            int result = messageId != null ? messageId.hashCode() : 0;
+            int result = receptionId != null ? receptionId.hashCode() : 0;
             result = 31 * result + (remoteAccessPoint != null ? remoteAccessPoint.hashCode() : 0);
             result = 31 * result + (date != null ? date.hashCode() : 0);
             return result;
@@ -82,7 +82,7 @@ public interface PeppolDocumentSender {
         public String toString() {
             final StringBuilder sb = new StringBuilder();
             sb.append("TransmissionReceipt");
-            sb.append("{messageId=").append(messageId);
+            sb.append("{messageId=").append(receptionId);
             sb.append(", remoteAccessPoint=").append(remoteAccessPoint);
             sb.append(", date=").append(date);
             sb.append('}');

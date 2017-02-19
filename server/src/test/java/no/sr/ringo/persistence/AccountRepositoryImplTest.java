@@ -6,14 +6,13 @@ import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.*;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.MessageNumber;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
-
-import java.util.UUID;
 
 import static org.testng.Assert.*;
 
@@ -144,7 +143,7 @@ public class AccountRepositoryImplTest {
 
     @Test(groups = {"persistence"})
     public void findMessageOwner(){
-        Long messageNumber = dbmsTestHelper.createMessage(adamsAccount.getAccountId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), null);
+        Long messageNumber = dbmsTestHelper.createSampleMessage(adamsAccount.getAccountId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), new ReceptionId(), null);
         assertEquals(adamsAccount, accountRepository.findAccountAsOwnerOfMessage(MessageNumber.create(messageNumber)));
 
     }

@@ -24,13 +24,16 @@
 package no.sr.ringo.persistence.jdbc.util;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.MessageId;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolDocumentTypeId;
 import eu.peppol.identifier.PeppolProcessTypeId;
 import no.sr.ringo.account.*;
-import no.sr.ringo.message.MessageMetaDataEntity;
+import no.sr.ringo.cenbiimeta.ProfileId;
+import no.sr.ringo.message.MessageMetaDataImpl;
 import no.sr.ringo.message.MessageRepository;
+import no.sr.ringo.message.ReceptionId;
+import no.sr.ringo.peppol.ChannelProtocol;
+import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.persistence.guice.jdbc.JdbcTxManager;
 import no.sr.ringo.persistence.guice.jdbc.Repository;
 import no.sr.ringo.persistence.queue.OutboundMessageQueueErrorId;
@@ -47,11 +50,12 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static no.sr.ringo.transport.TransferDirection.IN;
+import static no.sr.ringo.transport.TransferDirection.OUT;
 
 /**
  * Class providing helper methods to create messages and accounts for testing purposes.
@@ -79,43 +83,55 @@ public class DatabaseHelper {
     }
 
 
-    public Long createMessage(PeppolDocumentTypeId documentId, PeppolProcessTypeId processTypeId, String message, Integer accountId, no.sr.ringo.transport.TransferDirection direction,
-                              String senderValue, String receiverValue,
-                              final String uuid, Date delivered, Date received) {
+    public Long createSampleMessage(PeppolDocumentTypeId documentId, PeppolProcessTypeId processTypeId, String message, Integer accountId, no.sr.ringo.transport.TransferDirection direction,
+                                    String senderValue, String receiverValue,
+                                    final ReceptionId receptionId, Date delivered, Date received) {
+
+        verifyReceptionId(receptionId);
+
+        return createSampleMessage(documentId, processTypeId, message, accountId, direction, senderValue, receiverValue, receptionId, delivered, received, new PeppolChannelId(ChannelProtocol.SREST.name()));
+    }
+
+    void verifyReceptionId(ReceptionId receptionId) {
+        if (receptionId == null) {
+            throw new IllegalArgumentException("ReceptionId required argument");
+        }
+    }
+
+    public Long createSampleMessage(PeppolDocumentTypeId documentId, PeppolProcessTypeId processTypeId, String message, Integer accountId, no.sr.ringo.transport.TransferDirection direction,
+                                    String senderValue, String receiverValue,
+                                    final ReceptionId receptionId, Date delivered, Date received,
+                                    PeppolChannelId peppolChannelId) {
 
         if (received == null) {
             throw new IllegalArgumentException("received date is required");
         }
 
-        MessageMetaDataEntity.Builder builder = new MessageMetaDataEntity.Builder(no.sr.ringo.transport.TransferDirection.valueOf(direction.name()),
-                new ParticipantId(senderValue), new ParticipantId(receiverValue), documentId,
-                no.sr.ringo.peppol.ChannelProtocol.SREST);
+        verifyReceptionId(receptionId);
 
-        if (uuid != null && uuid.trim().length() > 0) {
-            builder.messageId(new MessageId(uuid));
-        }
-        if (delivered != null) {
-            builder.delivered(LocalDateTime.ofInstant(delivered.toInstant(), ZoneId.systemDefault()));
-        }
-        if (received != null) {
-            builder.received(LocalDateTime.ofInstant(received.toInstant(), ZoneId.systemDefault()));
-        }
-        if (processTypeId != null) {
-            builder.processTypeId(processTypeId);
-        }
-
+        final MessageMetaDataImpl mmd = new MessageMetaDataImpl();
+        mmd.getPeppolHeader().setPeppolDocumentTypeId(no.sr.ringo.peppol.PeppolDocumentTypeId.valueOf(documentId.toString()));
+        mmd.getPeppolHeader().setProfileId(ProfileId.valueOf(processTypeId.toString()));
         if (accountId != null) {
-            builder.accountId(accountId);
+            mmd.setAccountId(new AccountId(accountId));
         }
-        MessageMetaDataEntity messageMetaDataEntity = builder.build();
+        mmd.setTransferDirection(direction);
+        mmd.getPeppolHeader().setSender(ParticipantId.valueOf(senderValue));
+        mmd.getPeppolHeader().setReceiver(ParticipantId.valueOf(receiverValue));
+        mmd.getPeppolHeader().setPeppolChannelId(peppolChannelId);
+
+        mmd.setReceptionId(receptionId);
+        mmd.setDelivered(delivered);
+        mmd.setReceived(received);
+
 
         try {
-            if (messageMetaDataEntity.getTransferDirection() == no.sr.ringo.transport.TransferDirection.IN) {
-                return messageRepository.saveInboundMessage(messageMetaDataEntity, new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8"))));
-            } else if (messageMetaDataEntity.getTransferDirection() == no.sr.ringo.transport.TransferDirection.OUT) {
-                return messageRepository.saveOutboundMessage(messageMetaDataEntity, new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8"))));
+            if (direction == IN) {
+                return messageRepository.saveInboundMessage(mmd, new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8"))));
+            } else if (direction == OUT) {
+                return messageRepository.saveOutboundMessage(mmd, new ByteArrayInputStream(message.getBytes(Charset.forName("UTF-8"))));
             } else
-                throw new IllegalStateException("No support for transfer direction " + messageMetaDataEntity.getTransferDirection().name());
+                throw new IllegalStateException("No support for transfer direction " + mmd.getTransferDirection().name());
         } catch (no.sr.ringo.message.OxalisMessagePersistenceException e) {
             throw new IllegalStateException("Unable to save message " + e.getMessage());
         }
@@ -129,11 +145,11 @@ public class DatabaseHelper {
      *
      * @param direction indicates whether the message is inbound or outbound with respect to the PEPPOL network.
      */
-    public Long createMessage(Integer accountId, no.sr.ringo.transport.TransferDirection direction, String senderValue, String receiverValue, final String uuid, Date delivered, PeppolDocumentTypeId peppolDocumentTypeId, PeppolProcessTypeId peppolProcessTypeId) {
-        PeppolDocumentTypeId invoiceDocumentType =peppolDocumentTypeId;
+    public Long createSampleMessage(Integer accountId, no.sr.ringo.transport.TransferDirection direction, String senderValue, String receiverValue, final ReceptionId receptionId, Date delivered, PeppolDocumentTypeId peppolDocumentTypeId, PeppolProcessTypeId peppolProcessTypeId) {
+        PeppolDocumentTypeId invoiceDocumentType = peppolDocumentTypeId;
         PeppolProcessTypeId processTypeId = peppolProcessTypeId;
 
-        return createMessage(invoiceDocumentType, processTypeId, "<test>\u00E5</test>", accountId, direction, senderValue, receiverValue, uuid, delivered, new Date());
+        return createSampleMessage(invoiceDocumentType, processTypeId, "<test>\u00E5</test>", accountId, direction, senderValue, receiverValue, receptionId, delivered, new Date(), new PeppolChannelId("UnitTest"));
     }
 
     /**

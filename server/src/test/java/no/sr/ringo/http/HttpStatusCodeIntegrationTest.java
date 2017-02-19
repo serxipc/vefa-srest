@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.guice.ServerTestModuleFactory;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.persistence.DbmsTestHelper;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
@@ -16,7 +17,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.util.UUID;
 
 import static org.testng.Assert.assertEquals;
 
@@ -182,7 +182,7 @@ public class HttpStatusCodeIntegrationTest extends AbstractHttpClientServerTest 
      */
     public void insertSample() throws SQLException {
         final Account account = ObjectMother.getTestAccount();
-        messageId = dbmsTestHelper.createMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), UUID.randomUUID().toString(), null);
+        messageId = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), new ReceptionId(), null);
     }
 
     public void deleteSample() throws SQLException {

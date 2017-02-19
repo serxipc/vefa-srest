@@ -94,7 +94,7 @@ public class PeppolHeader {
         ProfileId cenBiiProfileId = profileIdTranslator.translateToCenBiiProfile(peppolDocumentTypeId.getCustomizationIdentifier().getPeppolExtensionIdentifier());
         result.setProfileId(cenBiiProfileId);
 
-        result.setPeppolChannelId(new PeppolChannelId("SendRegning"));
+        result.setPeppolChannelId(new PeppolChannelId(ChannelProtocol.SREST.name()));
         result.setReceiver(receiver);
         result.setSender(sender);
         return result;

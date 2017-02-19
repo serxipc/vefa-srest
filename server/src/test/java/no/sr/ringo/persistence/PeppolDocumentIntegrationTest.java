@@ -14,6 +14,7 @@ import no.sr.ringo.document.PeppolDocument;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.PeppolMessageNotFoundException;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.peppol.*;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
@@ -25,7 +26,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -105,9 +105,9 @@ public class PeppolDocumentIntegrationTest {
                 "2.0");
 
 
-        Long message = databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
+        Long message = databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
                 PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
-                invoiceXml, 1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), new Date(), new Date());
+                invoiceXml, 1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), new ReceptionId(), new Date(), new Date(),new PeppolChannelId("test"));
         return MessageNumber.create(message);
     }
 
@@ -119,9 +119,9 @@ public class PeppolDocumentIntegrationTest {
                 CustomizationIdentifier.valueOf(TransactionIdentifier.Predefined.T014_CREDIT_NOTE_V1 + ":#" + ProfileId.Predefined.PROPOSED_BII_XX + "#" + ProfileId.Predefined.EHF_CREDIT_NOTE),
                 "2.0");
 
-        Long messageNumber = databaseHelper.createMessage(PeppolDocumentTypeIdAcronym.CREDIT_NOTE.getDocumentTypeIdentifier(),
+        Long messageNumber = databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.CREDIT_NOTE.getDocumentTypeIdentifier(),
                 PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
-                creditXml, 1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), UUID.randomUUID().toString(), new Date(), new Date());
+                creditXml, 1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), new ReceptionId(), new Date(), new Date(), new PeppolChannelId("test"));
         return MessageNumber.create(messageNumber);
     }
 

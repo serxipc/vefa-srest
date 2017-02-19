@@ -94,7 +94,7 @@ public class RingoClientCommandExecutorTest  {
         RingoClientParams params = prepareParamsForOutboxSingle();
 
         expect(client.send(uploadFile, params.getChannelId(), params.getSenderId(), params.getRecipientId(), UploadMode.SINGLE)).andReturn(mockUploadMessage);
-        expect(mockUploadMessage.getMessageUUID()).andReturn(uuid);
+        expect(mockUploadMessage.getTransmissionId()).andReturn(uuid);
 
         expectedOutputMessage("testFile.xml", "testFile.xml");
 
@@ -116,7 +116,7 @@ public class RingoClientCommandExecutorTest  {
         RingoClientParams params = prepareParamsForOutbox();
 
         expect(client.send(uploadFile, params.getChannelId(), params.getSenderId(), params.getRecipientId(), UploadMode.BATCH)).andReturn(mockUploadMessage);
-        expect(mockUploadMessage.getMessageUUID()).andReturn(uuid);
+        expect(mockUploadMessage.getTransmissionId()).andReturn(uuid);
 
         expectedOutputMessage("testFile.xml", "testFile.xml");
 
@@ -180,7 +180,7 @@ public class RingoClientCommandExecutorTest  {
 
         assertTrue(uploadFile.toString().endsWith(".xml"),"Ooops dow we have a threading problem?");
         expect(client.send(uploadFile, params.getChannelId(), params.getSenderId(), params.getRecipientId(), UploadMode.BATCH)).andReturn(mockUploadMessage);
-        expect(mockUploadMessage.getMessageUUID()).andReturn(uuid);
+        expect(mockUploadMessage.getTransmissionId()).andReturn(uuid);
 
         expectedOutputMessage("testFile.xml", "testFile.xml");
 
@@ -206,7 +206,7 @@ public class RingoClientCommandExecutorTest  {
 
         String errorMessage = "Something went wrong";
         expect(client.send(uploadFile, params.getChannelId(), params.getSenderId(), params.getRecipientId(), UploadMode.BATCH)).andThrow(new IllegalStateException(errorMessage));
-        expect(mockUploadMessage.getMessageUUID()).andReturn(uuid);
+        expect(mockUploadMessage.getTransmissionId()).andReturn(uuid);
 
         mockStream.println("Upload failed for file: testFile.xml. Creating corresponding error file");
 
@@ -264,7 +264,7 @@ public class RingoClientCommandExecutorTest  {
 
         UUID messageUUID = UUID.randomUUID();
         expect(mockDownloadMessage.getReceiver()).andReturn(participantId);
-        expect(mockDownloadMessage.getMessageUUID()).andStubReturn(messageUUID.toString());
+        expect(mockDownloadMessage.getTransmissionId()).andStubReturn(messageUUID.toString());
 
         File expectedDir = new File(params.getInboxPath(), FileHelper.formatForFileName(participantId.stringValue()));
 
@@ -348,7 +348,7 @@ public class RingoClientCommandExecutorTest  {
 
         UUID messageUUID = UUID.randomUUID();
         expect(mockDownloadMessage.getReceiver()).andReturn(participantId);
-        expect(mockDownloadMessage.getMessageUUID()).andStubReturn(null);
+        expect(mockDownloadMessage.getTransmissionId()).andStubReturn(null);
         expect(mockDownloadMessage.getMessageSelfUri()).andReturn("http://ringo.domain.com/inbox/10");
 
         mockStream.println("Skipping message 'http://ringo.domain.com/inbox/10' because it has no messageID");
@@ -485,7 +485,7 @@ public class RingoClientCommandExecutorTest  {
 
     private void expectationsForUpload(RingoClientParams params) {
         expect(client.send(uploadFile, params.getChannelId(), params.getSenderId(), params.getRecipientId(), UploadMode.BATCH)).andStubReturn(mockUploadMessage);
-        expect(mockUploadMessage.getMessageUUID()).andStubReturn(uuid);
+        expect(mockUploadMessage.getTransmissionId()).andStubReturn(uuid);
     }
 
     private void expectedOutputMessage(final String fileToUpload, final String actualFileName) {
