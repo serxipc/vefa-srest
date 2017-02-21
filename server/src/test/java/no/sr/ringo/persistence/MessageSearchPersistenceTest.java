@@ -2,8 +2,8 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.WellKnownParticipant;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountRepository;
@@ -43,11 +43,11 @@ public class MessageSearchPersistenceTest {
     private final DbmsTestHelper dbmsTestHelper;
 
     private Account account;
-    private ParticipantId participantId;
+    private ParticipantIdentifier participantId;
     private Long firstMessageNo;
     private Long secondMessageNo;
-    String receiver1 = WellKnownParticipant.DIFI.stringValue();
-    String receiver2 = WellKnownParticipant.DIFI_TEST.stringValue();
+    String receiver1 = WellKnownParticipant.DIFI.getIdentifier();
+    String receiver2 = WellKnownParticipant.DIFI_TEST.getIdentifier();
 
     @Inject
     public MessageSearchPersistenceTest(AccountRepository accountRepository, PeppolMessageRepository peppolMessageRepository, DatabaseHelper databaseHelper, DbmsTestHelper dbmsTestHelper) {
@@ -68,7 +68,7 @@ public class MessageSearchPersistenceTest {
     @Test(groups = {"persistence"})
     public void testFindBySender() {
 
-        SearchParams searchParams = new SearchParams(null, participantId.stringValue(), null, null, null);
+        SearchParams searchParams = new SearchParams(null, participantId.getIdentifier(), null, null, null);
 
         List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
 
@@ -79,7 +79,7 @@ public class MessageSearchPersistenceTest {
     @Test(groups = {"persistence"})
     public void testFindBySenderAndReceiver() {
 
-        final String sender = participantId.stringValue();
+        final String sender = participantId.getIdentifier();
         SearchParams searchParams = new SearchParams(null, sender, receiver1, null, null);
 
         List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
@@ -97,7 +97,7 @@ public class MessageSearchPersistenceTest {
 
     @Test(groups = {"persistence"})
     public void testFindBySenderAndDirection() {
-        final String sender = participantId.stringValue();
+        final String sender = participantId.getIdentifier();
         SearchParams searchParams = new SearchParams("IN", sender, null, null, null);
 
         List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
@@ -115,7 +115,7 @@ public class MessageSearchPersistenceTest {
 
     @Test(groups = {"persistence"})
     public void testFindBySenderReceiverAndDirection() {
-        final String sender = participantId.stringValue();
+        final String sender = participantId.getIdentifier();
         SearchParams searchParams = new SearchParams("in", sender, receiver1, null, null);
 
         List<MessageMetaData> messages = peppolMessageRepository.findMessages(account.getAccountId(), searchParams);
@@ -134,7 +134,7 @@ public class MessageSearchPersistenceTest {
 
     @Test(groups = {"persistence"})
     public void testFindByDate() {
-        final String sender = participantId.stringValue();
+        final String sender = participantId.getIdentifier();
         SearchParams searchParams = new SearchParams(null, sender, null, null, null);
 
         //find all messages
@@ -221,9 +221,7 @@ public class MessageSearchPersistenceTest {
     public void setUp() throws Exception {
         participantId = ObjectMother.getAdamsParticipantId();
         account = accountRepository.createAccount(ObjectMother.getAdamsAccount(), participantId);
-        final String sender = participantId.stringValue();
-
-        boolean validNorwegianOrgNum = ParticipantId.isValidParticipantIdentifierPattern(receiver1);
+        final String sender = participantId.getIdentifier();
 
         firstMessageNo = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, sender, receiver1, new ReceptionId(), null);
         secondMessageNo = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.OUT, sender, receiver2, new ReceptionId(), null);

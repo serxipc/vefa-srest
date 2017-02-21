@@ -1,14 +1,14 @@
 package no.sr.ringo.document.specification;
 
-import eu.peppol.identifier.ParticipantId;
-import eu.peppol.identifier.SchemeId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.sr.ringo.peppol.Iso6523Util;
 import org.jdom.Element;
 
 /**
- * Finds the ParticipantId from the xpath given by the constructor.
+ * Finds the ParticipantIdentifier from the xpath given by the constructor.
  * Generic version of the RecipientParticipantIdXmlSpecification / SenderParticipantIdXmlSpecification
  */
-public class GenericParticipantIdXmlSpecification extends PeppolDocumentSpecification<ParticipantId> {
+public class GenericParticipantIdXmlSpecification extends PeppolDocumentSpecification<ParticipantIdentifier> {
 
     private final String xpath;
 
@@ -20,14 +20,14 @@ public class GenericParticipantIdXmlSpecification extends PeppolDocumentSpecific
         return xpath;
     }
 
-    public ParticipantId extractEntity(Element element) throws Exception {
-        String schemeId = element.getAttributeValue("schemeID");
-        final SchemeId partyId = SchemeId.parse(schemeId);
-        if (partyId == null) {
-            return ParticipantId.valueOf(element.getText());
+    public ParticipantIdentifier extractEntity(Element element) throws Exception {
+        String schemeIdName = element.getAttributeValue("schemeID");
+
+        if (schemeIdName == null) {
+            return ParticipantIdentifier.of(element.getText());
         }
         else {
-            return new ParticipantId(partyId, element.getText());
+            return Iso6523Util.participantIdentifierWithSchemeName(schemeIdName, element.getText());
         }
     }
 

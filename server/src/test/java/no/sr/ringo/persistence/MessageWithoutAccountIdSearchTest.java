@@ -47,7 +47,7 @@ public class MessageWithoutAccountIdSearchTest {
     @BeforeMethod
     public void setUp() throws Exception {
         databaseHelper.deleteAllMessagesWithoutAccountId();
-        dbmsTestHelper.createSampleMessage(null, TransferDirection.IN, WellKnownParticipant.U4_TEST.stringValue()  ,WellKnownParticipant.U4_TEST.stringValue() , new ReceptionId(), null);
+        dbmsTestHelper.createSampleMessage(null, TransferDirection.IN, WellKnownParticipant.U4_TEST.getIdentifier()  ,WellKnownParticipant.U4_TEST.getIdentifier() , new ReceptionId(), null);
 
     }
 

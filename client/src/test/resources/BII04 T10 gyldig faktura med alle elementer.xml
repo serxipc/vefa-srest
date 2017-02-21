@@ -124,7 +124,7 @@
 			</cac:PartyTaxScheme>
 			<cac:PartyLegalEntity>
 				<cbc:RegistrationName>The buyercompany inc.</cbc:RegistrationName>
-				<cbc:CompanyID schemeAgencyID="ZZZ" schemeID="ZZZ">NO976098897MVA</cbc:CompanyID>
+				<cbc:CompanyID schemeAgencyID="ZZZ" schemeID="ZZZ">976098897</cbc:CompanyID>
 				<cac:RegistrationAddress>
 					<cbc:CityName>Mainplace</cbc:CityName>
 					<cbc:CountrySubentity>RegionB</cbc:CountrySubentity>

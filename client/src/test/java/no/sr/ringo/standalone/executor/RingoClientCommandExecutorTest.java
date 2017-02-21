@@ -1,7 +1,7 @@
 package no.sr.ringo.standalone.executor;
 
-import eu.peppol.identifier.ParticipantId;
-import eu.peppol.identifier.SchemeId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.difi.vefa.peppol.common.model.Scheme;
 import no.sr.ringo.client.Inbox;
 import no.sr.ringo.client.Message;
 import no.sr.ringo.client.Messages;
@@ -53,7 +53,7 @@ public class RingoClientCommandExecutorTest  {
     private PrintStream mockStream;
 
     //will be used to create folder
-    ParticipantId participantId = new ParticipantId(SchemeId.AT_VAT, "111111111");
+    ParticipantIdentifier participantId = ParticipantIdentifier.of( "111111111", Scheme.of("AT:VAT"));
 
 
     @BeforeMethod
@@ -74,19 +74,6 @@ public class RingoClientCommandExecutorTest  {
     }
 
 
-    @Test
-    public void testSMPLookup() throws IOException, CommandLineExecutorException {
-        RingoClientParams params = prepareParamsForSMPLookup();
-
-        expect(client.isParticipantRegistered(params.getParticipantId())).andReturn(true);
-        mockStream.println("Participant 9908:976098897 is registered");
-        mockStream.close();
-
-        EasyMock.replay(client, mockStream);
-        RingoClientCommandExecutor executor = new RingoClientCommandExecutor(mockStream, params, client);
-        executor.execute();
-
-    }
 
     @Test
     //UploadMode.SINGLE used
@@ -177,7 +164,7 @@ public class RingoClientCommandExecutorTest  {
         prepareUploadFile(FILENAME);
 
         RingoClientParams params = prepareParamsForOutbox();
-        params.setSenderId(ParticipantId.valueOf("9908:976098897"));
+        params.setSenderId(ParticipantIdentifier.of("9908:976098897"));
 
         assertTrue(uploadFile.toString().endsWith(".xml"),"Ooops dow we have a threading problem?");
         expect(client.send(uploadFile, params.getChannelId(), params.getSenderId(), params.getRecipientId(), UploadMode.BATCH)).andReturn(mockUploadMessage);
@@ -267,7 +254,7 @@ public class RingoClientCommandExecutorTest  {
         expect(mockDownloadMessage.getReceiver()).andReturn(participantId);
         expect(mockDownloadMessage.getReceptionId()).andStubReturn(receptionId);
 
-        File expectedDir = new File(params.getInboxPath(), FileHelper.formatForFileName(participantId.stringValue()));
+        File expectedDir = new File(params.getInboxPath(), FileHelper.formatForFileName(participantId.getIdentifier()));
 
         expect(mockDownloadMessage.saveToDirectory(expectedDir)).andReturn(new File(DOWNLOAD_DIR, "fileName"));
         expect(mockDownloadMessage.markAsRead()).andReturn(true);
@@ -298,7 +285,7 @@ public class RingoClientCommandExecutorTest  {
         RingoClientParams params = RingoClientCommandExecutorTest.prepareParamsForInbox();
 
         //create expected subdir that's a file and will cause failure
-        File fileAsExpectedDir= new File(params.getInboxPath(), participantId.stringValue().replace(":", "_"));
+        File fileAsExpectedDir= new File(params.getInboxPath(), participantId.getIdentifier().replace(":", "_"));
         fileAsExpectedDir.createNewFile();
 
         Iterator<Message> mockIterator = createStrictMock(Iterator.class);
@@ -397,17 +384,6 @@ public class RingoClientCommandExecutorTest  {
         return params;
     }
 
-    /**
-     * Prepares params for SMP lookup
-     */
-    private RingoClientParams prepareParamsForSMPLookup() {
-        RingoClientParams params = new RingoClientParams();
-
-        params.setOperation(RingoClientParams.ClientOperation.SMP_LOOKUP);
-        params.setParticipantId(ParticipantId.valueOf("9908:976098897"));
-
-        return params;
-    }
 
     private void prepareFolders() throws IOException {
         File downloadDir = new File(DOWNLOAD_DIR);

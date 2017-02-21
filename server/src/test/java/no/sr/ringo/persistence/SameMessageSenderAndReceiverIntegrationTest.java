@@ -1,7 +1,7 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.guice.ServerTestModuleFactory;
@@ -32,7 +32,7 @@ public class SameMessageSenderAndReceiverIntegrationTest {
     private final DbmsTestHelper dbmsTestHelper;
 
     private Account account = ObjectMother.getTestAccount();
-    private ParticipantId participantId = ObjectMother.getTestParticipantId();
+    private ParticipantIdentifier participantId = ObjectMother.getTestParticipantId();
 
     private Long messageOut;
     private Integer accountReceiverId;
@@ -47,7 +47,7 @@ public class SameMessageSenderAndReceiverIntegrationTest {
 
     @BeforeMethod(groups = {"persistence"})
     public void insertSample() throws SQLException {
-        messageOut = dbmsTestHelper.createSampleMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), new ReceptionId(), (Date)null);
+        messageOut = dbmsTestHelper.createSampleMessage(1, TransferDirection.OUT, participantId.getIdentifier(), participantId.getIdentifier(), new ReceptionId(), (Date)null);
     }
 
     @AfterMethod(groups = {"persistence"})

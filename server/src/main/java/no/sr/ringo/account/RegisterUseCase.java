@@ -3,7 +3,7 @@ package no.sr.ringo.account;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.RingoConstant;
 import no.sr.ringo.common.MessageHelper;
 import no.sr.ringo.email.EmailService;
@@ -75,12 +75,12 @@ public class RegisterUseCase {
         }
 
         // Prefix given orgNo with 9908
-        final ParticipantId peppolParticipantId = ParticipantId.valueOf(registrationData.getOrgNo());
+        final ParticipantIdentifier peppolParticipantId = ParticipantIdentifier.of(registrationData.getOrgNo());
         if (peppolParticipantId == null) {
             throw new IllegalArgumentException("Provided organisation number is invalid");
         }
 
-        Account orgNoUsed = accountRepository.findAccountByParticipantId(new ParticipantId(peppolParticipantId.stringValue()));
+        Account orgNoUsed = accountRepository.findAccountByParticipantIdentifier(peppolParticipantId);
         if (orgNoUsed != null) {
             return new RegistrationProcessResult(RegistrationProcessResult.RegistrationSource.RINGO, false, MessageHelper.getMessage("reg.orgNo.registered"));
         }
@@ -92,7 +92,7 @@ public class RegisterUseCase {
 
         // create account entry and account_receiver entry (only if registering in SMP)
         //Prefix given orgNo with 9908
-        ParticipantId participantId = registrationData.isRegisterSmp() ? new ParticipantId(RingoConstant.NORWEGIAN_PEPPOL_PARTICIPANT_PREFIX + registrationData.getOrgNo()) : null;
+        ParticipantIdentifier participantId = registrationData.isRegisterSmp() ? new ParticipantIdentifier(RingoConstant.NORWEGIAN_PEPPOL_PARTICIPANT_PREFIX + registrationData.getOrgNo()) : null;
         Account storedAccount = accountRepository.createAccount(account, participantId);
 
         // Encrypts/hashes the password

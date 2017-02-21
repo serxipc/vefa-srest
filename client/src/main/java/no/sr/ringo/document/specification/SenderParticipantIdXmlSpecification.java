@@ -1,11 +1,11 @@
 package no.sr.ringo.document.specification;
 
-import eu.peppol.identifier.ParticipantId;
-import eu.peppol.identifier.SchemeId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.sr.ringo.peppol.Iso6523Util;
 import org.jdom.Element;
 
 /**
- * Finds the ParticipantId from the file
+ * Finds the ParticipantIdentifier from the file
  * <p/>
  * The file needs to contain an entity which can be fetched by xpath at this location
  * <p/>
@@ -14,7 +14,7 @@ import org.jdom.Element;
  * Company ids in the form of NO&lt;ORG_NO&gt;MVA, &lt;ORG_NO&gt;MVA, NO&lt;ORG_NO&gt;  &lt;ORG_NO&gt; are supported.
  * This means that only norwegian ParticipantIds can be automatically fetched.
  */
-public class SenderParticipantIdXmlSpecification extends PeppolDocumentSpecification<ParticipantId> {
+public class SenderParticipantIdXmlSpecification extends PeppolDocumentSpecification<ParticipantIdentifier> {
 
     /**
      * The xpath expression used to select node/nodes
@@ -26,24 +26,22 @@ public class SenderParticipantIdXmlSpecification extends PeppolDocumentSpecifica
     /**
      * First checks that the element contains the schemeID attribute, which is used to
      * specify the numeric ISO652 code. If a valid code is found then the contents of
-     * the companyID element are used to create the ParticipantId object.
+     * the companyID element are used to create the ParticipantIdentifier object.
      * <p/>
      *
      * @param element
      * @return
      * @throws Exception if a problem occurs during parsing.
      */
-    public ParticipantId extractEntity(Element element) throws Exception {
+    public ParticipantIdentifier extractEntity(Element element) throws Exception {
 
         String schemeId = element.getAttributeValue("schemeID");
 
-        final SchemeId partyId = SchemeId.parse(schemeId);
-
-        if (partyId == null) {
-            return ParticipantId.valueOf(element.getText());
+        if (schemeId == null) {
+            return ParticipantIdentifier.of(element.getText());
         }
         else {
-            return new ParticipantId(partyId, element.getText());
+            return Iso6523Util.participantIdentifierWithSchemeName(schemeId, element.getText());
         }
 
     }

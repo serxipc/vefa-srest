@@ -2,9 +2,9 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.guice.ServerTestModuleFactory;
@@ -37,7 +37,7 @@ public class PeppolMessageRepositoryImplStatisticsIntegrationTest {
     private final DatabaseHelper databaseHelper;
     Logger logger = LoggerFactory.getLogger(PeppolMessageRepositoryImplStatisticsIntegrationTest.class);
     private Account account = ObjectMother.getTestAccount();
-    private ParticipantId participantId = ObjectMother.getTestParticipantIdForSMPLookup();
+    private ParticipantIdentifier participantId = ObjectMother.getTestParticipantIdForSMPLookup();
 
     private Date sentDate;
     private Date downloadedDate;
@@ -105,38 +105,38 @@ public class PeppolMessageRepositoryImplStatisticsIntegrationTest {
     private void createTestMessages() {
 
 
-        databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
-                PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
+        databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.toVefa(),
+                PeppolProcessTypeIdAcronym.INVOICE_ONLY.toVefa(),
                 "<test>\u00E5</test>",
                 account.getAccountId().toInteger(),
                 TransferDirection.OUT,
-                participantId.stringValue(),
-                participantId.stringValue(),
+                participantId.getIdentifier(),
+                participantId.getIdentifier(),
                 new ReceptionId(), sentDate, receivedDate);
-        databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
-                PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
+        databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.toVefa(),
+                PeppolProcessTypeIdAcronym.INVOICE_ONLY.toVefa(),
                 "<test>\u00E5</test>",
                 account.getAccountId().toInteger(),
                 TransferDirection.IN,
-                participantId.stringValue(),
-                participantId.stringValue(),
+                participantId.getIdentifier(),
+                participantId.getIdentifier(),
                 new ReceptionId(), downloadedDate, receivedDate);
 
-        databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
-                PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
+        databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.toVefa(),
+                PeppolProcessTypeIdAcronym.INVOICE_ONLY.toVefa(),
                 "<test>\u00E5</test>",
                 account.getAccountId().toInteger(),
                 TransferDirection.IN,
-                participantId.stringValue(),
-                participantId.stringValue(),
+                participantId.getIdentifier(),
+                participantId.getIdentifier(),
                 new ReceptionId(), null, oldestUndeliveredDate);
-        databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(),
-                PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId(),
+        databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.toVefa(),
+                PeppolProcessTypeIdAcronym.INVOICE_ONLY.toVefa(),
                 "<test>\u00E5</test>",
                 account.getAccountId().toInteger(),
                 TransferDirection.OUT,
-                participantId.stringValue(),
-                participantId.stringValue(),
+                participantId.getIdentifier(),
+                participantId.getIdentifier(),
                 new ReceptionId(), null, oldestUndeliveredDate);
 
     }
@@ -148,6 +148,4 @@ public class PeppolMessageRepositoryImplStatisticsIntegrationTest {
         DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
         return DATE_FORMAT.parse(dateString);
     }
-
-
 }

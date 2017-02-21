@@ -1,8 +1,8 @@
 package no.sr.ringo.document;
 
-import eu.peppol.identifier.ParticipantId;
-import no.sr.ringo.cenbiimeta.ProfileId;
-import no.sr.ringo.peppol.PeppolDocumentTypeId;
+import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -26,17 +26,17 @@ public class FileClientPeppolEHF2Test {
     @Test
     public void testFindDocumentTypeForEhf2Invoice() throws Exception {
         FileClientPeppolDocument document = getFileClientPeppolDocumentFromResource(RESOURCE_EHF2_INVOICE);
-        PeppolDocumentTypeId result = document.findDocumentType();
+        DocumentTypeIdentifier result = document.findDocumentType();
         assertNotNull(result);
-        assertEquals(result.stringValue(), EHF_FAKTURA_2);
+        assertEquals(result.getIdentifier(), EHF_FAKTURA_2);
     }
 
     @Test
     public void testFindDocumentTypeForEhf2CreditNote() throws Exception {
         FileClientPeppolDocument document = getFileClientPeppolDocumentFromResource(RESOURCE_EHF2_CREDITNOTE);
-        PeppolDocumentTypeId result = document.findDocumentType();
+        DocumentTypeIdentifier result = document.findDocumentType();
         assertNotNull(result);
-        assertEquals(result.stringValue(), EHF_KREDITNOTA_2);
+        assertEquals(result.getIdentifier(), EHF_KREDITNOTA_2);
     }
 
     @Test
@@ -45,22 +45,22 @@ public class FileClientPeppolEHF2Test {
         FileClientPeppolDocument document = getFileClientPeppolDocumentFromResource(RESOURCE_EHF2_INVOICE);
 
         // make sure we have the correct document type
-        PeppolDocumentTypeId documentType = document.findDocumentType();
+        DocumentTypeIdentifier documentType = document.findDocumentType();
         assertNotNull(documentType);
         System.out.println(documentType);
 
         // make sure we have the correct profile
-        ProfileId profileId = document.findProfileId();
+        ProcessIdentifier profileId = document.findProfileId();
         assertNotNull(profileId);
         System.out.println(profileId.toString());
 
         // makes sure we have the correct receiver
-        ParticipantId receiver = document.findReceiver();
+        ParticipantIdentifier receiver = document.findReceiver();
         assertNotNull(receiver);
         System.out.println(receiver.toString());
 
         // make sure we have the correct sender
-        ParticipantId sender = document.findSender();
+        ParticipantIdentifier sender = document.findSender();
         assertNotNull(sender);
         System.out.println(sender.toString());
 
@@ -73,22 +73,22 @@ public class FileClientPeppolEHF2Test {
         FileClientPeppolDocument document = getFileClientPeppolDocumentFromResource(RESOURCE_EHF2_CREDITNOTE);
 
         // make sure we have the correct document type
-        PeppolDocumentTypeId documentType = document.findDocumentType();
+        DocumentTypeIdentifier documentType = document.findDocumentType();
         assertNotNull(documentType);
         System.out.println(documentType);
 
         // make sure we have the correct profile
-        ProfileId profileId = document.findProfileId();
+        ProcessIdentifier profileId = document.findProfileId();
         assertNotNull(profileId);
         System.out.println(profileId.toString());
 
         // makes sure we have the correct receiver
-        ParticipantId receiver = document.findReceiver();
+        ParticipantIdentifier receiver = document.findReceiver();
         assertNotNull(receiver);
         System.out.println(receiver.toString());
 
         // make sure we have the correct sender
-        ParticipantId sender = document.findSender();
+        ParticipantIdentifier sender = document.findSender();
         assertNotNull(sender);
         System.out.println(sender.toString());
 

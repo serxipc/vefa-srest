@@ -22,8 +22,9 @@ public class RingoHomeDirectoryTest {
 
         Path relativePath = Paths.get(homeDirName, RingoHomeDirectory.RELATIVE_DIR_NAME);
         if (Files.exists(relativePath)) {
+            System.setProperty(RingoHomeDirectory.RINGO_HOME_PROPERTY_NAME, relativePath.toString());
             Path path = RingoHomeDirectory.locateRingoHomeDir();
-            assertEquals(path, relativePath);
+            assertEquals(path, relativePath, "user.home:" + homeDirName + ", ringoHome: "+path);
         }
 
         if (!Files.exists(relativePath) && System.getProperty(RingoHomeDirectory.RINGO_HOME_PROPERTY_NAME) == null

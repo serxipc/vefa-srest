@@ -1,38 +1,33 @@
 /* Created by steinar on 08.01.12 at 19:49 */
 package no.sr.ringo.peppol;
 
-import eu.peppol.identifier.ParticipantId;
-import no.sr.ringo.cenbiimeta.ProfileId;
+import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 
 /**
  * @author Steinar Overbeck Cook steinar@sendregning.no
  */
 public class PeppolHeader {
-    private ParticipantId sender;
-    private ParticipantId receiver;
+    private ParticipantIdentifier sender;
+    private ParticipantIdentifier receiver;
     private PeppolChannelId peppolChannel;
-    private PeppolDocumentTypeId peppolDocumentTypeId;
-    private ProfileId profileId;
+    private DocumentTypeIdentifier peppolDocumentTypeId;
+    private ProcessIdentifier profileId;
 
-    @Deprecated
-    private PeppolDocumentIdAcronym peppolDocumentId;
-
-    @Deprecated
-    private PeppolProcessIdAcronym peppolProcessIdAcronym;
-
-    public ParticipantId getSender() {
+    public ParticipantIdentifier getSender() {
         return sender;
     }
 
-    public void setSender(ParticipantId sender) {
+    public void setSender(ParticipantIdentifier sender) {
         this.sender = sender;
     }
 
-    public ParticipantId getReceiver() {
+    public ParticipantIdentifier getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(ParticipantId receiver) {
+    public void setReceiver(ParticipantIdentifier receiver) {
         this.receiver = receiver;
     }
 
@@ -44,38 +39,26 @@ public class PeppolHeader {
         this.peppolChannel = peppolChannel;
     }
 
-    public PeppolDocumentTypeId getPeppolDocumentTypeId() {
+    public DocumentTypeIdentifier getPeppolDocumentTypeId() {
         return peppolDocumentTypeId;
     }
 
-    public void setPeppolDocumentTypeId(PeppolDocumentTypeId peppolDocumentTypeId) {
+    public void setDocumentTypeIdentifier(DocumentTypeIdentifier peppolDocumentTypeId) {
         this.peppolDocumentTypeId = peppolDocumentTypeId;
-        this.peppolDocumentId = PeppolDocumentIdAcronym.fromLocalName(peppolDocumentTypeId.getLocalName());
     }
 
-    public ProfileId getProfileId() {
+    public ProcessIdentifier getProcessIdentifier() {
         return profileId;
     }
 
-    public void setProfileId(ProfileId profileId) {
+    public void setProcessIdentifier(ProcessIdentifier profileId) {
         this.profileId = profileId;
-        this.peppolProcessIdAcronym = PeppolProcessIdAcronym.valueFor(profileId.toString());
     }
 
     public void validate() {
         if (peppolChannel == null || receiver == null || sender == null || peppolDocumentTypeId == null || profileId == null) {
             throw new InvalidPeppolHeaderException(this);
         }
-    }
-
-    @Deprecated
-    public PeppolDocumentIdAcronym getPeppolDocumentIdAcronym() {
-        return peppolDocumentId;
-    }
-
-    @Deprecated
-    public PeppolProcessIdAcronym getPeppolProcessIdAcronym() {
-        return peppolProcessIdAcronym;
     }
 
     /**
@@ -85,15 +68,10 @@ public class PeppolHeader {
      * @param sender
      * @param receiver
      */
-    public static PeppolHeader forDocumentType(PeppolDocumentTypeId peppolDocumentTypeId, ParticipantId sender, ParticipantId receiver) {
+    public static PeppolHeader forDocumentType(DocumentTypeIdentifier peppolDocumentTypeId, ProcessIdentifier processIdentifier, ParticipantIdentifier sender, ParticipantIdentifier receiver) {
         PeppolHeader result = new PeppolHeader();
-        result.setPeppolDocumentTypeId(peppolDocumentTypeId);
-
-        ProfileIdTranslator profileIdTranslator = new ProfileIdTranslator();
-
-        ProfileId cenBiiProfileId = profileIdTranslator.translateToCenBiiProfile(peppolDocumentTypeId.getCustomizationIdentifier().getPeppolExtensionIdentifier());
-        result.setProfileId(cenBiiProfileId);
-
+        result.setDocumentTypeIdentifier(peppolDocumentTypeId);
+        result.setProcessIdentifier(processIdentifier);
         result.setPeppolChannelId(new PeppolChannelId(ChannelProtocol.SREST.name()));
         result.setReceiver(receiver);
         result.setSender(sender);
@@ -107,41 +85,32 @@ public class PeppolHeader {
 
         PeppolHeader that = (PeppolHeader) o;
 
-        if (peppolChannel != null ? !peppolChannel.equals(that.peppolChannel) : that.peppolChannel != null) return false;
-        if (peppolDocumentId != that.peppolDocumentId) return false;
-        if (peppolDocumentTypeId != null ? !peppolDocumentTypeId.equals(that.peppolDocumentTypeId) : that.peppolDocumentTypeId != null) return false;
-        if (peppolProcessIdAcronym != that.peppolProcessIdAcronym) return false;
-        if (profileId != null ? !profileId.equals(that.profileId) : that.profileId != null) return false;
-        if (receiver != null ? !receiver.equals(that.receiver) : that.receiver != null) return false;
-        if (sender != null ? !sender.equals(that.sender) : that.sender != null) return false;
-
-        return true;
+        if (!sender.equals(that.sender)) return false;
+        if (!receiver.equals(that.receiver)) return false;
+        if (!peppolChannel.equals(that.peppolChannel)) return false;
+        if (!peppolDocumentTypeId.equals(that.peppolDocumentTypeId)) return false;
+        return profileId.equals(that.profileId);
     }
 
     @Override
     public int hashCode() {
-        int result = sender != null ? sender.hashCode() : 0;
-        result = 31 * result + (receiver != null ? receiver.hashCode() : 0);
-        result = 31 * result + (peppolChannel != null ? peppolChannel.hashCode() : 0);
-        result = 31 * result + (peppolDocumentTypeId != null ? peppolDocumentTypeId.hashCode() : 0);
-        result = 31 * result + (profileId != null ? profileId.hashCode() : 0);
-        result = 31 * result + (peppolDocumentId != null ? peppolDocumentId.hashCode() : 0);
-        result = 31 * result + (peppolProcessIdAcronym != null ? peppolProcessIdAcronym.hashCode() : 0);
+        int result = sender.hashCode();
+        result = 31 * result + receiver.hashCode();
+        result = 31 * result + peppolChannel.hashCode();
+        result = 31 * result + peppolDocumentTypeId.hashCode();
+        result = 31 * result + profileId.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("PeppolHeader");
-        sb.append("\n{ sender=").append(sender);
-        sb.append(",\n  receiver=").append(receiver);
-        sb.append(",\n  peppolChannel=").append(peppolChannel);
-        sb.append(",\n  peppolDocumentTypeId=").append(peppolDocumentTypeId);
-        sb.append(",\n  profileId=").append(profileId);
-        sb.append(",\n  peppolDocumentId=").append(peppolDocumentId);
-        sb.append(",\n  peppolProcessIdAcronym=").append(peppolProcessIdAcronym);
-        sb.append("\n}");
+        final StringBuilder sb = new StringBuilder("PeppolHeader{");
+        sb.append("sender=").append(sender);
+        sb.append(", receiver=").append(receiver);
+        sb.append(", peppolChannel=").append(peppolChannel);
+        sb.append(", peppolDocumentTypeId=").append(peppolDocumentTypeId);
+        sb.append(", profileId=").append(profileId);
+        sb.append('}');
         return sb.toString();
     }
 }

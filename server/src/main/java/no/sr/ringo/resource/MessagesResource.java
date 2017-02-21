@@ -107,28 +107,6 @@ public class MessagesResource extends AbstractMessageResource {
 
     }
 
-    /**
-     * Retrieves the PEPPOL XML Document in XML format, with added stylesheet (intended for web viewing on our site).
-     *
-     * @param msgNoString identifies the message to which the xml document is associated.
-     * @return
-     */
-    @GET
-    @Produces(RingoMediaType.APPLICATION_XML)
-    @Path("/{message_no}/xml-document-decorated")
-    public Response getXmlDocumentDecorated(@PathParam("message_no") String msgNoString) {
-
-        MessageNumber msgNo;
-        if (msgNoString == null || msgNoString.trim().length() == 0) {
-            return SrResponse.status(Response.Status.BAD_REQUEST, "No message number given");
-        } else {
-            msgNo = parseMsgNo(msgNoString);
-        }
-
-        PeppolDocument xmlDocument = fetchDocumentUseCase.executeWithDecoration(account, msgNo);
-        return SrResponse.ok().entity(xmlDocument.getXml()).build();
-
-    }
 
     @GET
     @Produces(RingoMediaType.TEXT_PLAIN)

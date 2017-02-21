@@ -22,11 +22,8 @@
 
 package no.sr.ringo.persistence.jdbc;
 
-import eu.peppol.identifier.ParticipantId;
-import no.difi.vefa.peppol.common.model.InstanceIdentifier;
-import no.difi.vefa.peppol.common.model.Receipt;
+import no.difi.vefa.peppol.common.model.*;
 import no.sr.ringo.account.AccountId;
-import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.message.*;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolHeader;
@@ -125,7 +122,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
     /**
      * Saves inbound messages from PEPPOL network.
      * <p>
-     * An attempt is made to locate the associated account by the receivers {@link ParticipantId} supplied in the meta data
+     * An attempt is made to locate the associated account by the receivers {@link ParticipantIdentifier} supplied in the meta data
      *
      * @param payloadInputStream
      * @return
@@ -246,7 +243,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
 
     }
 
-    private ArtifactPathComputer.FileRepoKey fileRepoKeyFrom(ReceptionId receptionId, no.sr.ringo.transport.TransferDirection transferDirection, ParticipantId sender, ParticipantId receiver, java.util.Date received) {
+    private ArtifactPathComputer.FileRepoKey fileRepoKeyFrom(ReceptionId receptionId, no.sr.ringo.transport.TransferDirection transferDirection, ParticipantIdentifier sender, ParticipantIdentifier receiver, java.util.Date received) {
         if (receptionId == null) {
             throw new IllegalArgumentException("Missing argument receptionId");
         }
@@ -282,15 +279,15 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             final Timestamp received = rs.getTimestamp("received");
             final Timestamp delivered = rs.getTimestamp("delivered");
 
-            final ParticipantId sender = ParticipantId.valueOf(rs.getString("sender"));
-            final ParticipantId receiver = ParticipantId.valueOf(rs.getString("receiver"));
+            final ParticipantIdentifier sender = ParticipantIdentifier.of(rs.getString("sender"));
+            final ParticipantIdentifier receiver = ParticipantIdentifier.of(rs.getString("receiver"));
             final PeppolChannelId channel = new PeppolChannelId(rs.getString("channel"));
 
             final ReceptionId message_uuid = new ReceptionId(rs.getString("message_uuid"));
             final String transmission_id = rs.getString("transmission_id");
             final String instance_id = rs.getString("instance_id");
 
-            final no.sr.ringo.peppol.PeppolDocumentTypeId document_id = no.sr.ringo.peppol.PeppolDocumentTypeId.valueOf(rs.getString("document_id"));
+            DocumentTypeIdentifier document_id = DocumentTypeIdentifier.of(rs.getString("document_id"));
 
             final String process_id = rs.getString("process_id");
             final String ap_name = rs.getString("ap_name");
@@ -314,10 +311,10 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             peppolHeader.setPeppolChannelId(channel);
             mmd.setReceptionId(message_uuid);
             mmd.setTransmissionId(new TransmissionId(transmission_id));
-            peppolHeader.setPeppolDocumentTypeId(document_id);
+            peppolHeader.setDocumentTypeIdentifier(document_id);
 
             if (process_id != null) {
-                peppolHeader.setProfileId(new ProfileId(process_id));
+                peppolHeader.setProcessIdentifier(ProcessIdentifier.of(process_id));
             }
 
             if (instance_id != null) {
@@ -364,16 +361,16 @@ public class MessageRepositoryH2Impl implements MessageRepository {
                 insertStatement.setInt(1, tmd.getAccountId().toInteger());
 
             insertStatement.setString(2, tmd.getTransferDirection().name());
-            insertStatement.setString(3, tmd.getPeppolHeader().getSender() != null ? tmd.getPeppolHeader().getSender().stringValue() : null);
-            insertStatement.setString(4, tmd.getPeppolHeader().getReceiver() != null ? tmd.getPeppolHeader().getReceiver().stringValue() : null);
+            insertStatement.setString(3, tmd.getPeppolHeader().getSender() != null ? tmd.getPeppolHeader().getSender().getIdentifier() : null);
+            insertStatement.setString(4, tmd.getPeppolHeader().getReceiver() != null ? tmd.getPeppolHeader().getReceiver().getIdentifier() : null);
             if (tmd.getPeppolHeader().getPeppolChannelId() != null)
                 insertStatement.setString(5, tmd.getPeppolHeader().getPeppolChannelId().stringValue());
             else
                 insertStatement.setString(5, null);
 
             insertStatement.setString(6, tmd.getReceptionId().stringValue());     // Unique id of message not to be mixed up with transmission id
-            insertStatement.setString(7, tmd.getPeppolHeader().getPeppolDocumentTypeId().toString());
-            insertStatement.setString(8, tmd.getPeppolHeader().getProfileId() != null ? tmd.getPeppolHeader().getProfileId().toString() : (null));   // Optional
+            insertStatement.setString(7, tmd.getPeppolHeader().getPeppolDocumentTypeId().getIdentifier());
+            insertStatement.setString(8, tmd.getPeppolHeader().getProcessIdentifier() != null ? tmd.getPeppolHeader().getProcessIdentifier().getIdentifier() : (null));   // Optional
             insertStatement.setString(9, payloadUrl.toString());
 
             insertStatement.setTimestamp(10, Timestamp.valueOf(LocalDateTime.ofInstant(tmd.getReceived().toInstant(), ZoneId.systemDefault())));
@@ -553,7 +550,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
     // Package private to ease testing
     //
 
-    AccountId srAccountIdForReceiver(ParticipantId participantId) {
+    AccountId srAccountIdForReceiver(ParticipantIdentifier participantId) {
 
         if (participantId == null) {
             return null;
@@ -567,7 +564,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
         try {
             con = jdbcTxManager.getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, participantId.stringValue());
+            ps.setString(1, participantId.getIdentifier());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 accountId = rs.getInt(1);
@@ -577,7 +574,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
         } catch (SQLException e) {
             log.error("Unable to obtain the account id for participant " + participantId + "; reason:" + e.getMessage(), e);
             log.error("SQL statement: " + sql);
-            log.error("Using participant_id '" + participantId.stringValue() + "'");
+            log.error("Using participant_id '" + participantId.getIdentifier() + "'");
             throw new IllegalStateException(sql + "; failed: " + e.getMessage(), e);
         }
 

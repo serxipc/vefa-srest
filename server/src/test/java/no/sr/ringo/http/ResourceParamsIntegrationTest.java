@@ -159,11 +159,11 @@ public class ResourceParamsIntegrationTest extends AbstractHttpClientServerTest 
         final File file = ClientObjectMother.getTestInvoice();
 
         multipartEntity.addPart("file", new FileBody(file, "application/xml"));
-        multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("ChannelID", new StringBody("CHTEST", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.getDocumentTypeIdentifier().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.toVefa().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.toVefa().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
 
         httpPost.setEntity(multipartEntity);
 
@@ -184,17 +184,18 @@ public class ResourceParamsIntegrationTest extends AbstractHttpClientServerTest 
 
         multipartEntity.addPart("ProcessID", new StringBody("WrongProcessId", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("file", new FileBody(file, "application/xml"));
-        multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("ChannelID", new StringBody("CHTEST", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.getDocumentTypeIdentifier().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.toVefa().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
 
         httpPost.setEntity(multipartEntity);
 
         HttpResponse response = httpClient.execute(httpPost);
 
-        assertEquals("Wrong processId value: WrongProcessId", ResponseUtils.writeResponseToString(response, RingoConstants.DEFAULT_CHARACTER_SET));
-        assertEquals(response.getStatusLine().getStatusCode(), 400);
+        // We no longer perform any checks, anything goes
+        // assertEquals("Wrong processId value: WrongProcessId", ResponseUtils.writeResponseToString(response, RingoConstants.DEFAULT_CHARACTER_SET));
+        assertEquals(response.getStatusLine().getStatusCode(), 201);
     }
 
     /**
@@ -209,16 +210,16 @@ public class ResourceParamsIntegrationTest extends AbstractHttpClientServerTest 
 
         multipartEntity.addPart("file", new FileBody(file, "application/xml"));
         multipartEntity.addPart("RecipientID", new StringBody("WrongRecipientId", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("ChannelID", new StringBody("CHTEST", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.getDocumentTypeIdentifier().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
 
         httpPost.setEntity(multipartEntity);
 
         HttpResponse response = httpClient.execute(httpPost);
 
-        assertEquals(response.getStatusLine().getStatusCode(), 400);
+        assertEquals(response.getStatusLine().getStatusCode(), 201);
     }
 
     /**
@@ -232,19 +233,17 @@ public class ResourceParamsIntegrationTest extends AbstractHttpClientServerTest 
         final File file = ClientObjectMother.getTestInvoice();
 
         multipartEntity.addPart("file", new FileBody(file, "application/xml"));
-        multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("SenderID", new StringBody("WrongSenderId",  "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("ChannelID", new StringBody("CHTEST", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.getDocumentTypeIdentifier().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
 
         httpPost.setEntity(multipartEntity);
 
         HttpResponse response = httpClient.execute(httpPost);
 
-        assertEquals(response.getStatusLine().getStatusCode(), 400);
-        String s = ResponseUtils.writeResponseToString(response, RingoConstants.DEFAULT_CHARACTER_SET);
-        System.err.println(s);
+        assertEquals(response.getStatusLine().getStatusCode(), 201); // Perfectly ok.
     }
 
     /**
@@ -258,17 +257,17 @@ public class ResourceParamsIntegrationTest extends AbstractHttpClientServerTest 
         final File file = ClientObjectMother.getTestInvoice();
 
         multipartEntity.addPart("file", new FileBody(file, "application/xml"));
-        multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("ChannelID", new StringBody("CHTEST", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("DocumentID", new StringBody("WrongDocumentId", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
 
         httpPost.setEntity(multipartEntity);
 
         HttpResponse response = httpClient.execute(httpPost);
 
-        assertEquals(response.getStatusLine().getStatusCode(), 400);
+        assertEquals(response.getStatusLine().getStatusCode(), 201);    // We allow invalid document type identifiers
     }
 
     /**
@@ -282,8 +281,8 @@ public class ResourceParamsIntegrationTest extends AbstractHttpClientServerTest 
         final File file = ClientObjectMother.getTestInvoice();
 
         multipartEntity.addPart("file", new FileBody(file, "application/xml"));
-        multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForConsumerReceiver().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForConsumerReceiver().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("ChannelID", new StringBody("TEST_ONLY", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("ProcessID", new StringBody("urn:dmk", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("DocumentID", new StringBody("urn:ap:unit4.com::ServiceProviderContainer##urn:spc:extended:dmk::1.0", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));

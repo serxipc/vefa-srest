@@ -1,7 +1,6 @@
 package no.sr.ringo.client;
 
-import eu.peppol.identifier.ParticipantId;
-import eu.peppol.identifier.SchemeId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.message.MessageMetaDataImpl;
 import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.message.MessageWithLocationsImpl;
@@ -53,7 +52,7 @@ public class InboxDownloadAllTest {
 
         MessageMetaDataImpl messageMetaData = new MessageMetaDataImpl();
         PeppolHeader peppolHeader = new PeppolHeader();
-        peppolHeader.setReceiver(new ParticipantId(SchemeId.NO_ORGNR,"976098897"));
+        peppolHeader.setReceiver( ParticipantIdentifier.of("976098897"));
         messageMetaData.setPeppolHeader(peppolHeader);
 
         receptionId = new ReceptionId();

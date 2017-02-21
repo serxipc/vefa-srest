@@ -90,7 +90,7 @@ public class MessagesIntegrationTest extends AbstractHttpClientServerTest {
     public void insertSample() throws SQLException {
         final Account account = ObjectMother.getTestAccount();
         for (int i = 0; i <= 26; i++) {
-            final Long message = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), new ReceptionId(), null);
+            final Long message = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), new ReceptionId(), null);
             messageIds.add(message);
         }
     }

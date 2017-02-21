@@ -1,5 +1,6 @@
 package no.sr.ringo.peppol;
 
+import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
 import no.sr.ringo.cenbiimeta.ProfileId;
 
 import java.util.regex.Matcher;
@@ -29,7 +30,9 @@ import java.util.regex.Pattern;
  *         <td>2.0</td>
  *     </tr>
  * </table>
+ * @deprecated use DocumentTypeIdentifier
  */
+
 public class PeppolDocumentTypeId {
 
     final RootNameSpace rootNameSpace;
@@ -57,6 +60,11 @@ public class PeppolDocumentTypeId {
         this.customizationIdentifier = customizationIdentifier;
         this.version = version;
     }
+
+    public DocumentTypeIdentifier toVefa(){
+        return DocumentTypeIdentifier.of(stringValue());
+    }
+
 
     public static PeppolDocumentTypeId valueOf(String documentIdAsText) {
         PeppolDocumentTypeId result = new UnknownPeppolDocumentTypeId(documentIdAsText);

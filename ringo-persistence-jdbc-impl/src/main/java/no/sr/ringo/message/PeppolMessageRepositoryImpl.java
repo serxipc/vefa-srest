@@ -1,18 +1,18 @@
 package no.sr.ringo.message;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountId;
-import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.message.statistics.InboxStatistics;
 import no.sr.ringo.message.statistics.OutboxStatistics;
 import no.sr.ringo.message.statistics.RingoAccountStatistics;
 import no.sr.ringo.message.statistics.RingoStatistics;
 import no.sr.ringo.peppol.ChannelProtocol;
 import no.sr.ringo.peppol.PeppolChannelId;
-import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.persistence.guice.jdbc.JdbcTxManager;
 import no.sr.ringo.persistence.guice.jdbc.Repository;
@@ -473,10 +473,10 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         messageMetaData.setTransferDirection(no.sr.ringo.transport.TransferDirection.valueOf(rs.getString("direction")));
         messageMetaData.setReceived(rs.getTimestamp("received"));
         messageMetaData.setDelivered(rs.getTimestamp("delivered"));
-        messageMetaData.getPeppolHeader().setSender(ParticipantId.valueOf(rs.getString("sender")));
+        messageMetaData.getPeppolHeader().setSender(ParticipantIdentifier.of(rs.getString("sender")));
 
         String receiverAsString = rs.getString("receiver");
-        ParticipantId receiver = ParticipantId.valueOf(receiverAsString);
+        ParticipantIdentifier receiver = ParticipantIdentifier.of(receiverAsString);
 
         messageMetaData.getPeppolHeader().setReceiver(receiver);
 
@@ -490,11 +490,11 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         if (transmission_id != null) {
             messageMetaData.setTransmissionId(new TransmissionId(transmission_id));
         }
-        messageMetaData.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.valueOf(rs.getString("document_id")));
+        messageMetaData.getPeppolHeader().setDocumentTypeIdentifier(DocumentTypeIdentifier.of(rs.getString("document_id")));
 
         String processId = rs.getString("process_id");
         if (processId != null) {
-            messageMetaData.getPeppolHeader().setProfileId(new ProfileId(processId));
+            messageMetaData.getPeppolHeader().setProcessIdentifier(ProcessIdentifier.of(processId));
         }
 
         final String payload_url = rs.getString("payload_url");
@@ -516,11 +516,11 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         m.setTransferDirection(no.sr.ringo.transport.TransferDirection.valueOf(rs.getString("direction")));
         m.setReceived(rs.getTimestamp("received"));
         m.setDelivered(rs.getTimestamp("delivered"));
-        m.getPeppolHeader().setSender(ParticipantId.valueOf(rs.getString("sender")));
-        m.getPeppolHeader().setReceiver(ParticipantId.valueOf(rs.getString("receiver")));
+        m.getPeppolHeader().setSender(ParticipantIdentifier.of(rs.getString("sender")));
+        m.getPeppolHeader().setReceiver(ParticipantIdentifier.of(rs.getString("receiver")));
         m.getPeppolHeader().setPeppolChannelId(new PeppolChannelId(rs.getString("channel")));
-        m.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.valueOf(rs.getString("document_id")));
-        m.getPeppolHeader().setProfileId(new ProfileId(rs.getString("process_id")));
+        m.getPeppolHeader().setDocumentTypeIdentifier(DocumentTypeIdentifier.of(rs.getString("document_id")));
+        m.getPeppolHeader().setProcessIdentifier( ProcessIdentifier.of(rs.getString("process_id")));
 
         // UUIDs are heavy lifting, check for null values first.
         String uuidString = rs.getString("message_uuid");
@@ -640,10 +640,10 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
                 sql = sql.concat(" and direction = '" + searchParams.getDirection().name() + "'");
             }
             if (searchParams.getSender() != null) {
-                sql = sql.concat(" and sender = '" + searchParams.getSender().stringValue() + "'");
+                sql = sql.concat(" and sender = '" + searchParams.getSender().getIdentifier() + "'");
             }
             if (searchParams.getReceiver() != null) {
-                sql = sql.concat(" and receiver = '" + searchParams.getReceiver().stringValue() + "'");
+                sql = sql.concat(" and receiver = '" + searchParams.getReceiver().getIdentifier() + "'");
             }
             if (searchParams.getSent() != null && searchParams.getDateCondition() != null) {
                 // Mysql:  sql = sql.concat(" and Date(received) " + searchParams.getDateCondition().getValue() + "'" + searchParams.getSent() + "'");

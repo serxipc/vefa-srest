@@ -60,6 +60,7 @@ public class ServerTestModuleFactory implements IModuleFactory {
             //set up the repositories email service etc.
             binder.install(new RingoServiceModule());
 
+            binder.install(new BlobStoreModule());
         }
 
      

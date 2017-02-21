@@ -1,6 +1,6 @@
 package no.sr.ringo.standalone.parser;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.peppol.PeppolChannelId;
 
 import java.io.File;
@@ -27,16 +27,16 @@ public class RingoClientParams {
     private ClientOperation operation;
 
     //participantID used for SMP lookup
-    private ParticipantId peppolParticipantId;
+    private ParticipantIdentifier peppolParticipantId;
 
     //ChannelId used when uploading files
     private PeppolChannelId peppolChannelId;
 
     //participantID of sender when uploading file
-    private ParticipantId senderIdPeppol;
+    private ParticipantIdentifier senderIdPeppol;
 
     //participantId of recipient when uploading single gile
-    private ParticipantId recipientIdPeppol;
+    private ParticipantIdentifier recipientIdPeppol;
 
 
     public File getOutboxPath() {
@@ -48,7 +48,7 @@ public class RingoClientParams {
      * Enum representing search condition
      */
     public enum ClientOperation {
-        UPLOAD, DOWNLOAD, UPLOAD_SINGLE, SMP_LOOKUP;
+        UPLOAD, DOWNLOAD, UPLOAD_SINGLE;
         
         /**
          * Returns a string consisting enum values
@@ -80,7 +80,7 @@ public class RingoClientParams {
         return operation;
     }
 
-    public ParticipantId getParticipantId() {
+    public ParticipantIdentifier getParticipantId() {
         return peppolParticipantId;
     }
 
@@ -88,7 +88,7 @@ public class RingoClientParams {
         return peppolChannelId;
     }
 
-    public ParticipantId getSenderId() {
+    public ParticipantIdentifier getSenderId() {
         return senderIdPeppol;
     }
 
@@ -108,7 +108,7 @@ public class RingoClientParams {
         this.operation = operation;
     }
 
-    public void setParticipantId(ParticipantId peppolParticipantId) {
+    public void setParticipantId(ParticipantIdentifier peppolParticipantId) {
         this.peppolParticipantId = peppolParticipantId;
     }
 
@@ -116,15 +116,15 @@ public class RingoClientParams {
         this.peppolChannelId = peppolChannelId;
     }
 
-    public void setSenderId(ParticipantId senderIdPeppol) {
+    public void setSenderId(ParticipantIdentifier senderIdPeppol) {
         this.senderIdPeppol = senderIdPeppol;
     }
 
-    public ParticipantId getRecipientId() {
+    public ParticipantIdentifier getRecipientId() {
         return recipientIdPeppol;
     }
 
-    public void setRecipientId(ParticipantId recipientIdPeppol) {
+    public void setRecipientId(ParticipantIdentifier recipientIdPeppol) {
         this.recipientIdPeppol = recipientIdPeppol;
     }
 

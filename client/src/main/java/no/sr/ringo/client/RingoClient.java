@@ -1,6 +1,6 @@
 package no.sr.ringo.client;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.common.UploadMode;
 import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.peppol.PeppolChannelId;
@@ -28,14 +28,6 @@ public interface RingoClient {
     Inbox getInbox();
 
     /**
-     * Determines if the participant is registered on the PEPPOL network
-     *
-     * @param peppolParticipantId The participant id of the recipient to check
-     * @return true if the participant is registered false otherwise
-     */
-    boolean isParticipantRegistered(ParticipantId peppolParticipantId);
-
-    /**
      * Sends the given file using the peppol network.
      * <p/>
      * The peppol document type and process type are determined from the contents of the file
@@ -47,7 +39,7 @@ public interface RingoClient {
      * @param uploadMode        Single or batch upload mode. To inform the server whether errors should be reported
      * @return the Message indicating that the file was uploaded
      */
-    Message send(File file, PeppolChannelId peppolChannelId, ParticipantId senderIdPeppol, ParticipantId recipientIdPeppol, UploadMode uploadMode);
+    Message send(File file, PeppolChannelId peppolChannelId, ParticipantIdentifier senderIdPeppol, ParticipantIdentifier recipientIdPeppol, UploadMode uploadMode);
 
     /**
      * Sends the document provided by the inputStream using the peppol network. Using a Stream helps to reduce the memory footprint
@@ -67,9 +59,9 @@ public interface RingoClient {
      * So that the generated Peppol Document can use these values. Also The PeppolHeader needs to contain
      * both the DocumentId and the ProcessId which is required when sending the document.
      *
-     * @param peppolParticipantId  The participant id of the recipient to check
+     * @param peppolParticipantIdentifier  The participant id of the recipient to check
      * @param localName the local name of the document e.g. Invoice,Order,CreditNote
      * @return a List of Objects containing the DocumentId and ProcessId combination
      */
-    List<AcceptedDocumentTransfer> fetchAcceptedDocumentTransfers(ParticipantId peppolParticipantId, LocalName localName);
+    List<AcceptedDocumentTransfer> fetchAcceptedDocumentTransfers(ParticipantIdentifier peppolParticipantIdentifier, LocalName localName);
 }

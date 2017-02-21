@@ -1,7 +1,6 @@
 package no.sr.ringo.message;
 
-import eu.peppol.identifier.ParticipantId;
-import eu.peppol.identifier.SchemeId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
@@ -28,7 +27,7 @@ public class PeppolMessageValidatorTest {
     Account mockRingoAccount;
 
     PeppolMessageValidator validator;
-    ParticipantId participantId;
+    ParticipantIdentifier participantId;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -36,7 +35,7 @@ public class PeppolMessageValidatorTest {
         mockPeppolHeader = createStrictMock(PeppolHeader.class);
         mockRingoAccount = createStrictMock(Account.class);
 
-        participantId = new ParticipantId(SchemeId.NO_ORGNR, "976098897");
+        participantId =  ParticipantIdentifier.of("9908:976098897");
 
     }
 
@@ -92,8 +91,8 @@ public class PeppolMessageValidatorTest {
         expect(mockPeppolMessage.getPeppolHeader()).andStubReturn(mockPeppolHeader);
         expect(mockPeppolHeader.getReceiver()).andReturn(participantId);
         expect(mockPeppolHeader.getSender()).andReturn(participantId);
-        expect(mockPeppolHeader.getPeppolDocumentTypeId()).andReturn(PeppolDocumentTypeId.EHF_INVOICE).times(2);
-        expect(mockPeppolHeader.getProfileId()).andReturn(null);
+        expect(mockPeppolHeader.getPeppolDocumentTypeId()).andReturn(PeppolDocumentTypeId.EHF_INVOICE.toVefa()).times(1);
+        expect(mockPeppolHeader.getProcessIdentifier()).andReturn(null);
 
         replay(mockPeppolMessage, mockPeppolHeader);
 
@@ -115,8 +114,8 @@ public class PeppolMessageValidatorTest {
 
         expect(mockPeppolHeader.getReceiver()).andReturn(participantId);
         expect(mockPeppolHeader.getSender()).andReturn(participantId);
-        expect(mockPeppolHeader.getPeppolDocumentTypeId()).andReturn(PeppolDocumentTypeId.EHF_INVOICE).times(2);
-        expect(mockPeppolHeader.getProfileId()).andReturn(ProfileId.Predefined.BII04_INVOICE_ONLY);
+        expect(mockPeppolHeader.getPeppolDocumentTypeId()).andReturn(PeppolDocumentTypeId.EHF_INVOICE.toVefa()).times(1);
+        expect(mockPeppolHeader.getProcessIdentifier()).andReturn(ProfileId.Predefined.BII04_INVOICE_ONLY.toVefa());
 
         replay(mockPeppolMessage, mockPeppolHeader);
 

@@ -23,7 +23,7 @@
 package no.sr.ringo.persistence.jdbc;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.account.*;
 import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.persistence.guice.jdbc.JdbcTxManager;
@@ -120,11 +120,11 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public Account findAccountByParticipantId(final ParticipantId participantId) {
+    public Account findAccountByParticipantIdentifier(final ParticipantIdentifier participantId) {
         if (participantId == null) {
             return null;
         }
-        Account account = findAccountWithWhereClause("a.id = (select account_id from account_receiver ac where ac.participant_id =?)", new String[]{participantId.stringValue()});
+        Account account = findAccountWithWhereClause("a.id = (select account_id from account_receiver ac where ac.participant_id =?)", new String[]{participantId.getIdentifier()});
         return account;
     }
 
@@ -140,8 +140,8 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     @Transactional
-    public Account createAccount(final Account account, final ParticipantId participantId) {
-        Account ringoAccount = findAccountByParticipantId(participantId);
+    public Account createAccount(final Account account, final ParticipantIdentifier participantId) {
+        Account ringoAccount = findAccountByParticipantIdentifier(participantId);
 
         if (ringoAccount != null) {
             return ringoAccount;
@@ -185,7 +185,7 @@ public class AccountRepositoryImpl implements AccountRepository {
                 sql = "insert into account_receiver (account_id, participant_id) values (?, ?)";
                 ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 ps.setInt(1, result.getAccountId().toInteger());
-                ps.setString(2, participantId.stringValue());
+                ps.setString(2, participantId.getIdentifier());
                 ps.execute();
 
             }

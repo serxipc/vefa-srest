@@ -29,7 +29,6 @@ public class RingoConfigModule extends AbstractModule{
     @Override
     protected void configure() {
         // No action for now
-        
     }
 
 

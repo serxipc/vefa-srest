@@ -20,6 +20,8 @@ public class RingoConfigModuleTest {
     @Test
     public void testConfigure() throws Exception {
 
+        System.setProperty("ringo.home", System.getProperty("java.io.tmpdir"));
+        
         String s = System.setProperty("buster", "dog");
         Injector injector = Guice.createInjector(new RingoConfigModule());
         Config config = injector.getInstance(Config.class);
@@ -38,8 +40,8 @@ public class RingoConfigModuleTest {
         Path p = Paths.get(property, "peppol","payload");
 
         assertEquals(payloadDir, p.toString());
-
-
     }
 
+
+    
 }

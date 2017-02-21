@@ -1,5 +1,7 @@
 package no.sr.ringo.peppol;
 
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
+
 /**
  * @author Steinar Overbeck Cook
  *
@@ -43,6 +45,10 @@ public enum PeppolProcessIdAcronym {
             }
         }
         return UNKNOWN;
+    }
+
+    public  ProcessIdentifier toVefa() {
+        return ProcessIdentifier.of(stringValue());
     }
 
     /** Creates the corresponding ProcessId based upon the supplied local name without throwing exception

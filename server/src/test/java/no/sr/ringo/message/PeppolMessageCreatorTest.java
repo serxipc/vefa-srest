@@ -1,7 +1,6 @@
 package no.sr.ringo.message;
 
-import eu.peppol.identifier.ParticipantId;
-import eu.peppol.identifier.SchemeId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
@@ -24,13 +23,13 @@ public class PeppolMessageCreatorTest {
 
     Account mockRingoAccount;
 
-    ParticipantId participantId;
+    ParticipantIdentifier participantId;
 
     @BeforeMethod
     public void setUp() throws Exception {
         mockRingoAccount = createStrictMock(Account.class);
 
-        participantId = new ParticipantId(SchemeId.NO_ORGNR, "976098897");
+        participantId =  ParticipantIdentifier.of("9908:976098897");
 
     }
 
@@ -48,8 +47,8 @@ public class PeppolMessageCreatorTest {
         PeppolMessage message = creator.extractDocument();
 
         assertNotNull(message);
-        assertEquals(PeppolDocumentTypeId.EHF_INVOICE, message.getPeppolHeader().getPeppolDocumentTypeId());
-        assertEquals(ProfileId.Predefined.BII04_INVOICE_ONLY, message.getPeppolHeader().getProfileId());
+        assertEquals(PeppolDocumentTypeId.EHF_INVOICE.toVefa(), message.getPeppolHeader().getPeppolDocumentTypeId());
+        assertEquals(ProfileId.Predefined.BII04_INVOICE_ONLY.toVefa(), message.getPeppolHeader().getProcessIdentifier());
         assertEquals(participantId, message.getPeppolHeader().getSender());
         assertEquals(participantId, message.getPeppolHeader().getReceiver());
         assertNotNull(message.getXmlMessage());

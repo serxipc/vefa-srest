@@ -22,7 +22,7 @@
 
 package no.sr.ringo.persistence.file;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.config.RingoConfigProperty;
 import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.transport.TransferDirection;
@@ -100,7 +100,7 @@ public class ArtifactPathComputer {
         Path basePath = createBasePath(fileRepoKey.direction);
         final Date date = fileRepoKey.getDate();
         LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-        Path path = Paths.get(basePath.toString(),normalizeFilename(fileRepoKey.getReceiver().stringValue()), normalizeFilename(fileRepoKey.getSender().stringValue()), isoDateFormat.format(ldt));
+        Path path = Paths.get(basePath.toString(),normalizeFilename(fileRepoKey.getReceiver().getIdentifier()), normalizeFilename(fileRepoKey.getSender().getIdentifier()), isoDateFormat.format(ldt));
         return path.resolve(filename);
     }
 
@@ -116,11 +116,11 @@ public class ArtifactPathComputer {
     public static class FileRepoKey {
         private final TransferDirection direction;
         private final ReceptionId receptionId;
-        private final ParticipantId sender;
-        private final ParticipantId receiver;
+        private final ParticipantIdentifier sender;
+        private final ParticipantIdentifier receiver;
         private final Date date;
 
-        public FileRepoKey(TransferDirection direction, ReceptionId receptionId, ParticipantId sender, ParticipantId receiver, Date date) {
+        public FileRepoKey(TransferDirection direction, ReceptionId receptionId, ParticipantIdentifier sender, ParticipantIdentifier receiver, Date date) {
             this.direction = direction;
             this.receptionId = receptionId;
             this.sender = sender;
@@ -132,11 +132,11 @@ public class ArtifactPathComputer {
             return receptionId;
         }
 
-        public ParticipantId getSender() {
+        public ParticipantIdentifier getSender() {
             return sender;
         }
 
-        public ParticipantId getReceiver() {
+        public ParticipantIdentifier getReceiver() {
             return receiver;
         }
 

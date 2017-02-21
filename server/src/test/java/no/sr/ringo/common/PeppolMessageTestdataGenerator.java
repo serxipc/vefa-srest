@@ -1,8 +1,7 @@
 package no.sr.ringo.common;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.account.AccountId;
-import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.message.MessageMetaDataImpl;
 import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.message.MessageWithLocationsImpl;
@@ -37,7 +36,7 @@ public class PeppolMessageTestdataGenerator {
     public static final String EHF_TEST_SEND_REGNING_HELSE_VEST2_XML = "ehf-test-SendRegning-HelseVest2.xml";
     public static final String EHF_TEST_USING_DEFAULT_NAMESPACE_XML = "ehf-test-dakantus_using_default_namespace.xml";
 
-    protected static final ParticipantId SR_PPID = ParticipantId.valueOf("9908:976098897");
+    protected static final ParticipantIdentifier SR_PPID = ParticipantIdentifier.of("9908:976098897");
 
     public static MessageWithLocationsImpl outboundMesssageNotSent() {
         return sampleMessage(TransferDirection.OUT);
@@ -69,10 +68,10 @@ public class PeppolMessageTestdataGenerator {
         m.setMessageMetaData(metaData);
 
         m.getPeppolHeader().setPeppolChannelId(new PeppolChannelId("TEST"));
-        m.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.EHF_INVOICE);
-        m.getPeppolHeader().setProfileId(new ProfileId(PeppolProcessIdAcronym.INVOICE_ONLY.stringValue()));
+        m.getPeppolHeader().setDocumentTypeIdentifier(PeppolDocumentTypeId.EHF_INVOICE.toVefa());
+        m.getPeppolHeader().setProcessIdentifier(PeppolProcessIdAcronym.INVOICE_ONLY.toVefa());
         m.getPeppolHeader().setReceiver(SR_PPID);
-        m.getPeppolHeader().setSender(ParticipantId.valueOf("9908:976098897"));
+        m.getPeppolHeader().setSender(ParticipantIdentifier.of("9908:976098897"));
 
         String path = null;
 
@@ -104,8 +103,8 @@ public class PeppolMessageTestdataGenerator {
 
         PeppolMessage peppolMessage = new PeppolMessage();
         peppolMessage.getPeppolHeader().setPeppolChannelId(new PeppolChannelId(ChannelProtocol.SREST.name()));
-        peppolMessage.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.EHF_INVOICE);
-        peppolMessage.getPeppolHeader().setProfileId(new ProfileId(PeppolProcessIdAcronym.INVOICE_ONLY.stringValue()));
+        peppolMessage.getPeppolHeader().setDocumentTypeIdentifier(PeppolDocumentTypeId.EHF_INVOICE.toVefa());
+        peppolMessage.getPeppolHeader().setProcessIdentifier(PeppolProcessIdAcronym.INVOICE_ONLY.toVefa());
         peppolMessage.getPeppolHeader().setReceiver(SR_PPID);
         peppolMessage.getPeppolHeader().setSender(SR_PPID);
 
@@ -130,8 +129,8 @@ public class PeppolMessageTestdataGenerator {
     public static PeppolMessage outboxPostRequestOfXmlUsingDefaultNamespaces() {
         PeppolMessage peppolMessage = new PeppolMessage();
         peppolMessage.getPeppolHeader().setPeppolChannelId(new PeppolChannelId("CH1"));
-        peppolMessage.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.EHF_INVOICE);
-        peppolMessage.getPeppolHeader().setProfileId(new ProfileId(PeppolProcessIdAcronym.INVOICE_ONLY.stringValue()));
+        peppolMessage.getPeppolHeader().setDocumentTypeIdentifier(PeppolDocumentTypeId.EHF_INVOICE.toVefa());
+        peppolMessage.getPeppolHeader().setProcessIdentifier(PeppolProcessIdAcronym.INVOICE_ONLY.toVefa());
         peppolMessage.getPeppolHeader().setReceiver(SR_PPID);
         peppolMessage.getPeppolHeader().setSender(SR_PPID);
         InputStream is = ReceiveMessageFromClientUseCaseIntegrationTest.class.getClassLoader().getResourceAsStream(EHF_TEST_USING_DEFAULT_NAMESPACE_XML);

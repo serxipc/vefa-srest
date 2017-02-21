@@ -22,9 +22,9 @@
 
 package no.sr.ringo.persistence;
 
-import eu.peppol.identifier.ParticipantId;
-import eu.peppol.identifier.PeppolDocumentTypeId;
 import eu.peppol.identifier.WellKnownParticipant;
+import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountId;
 import no.sr.ringo.account.CustomerId;
@@ -61,24 +61,24 @@ public class ObjectMother {
         return "ringo";
     }
 
-    public static ParticipantId getTestParticipantIdForSMPLookup() {
+    public static ParticipantIdentifier getTestParticipantIdForSMPLookup() {
         return WellKnownParticipant.DIFI;
     }
 
-    public static ParticipantId getTestParticipantIdForConsumerReceiver() {
-        return new ParticipantId("9999:01029400470");
+    public static ParticipantIdentifier getTestParticipantIdForConsumerReceiver() {
+        return new ParticipantIdentifier("9999:01029400470");
     }
 
-    public static ParticipantId getTestParticipantId() {
-        return new ParticipantId("9908:976098897");
+    public static ParticipantIdentifier getTestParticipantId() {
+        return new ParticipantIdentifier("9908:976098897");
     }
 
-    public static ParticipantId getAdamsParticipantId() {
-        return new ParticipantId("9908:988890081");
+    public static ParticipantIdentifier getAdamsParticipantId() {
+        return new ParticipantIdentifier("9908:988890081");
     }
 
-    public static final PeppolDocumentTypeId getDocumentIdForBisInvoice() {
-        return PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0::2.1");
+    public static final DocumentTypeIdentifier getDocumentIdForBisInvoice() {
+        return DocumentTypeIdentifier.of("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0::2.1");
     }
 
 }

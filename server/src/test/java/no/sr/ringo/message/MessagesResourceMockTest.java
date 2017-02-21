@@ -58,8 +58,8 @@ public class MessagesResourceMockTest {
     public void testGetMessages() throws Exception {
 
         String direction = "OUT";
-        String sender = WellKnownParticipant.DIFI_TEST.stringValue();
-        String receiver = WellKnownParticipant.DIFI_TEST.stringValue();
+        String sender = WellKnownParticipant.DIFI_TEST.getIdentifier();
+        String receiver = WellKnownParticipant.DIFI_TEST.getIdentifier();
         String sent = "<=2112-01-01";
         String index = "4";
 

@@ -182,7 +182,7 @@ public class HttpStatusCodeIntegrationTest extends AbstractHttpClientServerTest 
      */
     public void insertSample() throws SQLException {
         final Account account = ObjectMother.getTestAccount();
-        messageId = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), new ReceptionId(), null);
+        messageId = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), new ReceptionId(), null);
     }
 
     public void deleteSample() throws SQLException {

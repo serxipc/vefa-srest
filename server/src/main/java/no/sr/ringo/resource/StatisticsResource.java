@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 
 /**
  * Start of a resource providing statistics over the inbox, outbox and messages
+ *
  * @author andy
  */
 @Path("/statistics")

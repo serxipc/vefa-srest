@@ -1,6 +1,6 @@
 package no.sr.ringo.client;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.common.*;
 import no.sr.ringo.document.ClientPeppolDocument;
 import no.sr.ringo.message.MessageWithLocations;
@@ -178,18 +178,7 @@ public class RingoServiceRestImpl implements RingoService {
         return sendAsMimeMultipartHttpPost(peppolDocument, peppolHeader, uploadMode);
     }
 
-    public boolean isParticipantRegistered(ParticipantId peppolParticipantId) {
-        try {
-            String s = baseUri.toString() + "/directory/" + URLEncoder.encode(peppolParticipantId.stringValue(), "UTF-8");
-            URI directoryLookupUri = createURI(s);
-            HttpGet httpGet = new HttpGet(directoryLookupUri);
-            return execute(httpGet, new IsParticipantRegisteredRingoResponseHandler());
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("Unable to check if participant is registered", e);
-        }
-    }
-
-    public List<AcceptedDocumentTransfer> fetchAcceptedDocumentTransfers(ParticipantId peppolParticipantId, LocalName localName) {
+    public List<AcceptedDocumentTransfer> fetchAcceptedDocumentTransfers(ParticipantIdentifier peppolParticipantId, LocalName localName) {
         try {
             HttpGet httpGet = createHttpGet("/directory/" + urlEncode(peppolParticipantId) + "/" + localName.toString());
             return execute(httpGet, new AcceptedDocumentTransfersRingoResponseHandler(this));
@@ -318,11 +307,11 @@ public class RingoServiceRestImpl implements RingoService {
         try {
             MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET));
             multipartEntity.addPart("file", contentBody);
-            multipartEntity.addPart("RecipientID", new StringBody(peppolHeader.getReceiver().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-            multipartEntity.addPart("SenderID", new StringBody(peppolHeader.getSender().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+            multipartEntity.addPart("RecipientID", new StringBody(peppolHeader.getReceiver().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+            multipartEntity.addPart("SenderID", new StringBody(peppolHeader.getSender().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
             multipartEntity.addPart("ChannelID", new StringBody(peppolHeader.getPeppolChannelId().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-            multipartEntity.addPart("ProcessID", new StringBody(peppolHeader.getProfileId().toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-            multipartEntity.addPart("DocumentID", new StringBody(peppolHeader.getPeppolDocumentTypeId().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+            multipartEntity.addPart("ProcessID", new StringBody(peppolHeader.getProcessIdentifier().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+            multipartEntity.addPart("DocumentID", new StringBody(peppolHeader.getPeppolDocumentTypeId().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
             multipartEntity.addPart("UploadMode", new StringBody(uploadMode.name()));
             httpPost.setEntity(multipartEntity);
         } catch (UnsupportedEncodingException e) {
@@ -342,9 +331,9 @@ public class RingoServiceRestImpl implements RingoService {
         return new HttpGet(directoryLookupUri);
     }
 
-    protected String urlEncode(ParticipantId peppolParticipantId) {
+    protected String urlEncode(ParticipantIdentifier peppolParticipantId) {
         try {
-            return URLEncoder.encode(peppolParticipantId.stringValue(), "UTF-8");
+            return URLEncoder.encode(peppolParticipantId.getIdentifier(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException(e);
         }

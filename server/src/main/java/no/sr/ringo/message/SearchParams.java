@@ -1,6 +1,6 @@
 package no.sr.ringo.message;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.resource.InvalidUserInputWebException;
 import no.sr.ringo.transport.TransferDirection;
 import org.slf4j.Logger;
@@ -20,8 +20,8 @@ public class SearchParams implements MessageSearchParams {
     // not using dateFormat as it's not as restrictive as regex, expected date format is "yyyy-MM-dd"
     protected static final String DATE_FORMAT_REGEX = "[0-9]{4,4}-[0-2][0-9]-[0-3][0-9]";
 
-    private final ParticipantId receiver;
-    private final ParticipantId sender;
+    private final ParticipantIdentifier receiver;
+    private final ParticipantIdentifier sender;
     private final TransferDirection direction;
     //mapped to received in database
     private String sent;
@@ -57,11 +57,11 @@ public class SearchParams implements MessageSearchParams {
         return dateCondition;
     }
 
-    public ParticipantId getReceiver() {
+    public ParticipantIdentifier getReceiver() {
         return receiver;
     }
 
-    public ParticipantId getSender() {
+    public ParticipantIdentifier getSender() {
         return sender;
     }
 
@@ -79,10 +79,10 @@ public class SearchParams implements MessageSearchParams {
      */
     public void appendTo(UriBuilder uriBuilder) {
         if(this.sender != null) {
-            uriBuilder.queryParam("sender", sender.stringValue());
+            uriBuilder.queryParam("sender", sender.getIdentifier());
         }
         if(this.receiver !=null) {
-            uriBuilder.queryParam("receiver", receiver.stringValue());
+            uriBuilder.queryParam("receiver", receiver.getIdentifier());
         }
         if(this.sent !=null) {
             uriBuilder.queryParam("sent", String.format("'%s%s'",dateCondition.getValue(), sent));
@@ -99,12 +99,12 @@ public class SearchParams implements MessageSearchParams {
      * @param participantId
      * @return
      */
-    private ParticipantId parseParticipantId(String participantId) {
+    private ParticipantIdentifier parseParticipantId(String participantId) {
         String participantIdWithoutQuotes = removeQuotes(participantId);
         if (participantIdWithoutQuotes == null || participantIdWithoutQuotes.trim().length() == 0) {
             return null;
         } else {
-            return new ParticipantId(participantIdWithoutQuotes);
+            return new ParticipantIdentifier(participantIdWithoutQuotes);
         }
     }
 

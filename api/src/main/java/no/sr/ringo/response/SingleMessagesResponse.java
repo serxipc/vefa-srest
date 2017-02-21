@@ -64,10 +64,12 @@ public class SingleMessagesResponse implements RestResponse {
         xml.append("            <sender>" + RingoUtils.toXml(peppolHeader.getSender()) + "</sender>\n");
         xml.append("            <receiver>" + RingoUtils.toXml(peppolHeader.getReceiver()) + "</receiver>\n");
         xml.append("            <channel>" + RingoUtils.toXml(peppolHeader.getPeppolChannelId()) + "</channel>\n");
-        xml.append("            <document-type>" + RingoUtils.toXml(peppolHeader.getPeppolDocumentIdAcronym()) + "</document-type>\n");
+        // TODO: Consider replacing this with something else
+        // xml.append("            <document-type>" + RingoUtils.toXml(peppolHeader.getPeppolDocumentIdAcronym()) + "</document-type>\n");
         xml.append("            <document-id>" + RingoUtils.toXml(peppolHeader.getPeppolDocumentTypeId()) + "</document-id>\n");
-        xml.append("            <process-name>" + RingoUtils.toXml(peppolHeader.getPeppolProcessIdAcronym()) + "</process-name>\n");
-        xml.append("            <process-id>" + RingoUtils.toXml(peppolHeader.getProfileId()) + "</process-id>\n");
+        // TODO: Consider replacing this with something else
+        // xml.append("            <process-name>" + RingoUtils.toXml(peppolHeader.getPeppolProcessIdAcronym()) + "</process-name>\n");
+        xml.append("            <process-id>" + RingoUtils.toXml(peppolHeader.getProcessIdentifier()) + "</process-id>\n");
         xml.append("          </peppol-header>\n");
     }
 }

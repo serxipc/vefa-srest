@@ -1,6 +1,6 @@
 package no.sr.ringo.message;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.resource.InvalidUserInputWebException;
 import org.apache.commons.lang.StringUtils;
 
@@ -109,7 +109,7 @@ public class PeppolMessageValidator {
         }
         // ProfileIdResolver processIdResolver = new ProfileIdResolver();
         //not extracted by EHFDocumentExtractor
-        if (peppolMessage.getPeppolHeader().getProfileId() == null) {
+        if (peppolMessage.getPeppolHeader().getProcessIdentifier() == null) {
             throw new InvalidUserInputWebException(String.format("Wrong processId value: %s", postParams.getProcessIdString()));
         }
     }
@@ -120,25 +120,23 @@ public class PeppolMessageValidator {
             throw new InvalidUserInputWebException("DocumentId required");
         }
 
-        //not extracted by EHFDocumentExtractor
+        // not extracted by EHFDocumentExtractor
         if (peppolMessage.getPeppolHeader().getPeppolDocumentTypeId() == null) {
             throw new InvalidUserInputWebException(String.format("Wrong documentId value: %s", postParams.getDocumentIdString()));
-        } else if (!peppolMessage.getPeppolHeader().getPeppolDocumentTypeId().isKnown()) {
-            throw new InvalidUserInputWebException(String.format("Unknown document type: %s", postParams.getDocumentIdString()));
         }
     }
 
     private void validateSender() {
         //sender id
-        ParticipantId senderId = peppolMessage.getPeppolHeader().getSender();
+        ParticipantIdentifier senderId = peppolMessage.getPeppolHeader().getSender();
         if (senderId == null) {
             throw new InvalidUserInputWebException(String.format("Wrong senderId value: %s", postParams.getSenderIdString()));
         }
     }
 
-    private ParticipantId validateRecipientWithoutSmpLookup() {
+    private ParticipantIdentifier validateRecipientWithoutSmpLookup() {
         //recipient id
-        ParticipantId receiver = ParticipantId.valueOf(postParams.getRecipientIdString());
+        ParticipantIdentifier receiver = ParticipantIdentifier.of(postParams.getRecipientIdString());
         if (peppolMessage.getPeppolHeader().getReceiver() == null) {
             throw new InvalidUserInputWebException(String.format("Wrong recipientId value: %s", postParams.getRecipientIdString()));
         }

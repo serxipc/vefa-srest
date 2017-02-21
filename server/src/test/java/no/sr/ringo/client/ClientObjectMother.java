@@ -1,8 +1,8 @@
 package no.sr.ringo.client;
 
-import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.http.AbstractHttpClientServerTest;
@@ -31,15 +31,15 @@ public class ClientObjectMother {
      * @param receiver person that shall receiver document
      * @return
      */
-    public static HttpPost createOutboxPostRequest(Account account, ParticipantId receiver, ParticipantId sender) {
+    public static HttpPost createOutboxPostRequest(Account account, ParticipantIdentifier receiver, ParticipantIdentifier sender) {
         try {
             HttpPost httpPost = new HttpPost(AbstractHttpClientServerTest.PEPPOL_BASE_REST_URL + "/outbox/");
             MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             final File file = getTestInvoice();
 
             multipartEntity.addPart("file", new FileBody(file, "application/xml"));
-            multipartEntity.addPart("RecipientID", new StringBody(receiver.stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-            multipartEntity.addPart("SenderID", new StringBody(sender.stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+            multipartEntity.addPart("RecipientID", new StringBody(receiver.getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+            multipartEntity.addPart("SenderID", new StringBody(sender.getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
             multipartEntity.addPart("ChannelID", new StringBody("CHTEST", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
             multipartEntity.addPart("ProcessID", new StringBody(PeppolProcessTypeIdAcronym.INVOICE_ONLY.name(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
             multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeIdAcronym.INVOICE.name(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));

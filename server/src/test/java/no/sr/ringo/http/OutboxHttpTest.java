@@ -52,8 +52,8 @@ public class OutboxHttpTest extends AbstractHttpClientServerTest {
         MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET));
         ContentBody contentBody = new FileBody(file);
         multipartEntity.addPart("file", contentBody);
-        multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-        multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("RecipientID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+        multipartEntity.addPart("SenderID", new StringBody(ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("ChannelID", new StringBody("Test", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("ProcessID", new StringBody(ProfileId.Predefined.BII04_INVOICE_ONLY.toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
         multipartEntity.addPart("DocumentID", new StringBody(PeppolDocumentTypeId.EHF_INVOICE.toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));

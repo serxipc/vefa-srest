@@ -1,6 +1,6 @@
 package no.sr.ringo.client;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.document.ClientPeppolDocument;
 import no.sr.ringo.document.FileClientPeppolDocument;
 import no.sr.ringo.document.InputStreamPeppolDocument;
@@ -33,7 +33,7 @@ public class ClientPeppolDocumentFactory {
         return clientPeppolDocument;
     }
 
-    public PeppolHeader createPeppolHeader(PeppolChannelId peppolChannelId, ParticipantId senderIdPeppol, ParticipantId recipientIdPeppol) {
+    public PeppolHeader createPeppolHeader(PeppolChannelId peppolChannelId, ParticipantIdentifier senderIdPeppol, ParticipantIdentifier recipientIdPeppol) {
         PeppolHeader peppolHeader = new PeppolHeader();
         peppolHeader.setPeppolChannelId(peppolChannelId);
         peppolHeader.setSender(senderIdPeppol);

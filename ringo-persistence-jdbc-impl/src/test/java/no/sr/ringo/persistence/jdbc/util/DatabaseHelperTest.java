@@ -82,7 +82,12 @@ public class DatabaseHelperTest {
     public void testCreateMessageVerifyAccount() throws Exception {
         // Creates an outbound message, which should be associated with account no #2
         // even though the receivers ppid is bound to account #1
-        Long msgNo = databaseHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.OUT, WellKnownParticipant.DUMMY.stringValue(), WellKnownParticipant.DUMMY.stringValue(), new ReceptionId(), new Date(), PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(), PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId());
+        Long msgNo = databaseHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.OUT,
+                WellKnownParticipant.DUMMY.getIdentifier(),
+                WellKnownParticipant.DUMMY.getIdentifier(),
+                new ReceptionId(), new Date(),
+                PeppolDocumentTypeIdAcronym.EHF_INVOICE.toVefa(),
+                PeppolProcessTypeIdAcronym.INVOICE_ONLY.toVefa());
 
         TransmissionMetaData messageByNo = messageRepository.findByMessageNo(msgNo);
         assertEquals(messageByNo.getAccountId(), account.getAccountId());

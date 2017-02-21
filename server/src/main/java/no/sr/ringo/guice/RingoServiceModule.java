@@ -3,7 +3,10 @@ package no.sr.ringo.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.RequestScoped;
-import no.sr.ringo.document.*;
+import no.sr.ringo.document.DocumentRepository;
+import no.sr.ringo.document.DocumentRepositoryImpl;
+import no.sr.ringo.document.PeppolDocumentFactory;
+import no.sr.ringo.document.PeppolDocumentFactoryImpl;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.email.NoEmailServiceImpl;
 import no.sr.ringo.message.PeppolMessageRepository;
@@ -39,7 +42,6 @@ public class RingoServiceModule extends AbstractModule {
 
     private void bindPeppolDocumentFactories() {
         bind(PeppolDocumentFactory.class).to(PeppolDocumentFactoryImpl.class).in(Singleton.class);
-        bind(PeppolDocumentDecoratorFactory.class).to(PeppolDocumentDecoratorFactoryImpl.class).in(Singleton.class);
     }
 
     private void bindEmailService() {

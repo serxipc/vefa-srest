@@ -39,7 +39,9 @@ public class AdminResource extends AbstractMessageResource {
     private final SendReportUseCase sendReportUseCase;
 
     @Inject
-    public AdminResource(FetchMessagesUseCase fetchMessagesUseCase, Account account, PeppolMessageRepository peppolMessageRepository, SendReportUseCase sendReportUseCase) {
+    public AdminResource(FetchMessagesUseCase fetchMessagesUseCase, Account account,
+                         PeppolMessageRepository peppolMessageRepository,
+                         SendReportUseCase sendReportUseCase) {
         super();
         this.fetchMessagesUseCase = fetchMessagesUseCase;
         this.account = account;
@@ -65,12 +67,12 @@ public class AdminResource extends AbstractMessageResource {
 
     /**
      * Send monthly report (for previous month)
-     *
+     * <p>
      * curl -u username:password https://ringo.domain.com/admin/sendMonthlyReport?email=someone@company.com
      *
-     * @param year    The year to report for. If omitted, current year is used. If the current month is January, we use the previous year.
-     * @param month   The month to report for. If ommited, previous month is used. If the current month is January, we use December.
-     * @param email   The receiver of the report
+     * @param year  The year to report for. If omitted, current year is used. If the current month is January, we use the previous year.
+     * @param month The month to report for. If ommited, previous month is used. If the current month is January, we use December.
+     * @param email The receiver of the report
      * @return A status message
      */
     @GET
@@ -79,15 +81,15 @@ public class AdminResource extends AbstractMessageResource {
     public Response sendMonthlyReport(@Context ServletContext servletContext, @QueryParam("year") Integer year, @QueryParam("month") Integer month, @QueryParam("email") String email) {
 
 
-        if(year == null) {
+        if (year == null) {
             year = RingoReportUtils.getDefaultYearForReport();
         }
 
-        if(month == null) {
+        if (month == null) {
             month = RingoReportUtils.getPreviousMonth();
         }
 
-        if(email == null) {
+        if (email == null) {
             return SrResponse.status(Response.Status.BAD_REQUEST, String.format("You must specify parameter email. Year=%d, month=%d", year, month));
         }
 
@@ -99,7 +101,7 @@ public class AdminResource extends AbstractMessageResource {
     @GET
     @Path("/statistics")
     @Produces(RingoMediaType.APPLICATION_XML)
-    public Response adminStatistics(){
+    public Response adminStatistics() {
         final RingoStatistics ringoStatistics = peppolMessageRepository.getAdminStatistics();
         return SrResponse.ok().entity(ringoStatistics.asXml()).build();
     }

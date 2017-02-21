@@ -78,6 +78,11 @@ public class MessageWithLocationsImpl implements MessageWithLocations {
         return messageMetaData.getReceptionId();
     }
 
+    @Override
+    public URI getPayloadUri() {
+        return messageMetaData.getPayloadUri();
+    }
+
 
     public void setMessageMetaData(MessageMetaData messageMetaData) {
         this.messageMetaData = messageMetaData;

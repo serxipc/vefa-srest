@@ -10,7 +10,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.easymock.EasyMock.*;
-import static org.testng.Assert.assertEquals;
 
 /**
  * User: andy
@@ -19,7 +18,6 @@ import static org.testng.Assert.assertEquals;
  */
 public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
 
-    private PeppolDocumentDecoratorFactory mockPeppolDocumentDecoratorFactory;
     private DocumentRepository mockDocumentRepository;
     private FetchDocumentUseCase fetchDocumentUseCase;
 
@@ -30,30 +28,14 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
     @BeforeMethod
     public void setUp() throws Exception {
         mockDocumentRepository = EasyMock.createStrictMock(DocumentRepository.class);
-        mockPeppolDocumentDecoratorFactory = EasyMock.createStrictMock(PeppolDocumentDecoratorFactory.class);
 
-        fetchDocumentUseCase = new FetchDocumentUseCase(mockDocumentRepository, mockPeppolDocumentDecoratorFactory);
+        fetchDocumentUseCase = new FetchDocumentUseCase(mockDocumentRepository);
 
         account = ObjectMother.getTestAccount();
         ehfInvoice = createEhfInvoice();
         peppolDocumentDecorator = new MyPeppolDocumentDecorator(ehfInvoice);
     }
 
-    @Test
-    public void testsDocumentIsFetchedAndDecoratedByTheUseCase() throws Exception {
-        MessageNumber msgNo = MessageNumber.valueOf("10");
-
-        expect(mockDocumentRepository.getPeppolDocument(account, msgNo)).andStubReturn(ehfInvoice);
-
-        expect(mockPeppolDocumentDecoratorFactory.decorateWithStyleSheet(ehfInvoice)).andStubReturn(peppolDocumentDecorator);
-
-        replayAllMocks();
-
-        PeppolDocument result = fetchDocumentUseCase.executeWithDecoration(account, msgNo);
-
-        assertEquals(result, peppolDocumentDecorator);
-        verifyAllMocks();
-    }
 
     @Test(expectedExceptions = PeppolMessageNotFoundException.class)
     public void testIfAMessageIsNotFoundTheExceptionIsLeftToPropagate() throws Exception {
@@ -71,11 +53,11 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
     }
 
     private void verifyAllMocks() {
-        verify(mockPeppolDocumentDecoratorFactory,mockDocumentRepository);
+        verify(mockDocumentRepository);
     }
 
     private void replayAllMocks() {
-        replay(mockPeppolDocumentDecoratorFactory,mockDocumentRepository);
+        replay(mockDocumentRepository);
     }
 
 

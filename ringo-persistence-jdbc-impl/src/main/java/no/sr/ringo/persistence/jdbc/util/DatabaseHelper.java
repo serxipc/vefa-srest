@@ -24,11 +24,10 @@
 package no.sr.ringo.persistence.jdbc.util;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.ParticipantId;
-import eu.peppol.identifier.PeppolDocumentTypeId;
-import eu.peppol.identifier.PeppolProcessTypeId;
+import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.sr.ringo.account.*;
-import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.message.MessageMetaDataImpl;
 import no.sr.ringo.message.MessageRepository;
 import no.sr.ringo.message.ReceptionId;
@@ -83,7 +82,7 @@ public class DatabaseHelper {
     }
 
 
-    public Long createSampleMessage(PeppolDocumentTypeId documentId, PeppolProcessTypeId processTypeId, String message, Integer accountId, no.sr.ringo.transport.TransferDirection direction,
+    public Long createSampleMessage(DocumentTypeIdentifier documentId, ProcessIdentifier processTypeId, String message, Integer accountId, no.sr.ringo.transport.TransferDirection direction,
                                     String senderValue, String receiverValue,
                                     final ReceptionId receptionId, Date delivered, Date received) {
 
@@ -98,7 +97,7 @@ public class DatabaseHelper {
         }
     }
 
-    public Long createSampleMessage(PeppolDocumentTypeId documentId, PeppolProcessTypeId processTypeId, String message, Integer accountId, no.sr.ringo.transport.TransferDirection direction,
+    public Long createSampleMessage(DocumentTypeIdentifier documentId, ProcessIdentifier processTypeId, String message, Integer accountId, no.sr.ringo.transport.TransferDirection direction,
                                     String senderValue, String receiverValue,
                                     final ReceptionId receptionId, Date delivered, Date received,
                                     PeppolChannelId peppolChannelId) {
@@ -110,14 +109,14 @@ public class DatabaseHelper {
         verifyReceptionId(receptionId);
 
         final MessageMetaDataImpl mmd = new MessageMetaDataImpl();
-        mmd.getPeppolHeader().setPeppolDocumentTypeId(no.sr.ringo.peppol.PeppolDocumentTypeId.valueOf(documentId.toString()));
-        mmd.getPeppolHeader().setProfileId(ProfileId.valueOf(processTypeId.toString()));
+        mmd.getPeppolHeader().setDocumentTypeIdentifier(documentId);
+        mmd.getPeppolHeader().setProcessIdentifier(processTypeId);
         if (accountId != null) {
             mmd.setAccountId(new AccountId(accountId));
         }
         mmd.setTransferDirection(direction);
-        mmd.getPeppolHeader().setSender(ParticipantId.valueOf(senderValue));
-        mmd.getPeppolHeader().setReceiver(ParticipantId.valueOf(receiverValue));
+        mmd.getPeppolHeader().setSender(ParticipantIdentifier.of(senderValue));
+        mmd.getPeppolHeader().setReceiver(ParticipantIdentifier.of(receiverValue));
         mmd.getPeppolHeader().setPeppolChannelId(peppolChannelId);
 
         mmd.setReceptionId(receptionId);
@@ -141,9 +140,9 @@ public class DatabaseHelper {
      *
      * @param direction indicates whether the message is inbound or outbound with respect to the PEPPOL network.
      */
-    public Long createSampleMessage(Integer accountId, no.sr.ringo.transport.TransferDirection direction, String senderValue, String receiverValue, final ReceptionId receptionId, Date delivered, PeppolDocumentTypeId peppolDocumentTypeId, PeppolProcessTypeId peppolProcessTypeId) {
-        PeppolDocumentTypeId invoiceDocumentType = peppolDocumentTypeId;
-        PeppolProcessTypeId processTypeId = peppolProcessTypeId;
+    public Long createSampleMessage(Integer accountId, no.sr.ringo.transport.TransferDirection direction, String senderValue, String receiverValue, final ReceptionId receptionId, Date delivered, DocumentTypeIdentifier peppolDocumentTypeId, ProcessIdentifier peppolProcessTypeId) {
+        DocumentTypeIdentifier invoiceDocumentType = peppolDocumentTypeId;
+        ProcessIdentifier processTypeId = peppolProcessTypeId;
 
         return createSampleMessage(invoiceDocumentType, processTypeId, "<test>\u00E5</test>", accountId, direction, senderValue, receiverValue, receptionId, delivered, new Date(), new PeppolChannelId("UnitTest"));
     }

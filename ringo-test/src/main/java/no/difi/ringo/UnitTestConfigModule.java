@@ -1,8 +1,11 @@
 package no.difi.ringo;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -79,6 +82,18 @@ public class UnitTestConfigModule extends AbstractModule {
 
         Optional<String> validationQuery = Optional.of("select current_date()");
         bind(typeLiteralForOptionalString).annotatedWith(Names.named(JDBC_VALIDATION_QUERY)).toInstance(validationQuery);
+    }
+
+    @Provides
+    Config provideConfig() {
+        ConfigFactory.invalidateCaches();
+        final Config defaultReference = ConfigFactory.defaultReference();
+        final Config config = ConfigFactory.systemProperties()
+                .withFallback(defaultReference)
+                .withFallback(defaultReference.getConfig("default"));
+        final Config resolved = config.resolve();
+
+        return resolved;
     }
 
     private Path getPathToPayloadDirectory() {

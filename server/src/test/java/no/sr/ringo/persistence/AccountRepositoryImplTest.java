@@ -1,7 +1,7 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.*;
 import no.sr.ringo.guice.ServerTestModuleFactory;
@@ -31,7 +31,7 @@ public class AccountRepositoryImplTest {
     private AccountRepository accountRepository;
     private final DbmsTestHelper dbmsTestHelper;
     private Account account;
-    private ParticipantId participantId;
+    private ParticipantIdentifier participantId;
     private DatabaseHelper databaseHelper;
     private Customer customer;
     Account adamsAccount;
@@ -84,7 +84,7 @@ public class AccountRepositoryImplTest {
 
     @Test(groups = {"persistence"})
     public void testFindAccountByParticipantId() throws Exception {
-        Account accountByParticipantId = accountRepository.findAccountByParticipantId(participantId);
+        Account accountByParticipantId = accountRepository.findAccountByParticipantIdentifier(participantId);
         assertNotNull(accountByParticipantId);
         assertNotNull(accountByParticipantId.getAccountId());
         assertNotNull(accountByParticipantId.getCustomerId());
@@ -143,7 +143,7 @@ public class AccountRepositoryImplTest {
 
     @Test(groups = {"persistence"})
     public void findMessageOwner(){
-        Long messageNumber = dbmsTestHelper.createSampleMessage(adamsAccount.getAccountId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), new ReceptionId(), null);
+        Long messageNumber = dbmsTestHelper.createSampleMessage(adamsAccount.getAccountId().toInteger(), TransferDirection.IN, participantId.getIdentifier(), participantId.getIdentifier(), new ReceptionId(), null);
         assertEquals(adamsAccount, accountRepository.findAccountAsOwnerOfMessage(MessageNumber.create(messageNumber)));
 
     }

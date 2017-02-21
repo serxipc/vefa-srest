@@ -1,6 +1,6 @@
 package no.sr.ringo.peppol;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import org.joda.time.DateTimeZone;
 import org.testng.annotations.Test;
 
@@ -73,9 +73,9 @@ public class RingoUtilsTest {
     }
 
     @Test
-    public void testToXmlParticipantId(){
+    public void testToXmlParticipantIdentifier(){
         String expected = "9908:976098897";
-        final String encoded = RingoUtils.toXml(ParticipantId.valueOf(expected));
+        final String encoded = RingoUtils.toXml(ParticipantIdentifier.of(expected));
         final String decoded = RingoUtils.decodePredefinedXmlEntities(encoded);
         assertEquals(decoded, expected);
     }

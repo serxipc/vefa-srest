@@ -22,8 +22,8 @@
 
 package no.sr.ringo.persistence.jdbc;
 
-import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.WellKnownParticipant;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.account.AccountId;
 import no.sr.ringo.message.MessageMetaDataImpl;
 import no.sr.ringo.message.MessageRepository;
@@ -77,7 +77,7 @@ public class MessageRepositoryH2ImplTest {
     @Test
     public void findAccountByParticipantId() {
         MessageRepositoryH2Impl repo = (MessageRepositoryH2Impl) messageDbmsRepository;
-        AccountId accountId = repo.srAccountIdForReceiver(new ParticipantId("9908:976098897"));
+        AccountId accountId = repo.srAccountIdForReceiver(new ParticipantIdentifier("9908:976098897"));
         assertEquals(accountId.toInteger(), Integer.valueOf(1));
     }
 
@@ -127,12 +127,12 @@ public class MessageRepositoryH2ImplTest {
 
         String sender = resultSet.getString("SENDER");
         assertNotNull(sender);
-        assertEquals(sender, WellKnownParticipant.DIFI.stringValue());
+        assertEquals(sender, WellKnownParticipant.DIFI.getIdentifier());
 
 
         String receiver = resultSet.getString("RECEIVER");
         assertNotNull(receiver);
-        assertEquals(receiver, WellKnownParticipant.DIFI_TEST.stringValue());
+        assertEquals(receiver, WellKnownParticipant.DIFI_TEST.getIdentifier());
 
         assertNotNull(resultSet.getString("CHANNEL"));
         assertNotNull(resultSet.getString("MESSAGE_UUID"));
@@ -152,7 +152,7 @@ public class MessageRepositoryH2ImplTest {
         mmd.setTransferDirection(TransferDirection.OUT);
         mmd.getPeppolHeader().setSender(WellKnownParticipant.DIFI);
         mmd.getPeppolHeader().setReceiver(WellKnownParticipant.DIFI_TEST);
-        mmd.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.EHF_INVOICE);
+        mmd.getPeppolHeader().setDocumentTypeIdentifier(PeppolDocumentTypeId.EHF_INVOICE.toVefa());
         mmd.getPeppolHeader().setPeppolChannelId(new PeppolChannelId(ChannelProtocol.SREST.name()));
         mmd.setAccountId(new AccountId(1));
         return mmd;

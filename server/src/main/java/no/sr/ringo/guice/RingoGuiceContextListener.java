@@ -51,10 +51,13 @@ public class RingoGuiceContextListener extends GuiceServletContextListener {
 
                 // The repositories
                 new RingoRepositoryModule(),
+                
                 // The JDBC datasource to be obtained via JNDI
                 new RingoJndiDataSourceGuiceModule(jndiName),
 
-                new RingoConfigModule()
+                new RingoConfigModule() ,
+
+                new BlobStoreModule()   // Provides the PayloadUriRewriter instance to be used
         );
     }
 

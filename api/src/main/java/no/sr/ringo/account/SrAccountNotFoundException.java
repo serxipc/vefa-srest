@@ -22,7 +22,7 @@
 
 package no.sr.ringo.account;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 
 /**
  * @author Steinar Overbeck Cook
@@ -33,7 +33,7 @@ public class SrAccountNotFoundException extends Exception {
         super("SR Account " + id + " not found");
     }
 
-    public SrAccountNotFoundException(ParticipantId participantId) {
+    public SrAccountNotFoundException(ParticipantIdentifier participantId) {
         super("SR Account for participant id " + participantId + " not found");
     }
 

@@ -1,8 +1,9 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.ParticipantId;
 import no.difi.vefa.peppol.common.model.InstanceIdentifier;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
@@ -66,7 +67,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     private final DbmsTestHelper dbmsTestHelper;
     Logger logger = LoggerFactory.getLogger(PeppolMessageRepositoryImplIntegrationTest.class);
     private Account account = ObjectMother.getTestAccount();
-    private ParticipantId participantId = ObjectMother.getTestParticipantIdForSMPLookup();
+    private ParticipantIdentifier participantId = ObjectMother.getTestParticipantIdForSMPLookup();
 
     private Long messageId;
     private Long messageOut;
@@ -87,9 +88,9 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     public void insertSample() throws SQLException {
         databaseHelper.deleteAllMessagesForAccount(account);
         messageInReceptionId = new ReceptionId();
-        messageId = dbmsTestHelper.createSampleMessage(1, TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), messageInReceptionId, null);
+        messageId = dbmsTestHelper.createSampleMessage(1, TransferDirection.IN, participantId.getIdentifier(), participantId.getIdentifier(), messageInReceptionId, null);
         receptionId = new ReceptionId();
-        messageOut = dbmsTestHelper.createSampleMessage(1, TransferDirection.OUT, participantId.stringValue(), participantId.stringValue(), receptionId, null);
+        messageOut = dbmsTestHelper.createSampleMessage(1, TransferDirection.OUT, participantId.getIdentifier(), participantId.getIdentifier(), receptionId, null);
     }
 
     @AfterMethod(groups = {"persistence"})
@@ -128,10 +129,10 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         mmd.setTransferDirection(TransferDirection.IN);
         mmd.getPeppolHeader().setSender(ObjectMother.getTestParticipantId());
         mmd.getPeppolHeader().setReceiver(ObjectMother.getAdamsParticipantId());
-        mmd.getPeppolHeader().setPeppolDocumentTypeId(PeppolDocumentTypeId.EHF_INVOICE);
+        mmd.getPeppolHeader().setDocumentTypeIdentifier(PeppolDocumentTypeId.EHF_INVOICE.toVefa());
         mmd.getPeppolHeader().setPeppolChannelId(new PeppolChannelId(ChannelProtocol.AS2.name()));
 
-        mmd.getPeppolHeader().setProfileId(ProfileId.Predefined.PEPPOL_4A_INVOICE_ONLY);
+        mmd.getPeppolHeader().setProcessIdentifier(ProfileId.Predefined.PEPPOL_4A_INVOICE_ONLY.toVefa());
         mmd.setTransmissionId(new TransmissionId(UUID.randomUUID().toString()));
         mmd.setReceived(new Date());
         final InstanceIdentifier sbdhInstanceIdentifier = InstanceIdentifier.generateUUID();
@@ -190,7 +191,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
     @Test(groups = {"persistence"})
     public void testHandlingOfInvalidProcessId() {
         PeppolMessage peppolMessage = PeppolMessageTestdataGenerator.outboxPostRequest();
-        peppolMessage.getPeppolHeader().setProfileId(ProfileId.valueOf("urn:www.cenbii.eu:profile:bii05:ver1.0"));
+        peppolMessage.getPeppolHeader().setProcessIdentifier(ProcessIdentifier.of("urn:www.cenbii.eu:profile:bii05:ver1.0"));
 
         MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage);
         MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, Long.valueOf(messageWithLocations.getMsgNo()));
@@ -307,7 +308,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         assertEquals(messageOutbound.getPeppolHeader().getReceiver(), messageInbound.getPeppolHeader().getReceiver());
         assertEquals(messageOutbound.getPeppolHeader().getPeppolChannelId(), messageInbound.getPeppolHeader().getPeppolChannelId());
         assertEquals(messageOutbound.getPeppolHeader().getPeppolDocumentTypeId(), messageInbound.getPeppolHeader().getPeppolDocumentTypeId());
-        assertEquals(messageOutbound.getPeppolHeader().getProfileId(), messageInbound.getPeppolHeader().getProfileId());
+        assertEquals(messageOutbound.getPeppolHeader().getProcessIdentifier(), messageInbound.getPeppolHeader().getProcessIdentifier());
         assertEquals(receptionid, messageInbound.getReceptionId());
         assertEquals(messageOutbound.getReceived(), messageInbound.getReceived());
 

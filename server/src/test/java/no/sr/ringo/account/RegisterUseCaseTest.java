@@ -2,8 +2,7 @@
 package no.sr.ringo.account;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.ParticipantId;
-import no.sr.ringo.RingoConstant;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.common.MessageHelper;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import org.easymock.EasyMock;
@@ -81,19 +80,19 @@ public class RegisterUseCaseTest {
     public void testRegisterWithoutSmp() throws NoSuchAlgorithmException, UnsupportedEncodingException {
 
         CustomerId customerId = new CustomerId(10);
-        final String orgNo = "NO222222222";
+        final String orgNo = "9908:222222222";
         AccountRepository mockAccountRepository = createStrictMock(AccountRepository.class);
         registerUseCase.setAccountRepository(mockAccountRepository);
 
         expect(mockAccountRepository.accountExists(new UserName("username"))).andReturn(false);
-        expect(mockAccountRepository.findAccountByParticipantId(new ParticipantId(RingoConstant.NORWEGIAN_PEPPOL_PARTICIPANT_PREFIX + orgNo))).andReturn(null);
+        expect(mockAccountRepository.findAccountByParticipantIdentifier( ParticipantIdentifier.of(orgNo))).andReturn(null);
 
         Customer customer = new Customer(customerId.toInteger(), "name", new Date(), null, "email", "phone", "country", "add1", "add2", "zip", "city", orgNo);
 
         expect(mockAccountRepository.createCustomer("name", "email", "phone", "country", "contactPerson", "add1", "add2", "zip", "city", orgNo)).andReturn(customer);
         Account ra = new Account(customer.getCustomerId(), customer.getName(),new UserName("username"), new Date(), "password", new AccountId(1), false, true);
 
-        expect(mockAccountRepository.createAccount(isA(Account.class), EasyMock.<ParticipantId>isNull())).andReturn(ra);
+        expect(mockAccountRepository.createAccount(isA(Account.class), EasyMock.<ParticipantIdentifier>isNull())).andReturn(ra);
 
         mockAccountRepository.updatePasswordOnAccount(isA(AccountId.class), isA(String.class));
         expectLastCall();

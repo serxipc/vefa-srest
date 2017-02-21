@@ -1,7 +1,8 @@
 package no.sr.ringo.peppol;
 
-import eu.peppol.identifier.ParticipantId;
-import no.sr.ringo.cenbiimeta.ProfileId;
+import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -137,8 +138,8 @@ public class RingoUtils {
      * @param sender
      * @return
      */
-    public static String toXml(ParticipantId sender) {
-        return sender == null ? "" : sender.stringValue();
+    public static String toXml(ParticipantIdentifier sender) {
+        return sender == null ? "" : sender.getIdentifier();
     }
 
     /**
@@ -155,8 +156,8 @@ public class RingoUtils {
      * @param peppolDocumentTypeId
      * @return
      */
-    public static String toXml(PeppolDocumentTypeId peppolDocumentTypeId) {
-        return peppolDocumentTypeId != null ? encodePredefinedXmlEntities(peppolDocumentTypeId.stringValue()) : null;
+    public static String toXml(DocumentTypeIdentifier peppolDocumentTypeId) {
+        return peppolDocumentTypeId != null ? encodePredefinedXmlEntities(peppolDocumentTypeId.getIdentifier()) : null;
     }
 
     /**
@@ -174,8 +175,8 @@ public class RingoUtils {
      * @param profileId
      * @return
      */
-    public static String toXml(ProfileId profileId) {
-        return profileId != null ? encodePredefinedXmlEntities(profileId.toString()) : null;
+    public static String toXml(ProcessIdentifier profileId) {
+        return profileId != null ? encodePredefinedXmlEntities(profileId.getIdentifier()) : null;
     }
 
     /**

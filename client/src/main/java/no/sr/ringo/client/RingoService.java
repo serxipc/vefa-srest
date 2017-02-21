@@ -1,6 +1,6 @@
 package no.sr.ringo.client;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.common.MessageContainer;
 import no.sr.ringo.common.UploadMode;
 import no.sr.ringo.document.ClientPeppolDocument;
@@ -75,15 +75,7 @@ public interface RingoService {
      * @param localName the local name of the document e.g. Invoice,Order,CreditNote
      * @return a List of Objects containing the DocumentId and ProcessId combination
      */
-    List<AcceptedDocumentTransfer> fetchAcceptedDocumentTransfers(ParticipantId peppolParticipantId, LocalName localName);
-
-    /**
-     * Determines if the participant is registered on the PEPPOL network
-     *
-     * @param peppolParticipantId The participant id of the recipient to check
-     * @return true if the participant is registered false otherwise
-     */
-    boolean isParticipantRegistered(ParticipantId peppolParticipantId);
+    List<AcceptedDocumentTransfer> fetchAcceptedDocumentTransfers(ParticipantIdentifier peppolParticipantId, LocalName localName);
 
     /**
      * Downloads the message to the output stream provided

@@ -1,6 +1,6 @@
 package no.sr.ringo.message;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.transport.TransferDirection;
 
 /**
@@ -13,9 +13,9 @@ public interface MessageSearchParams {
 
     TransferDirection getDirection();
 
-    ParticipantId getSender();
+    ParticipantIdentifier getSender();
 
-    ParticipantId getReceiver();
+    ParticipantIdentifier getReceiver();
 
     String getSent();
 

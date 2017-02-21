@@ -12,7 +12,6 @@ import org.json.JSONStringer;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.Serializable;
 
 /**
@@ -30,6 +29,8 @@ public class RegisterResource extends AbstractMessageResource {
 
     @Inject
     public RegisterResource(RegisterUseCase registerUseCase) {
+
+        super();
         this.registerUseCase = registerUseCase;
     }
 

@@ -34,7 +34,7 @@ package no.sr.ringo.peppol;
  *         Date: 04.12.11
  *         Time: 18:52
  *
- *         @deprecated use the constructor of {@link PeppolDocumentTypeId}
+ *         @deprecated use the constructor of {@link DocumentTypeIdentifier}
  */
 enum PeppolDocumentIdAcronym {
     /** PEPPOL 4A invoice */

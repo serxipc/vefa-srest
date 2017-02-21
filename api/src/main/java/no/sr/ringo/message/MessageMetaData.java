@@ -4,6 +4,7 @@ import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.transport.TransferDirection;
 import no.sr.ringo.transport.TransmissionId;
 
+import java.net.URI;
 import java.util.Date;
 
 /**
@@ -30,4 +31,6 @@ public interface MessageMetaData {
     TransmissionId getTransmissionId();         // AS2 Message-ID
 
     ReceptionId getReceptionId();
+
+    URI getPayloadUri();
 }

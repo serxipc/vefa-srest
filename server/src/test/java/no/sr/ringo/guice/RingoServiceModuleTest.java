@@ -2,7 +2,6 @@ package no.sr.ringo.guice;
 
 import no.difi.ringo.UnitTestConfigModule;
 import no.sr.ringo.document.DocumentRepository;
-import no.sr.ringo.document.PeppolDocumentDecoratorFactory;
 import no.sr.ringo.document.PeppolDocumentFactory;
 import no.sr.ringo.persistence.jdbc.RingoRepositoryModule;
 import org.testng.annotations.Guice;
@@ -29,8 +28,6 @@ public class RingoServiceModuleTest {
     PeppolDocumentFactory documentFactory2;
     @Inject
     DocumentRepository documentRepository;
-    @Inject
-    PeppolDocumentDecoratorFactory peppolDocumentDecoratorFactory;
 
 
     @Test
@@ -46,10 +43,5 @@ public class RingoServiceModuleTest {
     @Test
     public void testFetchDocumentInjected() throws Exception {
         assertNotNull(documentRepository);
-    }
-
-    @Test
-    public void testPeppolDocumentDecoratorFactoryInjected() throws Exception {
-        assertNotNull(peppolDocumentDecoratorFactory);
     }
 }

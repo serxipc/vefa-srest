@@ -262,12 +262,10 @@ public class MessageResponseBuilderTest {
                 "            <sender>9908:976098897</sender>\n" +
                 "            <receiver>9908:976098897</receiver>\n" +
                 "            <channel>TEST</channel>\n" +
-                "            <document-type>INVOICE</document-type>\n" +
                 "            <document-id>" + PeppolDocumentTypeId.EHF_INVOICE.stringValue()+ "</document-id>\n" +
-                "            <process-name>INVOICE_ONLY</process-name>\n" +
                 "            <process-id>urn:www.cenbii.eu:profile:bii04:ver1.0</process-id>\n" +
                 "          </peppol-header>";
-        assertTrue(xml.contains(expectedHeader));
+        assertTrue(xml.contains(expectedHeader), "Ooops, sampleResponse: " + xml);
     }
 
     /**

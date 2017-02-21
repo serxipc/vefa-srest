@@ -1,6 +1,6 @@
 package no.sr.ringo.client;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.common.FileHelper;
 import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.message.ReceptionId;
@@ -79,7 +79,7 @@ public class Message {
         return file;
     }
 
-    public ParticipantId getReceiver() {
+    public ParticipantIdentifier getReceiver() {
         return messageWithLocations.getPeppolHeader().getReceiver();
     }
 

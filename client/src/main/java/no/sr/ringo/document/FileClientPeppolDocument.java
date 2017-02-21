@@ -1,11 +1,11 @@
 package no.sr.ringo.document;
 
-import eu.peppol.identifier.ParticipantId;
-import no.sr.ringo.cenbiimeta.ProfileId;
+import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.sr.ringo.common.XmlHelper;
 import no.sr.ringo.document.specification.*;
 import no.sr.ringo.peppol.LocalName;
-import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolHeader;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
@@ -16,6 +16,7 @@ import java.io.File;
 
 /**
  * ClientPeppolDocument which represents a PeppolDocument backed by a java.io.File object
+ * 
  * Provides a method for automatically extracting a valid PeppolHeader from the contents
  * of the file.
  */
@@ -49,11 +50,11 @@ public class FileClientPeppolDocument extends ClientPeppolDocument {
 
         // first we have to decode the document id (used to identify documents later)
         if (peppolHeader.getPeppolDocumentTypeId() == null) {
-            peppolHeader.setPeppolDocumentTypeId(findDocumentType());
+            peppolHeader.setDocumentTypeIdentifier(findDocumentType());
         }
 
-        if (peppolHeader.getProfileId() == null) {
-            peppolHeader.setProfileId(findProfileId());
+        if (peppolHeader.getProcessIdentifier() == null) {
+            peppolHeader.setProcessIdentifier(findProfileId());
         }
 
         if ((peppolHeader.getSender() == null) || (peppolHeader.getReceiver() == null)) {
@@ -81,37 +82,38 @@ public class FileClientPeppolDocument extends ClientPeppolDocument {
 
     private void makeSureWeOnlyDecodeKnownDocumentTypes(PeppolHeader peppolHeader) {
         if (peppolHeader.getPeppolDocumentTypeId() != null) {
-            String type = peppolHeader.getPeppolDocumentTypeId().getLocalName().toString();
-            if (!(LocalName.Invoice.toString().equalsIgnoreCase(type) || LocalName.CreditNote.toString().equalsIgnoreCase(type))) {
+            String type = peppolHeader.getPeppolDocumentTypeId().getIdentifier();
+
+            if (!(type.contains(LocalName.Invoice.toString()) || type.contains(LocalName.CreditNote.toString()))) {
                 throw new IllegalArgumentException("This Ringo Client version is unable to detect sender and receiver from " + type + " type xml files.");
             }
         }
     }
 
-    ParticipantId findGenericParticipantId(String xpath) {
-        XmlHelper<ParticipantId> participantIdXmlHelper = new XmlHelper<ParticipantId>(new GenericParticipantIdXmlSpecification(xpath));
+    ParticipantIdentifier findGenericParticipantId(String xpath) {
+        XmlHelper<ParticipantIdentifier> participantIdXmlHelper = new XmlHelper<ParticipantIdentifier>(new GenericParticipantIdXmlSpecification(xpath));
         return participantIdXmlHelper.selectSingle(getDocument());
     }
 
-    ParticipantId findReceiver() {
-        XmlHelper<ParticipantId> participantIdXmlHelper = new XmlHelper<ParticipantId>(new RecipientParticipantIdXmlSpecification());
+    ParticipantIdentifier findReceiver() {
+        XmlHelper<ParticipantIdentifier> participantIdXmlHelper = new XmlHelper<ParticipantIdentifier>(new RecipientParticipantIdXmlSpecification());
         return participantIdXmlHelper.selectSingle(getDocument());
     }
 
-    ParticipantId findSender() {
-        XmlHelper<ParticipantId> participantIdXmlHelper = new XmlHelper<ParticipantId>(new SenderParticipantIdXmlSpecification());
+    ParticipantIdentifier findSender() {
+        XmlHelper<ParticipantIdentifier> participantIdXmlHelper = new XmlHelper<ParticipantIdentifier>(new SenderParticipantIdXmlSpecification());
         return participantIdXmlHelper.selectSingle(getDocument());
     }
 
 
-    PeppolDocumentTypeId findDocumentType() {
-        XmlHelper<PeppolDocumentTypeId> documentTypeIdXmlHelper = new XmlHelper<PeppolDocumentTypeId>(new PeppolDocumentTypeIdXmlSpecification());
+    DocumentTypeIdentifier findDocumentType() {
+        XmlHelper<DocumentTypeIdentifier> documentTypeIdXmlHelper = new XmlHelper<DocumentTypeIdentifier>(new PeppolDocumentTypeIdXmlSpecification());
         documentTypeIdXmlHelper.rethrowException();
         return documentTypeIdXmlHelper.selectSingle(getDocument());
     }
 
-    ProfileId findProfileId() {
-        XmlHelper<ProfileId> processTypeIdXmlHelper = new XmlHelper<ProfileId>(new ProfileIdXmlSpecification());
+    ProcessIdentifier findProfileId() {
+        XmlHelper<ProcessIdentifier> processTypeIdXmlHelper = new XmlHelper<ProcessIdentifier>(new ProfileIdXmlSpecification());
         return processTypeIdXmlHelper.selectSingle(getDocument());
     }
 

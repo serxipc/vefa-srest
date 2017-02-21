@@ -1,5 +1,6 @@
 package no.sr.ringo.document.specification;
 
+import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
 import no.sr.ringo.peppol.CustomizationIdentifier;
 import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
@@ -10,7 +11,7 @@ import org.jdom.Namespace;
 import java.util.Collections;
 import java.util.List;
 
-public class PeppolDocumentTypeIdXmlSpecification extends PeppolDocumentSpecification<PeppolDocumentTypeId> {
+public class PeppolDocumentTypeIdXmlSpecification extends PeppolDocumentSpecification<DocumentTypeIdentifier> {
 
     /**
      * The xpath expression used to select node/nodes
@@ -19,7 +20,7 @@ public class PeppolDocumentTypeIdXmlSpecification extends PeppolDocumentSpecific
         return "/*";
     }
 
-    public PeppolDocumentTypeId extractEntity(Element element) throws Exception {
+    public DocumentTypeIdentifier extractEntity(Element element) throws Exception {
 
         String rootNamespace = element.getNamespace().getURI();
         LocalName localName = LocalName.valueOf(element.getName());
@@ -29,7 +30,9 @@ public class PeppolDocumentTypeIdXmlSpecification extends PeppolDocumentSpecific
         String version = element.getChild("UBLVersionID", cbcNamespace).getTextTrim();
         String customisationId = element.getChild("CustomizationID", cbcNamespace).getTextTrim();
 
-        return new PeppolDocumentTypeId(new RootNameSpace(rootNamespace),localName, CustomizationIdentifier.valueOf(customisationId),version);
+
+        final PeppolDocumentTypeId peppolDocumentTypeId = new PeppolDocumentTypeId(new RootNameSpace(rootNamespace), localName, CustomizationIdentifier.valueOf(customisationId), version);
+        return peppolDocumentTypeId.toVefa();
     }
 
     @Override

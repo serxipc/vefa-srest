@@ -1,6 +1,6 @@
 package no.sr.ringo.client;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.smp.AcceptedDocumentTransfer;
 import no.sr.ringo.standalone.DefaultRingoConfig;
@@ -48,7 +48,7 @@ public class RingoClientImplTest {
     @Test
     public void testFetchAcceptedDocumentTransfers() {
         RingoClientImpl ringoClient = new RingoClientImpl(mockRingoService);
-        ParticipantId peppolParticipantId = ParticipantId.valueOf("NO976098897");
+        ParticipantIdentifier peppolParticipantId = ParticipantIdentifier.of("976098897");
         LocalName localName = LocalName.Invoice;
         expect(mockRingoService.fetchAcceptedDocumentTransfers(peppolParticipantId, localName)).andReturn(Collections.<AcceptedDocumentTransfer>emptyList());
         replay(mockRingoService);

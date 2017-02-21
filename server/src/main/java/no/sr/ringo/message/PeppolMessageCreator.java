@@ -1,12 +1,12 @@
 package no.sr.ringo.message;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.sr.ringo.account.Account;
-import no.sr.ringo.cenbiimeta.ProfileId;
 import no.sr.ringo.common.ProfileIdResolver;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.peppol.PeppolChannelId;
-import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.resource.InvalidUserInputWebException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -60,8 +60,8 @@ public class PeppolMessageCreator {
         if (StringUtils.isNotBlank(postParams.getProcessIdString())) {
             ProfileIdResolver processIdResolver = new ProfileIdResolver();
             try {
-                ProfileId profileId = processIdResolver.resolve(postParams.getProcessIdString());
-                peppolMessage.getPeppolHeader().setProfileId(profileId);
+                ProcessIdentifier processIdentifier = processIdResolver.resolve(postParams.getProcessIdString());
+                peppolMessage.getPeppolHeader().setProcessIdentifier(processIdentifier);
             } catch (Exception e) {
                 log.warn(String.format("Wrong processId value: %s", postParams.getProcessIdString()));
             }
@@ -71,8 +71,8 @@ public class PeppolMessageCreator {
     private void extractDocumentTypeId() {
         if (StringUtils.isNotBlank(postParams.getDocumentIdString())) {
             try {
-                PeppolDocumentTypeId documentTypeId = PeppolDocumentTypeId.valueOf( postParams.getDocumentIdString());
-                peppolMessage.getPeppolHeader().setPeppolDocumentTypeId(documentTypeId);
+                DocumentTypeIdentifier documentTypeId = DocumentTypeIdentifier.of(postParams.getDocumentIdString());
+                peppolMessage.getPeppolHeader().setDocumentTypeIdentifier(documentTypeId);
             } catch (Exception e) {
                 log.warn(String.format("Cannot extractHeader documentId for value: %s", postParams.getDocumentIdString()));
             }
@@ -80,12 +80,12 @@ public class PeppolMessageCreator {
     }
 
     private void extractRecipient() {
-        ParticipantId receiver = ParticipantId.valueOf(postParams.getRecipientIdString());
+        ParticipantIdentifier receiver = ParticipantIdentifier.of(postParams.getRecipientIdString());
         peppolMessage.getPeppolHeader().setReceiver(receiver);
     }
 
     private void extractSender() {
-        ParticipantId senderId = ParticipantId.valueOf(postParams.getSenderIdString());
+        ParticipantIdentifier senderId = ParticipantIdentifier.of(postParams.getSenderIdString());
         peppolMessage.getPeppolHeader().setSender(senderId);
     }
 

@@ -1,8 +1,9 @@
 package no.sr.ringo.document;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.sr.ringo.cenbiimeta.ProfileId;
-import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -26,10 +27,10 @@ public class FileClientPeppolDocumentTest {
         File testFile = new File(validInvoiceUrl.toURI());
 
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
-        ParticipantId result = document.findReceiver();
+        ParticipantIdentifier result = document.findReceiver();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(),"9908:976098897", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
+        assertEquals(result.getIdentifier(),"9908:976098897", String.format("Unexpected participant id '%s' parsing test file : %s", result.getIdentifier(),validInvoiceUrl));
     }
 
     @Test
@@ -38,10 +39,10 @@ public class FileClientPeppolDocumentTest {
         final URL validInvoiceUrl = FileClientPeppolDocumentTest.class.getResource("/participantWithMva.xml");
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
-        ParticipantId result = document.findReceiver();
+        ParticipantIdentifier result = document.findReceiver();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(),"9908:976098897", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
+        assertEquals(result.getIdentifier(),"9908:976098897", String.format("Unexpected participant id '%s' parsing test file : %s", result.getIdentifier(),validInvoiceUrl));
     }
 
     @Test
@@ -50,10 +51,10 @@ public class FileClientPeppolDocumentTest {
         final URL validInvoiceUrl = FileClientPeppolDocumentTest.class.getResource("/validInvoice.xml");
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
-        ParticipantId result = document.findReceiver();
+        ParticipantIdentifier result = document.findReceiver();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(),"9999:983974724", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
+        assertEquals(result.getIdentifier(),"9999:983974724", String.format("Unexpected participant id '%s' parsing test file : %s", result.getIdentifier(),validInvoiceUrl));
     }
 
     @Test
@@ -62,10 +63,10 @@ public class FileClientPeppolDocumentTest {
         final URL validInvoiceUrl = FileClientPeppolDocumentTest.class.getResource("/BII04 T10 gyldig faktura med alle elementer.xml");
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
-        ParticipantId result = document.findReceiver();
+        ParticipantIdentifier result = document.findReceiver();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(),"9999:NO976098897MVA", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
+        assertEquals(result.getIdentifier(),"9999:976098897", String.format("Unexpected participant id '%s' parsing test file : %s", result.getIdentifier(),validInvoiceUrl));
     }
 
     @Test
@@ -74,10 +75,10 @@ public class FileClientPeppolDocumentTest {
         final URL validInvoiceUrl = FileClientPeppolDocumentTest.class.getResource("/BII05 T10 0 gyldig faktura med vanlige dataelementer.xml");
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
-        ParticipantId result = document.findReceiver();
+        ParticipantIdentifier result = document.findReceiver();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(),"9908:976098897", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
+        assertEquals(result.getIdentifier(),"9908:976098897", String.format("Unexpected participant id '%s' parsing test file : %s", result.getIdentifier(),validInvoiceUrl));
     }
 
     @Test
@@ -87,10 +88,10 @@ public class FileClientPeppolDocumentTest {
         File testFile = new File(validInvoiceUrl.toURI());
 
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
-        ParticipantId result = document.findSender();
+        ParticipantIdentifier result = document.findSender();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(),"9908:540269750", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
+        assertEquals(result.getIdentifier(),"9908:540269750", String.format("Unexpected participant id '%s' parsing test file : %s", result.getIdentifier(),validInvoiceUrl));
     }
 
     @Test
@@ -100,10 +101,10 @@ public class FileClientPeppolDocumentTest {
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
 
-        ParticipantId result = document.findSender();
+        ParticipantIdentifier result = document.findSender();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(),"9908:540269750", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
+        assertEquals(result.getIdentifier(),"9908:540269750", String.format("Unexpected participant id '%s' parsing test file : %s", result.getIdentifier(),validInvoiceUrl));
     }
 
     @Test
@@ -113,10 +114,10 @@ public class FileClientPeppolDocumentTest {
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
 
-        ParticipantId result = document.findSender();
+        ParticipantIdentifier result = document.findSender();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(),"9902:540269750", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
+        assertEquals(result.getIdentifier(),"9902:540269750", String.format("Unexpected participant id '%s' parsing test file : %s", result.getIdentifier(),validInvoiceUrl));
     }
 
     @Test
@@ -126,10 +127,10 @@ public class FileClientPeppolDocumentTest {
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
 
-        ParticipantId result = document.findSender();
+        ParticipantIdentifier result = document.findSender();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(),"9902:999999999", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
+        assertEquals(result.getIdentifier(),"9902:999999999", String.format("Unexpected participant id '%s' parsing test file : %s", result.getIdentifier(),validInvoiceUrl));
     }
 
     @Test
@@ -139,10 +140,10 @@ public class FileClientPeppolDocumentTest {
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
 
-        ParticipantId result = document.findSender();
+        ParticipantIdentifier result = document.findSender();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(),"9908:976098897", String.format("Unexpected participant id '%s' parsing test file : %s", result.stringValue(),validInvoiceUrl));
+        assertEquals(result.getIdentifier(),"9908:976098897", String.format("Unexpected participant id '%s' parsing test file : %s", result.getIdentifier(),validInvoiceUrl));
     }
 
     @Test
@@ -151,10 +152,10 @@ public class FileClientPeppolDocumentTest {
         File testFile = new File(validInvoiceUrl.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
 
-        PeppolDocumentTypeId result = document.findDocumentType();
+        DocumentTypeIdentifier result = document.findDocumentType();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(), "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1::2.0");
+        assertEquals(result.getIdentifier(), "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1::2.0");
 
     }
 
@@ -164,10 +165,10 @@ public class FileClientPeppolDocumentTest {
         File testFile = new File(validCreditNoteUrl.toURI());
 
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
-        PeppolDocumentTypeId result = document.findDocumentType();
+        DocumentTypeIdentifier result = document.findDocumentType();
 
         assertNotNull(result);
-        assertEquals(result.stringValue(),"urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.cenbii.eu:profile:biixx:ver1.0#urn:www.difi.no:ehf:kreditnota:ver1::2.0");
+        assertEquals(result.getIdentifier(),"urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.cenbii.eu:profile:biixx:ver1.0#urn:www.difi.no:ehf:kreditnota:ver1::2.0");
     }
 
     @Test
@@ -176,10 +177,10 @@ public class FileClientPeppolDocumentTest {
         File testFile = new File(validCreditNoteUrl.toURI());
         String processIdString = "urn:www.cenbii.eu:profile:bii05:ver1.0";
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
-        ProfileId result = document.findProfileId();
+        ProcessIdentifier result = document.findProfileId();
 
         assertNotNull(result);
-        assertEquals(processIdString, result.toString());
+        assertEquals(processIdString, result.getIdentifier());
     }
 
     @Test
@@ -187,10 +188,10 @@ public class FileClientPeppolDocumentTest {
         final URL invoice = FileClientPeppolDocumentTest.class.getResource("/iso-encoded-invoice.xml");
         File testFile = new File(invoice.toURI());
         FileClientPeppolDocument document = new FileClientPeppolDocument(testFile);
-        ProfileId result = document.findProfileId();
+        ProcessIdentifier result = document.findProfileId();
 
         assertNotNull(result);
-        assertEquals(result,ProfileId.Predefined.BII05_BILLING);
+        assertEquals(result,ProfileId.Predefined.BII05_BILLING.toVefa());
     }
 
 }

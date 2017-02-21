@@ -1,7 +1,7 @@
 package no.sr.ringo.usecase;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.guice.ServerTestModuleFactory;
@@ -34,7 +34,7 @@ public class ReceiveMessageFromClientUseCaseIntegrationTest {
 
     private static final String EHF_TEST_SEND_REGNING_HELSE_VEST2_XML = "ehf-test-sendregning.xml";
 
-    private ParticipantId participantId;
+    private ParticipantIdentifier participantId;
     private final DatabaseHelper databaseHelper;
     private final PeppolMessageRepository peppolMessageRepository;
 
@@ -61,8 +61,8 @@ public class ReceiveMessageFromClientUseCaseIntegrationTest {
         assertNotNull(is, "Unable to find " + EHF_TEST_SEND_REGNING_HELSE_VEST2_XML + " in class path");
 
         OutboundPostParams params = new OutboundPostParams.Builder()
-                .recipientId(participantId.stringValue())
-                .senderId(participantId.stringValue())
+                .recipientId(participantId.getIdentifier())
+                .senderId(participantId.getIdentifier())
                 .processId(PeppolProcessIdAcronym.INVOICE_ONLY.stringValue())
                 .documentId(PeppolDocumentTypeId.EHF_INVOICE.stringValue()).channelId(new PeppolChannelId("TEST").stringValue()).inputStream(is).build();
 

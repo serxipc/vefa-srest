@@ -2,7 +2,7 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountRepository;
@@ -35,9 +35,9 @@ public class MarkAsReadPersistenceTest {
     private final DbmsTestHelper dbmsTestHelper;
 
     private Long messageNo;
-    private String receiver1 = ObjectMother.getAdamsParticipantId().stringValue();
+    private String receiver1 = ObjectMother.getAdamsParticipantId().getIdentifier();
     private Account account;
-    private ParticipantId sender;
+    private ParticipantIdentifier sender;
 
     @Inject
     public MarkAsReadPersistenceTest(AccountRepository accountRepository, DatabaseHelper databaseHelper, PeppolMessageRepository peppolMessageRepository, DbmsTestHelper dbmsTestHelper) {
@@ -70,7 +70,7 @@ public class MarkAsReadPersistenceTest {
     public void setUp() throws Exception {
         account = accountRepository.createAccount(ObjectMother.getAdamsAccount(), ObjectMother.getAdamsParticipantId());
         sender = ObjectMother.getAdamsParticipantId();
-        messageNo = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, new ReceptionId(), null);
+        messageNo = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().getIdentifier(), receiver1, new ReceptionId(), null);
     }
 
     @AfterMethod

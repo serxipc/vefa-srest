@@ -1,9 +1,9 @@
 package no.sr.ringo.document.specification;
 
-import no.sr.ringo.cenbiimeta.ProfileId;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import org.jdom.Element;
 
-public class ProfileIdXmlSpecification extends PeppolDocumentSpecification<ProfileId> {
+public class ProfileIdXmlSpecification extends PeppolDocumentSpecification<ProcessIdentifier> {
 
     /**
      * The xpath expression used to select node/nodes
@@ -12,7 +12,7 @@ public class ProfileIdXmlSpecification extends PeppolDocumentSpecification<Profi
         return "//cbc:ProfileID";
     }
 
-    public ProfileId extractEntity(Element element) throws Exception {
-        return new ProfileId(element.getText());
+    public ProcessIdentifier extractEntity(Element element) throws Exception {
+        return ProcessIdentifier.of(element.getText());
     }
 }

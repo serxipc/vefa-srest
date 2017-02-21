@@ -23,9 +23,9 @@
 package no.sr.ringo.persistence.jdbc;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.account.*;
 import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.ReceptionId;
@@ -55,7 +55,7 @@ public class AccountRepositoryImplTest {
     Account adamsAccount;
     private AccountRepository accountRepository;
     private Account ringoAccount;
-    private ParticipantId participantId;
+    private ParticipantIdentifier participantId;
     private DatabaseHelper databaseHelper;
     private Customer customer;
 
@@ -106,7 +106,7 @@ public class AccountRepositoryImplTest {
 
     @Test(groups = {"persistence"})
     public void testFindAccountByParticipantId() throws Exception {
-        Account accountByParticipantId = accountRepository.findAccountByParticipantId(participantId);
+        Account accountByParticipantId = accountRepository.findAccountByParticipantIdentifier(participantId);
         assertNotNull(accountByParticipantId);
         assertNotNull(accountByParticipantId.getAccountId());
         assertNotNull(accountByParticipantId.getCustomerId());
@@ -165,7 +165,7 @@ public class AccountRepositoryImplTest {
 
     @Test(groups = {"persistence"})
     public void findMessageOwner() {
-        Long messageNumber = databaseHelper.createSampleMessage(adamsAccount.getAccountId().toInteger(), TransferDirection.IN, participantId.stringValue(), participantId.stringValue(), new ReceptionId(), null, PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier(), PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId());
+        Long messageNumber = databaseHelper.createSampleMessage(adamsAccount.getAccountId().toInteger(), TransferDirection.IN, participantId.getIdentifier(), participantId.getIdentifier(), new ReceptionId(), null, PeppolDocumentTypeIdAcronym.EHF_INVOICE.toVefa(), PeppolProcessTypeIdAcronym.INVOICE_ONLY.toVefa());
         assertEquals(adamsAccount, accountRepository.findAccountAsOwnerOfMessage(MessageNumber.create(messageNumber)));
 
     }

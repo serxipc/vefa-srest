@@ -70,6 +70,7 @@ public class RingoRestModule extends JerseyServletModule {
     }
 
     private void bindJerseyResources() {
+//        bind(PayloadUriRewriter.class).to(DefaultPayloadUriRewriter.class);     // Rewrites the payload URI
         bind(OutboxResource.class);
         bind(InboxResource.class);
         bind(MessagesResource.class);

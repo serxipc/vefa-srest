@@ -1,10 +1,10 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.PeppolDocumentTypeId;
 import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
-import eu.peppol.identifier.PeppolProcessTypeId;
 import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
+import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
@@ -34,8 +34,8 @@ public class DbmsTestHelper {
             throw new IllegalArgumentException("ReceptionId is required argument");
         }
 
-        PeppolDocumentTypeId invoiceDocumentType = PeppolDocumentTypeIdAcronym.EHF_INVOICE.getDocumentTypeIdentifier();
-        PeppolProcessTypeId processTypeId = PeppolProcessTypeIdAcronym.INVOICE_ONLY.getPeppolProcessTypeId();
+         DocumentTypeIdentifier invoiceDocumentType = PeppolDocumentTypeIdAcronym.EHF_INVOICE.toVefa();
+        ProcessIdentifier processTypeId = PeppolProcessTypeIdAcronym.INVOICE_ONLY.toVefa();
 
         return databaseHelper.createSampleMessage(invoiceDocumentType, processTypeId, "<test>\u00E5</test>", accountId, direction, senderValue, receiverValue, receptionId, delivered, new Date());
     }

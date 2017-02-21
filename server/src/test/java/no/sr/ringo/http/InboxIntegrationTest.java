@@ -48,13 +48,6 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
 
     private ReceptionId receptionId;
 
-
-    @Test(groups = {"integration"})
-    public void helloWorld() {
-        System.out.println("Hello world");;
-
-    }
-
     /**
      * Retrieves messages from inbox
      *
@@ -98,7 +91,7 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
         final Account account = ObjectMother.getTestAccount();
         receptionId = new ReceptionId();
 
-        messageId = dbmsTestHelper.createSampleMessage(1, TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), ObjectMother.getTestParticipantIdForSMPLookup().stringValue(), receptionId, null);
+        messageId = dbmsTestHelper.createSampleMessage(1, TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), receptionId, null);
         MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(MessageNumber.create(messageId));
 
 

@@ -22,6 +22,9 @@
         <jersey.version>1.19.2</jersey.version>
         <guice.version>4.1.0</guice.version>
         <jetty.version>7.6.16.v20140903</jetty.version>
+        <!-- For JitPack -->
+        <vefa.peppol.groupId>com.github.difi.vefa-peppol</vefa.peppol.groupId>
+        <vefa.peppol.version>70baa8aea8</vefa.peppol.version>
     </properties>
 
     <modules>
@@ -330,9 +333,9 @@
 
             <!-- jitpack.io -->
             <dependency>
-                <groupId>com.github.difi.vefa-peppol</groupId>
+                <groupId>${vefa.peppol.groupId}</groupId>
                 <artifactId>peppol-sbdh</artifactId>
-                <version>22fcd032f9</version>
+                <version>${vefa.peppol.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>no.difi.vefa</groupId>
@@ -340,10 +343,11 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            
             <dependency>
-                <groupId>com.github.difi.vefa-peppol</groupId>
+                <groupId>${vefa.peppol.groupId}</groupId>
                 <artifactId>peppol-common</artifactId>
-                <version>22fcd032f9</version>
+                <version>${vefa.peppol.version}</version>
             </dependency>
 
         </dependencies>

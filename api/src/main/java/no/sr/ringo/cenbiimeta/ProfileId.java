@@ -1,5 +1,7 @@
 package no.sr.ringo.cenbiimeta;
 
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
+
 /**
  * Represents the unique identification of a Profile according to the CEN/BII meta model.
  *
@@ -37,6 +39,9 @@ public class ProfileId {
         return new ProfileId(profileId);
     }
 
+    public ProcessIdentifier toVefa() {
+        return ProcessIdentifier.of(stringValue());
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

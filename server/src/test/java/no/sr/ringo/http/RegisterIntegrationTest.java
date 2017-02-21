@@ -33,7 +33,7 @@ public class RegisterIntegrationTest extends AbstractHttpClientServerTest {
 
     public static final String ACCOUNT_USERNAME = "Difi_test";
     // Skips past the "9908:" prefix
-    public static final String DIFI_TEST_ORG_NO = WellKnownParticipant.DIFI_TEST.stringValue().substring(5);
+    public static final String DIFI_TEST_ORG_NO = WellKnownParticipant.DIFI_TEST.getIdentifier().substring(5);
 
     @Inject
     AccountRepository accountRepository;

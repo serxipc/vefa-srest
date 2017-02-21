@@ -1,7 +1,6 @@
 package no.sr.ringo.http;
 
-import eu.peppol.identifier.ParticipantId;
-import eu.peppol.identifier.SchemeId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.client.ClientObjectMother;
 import no.sr.ringo.client.Inbox;
 import no.sr.ringo.client.Messagebox;
@@ -11,6 +10,7 @@ import no.sr.ringo.common.RingoLoggingStream;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolHeader;
+import no.sr.ringo.peppol.PeppolProcessIdAcronym;
 import org.apache.commons.io.input.ReaderInputStream;
 import org.apache.http.client.HttpClient;
 import org.apache.http.params.HttpParams;
@@ -73,10 +73,10 @@ public class VersionHeaderTest extends AbstractHttpClientServerTest {
     @Test(groups = {"integration"})
     public void testOutOfDateOutbox() throws IOException, URISyntaxException {
 
-        ParticipantId participantId = new ParticipantId(SchemeId.NO_ORGNR, "976098897");
+        ParticipantIdentifier participantId =  ParticipantIdentifier.of("9908:976098897");
 
         final ReaderInputStream readerInputStream = getTestInvoiceAsStream();
-        ringoRestClientImpl.send(readerInputStream, PeppolHeader.forDocumentType(INVOICE, participantId, participantId));
+        ringoRestClientImpl.send(readerInputStream, PeppolHeader.forDocumentType(INVOICE.toVefa(), PeppolProcessIdAcronym.INVOICE_ONLY.toVefa(),participantId, participantId));
 
         verify(mockOutputStream);
     }

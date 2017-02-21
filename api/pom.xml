@@ -27,6 +27,12 @@
             <groupId>no.difi.oxalis</groupId>
             <artifactId>oxalis-api</artifactId>
         </dependency>
+        
+        <dependency>
+            <groupId>${vefa.peppol.groupId}</groupId>
+            <artifactId>peppol-common</artifactId>
+        </dependency>
+
 
         <!-- logging -->
 

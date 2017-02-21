@@ -49,7 +49,7 @@ public class FetchMessagesUseCaseTest {
 
     @Test
     public void testNavigationWithNoNextAndPreviousLinks() throws Exception{
-        final SearchParams searchParams = new SearchParams("IN", WellKnownParticipant.DIFI_TEST.stringValue(),WellKnownParticipant.DIFI_TEST.stringValue(),"",null);
+        final SearchParams searchParams = new SearchParams("IN", WellKnownParticipant.DIFI_TEST.getIdentifier(),WellKnownParticipant.DIFI_TEST.getIdentifier(),"",null);
 
         expect(mockMessagesDataProvider.getCount(searchParams)).andReturn(0);
 
@@ -64,7 +64,7 @@ public class FetchMessagesUseCaseTest {
 
     @Test
     public void testNavigationWithOnlyNextLinks() throws Exception{
-        final SearchParams searchParams = new SearchParams("IN",WellKnownParticipant.DIFI_TEST.stringValue(),WellKnownParticipant.DIFI_TEST.stringValue(),"",null);
+        final SearchParams searchParams = new SearchParams("IN",WellKnownParticipant.DIFI_TEST.getIdentifier(),WellKnownParticipant.DIFI_TEST.getIdentifier(),"",null);
 
         expect(mockMessagesDataProvider.getCount(searchParams)).andReturn(26);
         expect(mockLocationAware.linkToResource(null, searchParams, 2)).andReturn(OK_URI);
@@ -81,7 +81,7 @@ public class FetchMessagesUseCaseTest {
 
     @Test
     public void testNavigationWithOnlyPreviousLinks() throws Exception{
-        final SearchParams searchParams = new SearchParams("IN",WellKnownParticipant.DIFI_TEST.stringValue(),WellKnownParticipant.DIFI_TEST.stringValue(),"","2");
+        final SearchParams searchParams = new SearchParams("IN",WellKnownParticipant.DIFI_TEST.getIdentifier(),WellKnownParticipant.DIFI_TEST.getIdentifier(),"","2");
 
         expect(mockMessagesDataProvider.getCount(searchParams)).andReturn(48);
         expect(mockLocationAware.linkToResource(null, searchParams, 1)).andReturn(OK_URI);
@@ -97,7 +97,7 @@ public class FetchMessagesUseCaseTest {
 
     @Test
     public void testNavigationWithOnlyPreviousLinksUpperLimit() throws Exception{
-        final SearchParams searchParams = new SearchParams("IN",WellKnownParticipant.DIFI_TEST.stringValue(),WellKnownParticipant.DIFI_TEST.stringValue(),"","2");
+        final SearchParams searchParams = new SearchParams("IN",WellKnownParticipant.DIFI_TEST.getIdentifier(),WellKnownParticipant.DIFI_TEST.getIdentifier(),"","2");
 
         expect(mockMessagesDataProvider.getCount(searchParams)).andReturn(50);
         expect(mockLocationAware.linkToResource(null, searchParams, 1)).andReturn(OK_URI);

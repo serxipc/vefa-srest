@@ -1,6 +1,6 @@
 package no.sr.ringo.standalone.executor;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.client.Inbox;
 import no.sr.ringo.client.Message;
 import no.sr.ringo.client.RingoClient;
@@ -124,22 +124,6 @@ public class RingoClientCommandExecutor {
 
                 break;
 
-            //Perform SMP lookup
-            case SMP_LOOKUP:
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format("Checking if participant %s is registered", params.getParticipantId()));
-                }
-
-                boolean participantRegistered = client.isParticipantRegistered(params.getParticipantId());
-
-                if (participantRegistered) {
-                    printStream.println(String.format("Participant %s is registered", params.getParticipantId().stringValue()));
-                } else {
-                    printStream.println(String.format("Participant %s is NOT registered", params.getParticipantId().stringValue()));
-                }
-
-                printStream.close();
-                break;
         }
     }
 
@@ -183,8 +167,8 @@ public class RingoClientCommandExecutor {
      * @param inboxPath
      * @return
      */
-    private File getReceiverDirectory(ParticipantId participantId, File inboxPath) {
-        String directoryName = FileHelper.formatForFileName(participantId.stringValue());
+    private File getReceiverDirectory(ParticipantIdentifier participantId, File inboxPath) {
+        String directoryName = FileHelper.formatForFileName(participantId.getIdentifier());
 
         File result = new File(inboxPath, directoryName);
 

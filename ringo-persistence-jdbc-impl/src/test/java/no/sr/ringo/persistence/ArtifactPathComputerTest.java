@@ -22,7 +22,7 @@
 
 package no.sr.ringo.persistence;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.persistence.file.ArtifactPathComputer;
 import org.slf4j.Logger;
@@ -65,7 +65,7 @@ public class ArtifactPathComputerTest {
 
     ArtifactPathComputer.FileRepoKey sampleMetadata() {
         UUID uuid = UUID.randomUUID();
-        ArtifactPathComputer.FileRepoKey fileRepoKey = new ArtifactPathComputer.FileRepoKey(no.sr.ringo.transport.TransferDirection.IN, new ReceptionId(), new ParticipantId("9908:976098897"),new ParticipantId("9908:976098897"),new Date());
+        ArtifactPathComputer.FileRepoKey fileRepoKey = new ArtifactPathComputer.FileRepoKey(no.sr.ringo.transport.TransferDirection.IN, new ReceptionId(), new ParticipantIdentifier("9908:976098897"),new ParticipantIdentifier("9908:976098897"),new Date());
         return fileRepoKey;
     }
 

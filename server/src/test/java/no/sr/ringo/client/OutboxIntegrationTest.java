@@ -1,7 +1,8 @@
 package no.sr.ringo.client;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountId;
@@ -44,8 +45,10 @@ import static org.testng.Assert.*;
 @Guice(moduleFactory = ServerTestModuleFactory.class)
 public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
 
-    PeppolDocumentTypeId ehfInvoicePeppolDocumentTypeId = PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1::2.0");
-    PeppolDocumentTypeId creditNotePeppolDocumentTypeId = PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.cenbii.eu:profile:biixx:ver1.0#urn:www.difi.no:ehf:kreditnota:ver1::2.0");
+    //PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1::2.0");
+    DocumentTypeIdentifier ehfInvoicePeppolDocumentTypeId = PeppolDocumentTypeId.EHF_INVOICE.toVefa();
+    // valueOf("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.cenbii.eu:profile:biixx:ver1.0#urn:www.difi.no:ehf:kreditnota:ver1::2.0");
+    DocumentTypeIdentifier creditNotePeppolDocumentTypeId = PeppolDocumentTypeId.EHF_CREDIT_NOTE.toVefa();
 
     @Inject
     DatabaseHelper databaseHelper;
@@ -67,12 +70,12 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
     public void uploadSampleInvoice() throws Exception {
 
         final Account account = ObjectMother.getTestAccount();
-        final ParticipantId sender = ObjectMother.getTestParticipantIdForSMPLookup();
+        final ParticipantIdentifier sender = ObjectMother.getTestParticipantIdForSMPLookup();
 
         File file = ClientObjectMother.getTestInvoice();
 
         final PeppolChannelId channel = new PeppolChannelId(ChannelProtocol.SREST.name());
-        final Message message = ringoRestClientImpl.send(file, channel, ParticipantId.valueOf(sender.stringValue()), ParticipantId.valueOf(sender.stringValue()), uploadMode);
+        final Message message = ringoRestClientImpl.send(file, channel, sender, sender, uploadMode);
 
         assertNotNull(message);
         assertNull(message.getContents().getDelivered());
@@ -83,23 +86,23 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         assertNotNull(message.getContents().getMsgNo());
 
         final PeppolHeader peppolHeader = message.getContents().getPeppolHeader();
-        assertEquals(peppolHeader.getReceiver().stringValue(), sender.stringValue());
-        assertEquals(peppolHeader.getSender().stringValue(), sender.stringValue());
+        assertEquals(peppolHeader.getReceiver().getIdentifier(), sender.getIdentifier());
+        assertEquals(peppolHeader.getSender().getIdentifier(), sender.getIdentifier());
         assertEquals(peppolHeader.getPeppolChannelId(), channel);
         assertEquals(peppolHeader.getPeppolDocumentTypeId(), ehfInvoicePeppolDocumentTypeId);
-        assertEquals(peppolHeader.getProfileId(), BII04_INVOICE_ONLY);
+        assertEquals(peppolHeader.getProcessIdentifier(), BII04_INVOICE_ONLY.toVefa());
     }
 
     @Test(groups = {"integration"})
     public void uploadSampleCreditInvoice() throws Exception {
 
-        final ParticipantId sender = ObjectMother.getTestParticipantIdForSMPLookup();
+        final ParticipantIdentifier sender = ObjectMother.getTestParticipantIdForSMPLookup();
 
         File file = ClientObjectMother.getTestCreditNote();
 
         final PeppolChannelId channel = new PeppolChannelId(ChannelProtocol.SREST.name());
 
-        final Message message = ringoRestClientImpl.send(file, channel, ParticipantId.valueOf(sender.stringValue()), ParticipantId.valueOf(sender.stringValue()), uploadMode);
+        final Message message = ringoRestClientImpl.send(file, channel, sender, sender, uploadMode);
 
         assertNotNull(message);
         assertNull(message.getContents().getDelivered());
@@ -109,11 +112,11 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         assertNotNull(message.getContents().getMsgNo());
 
         final PeppolHeader peppolHeader = message.getContents().getPeppolHeader();
-        assertEquals(peppolHeader.getReceiver().stringValue(), sender.stringValue());
-        assertEquals(peppolHeader.getSender().stringValue(), sender.stringValue());
+        assertEquals(peppolHeader.getReceiver().getIdentifier(), sender.getIdentifier());
+        assertEquals(peppolHeader.getSender().getIdentifier(), sender.getIdentifier());
         assertEquals(peppolHeader.getPeppolChannelId(), channel);
         assertEquals(peppolHeader.getPeppolDocumentTypeId(), creditNotePeppolDocumentTypeId);
-        assertEquals(peppolHeader.getProfileId(), PROPOSED_BII_XX);
+        assertEquals(peppolHeader.getProcessIdentifier(), PROPOSED_BII_XX.toVefa());
     }
 
 
@@ -136,11 +139,11 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         assertNotNull(message.getContents().getMsgNo());
 
         final PeppolHeader peppolHeader = message.getContents().getPeppolHeader();
-        assertEquals(peppolHeader.getReceiver().stringValue(), "9908:985420289");
-        assertEquals(peppolHeader.getSender().stringValue(), "9908:891382529");
+        assertEquals(peppolHeader.getReceiver().getIdentifier(), "9908:985420289");
+        assertEquals(peppolHeader.getSender().getIdentifier(), "9908:891382529");
         assertEquals(peppolHeader.getPeppolChannelId(), channel);
         assertEquals(peppolHeader.getPeppolDocumentTypeId(), ehfInvoicePeppolDocumentTypeId);
-        assertEquals(peppolHeader.getProfileId(), BII04_INVOICE_ONLY);
+        assertEquals(peppolHeader.getProcessIdentifier(), BII04_INVOICE_ONLY.toVefa());
 
     }
 
@@ -181,8 +184,8 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         final ReaderInputStream readerInputStream = new ReaderInputStream(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 
         PeppolDocumentTypeId peppolDocumentTypeId = PeppolDocumentTypeId.EHF_INVOICE;
-        ParticipantId participantId = ParticipantId.valueOf("0002:1234");
-        final Message message = ringoRestClientImpl.send(readerInputStream, PeppolHeader.forDocumentType(peppolDocumentTypeId, participantId, participantId));
+        ParticipantIdentifier participantId = ParticipantIdentifier.of("0002:1234");
+        final Message message = ringoRestClientImpl.send(readerInputStream, PeppolHeader.forDocumentType(peppolDocumentTypeId.toVefa(), PeppolProcessIdAcronym.INVOICE_ONLY.toVefa(),participantId, participantId));
 
         assertNotNull(message);
         assertNull(message.getContents().getDelivered());
@@ -192,11 +195,11 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         assertNotNull(message.getContents().getMsgNo());
 
         final PeppolHeader peppolHeader = message.getContents().getPeppolHeader();
-        assertEquals(peppolHeader.getReceiver().stringValue(), participantId.stringValue());
-        assertEquals(peppolHeader.getSender().stringValue(), participantId.stringValue());
+        assertEquals(peppolHeader.getReceiver().getIdentifier(), participantId.getIdentifier());
+        assertEquals(peppolHeader.getSender().getIdentifier(), participantId.getIdentifier());
         assertEquals(peppolHeader.getPeppolChannelId(), new PeppolChannelId(ChannelProtocol.SREST.name()));
         assertEquals(peppolHeader.getPeppolDocumentTypeId(), ehfInvoicePeppolDocumentTypeId);
-        assertEquals(peppolHeader.getProfileId(), BII04_INVOICE_ONLY);
+        assertEquals(peppolHeader.getProcessIdentifier(), BII04_INVOICE_ONLY.toVefa());
 
     }
 
@@ -207,9 +210,8 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         final ReaderInputStream readerInputStream = new ReaderInputStream(new InputStreamReader(new FileInputStream(file), "UTF-8"));
         final PeppolChannelId channel = new PeppolChannelId(ChannelProtocol.SREST.name());
 
-        PeppolDocumentTypeId peppolDocumentTypeId = creditNotePeppolDocumentTypeId;
-        ParticipantId participantId = ParticipantId.valueOf("0002:1234");
-        final Message message = ringoRestClientImpl.send(readerInputStream, PeppolHeader.forDocumentType(peppolDocumentTypeId, participantId, participantId));
+        ParticipantIdentifier participantId = ParticipantIdentifier.of("0002:1234");
+        final Message message = ringoRestClientImpl.send(readerInputStream, PeppolHeader.forDocumentType(creditNotePeppolDocumentTypeId, PeppolProcessIdAcronym.INVOICE_ONLY.toVefa(),participantId, participantId));
 
         assertNotNull(message);
         assertNull(message.getContents().getDelivered());
@@ -219,81 +221,30 @@ public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
         assertNotNull(message.getContents().getMsgNo());
 
         final PeppolHeader peppolHeader = message.getContents().getPeppolHeader();
-        assertEquals(peppolHeader.getReceiver().stringValue(), participantId.stringValue());
-        assertEquals(peppolHeader.getSender().stringValue(), participantId.stringValue());
+        assertEquals(peppolHeader.getReceiver().getIdentifier(), participantId.getIdentifier());
+        assertEquals(peppolHeader.getSender().getIdentifier(), participantId.getIdentifier());
         assertEquals(peppolHeader.getPeppolChannelId(), channel);
         assertEquals(peppolHeader.getPeppolDocumentTypeId(), creditNotePeppolDocumentTypeId);
-        assertEquals(peppolHeader.getProfileId(), PROPOSED_BII_XX);
+        assertEquals(peppolHeader.getProcessIdentifier(), PeppolProcessIdAcronym.INVOICE_ONLY.toVefa());
 
     }
 
 
-    @Test(groups = {"integration"})
-    public void uploadSampleInvoiceInvalidDocumentId() throws URISyntaxException, IOException {
-
-        final ParticipantId sender = ObjectMother.getTestParticipantIdForSMPLookup();
-        File file = ClientObjectMother.getTestInvoice();
-
-            HttpPost httpPost = new HttpPost(AbstractHttpClientServerTest.PEPPOL_BASE_REST_URL + "/outbox/");
-            MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-
-            multipartEntity.addPart("file", new FileBody(file, "application/xml"));
-            multipartEntity.addPart("RecipientID", new StringBody(sender.stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-            multipartEntity.addPart("SenderID", new StringBody(sender.stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-            multipartEntity.addPart("ChannelID", new StringBody("CHTEST", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-            multipartEntity.addPart("ProcessID", new StringBody(ProfileId.Predefined.BII04_INVOICE_ONLY.toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-            multipartEntity.addPart("DocumentID", new StringBody("WrongDocumentId", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-
-            httpPost.setEntity(multipartEntity);
-
-        HttpResponse response = httpClient.execute(httpPost);
-
-        System.out.println(response.toString());
-        assertEquals(400, response.getStatusLine().getStatusCode());
-
-
-    }
-
-
-    @Test(groups = {"integration"})
-    public void uploadSampleInvoiceInvalidProcessId() throws URISyntaxException, IOException {
-
-        final ParticipantId sender = ObjectMother.getTestParticipantIdForSMPLookup();
-        File file = ClientObjectMother.getTestInvoice();
-
-            HttpPost httpPost = new HttpPost(AbstractHttpClientServerTest.PEPPOL_BASE_REST_URL + "/outbox/");
-            MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-
-            multipartEntity.addPart("file", new FileBody(file, "application/xml"));
-            multipartEntity.addPart("RecipientID", new StringBody(sender.stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-            multipartEntity.addPart("SenderID", new StringBody(sender.stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-            multipartEntity.addPart("ChannelID", new StringBody("CHTEST", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-            multipartEntity.addPart("ProcessID", new StringBody("WrongProcessId", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-            multipartEntity.addPart("DocumentID", new StringBody(LocalName.Invoice.toString().toUpperCase(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-
-            httpPost.setEntity(multipartEntity);
-
-        HttpResponse response = httpClient.execute(httpPost);
-
-        System.out.println(response.toString());
-        assertEquals(response.getStatusLine().getStatusCode(),400);
-
-    }
 
     @Test(groups = {"integration"})
     public void uploadSampleInvoiceInvalidXml() throws URISyntaxException, IOException {
 
         databaseHelper.updateValidateFlagOnAccount(new AccountId(1), true);
         try {
-            final ParticipantId sender = ObjectMother.getTestParticipantIdForSMPLookup();
+            final ParticipantIdentifier sender = ObjectMother.getTestParticipantIdForSMPLookup();
             File file = ClientObjectMother.getTestInvoiceInvalid();
 
                 HttpPost httpPost = new HttpPost(AbstractHttpClientServerTest.PEPPOL_BASE_REST_URL + "/outbox/");
                 MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
                 multipartEntity.addPart("file", new FileBody(file, "application/xml"));
-                multipartEntity.addPart("RecipientID", new StringBody(sender.stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
-                multipartEntity.addPart("SenderID", new StringBody(sender.stringValue(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+                multipartEntity.addPart("RecipientID", new StringBody(sender.getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
+                multipartEntity.addPart("SenderID", new StringBody(sender.getIdentifier(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
                 multipartEntity.addPart("ChannelID", new StringBody("CHTEST", "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
                 multipartEntity.addPart("ProcessID", new StringBody(ProfileId.Predefined.BII04_INVOICE_ONLY.toString(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));
                 multipartEntity.addPart("DocumentID", new StringBody(LocalName.Invoice.toString().toUpperCase(), "text/plain", Charset.forName(RingoConstants.DEFAULT_CHARACTER_SET)));

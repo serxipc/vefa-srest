@@ -2,7 +2,7 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountRepository;
@@ -45,9 +45,9 @@ public class InboxWithMessageWithoutUUIDTest {
     private Long messageNo;
     private Long messageNo2;
     private Long messageNo3;
-    private String receiver1 = ObjectMother.getAdamsParticipantId().stringValue();
+    private String receiver1 = ObjectMother.getAdamsParticipantId().getIdentifier();
     private Account account;
-    private ParticipantId sender;
+    private ParticipantIdentifier sender;
 
     @Inject
     public InboxWithMessageWithoutUUIDTest(AccountRepository accountRepository, DatabaseHelper databaseHelper, PeppolMessageRepository peppolMessageRepository, DataSource dataSource, DbmsTestHelper dbmsTestHelper) {
@@ -71,11 +71,11 @@ public class InboxWithMessageWithoutUUIDTest {
     public void testMessagesWithNoUUID() throws PeppolMessageNotFoundException, SQLException {
 
         //proper message
-        messageNo = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, new ReceptionId(), null);
+        messageNo = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().getIdentifier(), receiver1, new ReceptionId(), null);
         //uuid = null
-        messageNo2 = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, new ReceptionId(), null);
+        messageNo2 = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().getIdentifier(), receiver1, new ReceptionId(), null);
         //uuid = ''
-        messageNo3 = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().stringValue(), receiver1, new ReceptionId(), null);
+        messageNo3 = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().getIdentifier(), receiver1, new ReceptionId(), null);
 
         inspectDbms();
         // We used to expect only a single message as message_uuid was required to be null in order to be deemed in the /inbox

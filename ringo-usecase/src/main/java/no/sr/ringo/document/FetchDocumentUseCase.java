@@ -15,21 +15,13 @@ import javax.inject.Inject;
 public class FetchDocumentUseCase {
 
     private final DocumentRepository documentRepository;
-    private final PeppolDocumentDecoratorFactory peppolDocumentDecoratorFactory;
 
     @Inject
-    public FetchDocumentUseCase(DocumentRepository documentRepository, PeppolDocumentDecoratorFactory peppolDocumentDecoratorFactory) {
+    public FetchDocumentUseCase(DocumentRepository documentRepository) {
         this.documentRepository = documentRepository;
-        this.peppolDocumentDecoratorFactory = peppolDocumentDecoratorFactory;
     }
 
     public PeppolDocument execute(Account account, MessageNumber msgNo) {
         return documentRepository.getPeppolDocument(account, msgNo);
     }
-
-    public PeppolDocument executeWithDecoration(Account account, MessageNumber msgNo) {
-        PeppolDocument document = documentRepository.getPeppolDocument(account, msgNo);
-        return peppolDocumentDecoratorFactory.decorateWithStyleSheet(document);
-    }
-
 }

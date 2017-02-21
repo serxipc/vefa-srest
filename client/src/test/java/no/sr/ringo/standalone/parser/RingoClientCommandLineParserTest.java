@@ -1,7 +1,5 @@
 package no.sr.ringo.standalone.parser;
 
-import eu.peppol.identifier.ParticipantId;
-import eu.peppol.identifier.SchemeId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -37,7 +35,6 @@ public class RingoClientCommandLineParserTest {
     private static final String UPLOAD = "-l";
     private static final String UPLOAD_SINGLE = "-n";
     private static final String DOWNLOAD = "-d";
-    private static final String SMP = "-s";
 
     //parameters for download
     private static final String INBOX = "-i";
@@ -200,36 +197,6 @@ public class RingoClientCommandLineParserTest {
 
     }
 
-    /**
-     * Tests valid command line arguments for smp lookup
-     * @throws Exception
-     */
-    @Test
-    public void testProperSMPLookupCommandLine() throws URISyntaxException {
-
-        RingoClientParams params = null;
-        RingoClientConnectionParams connectionParams = null;
-
-        try {
-            parser.parseCommandLine(new String[]{USERNAME, "adam", PASSWORD, "superSecretPassword", ADDRESS, "http://ringo.domain.com", SMP, PARTICIPANT_ID,  "9908:976098897"});
-            connectionParams = parser.extractConnectionParams();
-            params = parser.extractOperationParams();
-        } catch (CommandLineParserException e) {
-            assertEquals("a", e.getMessage());
-        }
-
-        assertEquals("adam", connectionParams.getUsername());
-        assertEquals("superSecretPassword", connectionParams.getPassword());
-        assertEquals(new URI("http://ringo.domain.com"), connectionParams.getAccessPointURI());
-
-        assertEquals(RingoClientParams.ClientOperation.SMP_LOOKUP, params.getOperation());
-        assertEquals(new ParticipantId(SchemeId.NO_ORGNR,"976098897"), params.getParticipantId());
-
-        assertNull(params.getOutboxPath());
-        assertNull(params.getInboxPath());
-        assertNull(params.getArchivePath());
-
-    }
 
     /**
      * Tests username missing
@@ -300,7 +267,7 @@ public class RingoClientCommandLineParserTest {
             parser.extractOperationParams();
             fail();
         } catch (CommandLineParserException e) {
-            assertEquals("One of: '--upload', '--uploadSingle', --download' '--smp' option required.", e.getMessage());
+            assertEquals("One of: '--upload', '--uploadSingle', --download' option required.", e.getMessage());
             assertFalse(e.isNotify());
             assertNull(e.getNotificationType());
         }
@@ -386,46 +353,7 @@ public class RingoClientCommandLineParserTest {
 
     }
 
-    /**
-     * Tests participantId missing for SMP lookup
-     * @throws Exception
-     */
-    @Test
-    public void testParticipantIdMissingForSMPLookup() {
 
-        try {
-            parser.parseCommandLine(new String[]{USERNAME, "adam", PASSWORD, "superSecretPassword", ADDRESS, "http://ringo.domain.com", SMP});
-            parser.extractConnectionParams();
-            parser.extractOperationParams();
-            fail();
-        } catch (CommandLineParserException e) {
-            assertEquals("ParticipantId required for smp lookup (--participantId)", e.getMessage());
-            assertFalse(e.isNotify());
-            assertNull(e.getNotificationType());
-        }
-
-    }
-
-    /**
-     * Tests wrong participantId formatfor SMP lookup
-     * Country prefix missing
-     * @throws Exception
-     */
-    @Test
-    public void testWrongParticipantIdFormatForSMPLookup() {
-
-        try {
-            parser.parseCommandLine(new String[]{USERNAME, "adam", PASSWORD, "superSecretPassword", ADDRESS, "http://ringo.domain.com", SMP, PARTICIPANT_ID,  "976098897"});
-            parser.extractConnectionParams();
-            parser.extractOperationParams();
-            fail();
-        } catch (CommandLineParserException e) {
-            assertEquals("Invalid participantId '976098897', valid format is: <4 digit agency code>:<Organisation identifier>", e.getMessage());
-            assertFalse(e.isNotify());
-            assertNull(e.getNotificationType());
-        }
-
-    }
 
     /**
      * Tests recipientId option without value for single file upload
@@ -555,49 +483,9 @@ public class RingoClientCommandLineParserTest {
      ******************************************************/
 
 
-    @Test
-    public void testParticipantIdNotAllowedForDownloadAndUpload() throws URISyntaxException {
-
-        //download
-        try {
-            parser.parseCommandLine(new String[]{USERNAME, "adam", PASSWORD, "superSecretPassword", ADDRESS, "http://ringo.domain.com", DOWNLOAD, INBOX, DOWNLOAD_DIR, PARTICIPANT_ID, "9908:9760988"});
-            parser.extractConnectionParams();
-            parser.extractOperationParams();
-            fail();
-        } catch (CommandLineParserException e) {
-            assertEquals("ParticipantId option allowed only for SMP lookup.", e.getMessage());
-            assertTrue(e.isNotify());
-            assertEquals(NotificationType.DOWNLOAD, e.getNotificationType());
-        }
-
-        //upload
-        try {
-            parser.parseCommandLine(new String[]{USERNAME, "adam", PASSWORD, "superSecretPassword", ADDRESS, "http://ringo.domain.com", UPLOAD, OUTBOX, UPLOAD_DIR, ARCHIVE, ARCHIVE_DIR, CHANNEL_ID, "ChannelId", PARTICIPANT_ID, "9908:9760988"});
-            parser.extractConnectionParams();
-            parser.extractOperationParams();
-            fail();
-        } catch (CommandLineParserException e) {
-            assertEquals("ParticipantId option allowed only for SMP lookup.", e.getMessage());
-            assertTrue(e.isNotify());
-            assertEquals(NotificationType.BATCH_UPLOAD, e.getNotificationType());
-
-        }
-
-        //single upload
-        try {
-            parser.parseCommandLine(new String[]{USERNAME, "adam", PASSWORD, "superSecretPassword", UPLOAD_SINGLE, FILENAME, UPLOAD_DIR+"/"+UPLOAD_FILE, ARCHIVE, ARCHIVE_DIR, SENDER_ID, "9908:976098897", CHANNEL_ID, "ChannelId", RECIPIENT_ID, "9908:976098897", PARTICIPANT_ID, "9908:9760988"});
-            parser.extractConnectionParams();
-            parser.extractOperationParams();
-            fail();
-        } catch (CommandLineParserException e) {
-            assertEquals("ParticipantId option allowed only for SMP lookup.", e.getMessage());
-            assertFalse(e.isNotify());
-            assertNull(e.getNotificationType());
-        }
-    }
 
     @Test
-    public void testInboxNotAllowedForUploadAndSMP() throws URISyntaxException {
+    public void testInboxNotAllowedForUpload() throws URISyntaxException {
 
         //upload
         try {
@@ -623,21 +511,10 @@ public class RingoClientCommandLineParserTest {
             assertNull(e.getNotificationType());
         }
 
-        //smp lookup
-        try {
-            parser.parseCommandLine(new String[]{USERNAME, "adam", PASSWORD, "superSecretPassword", ADDRESS, "http://ringo.domain.com", SMP, PARTICIPANT_ID,  "9908:976098897", INBOX, "inboxPath"});
-            parser.extractConnectionParams();
-            parser.extractOperationParams();
-            fail();
-        } catch (CommandLineParserException e) {
-            assertEquals("Inbox path option allowed only for download.", e.getMessage());
-            assertFalse(e.isNotify());
-            assertNull(e.getNotificationType());
-        }
     }
 
     @Test
-    public void testOutboxNotAllowedForDownloadAndSMP() throws URISyntaxException {
+    public void testOutboxNotAllowedForDownload() throws URISyntaxException {
 
         //download
         try {
@@ -651,21 +528,10 @@ public class RingoClientCommandLineParserTest {
             assertEquals(NotificationType.DOWNLOAD, e.getNotificationType());
         }
 
-        //smp lookup
-        try {
-            parser.parseCommandLine(new String[]{USERNAME, "adam", PASSWORD, "superSecretPassword", ADDRESS, "http://ringo.domain.com", SMP, PARTICIPANT_ID,  "9908:976098897", OUTBOX, "outboxPath"});
-            parser.extractConnectionParams();
-            parser.extractOperationParams();
-            fail();
-        } catch (CommandLineParserException e) {
-            assertEquals("Outbox path option allowed only for upload.", e.getMessage());
-            assertFalse(e.isNotify());
-            assertNull(e.getNotificationType());
-        }
     }
 
     @Test
-    public void testArchiveNotAllowedForDownloadAndSMP() throws URISyntaxException {
+    public void testArchiveNotAllowedForDownload() throws URISyntaxException {
 
         //download
         try {
@@ -679,17 +545,6 @@ public class RingoClientCommandLineParserTest {
             assertEquals(NotificationType.DOWNLOAD, e.getNotificationType());
         }
 
-        //smp lookup
-        try {
-            parser.parseCommandLine(new String[]{USERNAME, "adam", PASSWORD, "superSecretPassword", ADDRESS, "http://ringo.domain.com", SMP, PARTICIPANT_ID,  "9908:976098897", ARCHIVE, "archivePath"});
-            parser.extractConnectionParams();
-            parser.extractOperationParams();
-            fail();
-        } catch (CommandLineParserException e) {
-            assertEquals("Archive path option allowed only for upload.", e.getMessage());
-            assertFalse(e.isNotify());
-            assertNull(e.getNotificationType());
-        }
     }
 
     @Test
@@ -741,30 +596,6 @@ public class RingoClientCommandLineParserTest {
             assertEquals("SenderId option allowed only for single upload only. For multiple upload it will be extracted from xml file.", e.getMessage());
             assertTrue(e.isNotify());
             assertEquals(NotificationType.BATCH_UPLOAD, e.getNotificationType());
-        }
-
-        //smp lookup - recipientId
-        try {
-            parser.parseCommandLine(new String[]{USERNAME, "adam", PASSWORD, "superSecretPassword", ADDRESS, "http://ringo.domain.com", SMP, PARTICIPANT_ID,  "9908:976098897", RECIPIENT_ID, "recipientId"});
-            parser.extractConnectionParams();
-            parser.extractOperationParams();
-            fail();
-        } catch (CommandLineParserException e) {
-            assertEquals("RecipientId option allowed only for single upload only. For multiple upload it will be extracted from xml file.", e.getMessage());
-            assertFalse(e.isNotify());
-            assertNull(e.getNotificationType());
-        }
-
-        //smp lookup - senderId
-        try {
-            parser.parseCommandLine(new String[]{USERNAME, "adam", PASSWORD, "superSecretPassword", ADDRESS, "http://ringo.domain.com", SMP, PARTICIPANT_ID,  "9908:976098897", SENDER_ID, "senderId"});
-            parser.extractConnectionParams();
-            parser.extractOperationParams();
-            fail();
-        } catch (CommandLineParserException e) {
-            assertEquals("SenderId option allowed only for single upload only. For multiple upload it will be extracted from xml file.", e.getMessage());
-            assertFalse(e.isNotify());
-            assertNull(e.getNotificationType());
         }
     }
 
@@ -876,9 +707,4 @@ public class RingoClientCommandLineParserTest {
             archiveDir.delete();
         }
     }
-
-
-
-
-
 }

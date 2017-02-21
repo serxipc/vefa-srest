@@ -1,8 +1,5 @@
 package no.sr.ringo.oxalis;
 
-import eu.peppol.identifier.ParticipantId;
-import eu.peppol.identifier.PeppolDocumentTypeId;
-import eu.peppol.identifier.PeppolProcessTypeId;
 import no.difi.oxalis.api.outbound.TransmissionRequest;
 import no.difi.oxalis.api.outbound.TransmissionResponse;
 import no.difi.oxalis.api.outbound.Transmitter;
@@ -34,10 +31,10 @@ public class OxalisDocumentSender implements PeppolDocumentSender {
         TransmissionRequestBuilder requestBuilder = oxalisOutboundModule.getTransmissionRequestBuilder();
 
         requestBuilder
-                .receiver(new ParticipantId(messageMetaData.getPeppolHeader().getReceiver().stringValue()))
-                .sender((new ParticipantId(messageMetaData.getPeppolHeader().getSender().stringValue())))
-                .documentType(PeppolDocumentTypeId.valueOf(messageMetaData.getPeppolHeader().getPeppolDocumentTypeId().stringValue()))
-                .processType(PeppolProcessTypeId.valueOf(messageMetaData.getPeppolHeader().getProfileId().stringValue()))
+                .receiver( messageMetaData.getPeppolHeader().getReceiver())
+                .sender( messageMetaData.getPeppolHeader().getSender())
+                .documentType(messageMetaData.getPeppolHeader().getPeppolDocumentTypeId())
+                .processType((messageMetaData.getPeppolHeader().getProcessIdentifier()))
                 .payLoad(getXmlDocumentAsStream(xmlMessage));
 
 
@@ -49,14 +46,14 @@ public class OxalisDocumentSender implements PeppolDocumentSender {
         System.out.printf("Message sent to %s using %s was assigned transmissionId : %s\n",
                 transmissionRequest.getEndpoint().getAddress().toString(),
                 transmissionRequest.getEndpoint().getTransportProfile().getValue(),
-                transmissionResponse.getMessageId()
+                transmissionResponse.getTransmissionIdentifier()
         );
 
         Receipt receipt = transmissionResponse.primaryReceipt();
 
         return new TransmissionReceipt(messageMetaData.getReceptionId(),
                 // Transmission Id assigned by AS2 or whatever we are using
-                new TransmissionId(transmissionResponse.getMessageId().stringValue()),
+                new TransmissionId(transmissionResponse.getTransmissionIdentifier().toString()),
                 transmissionResponse.getEndpoint().getAddress(),
                 new Date(),
                 transmissionResponse.primaryReceipt()

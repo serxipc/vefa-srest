@@ -1,6 +1,6 @@
 package no.sr.ringo.client;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.common.UploadMode;
 import no.sr.ringo.peppol.LocalName;
 import no.sr.ringo.peppol.PeppolChannelId;
@@ -21,8 +21,8 @@ import static org.testng.Assert.*;
  */
 public class RingoClientAgressoTest {
 
-    private static final ParticipantId UNIT4_PARTICIPANT_ID = ParticipantId.valueOf("9908:961329310");
-    private static final ParticipantId SEND_REGNING_TEST_ID = ParticipantId.valueOf("9908:810017902");
+    private static final ParticipantIdentifier UNIT4_PARTICIPANT_ID = ParticipantIdentifier.of("9908:961329310");
+    private static final ParticipantIdentifier SEND_REGNING_TEST_ID = ParticipantIdentifier.of("9908:810017902");
 
     private RingoClientImpl agressoRingoClient;
 
@@ -62,7 +62,7 @@ public class RingoClientAgressoTest {
 
     @Test(enabled = false)
     public void thereAreAvailableDocumentTransfersForCreditNote() throws Exception {
-        List<AcceptedDocumentTransfer> acceptedDocumentTransfers = agressoRingoClient.fetchAcceptedDocumentTransfers(ParticipantId.valueOf("9908:961329310"), LocalName.Invoice);
+        List<AcceptedDocumentTransfer> acceptedDocumentTransfers = agressoRingoClient.fetchAcceptedDocumentTransfers(ParticipantIdentifier.of("9908:961329310"), LocalName.Invoice);
         assertNotNull(acceptedDocumentTransfers);
         assertTrue(acceptedDocumentTransfers.size() > 0);
     }

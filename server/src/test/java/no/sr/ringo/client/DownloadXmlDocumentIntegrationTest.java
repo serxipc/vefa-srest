@@ -54,9 +54,9 @@ public class DownloadXmlDocumentIntegrationTest extends AbstractHttpClientServer
 
     @BeforeMethod(groups = {"integration"})
     public void setUp() throws Exception {
-        Account account = accountRepository.findAccountByParticipantId(ObjectMother.getTestParticipantId());
+        Account account = accountRepository.findAccountByParticipantIdentifier(ObjectMother.getTestParticipantId());
         String receiver1 = "9908:976098897";
-        messageNumber = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantId().stringValue(), receiver1, new ReceptionId(), null);
+        messageNumber = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getTestParticipantId().getIdentifier(), receiver1, new ReceptionId(), null);
     }
 
 

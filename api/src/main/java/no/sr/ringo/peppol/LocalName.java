@@ -1,7 +1,7 @@
 package no.sr.ringo.peppol;
 
 /**
- * Represents the XML local name used in {@link PeppolDocumentTypeId} and as the root element in XML documents.
+ * Represents the XML local name used in {@link DocumentTypeIdentifier} and as the root element in XML documents.
  */
 public final class LocalName {
 

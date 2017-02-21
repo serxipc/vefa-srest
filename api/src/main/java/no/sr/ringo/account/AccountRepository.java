@@ -22,7 +22,7 @@
 
 package no.sr.ringo.account;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.message.MessageNumber;
 
 /**
@@ -32,7 +32,7 @@ public interface AccountRepository {
 
     public Account findAccountById(final AccountId id) throws SrAccountNotFoundException;
 
-    Account findAccountByParticipantId(final ParticipantId participantId);
+    Account findAccountByParticipantIdentifier(final ParticipantIdentifier participantId);
 
     /**
      * Locates an account, which you expect to exist by the username.
@@ -55,7 +55,7 @@ public interface AccountRepository {
      * @param participantId if not null will be used in account_receiver
      * @return
      */
-    Account createAccount(final Account account, final ParticipantId participantId);
+    Account createAccount(final Account account, final ParticipantIdentifier participantId);
 
     /**
      * Persists new customer

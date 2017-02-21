@@ -1,6 +1,6 @@
 package no.sr.ringo.standalone.parser;
 
-import eu.peppol.identifier.ParticipantId;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.peppol.PeppolChannelId;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang.StringUtils;
@@ -20,7 +20,7 @@ import static no.sr.ringo.exception.NotifyingException.NotificationType;
  */
 public class RingoClientCommandLineParser {
 
-    //ParticipantId format consists of 4 country code digits, colon and the actual number
+    //ParticipantIdentifier format consists of 4 country code digits, colon and the actual number
     private static final String PARTICIPANT_ID_FORMAT = "[0-9]{4,4}:.*";
 
     private static Options options = new Options();
@@ -40,7 +40,6 @@ public class RingoClientCommandLineParser {
     private static final String UPLOAD = "l";
     private static final String DOWNLOAD = "d";
     private static final String UPLOAD_SINGLE = "n";
-    private static final String SMP = "s";
 
     //parameters for download
     private static final String INBOX = "i";
@@ -107,9 +106,6 @@ public class RingoClientCommandLineParser {
                 break;
             case UPLOAD_SINGLE:
                 extractUploadParams(params, commandLine, true);
-                break;
-            case SMP_LOOKUP:
-                extractSMPLookupParams(params, commandLine);
                 break;
             default:
         }
@@ -195,7 +191,6 @@ public class RingoClientCommandLineParser {
         boolean isDownload = commandLine.hasOption(DOWNLOAD);
         boolean isUpload = commandLine.hasOption(UPLOAD);
         boolean isUploadSingle = commandLine.hasOption(UPLOAD_SINGLE);
-        boolean isSmp = commandLine.hasOption(SMP);
 
 
         if (isDownload) {
@@ -204,10 +199,8 @@ public class RingoClientCommandLineParser {
             params.setOperation(RingoClientParams.ClientOperation.UPLOAD);
         } else if (isUploadSingle) {
             params.setOperation(RingoClientParams.ClientOperation.UPLOAD_SINGLE);
-        } else if (isSmp) {
-            params.setOperation(RingoClientParams.ClientOperation.SMP_LOOKUP);
         } else {
-            throw new CommandLineParserException("One of: '--upload', '--uploadSingle', --download' '--smp' option required.");
+            throw new CommandLineParserException("One of: '--upload', '--uploadSingle', --download' option required.");
         }
 
     }
@@ -256,7 +249,7 @@ public class RingoClientCommandLineParser {
                     throw new CommandLineParserException(String.format("Invalid recipientId '%s', " + VALID_FORMAT_PEPPOL_PARTICIPANT, recipientId));
                 }
 
-                final ParticipantId peppolParticipantId = ParticipantId.valueOf(recipientId);
+                final ParticipantIdentifier peppolParticipantId = ParticipantIdentifier.of(recipientId);
                 if (peppolParticipantId == null) {
                     throw new CommandLineParserException(String.format("Invalid recipientId '%s', " + VALID_FORMAT_PEPPOL_PARTICIPANT, recipientId));
                 }
@@ -273,7 +266,7 @@ public class RingoClientCommandLineParser {
                     throw new CommandLineParserException(String.format("Invalid senderId '%s', " + VALID_FORMAT_PEPPOL_PARTICIPANT, senderId));
                 }
 
-                final ParticipantId peppolParticipantId = ParticipantId.valueOf(senderId);
+                final ParticipantIdentifier peppolParticipantId = ParticipantIdentifier.of(senderId);
                 if (peppolParticipantId == null) {
                     throw new CommandLineParserException(String.format("Invalid senderId '%s', " + VALID_FORMAT_PEPPOL_PARTICIPANT, senderId));
                 }
@@ -324,24 +317,16 @@ public class RingoClientCommandLineParser {
         boolean upload = commandLine.hasOption(UPLOAD);
         boolean upload_single = commandLine.hasOption(UPLOAD_SINGLE);
         boolean download = commandLine.hasOption(DOWNLOAD);
-        boolean smp = commandLine.hasOption(SMP);
 
         boolean inbox = commandLine.hasOption(INBOX);
         boolean outbox = commandLine.hasOption(OUTBOX);
         boolean archive = commandLine.hasOption(ARCHIVE);
 
-        boolean smpParticipantId = commandLine.hasOption(PARTICIPANT_ID);
         boolean singleUploadRecipientId = commandLine.hasOption(RECIPIENT_ID);
         boolean singleUploadSenderId = commandLine.hasOption(SENDER_ID);
 
         NotificationType notificationType = upload ? NotificationType.BATCH_UPLOAD : download ? NotificationType.DOWNLOAD : null;
 
-        //ParticipantId allowed for SMP lookup only
-        if (!smp) {
-            if (smpParticipantId) {
-                throw new CommandLineParserException("ParticipantId option allowed only for SMP lookup.", notificationType);
-            }
-        }
 
         //outbox and archive allowed for upload options only
         if (!upload && !upload_single) {
@@ -368,26 +353,8 @@ public class RingoClientCommandLineParser {
                 throw new CommandLineParserException("Inbox path option allowed only for download.", notificationType);
             }
         }
-    }
 
-    /**
-     * Extracts parameters specific for upload operation
-     */
-    private void extractSMPLookupParams(RingoClientParams params, CommandLine commandLine) throws CommandLineParserException {
-        if (!commandLine.hasOption(PARTICIPANT_ID)) {
-            throw new CommandLineParserException("ParticipantId required for smp lookup (--participantId)");
-        }
 
-        String participantIdString = commandLine.getOptionValue(PARTICIPANT_ID);
-
-        if (!participantIdString.matches(PARTICIPANT_ID_FORMAT)) {
-            throw new CommandLineParserException(String.format(INVALID_PEPOL_PARTICIPANT, participantIdString));
-        }
-        final ParticipantId peppolParticipantId = ParticipantId.valueOf(participantIdString);
-        if (peppolParticipantId == null) {
-            throw new CommandLineParserException(String.format(INVALID_PEPOL_PARTICIPANT, participantIdString));
-        }
-        params.setParticipantId(peppolParticipantId);
     }
 
     /**
@@ -412,10 +379,6 @@ public class RingoClientCommandLineParser {
                 .withType(String.class)
                 .withDescription("Download")
                 .withLongOpt("download").create(DOWNLOAD);
-
-        Option smp = OptionBuilder
-                .withDescription("SMP lookup")
-                .withLongOpt("smp").create(SMP);
 
         Option upload = OptionBuilder
                 .withDescription("Upload")
@@ -455,7 +418,7 @@ public class RingoClientCommandLineParser {
         Option participantId = OptionBuilder
                 .hasArg()
                 .withType(String.class)
-                .withDescription("ParticipantId for SMP lookup")
+                .withDescription("ParticipantIdentifier for SMP lookup")
                 .withLongOpt("participantId").create(PARTICIPANT_ID);
 
         Option channelId = OptionBuilder
@@ -501,7 +464,6 @@ public class RingoClientCommandLineParser {
         options.addOption(uploadSingle);
         options.addOption(recipientId);
         options.addOption(production);
-        options.addOption(smp);
         options.addOption(uploadPath);
         options.addOption(downloadPath);
         options.addOption(archivePath);
@@ -553,10 +515,6 @@ public class RingoClientCommandLineParser {
 
         sb.append("\nExample: -u user -p secret --download --inboxPath /home/download");
         sb.append("\nDefault directories: -u user -p secret --download");
-
-        sb.append("\n\nSMP LOOKUP\n");
-        sb.append("\nTo check whether given participant is registered in the PEPPOL network, use --smp (-s) and --participantId (-z) with value to be checked");
-        sb.append("\nExample: -u user -p secret --smp -z 9908:976098897");
 
         System.out.println(sb.toString());
 
