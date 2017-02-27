@@ -1,13 +1,13 @@
 /* Created by steinar on 09.01.12 at 13:58 */
 package no.sr.ringo.response;
 
-import no.sr.ringo.peppol.RingoUtils;
 import no.sr.ringo.message.MessageWithLocations;
+import no.sr.ringo.peppol.RingoUtils;
 
 import java.util.List;
 
 /**
- * The response from a query to /Messages
+ * The response from a query on /messages
  *
  * @author Steinar Overbeck Cook steinar@sendregning.no
  */

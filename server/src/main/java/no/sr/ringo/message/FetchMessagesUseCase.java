@@ -250,11 +250,12 @@ public class FetchMessagesUseCase {
     }
 
     public MessageMetaData findOutBoundMessageByMessageNo(Account account, Long msgNo) {
-        MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, msgNo);
+        final MessageNumber messageNo = MessageNumber.create(msgNo);
+        MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, messageNo);
         if (outgoingMessage(messageByMessageNo)) {
             return messageByMessageNo;
         }
-        throw new PeppolMessageNotFoundException(msgNo);
+        throw new PeppolMessageNotFoundException(messageNo);
     }
 
     private boolean outgoingMessage(MessageMetaData messageByMessageNo) {

@@ -1,7 +1,7 @@
 package no.sr.ringo.http;
 
-import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
-import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
+import no.difi.oxalis.test.identifier.PeppolDocumentTypeIdAcronym;
+import no.difi.oxalis.test.identifier.PeppolProcessTypeIdAcronym;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.client.ClientObjectMother;
 import no.sr.ringo.common.ResponseUtils;

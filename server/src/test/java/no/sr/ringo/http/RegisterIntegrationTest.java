@@ -1,7 +1,7 @@
 package no.sr.ringo.http;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.WellKnownParticipant;
+import no.difi.oxalis.test.identifier.WellKnownParticipant;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountRepository;
 import no.sr.ringo.account.SrAccountNotFoundException;

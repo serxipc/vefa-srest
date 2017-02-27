@@ -41,7 +41,7 @@ public interface PeppolMessageRepository {
      * @return
      * @throws PeppolMessageNotFoundException
      */
-    MessageMetaData findMessageByMessageNo(Account account, Long messageNo) throws PeppolMessageNotFoundException;
+    MessageMetaData findMessageByMessageNo(Account account, MessageNumber messageNo) throws PeppolMessageNotFoundException;
 
     /**
      * Gives the count of messages in the inbox for the supplied account

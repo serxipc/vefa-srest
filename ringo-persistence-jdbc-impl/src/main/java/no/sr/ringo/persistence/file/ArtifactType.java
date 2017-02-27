@@ -34,12 +34,12 @@ public enum ArtifactType {
     /**
      * The main document, i.e the invoice, purchase order, etc.
      */
-    PAYLOAD("The payload", "PAYLOAD_URL", "-doc.xml"),
+    PAYLOAD("The payload", "PAYLOAD_URL", ".doc.xml"),
 
     /**
      * The transport protocol specific native evidene, i.e. MDN for AS2 protocol
      */
-    NATIVE_EVIDENCE("Protocol specific transmission evidence", "NATIVE_EVIDENCE_URL", "-rcpt.smime");
+    EVIDENCE("Transmission evidence", "EVIDENCE_URL", ".receipt.smime");
 
     private final String description;
 

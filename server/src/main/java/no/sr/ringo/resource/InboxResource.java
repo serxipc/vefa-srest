@@ -78,7 +78,7 @@ public class InboxResource extends AbstractMessageResource {
             msgNo = parseMsgNo(msgNoString);
         }
 
-        MessageMetaData messageMetaData = peppolMessageRepository.findMessageByMessageNo(account, msgNo.toLong());
+        MessageMetaData messageMetaData = peppolMessageRepository.findMessageByMessageNo(account, msgNo);
         if (!messageMetaData.getTransferDirection().equals(TransferDirection.IN)) {
             return SrResponse.status(Response.Status.NOT_FOUND, "Inbound message number " + msgNoString + " not found");
         }
@@ -133,7 +133,7 @@ public class InboxResource extends AbstractMessageResource {
         }
 
         MessageMetaData messageMetaDataWithLocators = null;
-        messageMetaDataWithLocators = peppolMessageRepository.findMessageByMessageNo(account, msgNo.toLong());
+        messageMetaDataWithLocators = peppolMessageRepository.findMessageByMessageNo(account, msgNo);
         if (!messageMetaDataWithLocators.getTransferDirection().equals(TransferDirection.IN)) {
             return SrResponse.status(Response.Status.NOT_FOUND, "Inbound message number " + msgNoString + " not found");
         }

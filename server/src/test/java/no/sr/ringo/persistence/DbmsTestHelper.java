@@ -1,8 +1,8 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
-import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
+import no.difi.oxalis.test.identifier.PeppolDocumentTypeIdAcronym;
+import no.difi.oxalis.test.identifier.PeppolProcessTypeIdAcronym;
 import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.sr.ringo.message.ReceptionId;

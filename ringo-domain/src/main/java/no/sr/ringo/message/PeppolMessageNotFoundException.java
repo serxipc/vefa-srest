@@ -5,7 +5,7 @@ package no.sr.ringo.message;
  * @author Steinar Overbeck Cook steinar@sendregning.no
  */
 public class PeppolMessageNotFoundException extends IllegalArgumentException {
-    public PeppolMessageNotFoundException(Long messageNo) {
+    public PeppolMessageNotFoundException(MessageNumber messageNo) {
         super("PEPPOL message number " + messageNo + " not found");
     }
 }

@@ -70,7 +70,7 @@ public class ArtifactPathComputer {
 
     public Path createNativeEvidencePathFrom(FileRepoKey fileRepoKey) {
 
-        String fileName = createBaseFilename(fileRepoKey, ArtifactType.NATIVE_EVIDENCE.getFileNameSuffix());
+        String fileName = createBaseFilename(fileRepoKey, ArtifactType.EVIDENCE.getFileNameSuffix());
         return createCompletePath(fileRepoKey, fileName);
     }
 

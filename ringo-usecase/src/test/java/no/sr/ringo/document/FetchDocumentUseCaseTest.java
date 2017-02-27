@@ -4,6 +4,7 @@ import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.PeppolMessageNotFoundException;
+import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.peppol.PeppolDocumentTest;
 import org.easymock.EasyMock;
 import org.testng.annotations.BeforeMethod;
@@ -24,12 +25,14 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
     private Account account;
     private PeppolDocument ehfInvoice;
     private MyPeppolDocumentDecorator peppolDocumentDecorator;
+    private PeppolMessageRepository mockPeppolMessageRepository;
 
     @BeforeMethod
     public void setUp() throws Exception {
         mockDocumentRepository = EasyMock.createStrictMock(DocumentRepository.class);
+        mockPeppolMessageRepository = EasyMock.createMock(PeppolMessageRepository.class);
 
-        fetchDocumentUseCase = new FetchDocumentUseCase(mockDocumentRepository);
+        fetchDocumentUseCase = new FetchDocumentUseCase(mockDocumentRepository, mockPeppolMessageRepository);
 
         account = ObjectMother.getTestAccount();
         ehfInvoice = createEhfInvoice();
@@ -41,7 +44,7 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
     public void testIfAMessageIsNotFoundTheExceptionIsLeftToPropagate() throws Exception {
         MessageNumber msgNo = MessageNumber.valueOf("10");
 
-        expect(mockDocumentRepository.getPeppolDocument(account, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo.toLong()));
+        expect(mockDocumentRepository.getPeppolDocument(account, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo));
         replayAllMocks();
 
         fetchDocumentUseCase.execute(account, msgNo);

@@ -22,7 +22,7 @@
 
 package no.sr.ringo.persistence.jdbc;
 
-import eu.peppol.identifier.WellKnownParticipant;
+import no.difi.oxalis.test.identifier.WellKnownParticipant;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.account.AccountId;
 import no.sr.ringo.message.MessageMetaDataImpl;

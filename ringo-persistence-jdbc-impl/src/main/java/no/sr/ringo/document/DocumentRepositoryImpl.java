@@ -54,7 +54,7 @@ public class DocumentRepositoryImpl implements DocumentRepository {
         if (documentFound(rs)) {
             return extractPeppolDocumentFromResultSet(rs);
         } else {
-            throw new PeppolMessageNotFoundException(msgNo.toLong());
+            throw new PeppolMessageNotFoundException(msgNo);
         }
     }
 

@@ -1,7 +1,7 @@
 package no.sr.ringo.client;
 
-import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
-import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
+import no.difi.oxalis.test.identifier.PeppolDocumentTypeIdAcronym;
+import no.difi.oxalis.test.identifier.PeppolProcessTypeIdAcronym;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.common.RingoConstants;

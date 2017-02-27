@@ -91,7 +91,7 @@ CREATE TABLE message (
   remote_host varchar(128) DEFAULT NULL ,
   ap_name varchar(128) DEFAULT NULL  ,
   payload_url varchar(256) not null ,
-  native_evidence_url varchar(256) default null ,
+  evidence_url varchar(256) default null ,
   PRIMARY KEY (msg_no),
   constraint unique_message_uuid UNIQUE (direction, message_uuid),
   CONSTRAINT direction_enum check(direction in ('IN','OUT')),

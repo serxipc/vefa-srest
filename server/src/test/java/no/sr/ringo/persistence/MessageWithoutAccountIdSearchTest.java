@@ -2,7 +2,7 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.WellKnownParticipant;
+import no.difi.oxalis.test.identifier.WellKnownParticipant;
 import no.sr.ringo.guice.ServerTestModuleFactory;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.PeppolMessageRepository;

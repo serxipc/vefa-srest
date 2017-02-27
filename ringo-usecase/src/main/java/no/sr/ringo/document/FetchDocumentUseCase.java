@@ -2,6 +2,7 @@ package no.sr.ringo.document;
 
 import no.sr.ringo.account.Account;
 import no.sr.ringo.message.MessageNumber;
+import no.sr.ringo.message.PeppolMessageRepository;
 
 import javax.inject.Inject;
 
@@ -15,13 +16,20 @@ import javax.inject.Inject;
 public class FetchDocumentUseCase {
 
     private final DocumentRepository documentRepository;
+    private final PeppolMessageRepository peppolMessageRepository;
 
     @Inject
-    public FetchDocumentUseCase(DocumentRepository documentRepository) {
+    public FetchDocumentUseCase(DocumentRepository documentRepository, PeppolMessageRepository peppolMessageRepository) {
         this.documentRepository = documentRepository;
+        this.peppolMessageRepository = peppolMessageRepository;
     }
 
     public PeppolDocument execute(Account account, MessageNumber msgNo) {
+
+        peppolMessageRepository.findMessageByMessageNo(account, msgNo);
+
+
+
         return documentRepository.getPeppolDocument(account, msgNo);
     }
 }

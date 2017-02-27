@@ -7,10 +7,7 @@ import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountRepository;
 import no.sr.ringo.guice.ServerTestModuleFactory;
-import no.sr.ringo.message.MessageMetaData;
-import no.sr.ringo.message.PeppolMessageNotFoundException;
-import no.sr.ringo.message.PeppolMessageRepository;
-import no.sr.ringo.message.ReceptionId;
+import no.sr.ringo.message.*;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
 import org.testng.annotations.AfterMethod;
@@ -34,7 +31,7 @@ public class MarkAsReadPersistenceTest {
     private final PeppolMessageRepository peppolMessageRepository;
     private final DbmsTestHelper dbmsTestHelper;
 
-    private Long messageNo;
+    private MessageNumber messageNo;
     private String receiver1 = ObjectMother.getAdamsParticipantId().getIdentifier();
     private Account account;
     private ParticipantIdentifier sender;
@@ -59,7 +56,7 @@ public class MarkAsReadPersistenceTest {
         assertNull(messageByMessageNo.getDelivered());
 
         //mark as read (update delivered)
-        peppolMessageRepository.markMessageAsRead(messageNo);
+        peppolMessageRepository.markMessageAsRead(messageNo.toLong());
 
         //fetch the message again and verify that delivered is not null
         messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, messageNo);
@@ -70,7 +67,8 @@ public class MarkAsReadPersistenceTest {
     public void setUp() throws Exception {
         account = accountRepository.createAccount(ObjectMother.getAdamsAccount(), ObjectMother.getAdamsParticipantId());
         sender = ObjectMother.getAdamsParticipantId();
-        messageNo = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().getIdentifier(), receiver1, new ReceptionId(), null);
+        Long mgsNo = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().getIdentifier(), receiver1, new ReceptionId(), null);
+        messageNo = MessageNumber.create(mgsNo);
     }
 
     @AfterMethod

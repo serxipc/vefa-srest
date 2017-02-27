@@ -166,7 +166,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             MessageMetaData mmd = messageMetaDataOptional.get();
             ArtifactPathComputer.FileRepoKey fileRepoKey = fileRepoKeyFrom(new ReceptionId(receptionId.stringValue()), transferDirection, mmd.getPeppolHeader().getSender(), mmd.getPeppolHeader().getReceiver(), mmd.getReceived());
             InputStream receiptInputStream = new ByteArrayInputStream(transmissionEvidence.getValue());
-            Path nativeEvidencePath = persistArtifact(ArtifactType.NATIVE_EVIDENCE, receiptInputStream, fileRepoKey);
+            Path nativeEvidencePath = persistArtifact(ArtifactType.EVIDENCE, receiptInputStream, fileRepoKey);
 
             updateMetadataForEvidence(transferDirection, receptionId, nativeEvidencePath);
         } else
@@ -294,7 +294,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
 
             final URI payload_url = URI.create(rs.getString("payload_url"));
 
-            String native_evidence_url = rs.getString("native_evidence_url");
+            String native_evidence_url = rs.getString("evidence_url");
 
 
             final MessageMetaDataImpl mmd = new MessageMetaDataImpl();
@@ -479,7 +479,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
 
         Function<ArtifactPathComputer.FileRepoKey, Path> function;
         switch (artifactType) {
-            case NATIVE_EVIDENCE:
+            case EVIDENCE:
                 function = artifactPathComputer::createNativeEvidencePathFrom;
                 break;
             case PAYLOAD:
@@ -496,7 +496,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
         String dateColumnName = dateColumnNameFor(transferDirection);
 
         String sql = "update message set "
-                + ArtifactType.NATIVE_EVIDENCE.getColumnName() + "=?, " // p1
+                + ArtifactType.EVIDENCE.getColumnName() + "=?, " // p1
                 + dateColumnName + "=? " // p2
                 + " where message_uuid = ? and direction=?"; // p3 & p4
 

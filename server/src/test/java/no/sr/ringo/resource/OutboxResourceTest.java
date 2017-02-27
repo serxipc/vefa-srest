@@ -60,7 +60,9 @@ public class OutboxResourceTest {
         Long msgNo = 1L;
         UriInfo uriInfo = createMockUriInfo();
 
-        expect(mockFetchMessageUseCase.findOutBoundMessageByMessageNo(mockRingoAccount, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo));
+        final MessageNumber messageNo = MessageNumber.create(msgNo);
+        
+        expect(mockFetchMessageUseCase.findOutBoundMessageByMessageNo(mockRingoAccount, msgNo)).andThrow(new PeppolMessageNotFoundException(messageNo));
 
         replayAllMocks();
 
@@ -82,7 +84,7 @@ public class OutboxResourceTest {
     @Test(expectedExceptions = PeppolMessageNotFoundException.class)
     public void testDownloadPeppolDocumentException() throws Exception {
         MessageNumber msgNo = MessageNumber.create(1);
-        expect(mockFetchDocumentUseCase.execute(mockRingoAccount, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo.toLong()));
+        expect(mockFetchDocumentUseCase.execute(mockRingoAccount, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo));
         replayAllMocks();
 
         Response response = outboxResource.downloadPeppolDocument(msgNo.toString());

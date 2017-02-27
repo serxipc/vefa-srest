@@ -258,7 +258,7 @@ public class DatabaseHelper {
         try {
             while (rs.next()) {
                 deleteIfExists(rs.getString("payload_url"));
-                deleteIfExists(rs.getString("native_evidence_url"));
+                deleteIfExists(rs.getString("evidence_url"));
             }
         } catch (IOException | SQLException e) {
             throw new IllegalStateException("Error while deleting artifacts" + e, e);

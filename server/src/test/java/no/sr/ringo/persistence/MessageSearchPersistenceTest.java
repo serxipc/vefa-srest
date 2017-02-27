@@ -2,7 +2,7 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.WellKnownParticipant;
+import no.difi.oxalis.test.identifier.WellKnownParticipant;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;

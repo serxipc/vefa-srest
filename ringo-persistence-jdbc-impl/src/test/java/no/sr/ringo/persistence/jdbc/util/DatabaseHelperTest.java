@@ -22,9 +22,9 @@
 
 package no.sr.ringo.persistence.jdbc.util;
 
-import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
-import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
-import eu.peppol.identifier.WellKnownParticipant;
+import no.difi.oxalis.test.identifier.PeppolDocumentTypeIdAcronym;
+import no.difi.oxalis.test.identifier.PeppolProcessTypeIdAcronym;
+import no.difi.oxalis.test.identifier.WellKnownParticipant;
 import no.sr.ringo.account.*;
 import no.sr.ringo.message.MessageRepository;
 import no.sr.ringo.message.ReceptionId;
@@ -73,7 +73,7 @@ public class DatabaseHelperTest {
     }
 
     /**
-     * Ensures that we a) can insert a messag and b) the message is associated with the account we specify, i.e. there is no attempt made
+     * Ensures that we a) can insert a message and b) the message is associated with the account we specify, i.e. there is no attempt made
      * to connect it to another account.
      *
      * @throws Exception
@@ -91,21 +91,6 @@ public class DatabaseHelperTest {
 
         TransmissionMetaData messageByNo = messageRepository.findByMessageNo(msgNo);
         assertEquals(messageByNo.getAccountId(), account.getAccountId());
-    }
-
-    @Test
-    public void testCreateMessage1() throws Exception {
-
-    }
-
-    @Test
-    public void testCreateMessage2() throws Exception {
-
-    }
-
-    @Test
-    public void testDeleteMessage() throws Exception {
-
     }
 
 }

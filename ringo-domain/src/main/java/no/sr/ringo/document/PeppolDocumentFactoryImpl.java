@@ -12,6 +12,7 @@ public class PeppolDocumentFactoryImpl implements PeppolDocumentFactory {
 
     public PeppolDocument makePeppolDocument(PeppolDocumentTypeId peppolDocumentTypeId, String contentsAsXml) {
 
+        // This needs to be removed
         if (peppolDocumentTypeId.getLocalName().equals(LocalName.Invoice)) {
                 return new EhfInvoice(contentsAsXml);
         } else if (peppolDocumentTypeId.getLocalName().equals(LocalName.CreditNote)){

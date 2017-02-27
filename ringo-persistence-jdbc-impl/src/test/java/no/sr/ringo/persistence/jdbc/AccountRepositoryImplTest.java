@@ -23,8 +23,8 @@
 package no.sr.ringo.persistence.jdbc;
 
 import com.google.inject.Inject;
-import eu.peppol.identifier.PeppolDocumentTypeIdAcronym;
-import eu.peppol.identifier.PeppolProcessTypeIdAcronym;
+import no.difi.oxalis.test.identifier.PeppolDocumentTypeIdAcronym;
+import no.difi.oxalis.test.identifier.PeppolProcessTypeIdAcronym;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.account.*;
 import no.sr.ringo.message.MessageNumber;

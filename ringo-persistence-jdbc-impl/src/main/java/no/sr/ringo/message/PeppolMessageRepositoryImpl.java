@@ -41,7 +41,7 @@ import static no.sr.ringo.transport.TransferDirection.OUT;
 /**
  * Repository for the message meta data entities.
  * <p>
- * TODO: This class should be merged with {@link MessageRepository} in oxalis-persistence.
+ * TODO: This class should be merged with {@link no.sr.ringo.persistence.jdbc.MessageRepositoryH2Impl}
  *
  * @author Steinar Overbeck Cook steinar@sendregning.no
  * @author Thore Holmberg Johnsen thore@sendregning.no
@@ -111,7 +111,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             if (rs.next()) {
                 return extractMessageFromResultSet(rs);
             } else {
-                throw new PeppolMessageNotFoundException(msgNo.toLong());
+                throw new PeppolMessageNotFoundException(msgNo);
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Unable to retrieve xml document for message no: " + msgNo, e);
@@ -119,11 +119,11 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     }
 
     @Override
-    public MessageMetaData findMessageByMessageNo(Account account, Long messageNo) throws PeppolMessageNotFoundException {
+    public MessageMetaData findMessageByMessageNo(Account account, MessageNumber messageNo) throws PeppolMessageNotFoundException {
         try {
             SqlHelper sql = SqlHelper.create(getDbmsPlatform()).findMessageByMessageNoAndAccountId();
             PreparedStatement ps = sql.prepareStatement(jdbcTxManager.getConnection());
-            ps.setLong(1, messageNo);
+            ps.setLong(1, messageNo.toLong());
             ps.setInt(2, account.getAccountId().toInteger());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -327,7 +327,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
                     xmlMessage = lines.collect(joining(System.lineSeparator()));
                 }
             } else
-                throw new PeppolMessageNotFoundException(messageNo.longValue());
+                throw new PeppolMessageNotFoundException(MessageNumber.create(messageNo));
             return SbdhUtils.removeSbdhEnvelope(xmlMessage);
         } catch (SQLException | IOException e) {
             throw new IllegalStateException("Unable to retrieve xml document for message no: " + messageNo, e);
@@ -353,7 +353,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             if (rs.next()) {
                 same_account = rs.getBoolean("same_account");
             } else
-                throw new PeppolMessageNotFoundException(messageNo.longValue());
+                throw new PeppolMessageNotFoundException(MessageNumber.create(messageNo));
             return same_account;
         } catch (SQLException e) {
             throw new IllegalStateException("Unable to retrieve xml document for message no: " + messageNo, e);

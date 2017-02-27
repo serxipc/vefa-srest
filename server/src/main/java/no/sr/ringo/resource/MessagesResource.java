@@ -79,7 +79,7 @@ public class MessagesResource extends AbstractMessageResource {
             msgNo = parseMsgNo(msgNoString);
         }
 
-        MessageMetaData messageMetaDataWithLocator = peppolMessageRepository.findMessageByMessageNo(account, msgNo.toLong());
+        MessageMetaData messageMetaDataWithLocator = peppolMessageRepository.findMessageByMessageNo(account, msgNo);
         return createSingleMessageResponse(uriInfo, messageMetaDataWithLocator);
 
     }

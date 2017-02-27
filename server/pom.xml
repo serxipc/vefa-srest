@@ -116,7 +116,8 @@
             <artifactId>ringo-test</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
+
         <dependency>
             <groupId>com.github.difi.vefa-peppol</groupId>
             <artifactId>peppol-common</artifactId>

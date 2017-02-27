@@ -18,10 +18,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <slf4j.version>1.7.2</slf4j.version>
-        <oxalis.version>4.0.0-RC2-SNAPSHOT</oxalis.version>
         <jersey.version>1.19.2</jersey.version>
         <guice.version>4.1.0</guice.version>
         <jetty.version>7.6.16.v20140903</jetty.version>
+        <oxalis.version>4.0.0-RC2-SNAPSHOT</oxalis.version>
         <!-- For JitPack -->
         <vefa.peppol.groupId>com.github.difi.vefa-peppol</vefa.peppol.groupId>
         <vefa.peppol.version>70baa8aea8</vefa.peppol.version>

@@ -1,7 +1,7 @@
 package no.sr.ringo.message;
 
 import com.sun.jersey.api.uri.UriBuilderImpl;
-import eu.peppol.identifier.WellKnownParticipant;
+import no.difi.oxalis.test.identifier.WellKnownParticipant;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountId;
@@ -75,10 +75,14 @@ public class MessagesResourceMockTest {
         verifyAllMocks();
     }
 
+    /**
+     * Attempts to retrieve the payload for a given message.
+     * @throws Exception
+     */
     @Test
     public void testGetXmlDocument() throws Exception {
 
-        expect(mockFetchDocumentUseCase.execute(account, MessageNumber.create(1))).andReturn(new DefaultPeppolDocument("An xml document"));
+        expect(mockFetchDocumentUseCase.execute(account, MessageNumber.create(1L))).andReturn(new DefaultPeppolDocument("An xml document"));
         replayAllMocks();
 
         Response xmlResponse = messagesResource.getXmlDocument("1");
@@ -90,7 +94,7 @@ public class MessagesResourceMockTest {
     @Test(expectedExceptions = PeppolMessageNotFoundException.class)
     public void testMessageNotFoundException() throws Exception {
 
-        expect(mockFetchDocumentUseCase.execute(account, MessageNumber.create(1))).andThrow(new PeppolMessageNotFoundException(1L));
+        expect(mockFetchDocumentUseCase.execute(account, MessageNumber.create(1))).andThrow(new PeppolMessageNotFoundException(MessageNumber.create(1L)));
         replayAllMocks();
 
         messagesResource.getXmlDocument("1");
