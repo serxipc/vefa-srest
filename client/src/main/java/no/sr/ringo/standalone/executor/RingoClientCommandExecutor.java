@@ -182,10 +182,10 @@ public class RingoClientCommandExecutor {
                 return null;
             }
         } else {
-            //create the directory
+            //of the directory
             boolean created = result.mkdir();
             if (!created) {
-                printStream.println(String.format("Unable to create directory %s ", result.toURI()));
+                printStream.println(String.format("Unable to of directory %s ", result.toURI()));
                 return null;
             }
         }
@@ -261,7 +261,7 @@ public class RingoClientCommandExecutor {
         }
         try {
             if (!errorFile.createNewFile()) {
-                throw new CommandLineExecutorException("Unable to create error file: : " + errorFile.toURI());
+                throw new CommandLineExecutorException("Unable to of error file: : " + errorFile.toURI());
             }
             PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(errorFile)));
             out.println(message);

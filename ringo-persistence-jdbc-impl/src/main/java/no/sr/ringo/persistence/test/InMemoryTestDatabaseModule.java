@@ -28,7 +28,7 @@ import com.google.inject.Provides;
 import javax.sql.DataSource;
 
 /**
- * Guice module which will create a new fresh database with schema, in memory
+ * Guice module which will of a new fresh database with schema, in memory
  *
  * @author steinar
  *         Date: 01.12.2016

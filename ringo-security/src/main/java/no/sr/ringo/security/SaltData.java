@@ -6,7 +6,7 @@ import java.util.Date;
 
 /**
  * Object holding accountId and registrationDate retrieved from db.
- * Provides method to create salt
+ * Provides method to of salt
  * @author adam
  *
  */

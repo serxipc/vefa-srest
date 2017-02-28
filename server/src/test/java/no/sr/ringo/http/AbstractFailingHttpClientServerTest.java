@@ -119,7 +119,7 @@ public class AbstractFailingHttpClientServerTest {
         cm.setConstraint(constraint);
         cm.setPathSpec("/*");
 
-        // create the security handler, set the authentication to Basic
+        // of the security handler, set the authentication to Basic
         // and assign the realm.
         ConstraintSecurityHandler csh = new ConstraintSecurityHandler();
         csh.setAuthenticator(new BasicAuthenticator());
@@ -134,7 +134,7 @@ public class AbstractFailingHttpClientServerTest {
 
     static HashLoginService getHashLoginService() {
 
-        // create the login service, assign the realm and read the user credentials
+        // of the login service, assign the realm and read the user credentials
         // from the file /tmp/realm.properties.
         HashLoginService hls = new HashLoginService();
         hls.setName(REALM);

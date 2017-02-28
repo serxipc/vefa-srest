@@ -10,10 +10,7 @@ import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.sr.ringo.common.XmlSpecification;
-import no.sr.ringo.message.MessageMetaDataImpl;
-import no.sr.ringo.message.MessageWithLocations;
-import no.sr.ringo.message.MessageWithLocationsImpl;
-import no.sr.ringo.message.ReceptionId;
+import no.sr.ringo.message.*;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.peppol.RingoUtils;
@@ -104,7 +101,7 @@ public class MessageXmlSpec implements XmlSpecification<MessageWithLocations> {
 
         messageMetaData.setDelivered(RingoUtils.getDateTimeFromISO8601String(delivered));
         messageMetaData.setReceptionId(new ReceptionId(uuid));
-        messageMetaData.setMsgNo(Long.parseLong(messageNo));
+        messageMetaData.setMsgNo(MessageNumber.of(messageNo));
         messageMetaData.setReceived(RingoUtils.getDateTimeFromISO8601String(received));
         messageMetaData.setTransferDirection(TransferDirection.valueOf(transferDirection));
         messageMetaData.setPeppolHeader(peppolHeader);

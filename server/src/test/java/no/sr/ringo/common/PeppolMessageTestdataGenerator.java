@@ -2,10 +2,7 @@ package no.sr.ringo.common;
 
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.account.AccountId;
-import no.sr.ringo.message.MessageMetaDataImpl;
-import no.sr.ringo.message.MessageWithLocations;
-import no.sr.ringo.message.MessageWithLocationsImpl;
-import no.sr.ringo.message.PeppolMessage;
+import no.sr.ringo.message.*;
 import no.sr.ringo.peppol.ChannelProtocol;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
@@ -60,7 +57,7 @@ public class PeppolMessageTestdataGenerator {
         MessageWithLocationsImpl m = new MessageWithLocationsImpl();
 
         MessageMetaDataImpl metaData = new MessageMetaDataImpl();
-        metaData.setMsgNo(42L);
+        metaData.setMsgNo(MessageNumber.of(42L));
         metaData.setReceived(new Date());
         metaData.setTransferDirection(transferDirection);
         metaData.setAccountId(new AccountId(1));

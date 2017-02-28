@@ -47,7 +47,7 @@ public class ClientObjectMother {
             httpPost.setEntity(multipartEntity);
             return httpPost;
         } catch (Exception e) {
-            throw new IllegalStateException("Unable to create outbox post request", e);
+            throw new IllegalStateException("Unable to of outbox post request", e);
         }
     }
 

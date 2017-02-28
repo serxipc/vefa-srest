@@ -1,6 +1,7 @@
 package no.sr.ringo.message;
 
 import com.google.inject.Inject;
+import no.difi.oxalis.api.model.TransmissionIdentifier;
 import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
@@ -18,7 +19,6 @@ import no.sr.ringo.persistence.guice.jdbc.JdbcTxManager;
 import no.sr.ringo.persistence.guice.jdbc.Repository;
 import no.sr.ringo.persistence.jdbc.platform.DbmsPlatform;
 import no.sr.ringo.persistence.jdbc.platform.DbmsPlatformFactory;
-import no.sr.ringo.transport.TransmissionId;
 import no.sr.ringo.utils.SbdhUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,8 +87,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         Long msgNo = null;
         msgNo = oxalisMessageRepository.saveOutboundMessage(mmd, peppolMessage.getXmlMessage());
 
-
-        mmd.setMsgNo(msgNo);
+        mmd.setMsgNo(MessageNumber.of(msgNo));
 
         return new MessageWithLocationsImpl(mmd);
     }
@@ -327,7 +326,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
                     xmlMessage = lines.collect(joining(System.lineSeparator()));
                 }
             } else
-                throw new PeppolMessageNotFoundException(MessageNumber.create(messageNo));
+                throw new PeppolMessageNotFoundException(MessageNumber.of(messageNo));
             return SbdhUtils.removeSbdhEnvelope(xmlMessage);
         } catch (SQLException | IOException e) {
             throw new IllegalStateException("Unable to retrieve xml document for message no: " + messageNo, e);
@@ -353,7 +352,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             if (rs.next()) {
                 same_account = rs.getBoolean("same_account");
             } else
-                throw new PeppolMessageNotFoundException(MessageNumber.create(messageNo));
+                throw new PeppolMessageNotFoundException(MessageNumber.of(messageNo));
             return same_account;
         } catch (SQLException e) {
             throw new IllegalStateException("Unable to retrieve xml document for message no: " + messageNo, e);
@@ -468,7 +467,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     private MessageMetaDataImpl extractMessageFromResultSet(ResultSet rs) throws SQLException {
         MessageMetaDataImpl messageMetaData = new MessageMetaDataImpl();
         final long msg_no = rs.getLong("msg_no");
-        messageMetaData.setMsgNo(msg_no);
+        messageMetaData.setMsgNo(MessageNumber.of(msg_no));
         messageMetaData.setAccountId(new AccountId(rs.getInt("account_id")));
         messageMetaData.setTransferDirection(no.sr.ringo.transport.TransferDirection.valueOf(rs.getString("direction")));
         messageMetaData.setReceived(rs.getTimestamp("received"));
@@ -488,7 +487,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
 
         final String transmission_id = rs.getString("transmission_id");
         if (transmission_id != null) {
-            messageMetaData.setTransmissionId(new TransmissionId(transmission_id));
+            messageMetaData.setTransmissionId(TransmissionIdentifier.of(transmission_id));
         }
         messageMetaData.getPeppolHeader().setDocumentTypeIdentifier(DocumentTypeIdentifier.of(rs.getString("document_id")));
 
@@ -512,7 +511,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
 
     private MessageMetaDataImpl extractMessageForResultSetWithoutAccountId(ResultSet rs) throws SQLException {
         MessageMetaDataImpl m = new MessageMetaDataImpl();
-        m.setMsgNo(rs.getLong("msg_no"));
+        m.setMsgNo(MessageNumber.of(rs.getLong("msg_no")));
         m.setTransferDirection(no.sr.ringo.transport.TransferDirection.valueOf(rs.getString("direction")));
         m.setReceived(rs.getTimestamp("received"));
         m.setDelivered(rs.getTimestamp("delivered"));

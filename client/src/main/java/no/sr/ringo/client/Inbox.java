@@ -11,7 +11,7 @@ import no.sr.ringo.response.InboxRingoResponseHandler;
 public class Inbox extends Messagebox {
 
     /**
-     * It is not intended for client code to create this object.
+     * It is not intended for client code to of this object.
      * The inbox can be fetched by calling getInbox() on the ringoClient.
      *
      * @param ringoService

@@ -1,8 +1,8 @@
 package no.sr.ringo.message;
 
+import no.difi.oxalis.api.model.TransmissionIdentifier;
 import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.transport.TransferDirection;
-import no.sr.ringo.transport.TransmissionId;
 
 import java.net.URI;
 import java.util.Date;
@@ -26,9 +26,9 @@ public interface MessageMetaData {
 
     PeppolHeader getPeppolHeader();
 
-    Long getMsgNo();
+    MessageNumber getMsgNo();
 
-    TransmissionId getTransmissionId();         // AS2 Message-ID
+    TransmissionIdentifier getTransmissionId();         // AS2 Message-ID
 
     ReceptionId getReceptionId();
 

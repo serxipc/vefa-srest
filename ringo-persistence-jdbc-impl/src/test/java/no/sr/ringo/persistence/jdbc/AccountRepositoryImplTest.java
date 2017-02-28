@@ -25,11 +25,11 @@ package no.sr.ringo.persistence.jdbc;
 import com.google.inject.Inject;
 import no.difi.oxalis.test.identifier.PeppolDocumentTypeIdAcronym;
 import no.difi.oxalis.test.identifier.PeppolProcessTypeIdAcronym;
+import no.difi.ringo.tools.PersistenceObjectMother;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.account.*;
 import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.ReceptionId;
-import no.sr.ringo.persistence.ObjectMother;
 import no.sr.ringo.persistence.guice.PersistenceTestModuleFactory;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
@@ -67,8 +67,8 @@ public class AccountRepositoryImplTest {
 
     @BeforeMethod(groups = {"persistence"})
     public void setUp() throws Exception {
-        participantId = ObjectMother.getAdamsParticipantId();
-        adamsAccount = ObjectMother.getAdamsAccount();
+        participantId = PersistenceObjectMother.getAdamsParticipantId();
+        adamsAccount = PersistenceObjectMother.getAdamsAccount();
         adamsAccount = accountRepository.createAccount(adamsAccount, participantId);
         ringoAccount = accountRepository.createAccount(ringoAccount, participantId);
 
@@ -166,7 +166,7 @@ public class AccountRepositoryImplTest {
     @Test(groups = {"persistence"})
     public void findMessageOwner() {
         Long messageNumber = databaseHelper.createSampleMessage(adamsAccount.getAccountId().toInteger(), TransferDirection.IN, participantId.getIdentifier(), participantId.getIdentifier(), new ReceptionId(), null, PeppolDocumentTypeIdAcronym.EHF_INVOICE.toVefa(), PeppolProcessTypeIdAcronym.INVOICE_ONLY.toVefa());
-        assertEquals(adamsAccount, accountRepository.findAccountAsOwnerOfMessage(MessageNumber.create(messageNumber)));
+        assertEquals(adamsAccount, accountRepository.findAccountAsOwnerOfMessage(MessageNumber.of(messageNumber)));
 
     }
 

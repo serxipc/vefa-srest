@@ -1,6 +1,7 @@
 package no.sr.ringo.document;
 
 import no.sr.ringo.account.Account;
+import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.PeppolMessageRepository;
 
@@ -26,10 +27,13 @@ public class FetchDocumentUseCase {
 
     public PeppolDocument execute(Account account, MessageNumber msgNo) {
 
-        peppolMessageRepository.findMessageByMessageNo(account, msgNo);
+        final MessageMetaData messageMetaData = peppolMessageRepository.findMessageByMessageNo(account, msgNo);
 
+        if (messageMetaData.getPayloadUri().getScheme().startsWith("file")) {
+            return documentRepository.getPeppolDocument(account, msgNo);
+        } else {
+            throw new UnsupportedOperationException("Can only handle file urls for now");
+        }
 
-
-        return documentRepository.getPeppolDocument(account, msgNo);
     }
 }

@@ -85,12 +85,12 @@ public class RegisterUseCase {
             return new RegistrationProcessResult(RegistrationProcessResult.RegistrationSource.RINGO, false, MessageHelper.getMessage("reg.orgNo.registered"));
         }
 
-        // create customer entry
+        // of customer entry
         Customer customer = accountRepository.createCustomer(registrationData.getName(), registrationData.getEmail(), registrationData.getPhone(), registrationData.getCountry(), registrationData.getContactPerson(), registrationData.getAddress1(), registrationData.getAddress2(), registrationData.getZip(), registrationData.getCity(), registrationData.getOrgNo());
 
         Account account = new Account(customer.getCustomerId(), customer.getName(), new UserName(registrationData.getUsername()), null, null, null, false, true);
 
-        // create account entry and account_receiver entry (only if registering in SMP)
+        // of account entry and account_receiver entry (only if registering in SMP)
         //Prefix given orgNo with 9908
         ParticipantIdentifier participantId = registrationData.isRegisterSmp() ? new ParticipantIdentifier(RingoConstant.NORWEGIAN_PEPPOL_PARTICIPANT_PREFIX + registrationData.getOrgNo()) : null;
         Account storedAccount = accountRepository.createAccount(account, participantId);

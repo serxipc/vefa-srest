@@ -1,9 +1,9 @@
 /* Created by steinar on 08.01.12 at 20:18 */
 package no.sr.ringo.message;
 
+import no.difi.oxalis.api.model.TransmissionIdentifier;
 import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.transport.TransferDirection;
-import no.sr.ringo.transport.TransmissionId;
 
 import java.net.URI;
 import java.util.Date;
@@ -65,11 +65,11 @@ public class MessageWithLocationsImpl implements MessageWithLocations {
         return messageMetaData.getPeppolHeader();
     }
 
-    public Long getMsgNo() {
+    public MessageNumber getMsgNo() {
         return messageMetaData.getMsgNo();
     }
 
-    public TransmissionId getTransmissionId() {
+    public TransmissionIdentifier getTransmissionId() {
         return messageMetaData.getTransmissionId();
     }
 

@@ -14,67 +14,67 @@ public class MessageNumberTest {
 
     @Test
     public void testValidMessageNumber() throws Exception {
-        MessageNumber messageNumber = MessageNumber.create(1);
+        MessageNumber messageNumber = MessageNumber.of(1);
         assertNotNull(messageNumber);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testInValidMessageNumber() throws Exception {
-        MessageNumber.create(-1);
+        MessageNumber.of(-1);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testInValidMessageNumberZero() throws Exception {
-        MessageNumber.create(0);
+        MessageNumber.of(0);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testInValidMessageNumberNull() throws Exception {
-        MessageNumber.create((Long)null);
+        MessageNumber.of((Long)null);
     }
 
     @Test
     public void testEqualsMessageNumber() throws Exception {
-        MessageNumber messageNumber1 = MessageNumber.create(1);
-        MessageNumber messageNumber2 = MessageNumber.create(1);
+        MessageNumber messageNumber1 = MessageNumber.of(1);
+        MessageNumber messageNumber2 = MessageNumber.of(1);
         assertEquals(messageNumber1, messageNumber2);
     }
 
     @Test
     public void testToString() throws Exception {
-        MessageNumber messageNumber1 = MessageNumber.create(1);
+        MessageNumber messageNumber1 = MessageNumber.of(1);
         assertEquals(messageNumber1.toString(),"1");
     }
 
     @Test
     public void testValidValueOf() throws Exception {
-        MessageNumber messageNumber = MessageNumber.valueOf("1");
+        MessageNumber messageNumber = MessageNumber.of("1");
         assertNotNull(messageNumber);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testInvalidValueOfException() throws Exception {
-        MessageNumber.valueOf("a");
+        MessageNumber.of("a");
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testEmptyStringValueOfException() throws Exception {
-        MessageNumber.valueOf("");
+        MessageNumber.of("");
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testNullStringValueOfException() throws Exception {
-        MessageNumber.valueOf(null);
+        MessageNumber.of((Long)null);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testValidNumberInvalidMessageNumberException() throws Exception {
-        MessageNumber.valueOf("-1");
+        MessageNumber.of("-1");
     }
 
     @Test
     public void testToInt() throws Exception {
-        MessageNumber messageNumber = MessageNumber.create(1);
+        MessageNumber messageNumber = MessageNumber.of(1);
         assertEquals(new Integer(1), messageNumber.toInt());
     }
 }

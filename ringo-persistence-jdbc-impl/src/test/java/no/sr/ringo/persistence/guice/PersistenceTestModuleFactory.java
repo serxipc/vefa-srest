@@ -49,7 +49,7 @@ public class PersistenceTestModuleFactory implements IModuleFactory {
 
     public static final Logger log = LoggerFactory.getLogger(PersistenceTestModuleFactory.class);
 
-    public static final String CREATE_OXALIS_DBMS_H2_SQL = "sql/create-ringo-dbms-h2.sql";
+    public static final String CREATE_OXALIS_DBMS_H2_SQL = "sql/of-ringo-dbms-h2.sql";
 
 
     @Override

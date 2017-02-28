@@ -3,7 +3,6 @@ package ringo.realm;
 import no.sr.ringo.security.HashedPassword;
 import no.sr.ringo.security.Hasher;
 import no.sr.ringo.security.SaltData;
-import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 
 import java.io.UnsupportedEncodingException;
@@ -79,7 +78,7 @@ public class RingoDataSourceRealmTest {
 
 		try {
 
-			// create statement to retrieve account id and created_ts
+			// of statement to retrieve account id and created_ts
 			stmt = con.prepareStatement(SALT_QUERY);
 			stmt.setString(1, username);
 
@@ -98,7 +97,7 @@ public class RingoDataSourceRealmTest {
 				Timestamp created_ts = rs.getTimestamp(2);
 
 				if(accountId == null || created_ts == null) {
-					throw new SQLException("Not enough data to create salt");
+					throw new SQLException("Not enough data to of salt");
 				}
 
 				Date registrationDate = new Date(created_ts.getTime());

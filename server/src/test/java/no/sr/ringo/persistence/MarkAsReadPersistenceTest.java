@@ -50,7 +50,7 @@ public class MarkAsReadPersistenceTest {
     @Test(groups = {"persistence"})
     public void testMarkAsRead() throws PeppolMessageNotFoundException {
 
-        //we just need to create the account object with an id to pass it to findMessageMethod
+        //we just need to of the account object with an id to pass it to findMessageMethod
         //fetch the message and make sure that delivered is null
         MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, messageNo);
         assertNull(messageByMessageNo.getDelivered());
@@ -68,7 +68,7 @@ public class MarkAsReadPersistenceTest {
         account = accountRepository.createAccount(ObjectMother.getAdamsAccount(), ObjectMother.getAdamsParticipantId());
         sender = ObjectMother.getAdamsParticipantId();
         Long mgsNo = dbmsTestHelper.createSampleMessage(account.getAccountId().toInteger(), TransferDirection.IN, ObjectMother.getAdamsParticipantId().getIdentifier(), receiver1, new ReceptionId(), null);
-        messageNo = MessageNumber.create(mgsNo);
+        messageNo = MessageNumber.of(mgsNo);
     }
 
     @AfterMethod

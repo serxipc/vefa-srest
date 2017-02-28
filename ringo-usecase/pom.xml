@@ -26,6 +26,12 @@
             <artifactId>ringo-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>no.difi.ringo</groupId>
+            <artifactId>ringo-test</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>javax.inject</groupId>

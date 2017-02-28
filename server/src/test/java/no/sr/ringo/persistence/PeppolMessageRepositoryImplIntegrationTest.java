@@ -1,6 +1,7 @@
 package no.sr.ringo.persistence;
 
 import com.google.inject.Inject;
+import no.difi.oxalis.api.model.TransmissionIdentifier;
 import no.difi.vefa.peppol.common.model.InstanceIdentifier;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
@@ -21,7 +22,6 @@ import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.resource.InvalidUserInputWebException;
 import no.sr.ringo.transport.TransferDirection;
-import no.sr.ringo.transport.TransmissionId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -48,7 +48,6 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Supplier;
 
 import static org.testng.Assert.*;
@@ -106,7 +105,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         PeppolMessage peppolMessage = PeppolMessageTestdataGenerator.outboxPostRequest();
 
         MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage);
-        final MessageNumber messageNo = MessageNumber.create(messageWithLocations.getMsgNo());
+        final MessageNumber messageNo = messageWithLocations.getMsgNo();
         MessageMetaData messageMetaData = peppolMessageRepository.findMessageByMessageNo(account, messageNo);
 
         PeppolHeader peppolHeader = peppolMessage.getPeppolHeader();
@@ -134,7 +133,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         mmd.getPeppolHeader().setPeppolChannelId(new PeppolChannelId(ChannelProtocol.AS2.name()));
 
         mmd.getPeppolHeader().setProcessIdentifier(ProfileId.Predefined.PEPPOL_4A_INVOICE_ONLY.toVefa());
-        mmd.setTransmissionId(new TransmissionId(UUID.randomUUID().toString()));
+        mmd.setTransmissionId(TransmissionIdentifier.generateUUID());
         mmd.setReceived(new Date());
         final InstanceIdentifier sbdhInstanceIdentifier = InstanceIdentifier.generateUUID();
         mmd.setSbdhInstanceIdentifier(sbdhInstanceIdentifier);
@@ -182,9 +181,9 @@ public class PeppolMessageRepositoryImplIntegrationTest {
             }
         }
         MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage);
-        final MessageNumber messageNo = MessageNumber.create(messageWithLocations.getMsgNo());
+        final MessageNumber messageNo = messageWithLocations.getMsgNo();
         MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, messageNo);
-        PeppolDocument docFromDatabase = documentRepository.getPeppolDocument(account, MessageNumber.create(messageByMessageNo.getMsgNo()));
+        PeppolDocument docFromDatabase = documentRepository.getPeppolDocument(account, messageByMessageNo.getMsgNo());
         assertTrue(!docFromDatabase.getXml().contains("xmlns=\"\""), "We should not have added xmlns=\"\" anywhere in the message");
 
         assertNotNull(messageWithLocations.getReceptionId(), "Missing ReceptionId in MessageWithLocations");
@@ -196,7 +195,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         peppolMessage.getPeppolHeader().setProcessIdentifier(ProcessIdentifier.of("urn:www.cenbii.eu:profile:bii05:ver1.0"));
 
         MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage);
-        MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account,MessageNumber.create(messageWithLocations.getMsgNo()));
+        MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account,messageWithLocations.getMsgNo());
 
         PeppolHeader peppolHeader = peppolMessage.getPeppolHeader();
         PeppolHeader persistedPeppolHeader = messageByMessageNo.getPeppolHeader();
@@ -218,20 +217,20 @@ public class PeppolMessageRepositoryImplIntegrationTest {
 
     @Test(groups = {"persistence"})
     public void testFindMessageByMessageNoAndAccountId() throws Exception {
-        final MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, MessageNumber.create(messageId));
+        final MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, MessageNumber.of(messageId));
         assertNotNull(messageByMessageNo);
     }
 
     @Test(groups = {"persistence"})
     public void testFindMessageByMessageNo() throws Exception {
-        final MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(MessageNumber.create(messageId));
+        final MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(MessageNumber.of(messageId));
         assertNotNull(messageByMessageNo);
     }
 
     @Test(groups = {"persistence"}, expectedExceptions = PeppolMessageNotFoundException.class)
     public void testDoesNotFindMessageByMessageNo() {
         //This should throw an exception as adam is not owner of message 1
-        final MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(ObjectMother.getAdamsAccount(), MessageNumber.create(messageId));
+        final MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(ObjectMother.getAdamsAccount(), MessageNumber.of(messageId));
         fail("This should never have happened, didn't expect to get here (messageByMessageNo=" + messageByMessageNo + ")");
     }
 
@@ -286,9 +285,9 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         Date date = cal.getTime();
         Receipt receipt = Receipt.of("Native evidence bytes".getBytes());
         
-        peppolMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(MessageNumber.create(messageOut), null, receptionId, date, receipt);
+        peppolMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(MessageNumber.of(messageOut), null, receptionId, date, receipt);
 
-        MessageMetaData messageOutbound = peppolMessageRepository.findMessageByMessageNo(account, MessageNumber.create(messageOut));
+        MessageMetaData messageOutbound = peppolMessageRepository.findMessageByMessageNo(account, MessageNumber.of(messageOut));
 
         assertEquals(receptionId, messageOutbound.getReceptionId());
         Calendar c2 = Calendar.getInstance();
@@ -303,7 +302,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         //copy from out to in while assigning a new UUID
         messageIn = peppolMessageRepository.copyOutboundMessageToInbound(this.messageOut, receptionid);
 
-        MessageMetaData messageInbound = peppolMessageRepository.findMessageByMessageNo(account, MessageNumber.create(messageIn));
+        MessageMetaData messageInbound = peppolMessageRepository.findMessageByMessageNo(account, MessageNumber.of(messageIn));
         assertNull(messageInbound.getDelivered());
         assertEquals(TransferDirection.IN, messageInbound.getTransferDirection());
         assertEquals(messageOutbound.getPeppolHeader().getSender(), messageInbound.getPeppolHeader().getSender());
@@ -320,7 +319,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
             assertEquals(messages.size(), 1);
             TransmissionMetaData m = messages.get(0);
 
-            verifyEvidence(m::getNativeEvidenceUri, receipt.getValue());
+            verifyEvidence(m::getEvidenceUri, receipt.getValue());
         }
 
         String xmlOut = peppolMessageRepository.findDocumentByMessageNoWithoutAccountCheck(messageOut);

@@ -43,7 +43,7 @@ public class BlobStoreModule extends AbstractModule {
             try {
                 url = new URL(classPath);
             } catch (MalformedURLException e) {
-                throw new IllegalStateException("Unable to create URL from " + classPath);
+                throw new IllegalStateException("Unable to of URL from " + classPath);
             }
 
             ServiceLoader<PayloadUriRewriter> loader = ServiceLoader.load(PayloadUriRewriter.class, new URLClassLoader(new URL[]{url}, Thread.currentThread().getContextClassLoader()));

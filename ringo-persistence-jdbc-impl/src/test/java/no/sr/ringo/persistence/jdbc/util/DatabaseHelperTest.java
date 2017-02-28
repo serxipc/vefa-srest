@@ -25,10 +25,9 @@ package no.sr.ringo.persistence.jdbc.util;
 import no.difi.oxalis.test.identifier.PeppolDocumentTypeIdAcronym;
 import no.difi.oxalis.test.identifier.PeppolProcessTypeIdAcronym;
 import no.difi.oxalis.test.identifier.WellKnownParticipant;
+import no.difi.ringo.tools.PersistenceObjectMother;
 import no.sr.ringo.account.*;
-import no.sr.ringo.message.MessageRepository;
-import no.sr.ringo.message.ReceptionId;
-import no.sr.ringo.message.TransmissionMetaData;
+import no.sr.ringo.message.*;
 import no.sr.ringo.persistence.guice.PersistenceTestModuleFactory;
 import no.sr.ringo.transport.TransferDirection;
 import org.testng.annotations.BeforeMethod;
@@ -38,8 +37,7 @@ import org.testng.annotations.Test;
 import javax.inject.Inject;
 import java.util.Date;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
+import static org.testng.Assert.*;
 
 /**
  * @author steinar
@@ -93,4 +91,12 @@ public class DatabaseHelperTest {
         assertEquals(messageByNo.getAccountId(), account.getAccountId());
     }
 
+    @Test
+    public void createSampleEntry() throws Exception {
+
+        MessageMetaDataImpl transmissionMetaData = PersistenceObjectMother.sampleInboundTransmissionMetaData();
+
+        final MessageNumber messageNumber = databaseHelper.createSampleEntry(transmissionMetaData);
+        assertNotNull(messageNumber);
+    }
 }

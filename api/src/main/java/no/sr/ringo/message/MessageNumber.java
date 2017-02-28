@@ -41,7 +41,7 @@ public class MessageNumber implements Serializable, Comparable<MessageNumber> {
         this.messageNo = messageNo;
     }
 
-    public static MessageNumber create(Long messageNo){
+    public static MessageNumber of(Long messageNo){
         if (messageNo == null) {
             throw new IllegalArgumentException("Message number cannot be null");
         } else if (messageNo < 1) {
@@ -56,7 +56,7 @@ public class MessageNumber implements Serializable, Comparable<MessageNumber> {
      * @deprecated use the Long constructor
      */
     @Deprecated
-    public static MessageNumber create(Integer messageNo){
+    public static MessageNumber of(Integer messageNo){
         if (messageNo == null) {
             throw new IllegalArgumentException("Message number cannot be null");
         } else if (messageNo < 1) {
@@ -66,10 +66,10 @@ public class MessageNumber implements Serializable, Comparable<MessageNumber> {
     }
 
 
-    public static MessageNumber valueOf(String s) {
+    public static MessageNumber of(String s) {
         try {
             Long longValue = Long.valueOf(s);
-            return create(longValue);
+            return of(longValue);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(String.format("%s is not a valid message number.", s));
 

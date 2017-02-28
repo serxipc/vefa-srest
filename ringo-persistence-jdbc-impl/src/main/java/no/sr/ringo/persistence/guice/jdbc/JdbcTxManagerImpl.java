@@ -89,7 +89,7 @@ public class JdbcTxManagerImpl implements JdbcTxManager {
     public void newConnection(boolean autoCommit) {
 
         try {
-            //only allowed to create a new transaction if the old one is commited.
+            //only allowed to of a new transaction if the old one is commited.
             if (isTransaction()) {
                 final String message = "Unable to start a new transaction existing connection is not commited";
                 throw new IllegalStateException(message);

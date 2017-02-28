@@ -1,6 +1,6 @@
 
-/** To create TEST database : Create a new database called oxalis_test and run this script */
-/** To create PROD database : Create a new database called oxalis and run this script */
+/** To of TEST database : Create a new database called oxalis_test and run this script */
+/** To of PROD database : Create a new database called oxalis and run this script */
 
 drop table if exists outbound_message_queue_error;
 drop table if exists outbound_message_queue;
@@ -88,8 +88,7 @@ CREATE TABLE message (
   instance_id varchar(64),
   document_id varchar(256) NOT NULL ,
   process_id varchar(128) DEFAULT NULL ,
-  remote_host varchar(128) DEFAULT NULL ,
-  ap_name varchar(128) DEFAULT NULL  ,
+  ap_name varchar(128) DEFAULT NULL ,
   payload_url varchar(256) not null ,
   evidence_url varchar(256) default null ,
   PRIMARY KEY (msg_no),

@@ -22,9 +22,9 @@
         <guice.version>4.1.0</guice.version>
         <jetty.version>7.6.16.v20140903</jetty.version>
         <oxalis.version>4.0.0-RC2-SNAPSHOT</oxalis.version>
-        <!-- For JitPack -->
-        <vefa.peppol.groupId>com.github.difi.vefa-peppol</vefa.peppol.groupId>
-        <vefa.peppol.version>70baa8aea8</vefa.peppol.version>
+        
+        <vefa.peppol.groupId>no.difi.vefa</vefa.peppol.groupId>
+        <vefa.peppol.version>0.9.7</vefa.peppol.version>
     </properties>
 
     <modules>
@@ -331,7 +331,6 @@
                 <scope>test</scope>
             </dependency>
 
-            <!-- jitpack.io -->
             <dependency>
                 <groupId>${vefa.peppol.groupId}</groupId>
                 <artifactId>peppol-sbdh</artifactId>

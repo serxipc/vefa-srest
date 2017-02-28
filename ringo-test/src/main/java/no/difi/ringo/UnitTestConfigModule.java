@@ -44,7 +44,7 @@ public class UnitTestConfigModule extends AbstractModule {
         try {
             jdbcUri = new URI(uriString);
         } catch (URISyntaxException e) {
-            throw new IllegalStateException("Unable to create URI from " + uriString, e);
+            throw new IllegalStateException("Unable to of URI from " + uriString, e);
         }
         return jdbcUri;
     }
@@ -104,7 +104,7 @@ public class UnitTestConfigModule extends AbstractModule {
                 Path path = Files.createDirectories(baseDirPath);
             }
         } catch (IOException e) {
-            throw new IllegalStateException("Unable to create directory " + baseDirPath + "; " + e.getMessage(), e);
+            throw new IllegalStateException("Unable to of directory " + baseDirPath + "; " + e.getMessage(), e);
         }
         return baseDirPath;
     }

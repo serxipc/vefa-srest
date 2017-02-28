@@ -75,7 +75,7 @@ public class QueueRepositoryImplIntegrationTest {
         peppolMessage.getPeppolHeader().setProcessIdentifier(ProcessIdentifier.of("urn:www.cenbii.eu:profile:bii05:ver1.0"));
 
         MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage);
-        OutboundMessageQueueId queueId = queueRepository.putMessageOnQueue(messageWithLocations.getMsgNo());
+        OutboundMessageQueueId queueId = queueRepository.putMessageOnQueue(messageWithLocations.getMsgNo().toLong());
         assertNotNull(queueId);
 
         OutboundMessageQueueId qid = OutboundMessageQueueId.valueOf(queueId.toString());
@@ -92,12 +92,12 @@ public class QueueRepositoryImplIntegrationTest {
         peppolMessage.getPeppolHeader().setProcessIdentifier(ProcessIdentifier.of("urn:www.cenbii.eu:profile:bii05:ver1.0"));
 
         MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage);
-        OutboundMessageQueueId queueId = queueRepository.putMessageOnQueue(messageWithLocations.getMsgNo());
+        OutboundMessageQueueId queueId = queueRepository.putMessageOnQueue(messageWithLocations.getMsgNo().toLong());
         assertNotNull(queueId);
 
         QueuedOutboundMessage queuedMessage = queueRepository.getQueuedMessageById(queueId);
         assertNotNull(queuedMessage);
-        assertEquals(MessageNumber.create(messageWithLocations.getMsgNo()), queuedMessage.getMessageNumber());
+        assertEquals(MessageNumber.of(messageWithLocations.getMsgNo().toLong()), queuedMessage.getMessageNumber());
         assertEquals(queueId, queuedMessage.getOutboundQueueId());
         assertEquals(OutboundMessageQueueState.QUEUED, queuedMessage.getState());
     }
@@ -150,7 +150,7 @@ public class QueueRepositoryImplIntegrationTest {
         peppolMessage.getPeppolHeader().setProcessIdentifier(ProcessIdentifier.of("urn:www.cenbii.eu:profile:bii05:ver1.0"));
 
         MessageWithLocations messageWithLocations = peppolMessageRepository.persistOutboundMessage(account, peppolMessage);
-        return  queueRepository.putMessageOnQueue(messageWithLocations.getMsgNo());
+        return  queueRepository.putMessageOnQueue(messageWithLocations.getMsgNo().toLong());
     }
 
     @Test(groups = {"persistence"})

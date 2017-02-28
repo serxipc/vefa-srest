@@ -1,5 +1,6 @@
 package no.sr.ringo.usecase;
 
+import no.difi.oxalis.api.model.TransmissionIdentifier;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountRepository;
@@ -12,7 +13,6 @@ import no.sr.ringo.oxalis.PeppolDocumentSender;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.persistence.queue.*;
-import no.sr.ringo.transport.TransmissionId;
 import org.easymock.EasyMock;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -57,12 +57,12 @@ public class SendQueuedMessageUseCaseTest {
 
         //Tests the all ok path for sending a document
 
-        final Long msgNo = 1L;
+        final MessageNumber msgNo = MessageNumber.of(1L);
         final OutboundMessageQueueId queueId = new OutboundMessageQueueId(10);
 
         String message = "a fancy invoice";
         Receipt receipt1 = Receipt.of("native evidence bytes".getBytes());
-        PeppolDocumentSender.TransmissionReceipt receipt = new PeppolDocumentSender.TransmissionReceipt(new ReceptionId(), new TransmissionId("rubbish"), null, new Date(),
+        PeppolDocumentSender.TransmissionReceipt receipt = new PeppolDocumentSender.TransmissionReceipt(new ReceptionId(),  TransmissionIdentifier.of("rubbish"), null, new Date(),
                 receipt1);
 
         SendQueuedMessagesUseCase useCase = new SendQueuedMessagesUseCase(mockDocumentSender, mockMessageRepository, mockQueueRepository, mockEmailService, mockAccountRepository);
@@ -75,10 +75,10 @@ public class SendQueuedMessageUseCaseTest {
 
         //set up expectations for messageRepo
         expect(mockQueueRepository.lockQueueItemForDelivery(queueId)).andStubReturn(true);
-        expect(mockMessageRepository.findDocumentByMessageNoWithoutAccountCheck(msgNo)).andStubReturn(message);
+        expect(mockMessageRepository.findDocumentByMessageNoWithoutAccountCheck(msgNo.toLong())).andStubReturn(message);
 
         mockMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(
-                EasyMock.eq(MessageNumber.create(msgNo)),
+                EasyMock.eq(msgNo),
                 eq(receipt.getRemoteAccessPoint()),
                 eq(receipt.getReceptionId()),
                 eq(receipt.getDate()),
@@ -106,7 +106,7 @@ public class SendQueuedMessageUseCaseTest {
     public void testSendDocumentViaPeppolLockedMessage() throws Exception {
 
         //Tests that  path when a message is already locked for sending a document
-        final Long msgNo = 1L;
+        final MessageNumber msgNo = MessageNumber.of(1L);
         final OutboundMessageQueueId queueId = new OutboundMessageQueueId(10);
 
         SendQueuedMessagesUseCase useCase = new SendQueuedMessagesUseCase(mockDocumentSender, mockMessageRepository, mockQueueRepository, mockEmailService, mockAccountRepository);
@@ -138,7 +138,7 @@ public class SendQueuedMessageUseCaseTest {
     public void testHandleSingleMessageOk() throws Exception {
 
         //Tests that  path when a message is already locked for sending a document
-        final MessageNumber msgNo = MessageNumber.create(1L);
+        final MessageNumber msgNo = MessageNumber.of(1L);
         final OutboundMessageQueueId queueId = new OutboundMessageQueueId(10);
         QueuedOutboundMessage mockQueue = createMock("QueuedOutboundMessage", QueuedOutboundMessage.class);
         MessageMetaData mockMessage = EasyMock.createMock(MessageMetaData.class);
@@ -157,7 +157,7 @@ public class SendQueuedMessageUseCaseTest {
         // expect message to be sent by oxalis
         Receipt receipt = Receipt.of("native evidence bytes".getBytes());
         final ReceptionId receptionId = new ReceptionId();
-        expect(mockDocumentSender.sendDocument(mockMessage, messageXml)).andStubReturn(new PeppolDocumentSender.TransmissionReceipt(receptionId, new TransmissionId("test"), URI.create("http://ringo.domain.com/"), new Date(),
+        expect(mockDocumentSender.sendDocument(mockMessage, messageXml)).andStubReturn(new PeppolDocumentSender.TransmissionReceipt(receptionId,  TransmissionIdentifier.of("test"), URI.create("http://ringo.domain.com/"), new Date(),
                 receipt));
 
         // update message to delivered
@@ -193,7 +193,7 @@ public class SendQueuedMessageUseCaseTest {
         Account mockAccount = createMock(Account.class);
 
         //Tests that  path when a message is already locked for sending a document
-        final MessageNumber msgNo = MessageNumber.create(1);
+        final MessageNumber msgNo = MessageNumber.of(1);
         final OutboundMessageQueueId queueId = new OutboundMessageQueueId(10);
         QueuedOutboundMessage mockQueue = createMock("QueuedOutboundMessage", QueuedOutboundMessage.class);
         MessageMetaData mockMessage = EasyMock.createMock(MessageMetaData.class);
@@ -215,7 +215,7 @@ public class SendQueuedMessageUseCaseTest {
         mockQueueRepository.changeQueuedMessageState(queueId, OutboundMessageQueueState.AOD);
 
         //send error notification
-        expect(mockAccountRepository.findAccountAsOwnerOfMessage(MessageNumber.create(msgNo.toLong()))).andReturn(mockAccount);
+        expect(mockAccountRepository.findAccountAsOwnerOfMessage(MessageNumber.of(msgNo.toLong()))).andReturn(mockAccount);
         expect(mockEmailService.sendProcessingErrorNotification(mockAccount, "Exception simulation", msgNo)).andReturn(null);
 
         // new entry in error table
@@ -251,7 +251,7 @@ public class SendQueuedMessageUseCaseTest {
         expect(mockMessageRepository.findMessageByMessageNo(msgNo)).andStubReturn(mockMessage);
 
         //set up expectations for message and queue
-        expect(mockMessage.getMsgNo()).andStubReturn(msgNo.toLong());
+        expect(mockMessage.getMsgNo()).andStubReturn(msgNo);
         expect(mockMessage.getDelivered()).andStubReturn(null); // message cannot be delivered
         expect(mockMessage.getPeppolHeader()).andStubReturn(getSimplePeppolHeader());
         expect(mockQueue.getOutboundQueueId()).andStubReturn(queueId);

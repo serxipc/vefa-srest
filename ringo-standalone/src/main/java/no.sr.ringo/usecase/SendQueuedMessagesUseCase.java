@@ -170,12 +170,12 @@ public class SendQueuedMessagesUseCase {
 
         // when we pass here the queued message has state IN_PROGRESS
 
-        String xmlMessage = messageRepository.findDocumentByMessageNoWithoutAccountCheck(messageMetaData.getMsgNo().longValue());
+        String xmlMessage = messageRepository.findDocumentByMessageNoWithoutAccountCheck(messageMetaData.getMsgNo().toLong());
         logger.debug("Attempting to send message #" + messageMetaData.getMsgNo());
         final PeppolDocumentSender.TransmissionReceipt transmissionReceipt = documentSender.sendDocument(messageMetaData, xmlMessage);
 
         messageRepository.updateOutBoundMessageDeliveryDateAndUuid(
-                MessageNumber.create(messageMetaData.getMsgNo()),
+                messageMetaData.getMsgNo(),
                 transmissionReceipt.getRemoteAccessPoint(),
                 transmissionReceipt.getReceptionId(),
                 transmissionReceipt.getDate(),
@@ -206,7 +206,7 @@ public class SendQueuedMessagesUseCase {
 
         MessageNumber messageNumber = queuedOutboundMessage.getMessageNumber();
 
-        Account account = accountRepository.findAccountAsOwnerOfMessage( MessageNumber.create(messageNumber.toLong()));
+        Account account = accountRepository.findAccountAsOwnerOfMessage( MessageNumber.of(messageNumber.toLong()));
         emailService.sendProcessingErrorNotification(account, message, queuedOutboundMessage.getMessageNumber());
 
     }

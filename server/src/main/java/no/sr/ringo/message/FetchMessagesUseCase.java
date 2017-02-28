@@ -250,7 +250,7 @@ public class FetchMessagesUseCase {
     }
 
     public MessageMetaData findOutBoundMessageByMessageNo(Account account, Long msgNo) {
-        final MessageNumber messageNo = MessageNumber.create(msgNo);
+        final MessageNumber messageNo = MessageNumber.of(msgNo);
         MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(account, messageNo);
         if (outgoingMessage(messageByMessageNo)) {
             return messageByMessageNo;

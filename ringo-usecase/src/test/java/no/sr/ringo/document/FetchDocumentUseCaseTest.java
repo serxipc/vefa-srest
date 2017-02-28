@@ -1,7 +1,9 @@
 package no.sr.ringo.document;
 
+import no.difi.ringo.tools.PersistenceObjectMother;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
+import no.sr.ringo.message.MessageMetaDataImpl;
 import no.sr.ringo.message.MessageNumber;
 import no.sr.ringo.message.PeppolMessageNotFoundException;
 import no.sr.ringo.message.PeppolMessageRepository;
@@ -42,13 +44,37 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
 
     @Test(expectedExceptions = PeppolMessageNotFoundException.class)
     public void testIfAMessageIsNotFoundTheExceptionIsLeftToPropagate() throws Exception {
-        MessageNumber msgNo = MessageNumber.valueOf("10");
+        MessageNumber msgNo = MessageNumber.of("10");
 
-        expect(mockDocumentRepository.getPeppolDocument(account, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo));
+        final MessageMetaDataImpl messageMetaData = PersistenceObjectMother.sampleInboundTransmissionMetaData();
+
+        expect(mockPeppolMessageRepository.findMessageByMessageNo(account, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo));
+        
+        replayAllMocks();
+
+        fetchDocumentUseCase.execute(account, msgNo);
+        verifyAllMocks();
+    }
+
+
+    @Test
+    public void verifyThatFilePayloadUriIsHandled() throws Exception {
+
+        // Creates the sample data to be returned etc.
+        MessageNumber msgNo = MessageNumber.of("10");
+        final MessageMetaDataImpl messageMetaData = PersistenceObjectMother.sampleInboundTransmissionMetaData(msgNo, account.getAccountId());
+
+        // First we expect an attempt to find the meta data
+        final PeppolDocument peppolDocument = EasyMock.createMock(PeppolDocument.class);
+        expect(mockPeppolMessageRepository.findMessageByMessageNo(account, msgNo)).andReturn(messageMetaData);
+        expect(mockDocumentRepository.getPeppolDocument(account, msgNo)).andReturn(peppolDocument);
+        expectLastCall();
+        
         replayAllMocks();
 
         fetchDocumentUseCase.execute(account, msgNo);
     }
+
 
     private PeppolDocument createEhfInvoice() {
         String invoice = invoice();
@@ -56,11 +82,11 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
     }
 
     private void verifyAllMocks() {
-        verify(mockDocumentRepository);
+        verify(mockDocumentRepository, mockPeppolMessageRepository);
     }
 
     private void replayAllMocks() {
-        replay(mockDocumentRepository);
+        replay(mockDocumentRepository, mockPeppolMessageRepository);
     }
 
 

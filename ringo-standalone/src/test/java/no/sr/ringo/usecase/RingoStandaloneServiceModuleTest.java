@@ -2,6 +2,7 @@ package no.sr.ringo.usecase;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import no.difi.oxalis.outbound.OxalisOutboundComponent;
 import no.difi.ringo.UnitTestConfigModule;
 import no.sr.ringo.guice.OxalisOutboundModule;
 import no.sr.ringo.guice.RingoServiceModule;
@@ -36,6 +37,10 @@ public class RingoStandaloneServiceModuleTest {
         PeppolDocumentSender documentSender = useCase.getDocumentSender();
 
         assertTrue(documentSender instanceof OxalisDocumentSender);
+    }
 
+    @Test
+    public void instantiateOxalisOutbound() throws Exception {
+        final OxalisOutboundComponent oxalisOutboundComponent = new OxalisOutboundComponent();
     }
 }

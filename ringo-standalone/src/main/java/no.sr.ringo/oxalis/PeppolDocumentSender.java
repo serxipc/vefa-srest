@@ -1,9 +1,9 @@
 package no.sr.ringo.oxalis;
 
+import no.difi.oxalis.api.model.TransmissionIdentifier;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.message.MessageMetaData;
 import no.sr.ringo.message.ReceptionId;
-import no.sr.ringo.transport.TransmissionId;
 
 import java.net.URI;
 import java.util.Date;
@@ -31,12 +31,12 @@ public interface PeppolDocumentSender {
     public static final class TransmissionReceipt {
 
         private final ReceptionId receptionId;
-        private final TransmissionId transmissionId;
+        private final TransmissionIdentifier transmissionId;
         private final String remoteAccessPoint;
         private final Date date;
         private final Receipt receipt;
 
-        public TransmissionReceipt(ReceptionId receptionId, TransmissionId transmissionId, URI remoteAccessPoint, Date date, Receipt receipt) {
+        public TransmissionReceipt(ReceptionId receptionId, TransmissionIdentifier transmissionId, URI remoteAccessPoint, Date date, Receipt receipt) {
             this.receptionId = receptionId;
             this.transmissionId = transmissionId;
             this.remoteAccessPoint = remoteAccessPoint != null ? remoteAccessPoint.toString() : "n/a";
@@ -60,7 +60,7 @@ public interface PeppolDocumentSender {
             return receipt;
         }
 
-        public TransmissionId getTransmissionId() {
+        public TransmissionIdentifier getTransmissionId() {
             return transmissionId;
         }
 

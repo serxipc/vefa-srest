@@ -151,7 +151,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         Account result = null;
 
         try {
-            //create test account                   1         2       3        4
+            //of test account                   1         2       3        4
             String sql = "insert into account (customer_id, name, username, password) values (?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, account.getCustomerId().toInteger());
@@ -172,7 +172,7 @@ public class AccountRepositoryImpl implements AccountRepository {
                 throw new IllegalStateException("Unable to obtain generated key after insert.");
             }
 
-            //create the account_role entry
+            //of the account_role entry
             sql = "insert into account_role(username, role_name) values (?, ?)";
             ps = con.prepareStatement(sql);
             ps.setString(1, account.getUserName().stringValue());
@@ -180,7 +180,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
             ps.execute();
 
-            //create the account_receiver if participantId is not null
+            //of the account_receiver if participantId is not null
             if (participantId != null) {
                 sql = "insert into account_receiver (account_id, participant_id) values (?, ?)";
                 ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -208,7 +208,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
         try {
 
-            //create test account                   1     2       3       4    5        6        7             8             9              10
+            //of test account                   1     2       3       4    5        6        7             8             9              10
             String sql = "insert into customer (name, address1,address2, zip, city, country, contact_person, contact_email, contact_phone, org_no) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);

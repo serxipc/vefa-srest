@@ -5,7 +5,10 @@ import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.email.EmailService;
 import no.sr.ringo.guice.ServerTestModuleFactory;
-import no.sr.ringo.message.*;
+import no.sr.ringo.message.MessageMetaData;
+import no.sr.ringo.message.MessageWithLocations;
+import no.sr.ringo.message.OutboundPostParams;
+import no.sr.ringo.message.PeppolMessageRepository;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.peppol.PeppolProcessIdAcronym;
@@ -69,13 +72,13 @@ public class ReceiveMessageFromClientUseCaseIntegrationTest {
         MessageWithLocations message = receiveMessageFromClientUseCase.handleMessage(params);
 
         //check it's queued
-        DatabaseHelper.QueuedMessage queuedMessage = databaseHelper.getQueuedMessageByMsgNo(message.getMsgNo());
+        DatabaseHelper.QueuedMessage queuedMessage = databaseHelper.getQueuedMessageByMsgNo(message.getMsgNo().toLong());
         assertNotNull(queuedMessage);
         assertNotNull(queuedMessage.getQueueId());
         assertEquals(message.getMsgNo(), queuedMessage.getMsgNo());
         assertEquals(OutboundMessageQueueState.QUEUED, queuedMessage.getState());
 
-        MessageMetaData metaData = peppolMessageRepository.findMessageByMessageNo(MessageNumber.create(message.getMsgNo()));
+        MessageMetaData metaData = peppolMessageRepository.findMessageByMessageNo(message.getMsgNo());
         assertNotNull(metaData);
 
     }

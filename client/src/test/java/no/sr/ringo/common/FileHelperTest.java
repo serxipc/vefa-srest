@@ -38,12 +38,12 @@ public class FileHelperTest {
         //file doesn't exist, so method should return the same name
         assertEquals(fileName, FileHelper.checkFile(new File(""), fileName));
 
-        //create the file
+        //of the file
         new File(new File("/tmp"), fileName).createNewFile();
         //file exists, so expect the name with _1
         assertEquals(secondFileName, FileHelper.checkFile(new File("/tmp"), fileName));
 
-        //create the secondFile
+        //of the secondFile
         new File(new File("/tmp"), secondFileName).createNewFile();
 
         //both files exists, so expect the name with _2

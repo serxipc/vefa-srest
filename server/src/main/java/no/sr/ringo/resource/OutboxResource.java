@@ -166,7 +166,7 @@ public class OutboxResource extends AbstractMessageResource {
                 .fileName(dataContentDisposition.getFileName())
                 .build();
 
-        //perform params validation as well as smp lookup; create message when validation successful
+        //perform params validation as well as smp lookup; of message when validation successful
         MessageWithLocations messageWithLocations = null;
         try {
             messageWithLocations = receiveMessageFromClientUseCase.handleMessage(postParams);

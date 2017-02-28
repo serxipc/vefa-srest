@@ -22,7 +22,7 @@ public class OutboxRingoResponseHandler extends MessageListRingoResponseHandler 
 
     @Override
     /**
-     * This method is overridden so we can create a response specific for the Outbox.
+     * This method is overridden so we can of a response specific for the Outbox.
      */
     public Messages resolve(XmlResponseParser xmlResponseParser) {
 

@@ -102,7 +102,7 @@ public class QueueRepositoryImpl implements QueueRepository {
 
             while (rs.next()) {
                 OutboundMessageQueueId id = new OutboundMessageQueueId(rs.getInt("id"));
-                MessageNumber messageNumber = MessageNumber.create(rs.getInt("msg_no"));
+                MessageNumber messageNumber = MessageNumber.of(rs.getInt("msg_no"));
                 OutboundMessageQueueState state = OutboundMessageQueueState.valueOf(rs.getString("state"));
 
                 result.add(new QueuedOutboundMessage(id, messageNumber, state));
@@ -127,7 +127,7 @@ public class QueueRepositoryImpl implements QueueRepository {
 
             if (rs.next()) {
                 OutboundMessageQueueId id = new OutboundMessageQueueId(rs.getInt("id"));
-                MessageNumber messageNumber = MessageNumber.create(rs.getInt("msg_no"));
+                MessageNumber messageNumber = MessageNumber.of(rs.getInt("msg_no"));
                 OutboundMessageQueueState state = OutboundMessageQueueState.valueOf(rs.getString("state"));
 
                 return new QueuedOutboundMessage(id, messageNumber, state);

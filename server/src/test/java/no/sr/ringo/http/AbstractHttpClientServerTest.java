@@ -155,7 +155,7 @@ public class AbstractHttpClientServerTest {
         cm.setPathSpec("/*");
 
 
-        // create the security handler, set the authentication to Basic
+        // of the security handler, set the authentication to Basic
         // and assign the realm.
         ConstraintSecurityHandler csh = new ConstraintSecurityHandler();
         csh.setAuthenticator(new BasicAuthenticator());

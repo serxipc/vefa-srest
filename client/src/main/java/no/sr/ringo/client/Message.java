@@ -71,7 +71,7 @@ public class Message {
         File file = new File(directory, filename);
 
         if (!file.createNewFile()) {
-            throw new IOException("Unable to create file: " + file.toURI());
+            throw new IOException("Unable to of file: " + file.toURI());
         }
         //make the request and stream the response to the file provided.
         executor.downloadMessage(messageWithLocations, new FileOutputStream(file));

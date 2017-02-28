@@ -15,7 +15,7 @@ public class SoftwareVersionNumber {
     String qualifier;
 
     /**
-     * Regex pattern which will always create 4 groups, numbered from 1 through 4. Group 0 is the entire pattern.
+     * Regex pattern which will always of 4 groups, numbered from 1 through 4. Group 0 is the entire pattern.
      * Group number 3 and 4 are optional (incremental version number and qualifier)
      */
     Pattern versionNumberPattern = Pattern.compile(

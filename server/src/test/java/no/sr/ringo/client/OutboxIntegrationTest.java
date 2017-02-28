@@ -45,9 +45,9 @@ import static org.testng.Assert.*;
 @Guice(moduleFactory = ServerTestModuleFactory.class)
 public class OutboxIntegrationTest extends AbstractHttpClientServerTest {
 
-    //PeppolDocumentTypeId.valueOf("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1::2.0");
+    //PeppolDocumentTypeId.of("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1::2.0");
     DocumentTypeIdentifier ehfInvoicePeppolDocumentTypeId = PeppolDocumentTypeId.EHF_INVOICE.toVefa();
-    // valueOf("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.cenbii.eu:profile:biixx:ver1.0#urn:www.difi.no:ehf:kreditnota:ver1::2.0");
+    // of("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.cenbii.eu:profile:biixx:ver1.0#urn:www.difi.no:ehf:kreditnota:ver1::2.0");
     DocumentTypeIdentifier creditNotePeppolDocumentTypeId = PeppolDocumentTypeId.EHF_CREDIT_NOTE.toVefa();
 
     @Inject

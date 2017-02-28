@@ -15,5 +15,5 @@ public interface TransmissionMetaData extends MessageMetaData {
 
     AccountId getAccountId();
 
-    URI getNativeEvidenceUri();
+    URI getEvidenceUri();
 }

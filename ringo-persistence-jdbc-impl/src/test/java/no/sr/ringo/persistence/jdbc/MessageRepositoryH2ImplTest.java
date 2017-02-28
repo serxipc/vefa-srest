@@ -86,8 +86,8 @@ public class MessageRepositoryH2ImplTest {
     void removeFilesFor(TransmissionMetaData metaData) {
 
         deleteUri(metaData.getPayloadUri());
-        if (metaData.getNativeEvidenceUri() != null) {
-            deleteUri(metaData.getNativeEvidenceUri());
+        if (metaData.getEvidenceUri() != null) {
+            deleteUri(metaData.getEvidenceUri());
         }
     }
 

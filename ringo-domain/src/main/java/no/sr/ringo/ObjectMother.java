@@ -1,6 +1,5 @@
 package no.sr.ringo;
 
-// import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.sr.ringo.account.Account;
@@ -11,13 +10,14 @@ import no.sr.ringo.account.UserName;
 import java.util.Date;
 
 /**
- * Object which shall be used to create complex objects for testing.
+ * Object which shall be used to of complex objects for testing.
  *
  * @author andy
  * @author adam
  * @author thore
  */
 public class ObjectMother {
+
 
     public static Account getTestAccount(){
         return new Account(
@@ -60,5 +60,8 @@ public class ObjectMother {
     public static final DocumentTypeIdentifier getDocumentIdForBisInvoice() {
         return DocumentTypeIdentifier.of("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0::2.1");
     }
+
+
+
 
 }

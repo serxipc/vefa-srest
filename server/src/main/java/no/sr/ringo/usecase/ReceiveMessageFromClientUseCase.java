@@ -128,7 +128,7 @@ public class ReceiveMessageFromClientUseCase {
      * As message is valid, we put it on the queue
      */
     protected OutboundMessageQueueId queueMessage(MessageWithLocations message) {
-        return queueRepository.putMessageOnQueue(message.getMsgNo());
+        return queueRepository.putMessageOnQueue(message.getMsgNo().toLong());
     }
 
     protected String extractInvoiceNoFromDocument(Document document) {

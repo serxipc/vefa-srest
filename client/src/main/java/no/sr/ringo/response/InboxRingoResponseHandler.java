@@ -19,7 +19,7 @@ public class InboxRingoResponseHandler extends MessageListRingoResponseHandler {
 
     @Override
     /**
-     * This method is overriden so we can create a response specific for the Inbox.
+     * This method is overriden so we can of a response specific for the Inbox.
      */
     public Messages resolve(XmlResponseParser xmlResponseParser) {
         InboxQueryResponse result = new InboxQueryResponse(getMessages(xmlResponseParser));

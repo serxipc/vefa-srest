@@ -8,7 +8,6 @@ public class OxalisOutboundModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        // bind(OxalisOutboundModule.class).in(Singleton.class);
         bind(OxalisOutboundComponent.class).in(Singleton.class);
     }
 }

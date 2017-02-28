@@ -22,6 +22,7 @@
 
 package no.sr.ringo.persistence.jdbc;
 
+import no.difi.oxalis.api.model.TransmissionIdentifier;
 import no.difi.vefa.peppol.common.model.*;
 import no.sr.ringo.account.AccountId;
 import no.sr.ringo.message.*;
@@ -32,7 +33,6 @@ import no.sr.ringo.persistence.file.ArtifactType;
 import no.sr.ringo.persistence.guice.jdbc.JdbcTxManager;
 import no.sr.ringo.persistence.guice.jdbc.Repository;
 import no.sr.ringo.transport.TransferDirection;
-import no.sr.ringo.transport.TransmissionId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -301,7 +301,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             final PeppolHeader peppolHeader = new PeppolHeader();
             mmd.setPeppolHeader(peppolHeader);
 
-            mmd.setMsgNo(msg_no);
+            mmd.setMsgNo(MessageNumber.of(msg_no));
             mmd.setAccountId(account_id);
             mmd.setTransferDirection(direction);
             mmd.setReceived(received);
@@ -310,7 +310,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             peppolHeader.setReceiver(receiver);
             peppolHeader.setPeppolChannelId(channel);
             mmd.setReceptionId(message_uuid);
-            mmd.setTransmissionId(new TransmissionId(transmission_id));
+            mmd.setTransmissionId(TransmissionIdentifier.of(transmission_id));
             peppolHeader.setDocumentTypeIdentifier(document_id);
 
             if (process_id != null) {
@@ -324,7 +324,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             mmd.setPayloadUri(payload_url);
             if (native_evidence_url != null) {
                 try {
-                    mmd.setNativeEvidenceUri(new URI(native_evidence_url));
+                    mmd.setEvidenceUri(new URI(native_evidence_url));
                 } catch (URISyntaxException e) {
                     throw new IllegalStateException("Invalid native evidence URI for msg_no=" + msg_no + "; value=" + native_evidence_url + ", cause=" + e.getMessage(), e);
                 }
@@ -336,14 +336,21 @@ public class MessageRepositoryH2Impl implements MessageRepository {
         return result;
     }
 
+/*
+    MessageNumber createMetaDataEntry(TransmissionMetaData tmd) {
+
+    }
+*/
 
     private Long createMetaDataEntry(TransmissionMetaData tmd, URI payloadUrl) {
         if (tmd == null) {
             throw new IllegalArgumentException("MessageMetaData required argument");
         }
+
         //
         //                                                            1           2           3       4       5            6               7           8           9           10          11          12
-        final String INSERT_INTO_MESSAGE_SQL = "insert into message (account_id, direction, sender, receiver, channel, message_uuid, document_id, process_id, payload_url, received, delivered, transmission_id ) values(?,?,?,?,?,?,?,?,?,?,?,?)";
+        final String INSERT_INTO_MESSAGE_SQL = "insert into message (account_id, direction, sender, receiver, channel, message_uuid, document_id, process_id, payload_url, received, delivered, transmission_id ) "
+                + " values(?,?,?,?,?,?,?,?,?,?,?,?)";
 
         Connection connection = null;
         try {
@@ -415,7 +422,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
         } catch (Exception e) {
             log.error("Unable to insert into message table using " + INSERT_INTO_MESSAGE_SQL + ", " + e, e);
             log.error("Please ensure that the DBMS and the MESSAGE table is available.");
-            throw new IllegalStateException("Unable to create new entry in MESSAGE " + e.getMessage(), e);
+            throw new IllegalStateException("Unable to of new entry in MESSAGE " + e.getMessage(), e);
         }
     }
 
@@ -542,7 +549,7 @@ public class MessageRepositoryH2Impl implements MessageRepository {
             try {
                 Files.createDirectories(directory);
             } catch (IOException e) {
-                throw new IllegalStateException("Unable to create directories for path " + directory);
+                throw new IllegalStateException("Unable to of directories for path " + directory);
             }
         }
     }

@@ -68,7 +68,7 @@ public class RingoConfigModule extends AbstractModule{
     }
 
     /**
-     * Intermediate Config used to create the final, sandwiched config.
+     * Intermediate Config used to of the final, sandwiched config.
      * Loads the default "ringo.conf" file from the RINGO_HOME directory.
      *
      * @param homePath the RINGO_HOME path

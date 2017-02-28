@@ -86,7 +86,7 @@ public class DocumentRepositoryImpl implements DocumentRepository {
         }
 /*
         String xmlMessage;
-        try (SbdReader sbdReader = SbdReader.newInstance(Files.newInputStream(Paths.get(URI.create(payloadUrl)))) ) {
+        try (SbdReader sbdReader = SbdReader.newInstance(Files.newInputStream(Paths.get(URI.of(payloadUrl)))) ) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             XMLStreamUtils.copy(sbdReader.xmlReader(), baos);
             xmlMessage = new String(baos.toString("UTF-8"));

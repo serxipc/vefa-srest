@@ -43,7 +43,7 @@ public abstract class AbstractMessageResource implements UriLocationAware {
         return resourceUriBuilder.build();
     }
 
-    protected URI computeXmlDocumentUri(UriInfo uriInfo, Long msgNo) {
+    protected URI computeXmlDocumentUri(UriInfo uriInfo, MessageNumber msgNo) {
         // https....../messages
         UriBuilder uriBuilder = getUriBuilderForResource(uriInfo, MessagesResource.class);
 
@@ -53,7 +53,7 @@ public abstract class AbstractMessageResource implements UriLocationAware {
         return documentUri;
     }
 
-    protected URI computeUriForSelf(UriInfo uriInfo, Long msgNo) {
+    protected URI computeUriForSelf(UriInfo uriInfo, MessageNumber msgNo) {
 
         // https....../outbox
         UriBuilder uriBuilder = getUriBuilderForResource(uriInfo, this.getClass());
@@ -116,7 +116,7 @@ public abstract class AbstractMessageResource implements UriLocationAware {
      */
     protected MessageNumber parseMsgNo(String msgNoString) {
         try {
-            return MessageNumber.valueOf(msgNoString);
+            return MessageNumber.of(msgNoString);
         } catch (IllegalArgumentException nfe) {
             throw new InvalidUserInputWebException(String.format("Invalid message number '%s'", msgNoString));
         }

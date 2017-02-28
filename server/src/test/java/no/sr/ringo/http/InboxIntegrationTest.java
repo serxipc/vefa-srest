@@ -13,6 +13,9 @@ import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.persistence.DbmsTestHelper;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -22,11 +25,11 @@ import org.testng.annotations.Test;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * @author Steinar Overbeck Cook steinar@sendregning.no
@@ -35,17 +38,13 @@ import static org.testng.Assert.assertTrue;
 public class InboxIntegrationTest extends AbstractHttpClientServerTest {
 
     static final Logger log = LoggerFactory.getLogger(InboxIntegrationTest.class);
-    private Long messageId;
-
     @Inject
     DatabaseHelper databaseHelper;
-
     @com.google.inject.Inject
     DbmsTestHelper dbmsTestHelper;
-
     @Inject
     PeppolMessageRepository peppolMessageRepository;
-
+    private Long msgNo;
     private ReceptionId receptionId;
 
     /**
@@ -77,7 +76,7 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
 
         for (Message message : messages) {
             count++;
-            // Assumes there is only a single message, create by insertSample(), in the table
+            // Assumes there is only a single message, of by insertSample(), in the table
 
             if (message.getReceptionId().equals(receptionId))
                 foundOneOfTheInserted = true;
@@ -86,20 +85,51 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
         assertTrue(foundOneOfTheInserted);
     }
 
+
+    /**
+     * Inserts a sample entry into the database and verifies that
+     * the payload is handled correctly
+     *
+     * @throws Exception
+     */
+    @Test(groups = {"integration"})
+    public void testGetPayload() throws Exception {
+
+
+        try{
+            String s = PEPPOL_BASE_URL.toString() + "/messages/" + msgNo + "/xml-document";
+            URI directoryLookupUri = new URI(s);
+            HttpGet httpGet = new HttpGet(directoryLookupUri);
+
+            HttpResponse response = httpClient.execute(httpGet);
+
+            final String txt = EntityUtils.toString(response.getEntity());
+
+
+            System.out.println(txt);
+            
+            assertEquals(response.getStatusLine().getStatusCode(),200);
+        } finally {
+            deleteSample();
+        }
+
+
+    }
+
     @BeforeMethod(groups = {"integration"})
     public void insertSample() throws SQLException {
         final Account account = ObjectMother.getTestAccount();
         receptionId = new ReceptionId();
 
-        messageId = dbmsTestHelper.createSampleMessage(1, TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), receptionId, null);
-        MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(MessageNumber.create(messageId));
+        msgNo = dbmsTestHelper.createSampleMessage(1, TransferDirection.IN, ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), ObjectMother.getTestParticipantIdForSMPLookup().getIdentifier(), receptionId, null);
+        MessageMetaData messageByMessageNo = peppolMessageRepository.findMessageByMessageNo(MessageNumber.of(msgNo));
 
 
     }
 
     @AfterMethod(groups = {"integration"})
     public void deleteSample() throws SQLException {
-        databaseHelper.deleteMessage(messageId);
+        databaseHelper.deleteMessage(msgNo);
     }
 }
 

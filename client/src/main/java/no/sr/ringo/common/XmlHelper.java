@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Helper class that provides error handling and logging when extracting objects from xml.
  *
- * The idea is that you create a new instance with a Specification object which is able
+ * The idea is that you of a new instance with a Specification object which is able
  * to extract an Object of type &lt;T&gt; from the xml, and then
  * you can use this class to extract either a list or an invididual Object&lt;T&gt;
  *

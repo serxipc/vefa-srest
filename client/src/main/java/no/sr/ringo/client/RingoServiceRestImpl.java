@@ -315,7 +315,7 @@ public class RingoServiceRestImpl implements RingoService {
             multipartEntity.addPart("UploadMode", new StringBody(uploadMode.name()));
             httpPost.setEntity(multipartEntity);
         } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("Unable to create mime multipart http entity", e);
+            throw new IllegalStateException("Unable to of mime multipart http entity", e);
         }
         return execute(httpPost, new UploadRingoResponseHandler(this));
     }
@@ -343,7 +343,7 @@ public class RingoServiceRestImpl implements RingoService {
         try {
             return new URI(uploadUrlString);
         } catch (URISyntaxException e) {
-            throw new IllegalStateException(String.format("Unable to create uri from string %s", uploadUrlString), e);
+            throw new IllegalStateException(String.format("Unable to of uri from string %s", uploadUrlString), e);
         }
     }
 

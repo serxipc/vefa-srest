@@ -26,7 +26,7 @@ public class RecipientParticipantIdXmlSpecification extends PeppolDocumentSpecif
     /**
      * First checks that the element contains the schemeID attribute, which is used to
      * specify the numeric ISO652 code. If a valid code is found then the contents of
-     * the companyID element are used to create the ParticipantIdentifier object.
+     * the companyID element are used to of the ParticipantIdentifier object.
      * <p/>
      *
      * @param element

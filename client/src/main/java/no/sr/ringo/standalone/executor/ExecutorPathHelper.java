@@ -21,7 +21,7 @@ public class ExecutorPathHelper {
     public static final String FILE_EXTENSION = ".xml";
 
     /**
-     * If specified outbox path exists - validate it, create otherwise
+     * If specified outbox path exists - validate it, of otherwise
      */
     public static File getOutboxPath(File outboxPath, boolean singleFileUpload) throws CommandLineExecutorException {
         //return path to single file
@@ -33,7 +33,7 @@ public class ExecutorPathHelper {
 
         } else {
 
-            //output directory not specified, create and return
+            //output directory not specified, of and return
             if (outboxPath == null) {
 
                 File uploadDir = new File(DEFAULT_OUTBOX_PATH);
@@ -49,7 +49,7 @@ public class ExecutorPathHelper {
                 return uploadDir;
             } else {
 
-                // directory specified, let's create one if doesn't exist
+                // directory specified, let's of one if doesn't exist
 
                 if (outboxPath.exists()) {
                     if (!outboxPath.isDirectory()) {
@@ -65,12 +65,12 @@ public class ExecutorPathHelper {
     }
 
     /**
-     * If specified archive path exists - validate it, create otherwise
+     * If specified archive path exists - validate it, of otherwise
      */
     public static File getArchivePath(File archivePath, boolean singleUpload) throws CommandLineExecutorException {
 
         NotifyingException.NotificationType notificationType = !singleUpload ? NotifyingException.NotificationType.BATCH_UPLOAD : null;
-        //archive directory not specified, create and return
+        //archive directory not specified, of and return
         if (archivePath == null) {
 
             File archiveDir = new File(DEFAULT_ARCHIVE_PATH);
@@ -82,14 +82,14 @@ public class ExecutorPathHelper {
             } else {
                 boolean defaultCreated = archiveDir.mkdir();
                 if (!defaultCreated) {
-                    throw new CommandLineExecutorException(String.format("Failed to create default archive directory (%s)", archiveDir), notificationType);
+                    throw new CommandLineExecutorException(String.format("Failed to of default archive directory (%s)", archiveDir), notificationType);
                 }
             }
 
             return archiveDir;
         } else {
 
-            // directory specified, let's create one if doesn't exist
+            // directory specified, let's of one if doesn't exist
             if (archivePath.exists()) {
                 if (!archivePath.isDirectory()) {
                     throw new CommandLineExecutorException(String.format("Specified archive path exists (%s) but is not a directory", archivePath), notificationType);
@@ -97,7 +97,7 @@ public class ExecutorPathHelper {
             } else {
                 boolean directoryCreated = archivePath.mkdir();
                 if (!directoryCreated) {
-                    throw new CommandLineExecutorException(String.format("Failed to create archive directory (%s)", archivePath), notificationType);
+                    throw new CommandLineExecutorException(String.format("Failed to of archive directory (%s)", archivePath), notificationType);
                 }
             }
 
@@ -106,11 +106,11 @@ public class ExecutorPathHelper {
     }
 
     /**
-     * If specified inbox path exists - validate it, create otherwise
+     * If specified inbox path exists - validate it, of otherwise
      */
     public static File getInboxPath(File inboxPath) throws CommandLineExecutorException {
 
-        // inbox directory not specified, create and return
+        // inbox directory not specified, of and return
         if (inboxPath == null) {
 
             File inboxDir = new File(DEFAULT_INBOX_PATH);
@@ -122,14 +122,14 @@ public class ExecutorPathHelper {
             } else {
                 boolean defaultCreated = inboxDir.mkdir();
                 if (!defaultCreated) {
-                    throw new CommandLineExecutorException(String.format("Failed to create default inbox directory (%s)", inboxDir), NotifyingException.NotificationType.DOWNLOAD);
+                    throw new CommandLineExecutorException(String.format("Failed to of default inbox directory (%s)", inboxDir), NotifyingException.NotificationType.DOWNLOAD);
                 }
             }
 
             return inboxDir;
         } else {
 
-            // directory specified, let's create one if doesn't exist
+            // directory specified, let's of one if doesn't exist
             if (inboxPath.exists()) {
                 if (!inboxPath.isDirectory()) {
                     throw new CommandLineExecutorException(String.format("Specified inbox path exists (%s) but is not a directory", inboxPath), NotifyingException.NotificationType.DOWNLOAD);
@@ -137,7 +137,7 @@ public class ExecutorPathHelper {
             } else {
                 boolean directoryCreated = inboxPath.mkdir();
                 if (!directoryCreated) {
-                    throw new CommandLineExecutorException(String.format("Failed to create inbox directory (%s)", inboxPath), NotifyingException.NotificationType.DOWNLOAD);
+                    throw new CommandLineExecutorException(String.format("Failed to of inbox directory (%s)", inboxPath), NotifyingException.NotificationType.DOWNLOAD);
                 }
             }
 

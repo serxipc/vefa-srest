@@ -33,7 +33,7 @@ public class TestFileHelper {
             File projectRoot = result.getParentFile().getParentFile().getParentFile();
             return projectRoot;
         } catch (URISyntaxException e) {
-            throw new IllegalStateException("Unable to create URI from URI " + url, e);
+            throw new IllegalStateException("Unable to of URI from URI " + url, e);
         }
     }
 

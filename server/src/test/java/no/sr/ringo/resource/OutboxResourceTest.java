@@ -46,7 +46,7 @@ public class OutboxResourceTest {
         UriInfo uriInfo = createMockUriInfo();
         MessageMetaData messageMetaData = messageMetaData(1);
 
-        expect(mockFetchMessageUseCase.findOutBoundMessageByMessageNo(mockRingoAccount, messageMetaData.getMsgNo().longValue())).andStubReturn(messageMetaData);
+        expect(mockFetchMessageUseCase.findOutBoundMessageByMessageNo(mockRingoAccount, messageMetaData.getMsgNo().toLong())).andStubReturn(messageMetaData);
 
         replayAllMocks();
 
@@ -60,7 +60,7 @@ public class OutboxResourceTest {
         Long msgNo = 1L;
         UriInfo uriInfo = createMockUriInfo();
 
-        final MessageNumber messageNo = MessageNumber.create(msgNo);
+        final MessageNumber messageNo = MessageNumber.of(msgNo);
         
         expect(mockFetchMessageUseCase.findOutBoundMessageByMessageNo(mockRingoAccount, msgNo)).andThrow(new PeppolMessageNotFoundException(messageNo));
 
@@ -71,7 +71,7 @@ public class OutboxResourceTest {
 
     @Test
     public void testDownloadPeppolDocument() throws Exception {
-        MessageNumber msgNo = MessageNumber.create(1);
+        MessageNumber msgNo = MessageNumber.of(1L);
         PeppolDocument peppolDocument = new DefaultPeppolDocument("");
         expect(mockFetchDocumentUseCase.execute(mockRingoAccount, msgNo)).andStubReturn(peppolDocument);
         replayAllMocks();
@@ -83,7 +83,7 @@ public class OutboxResourceTest {
 
     @Test(expectedExceptions = PeppolMessageNotFoundException.class)
     public void testDownloadPeppolDocumentException() throws Exception {
-        MessageNumber msgNo = MessageNumber.create(1);
+        MessageNumber msgNo = MessageNumber.of(1);
         expect(mockFetchDocumentUseCase.execute(mockRingoAccount, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo));
         replayAllMocks();
 
@@ -93,7 +93,7 @@ public class OutboxResourceTest {
 
     private MessageMetaDataImpl messageMetaData(Integer msgNo) {
         MessageMetaDataImpl messageMetaData = new MessageMetaDataImpl();
-        messageMetaData.setMsgNo(1L);
+        messageMetaData.setMsgNo(MessageNumber.of(1L));
         messageMetaData.setTransferDirection(TransferDirection.OUT);
         return messageMetaData;
     }

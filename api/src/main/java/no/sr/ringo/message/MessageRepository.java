@@ -47,11 +47,9 @@ public interface MessageRepository {
 
     Long saveOutboundMessage(TransmissionMetaData messageMetaData, InputStream payloadDocument);
 
-
     Long saveOutboundMessage(TransmissionMetaData messageMetaData, Document payloadDocument);
 
     Long saveInboundMessage(TransmissionMetaData messageMetaData, InputStream payload);
-
 
     void saveOutboundTransportReceipt(Receipt transmissionEvidence, ReceptionId receptionId);
 

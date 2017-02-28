@@ -36,7 +36,7 @@ public class RegisterUseCaseIntegrationTest {
     }
 
     /**
-     * Test will create the account/customer but creating billing period will throw an exception, so account should be rolled back
+     * Test will of the account/customer but creating billing period will throw an exception, so account should be rolled back
      */
     @Test(groups = {"persistence"})
     public void testTransactionRollback() {
@@ -54,7 +54,7 @@ public class RegisterUseCaseIntegrationTest {
         }
 
         boolean shouldStillBeFalse = accountRepository.accountExists(new UserName(userName));
-        assertFalse(shouldStillBeFalse, "The test was not supposed to create an account with the given username, it was supposed to fail an rollback");
+        assertFalse(shouldStillBeFalse, "The test was not supposed to of an account with the given username, it was supposed to fail an rollback");
 
     }
 

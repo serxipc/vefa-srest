@@ -1,11 +1,11 @@
 /* Created by steinar on 08.01.12 at 19:55 */
 package no.sr.ringo.message;
 
+import no.difi.oxalis.api.model.TransmissionIdentifier;
 import no.difi.vefa.peppol.common.model.InstanceIdentifier;
 import no.sr.ringo.account.AccountId;
 import no.sr.ringo.peppol.PeppolHeader;
 import no.sr.ringo.transport.TransferDirection;
-import no.sr.ringo.transport.TransmissionId;
 
 import java.net.URI;
 import java.util.Date;
@@ -16,7 +16,7 @@ import java.util.Date;
  */
 public class MessageMetaDataImpl implements TransmissionMetaData {
 
-    private Long msgNo;
+    private MessageNumber msgNo;
 
     private AccountId accountId;
     private TransferDirection transferDirection;
@@ -24,11 +24,11 @@ public class MessageMetaDataImpl implements TransmissionMetaData {
     private Date delivered;
 
     private ReceptionId receptionId = new ReceptionId();    // Our internal reception identification
-    private TransmissionId transmissionId;      // AS2 Message-ID
+    private TransmissionIdentifier transmissionId;      // AS2 Message-ID
     private InstanceIdentifier sbdhInstanceIdentifier; // SBDH instance identifier
 
     URI payloadUri;
-    URI nativeEvidenceUri ;
+    URI evidenceUri;
 
     private PeppolHeader peppolHeader;
 
@@ -36,6 +36,30 @@ public class MessageMetaDataImpl implements TransmissionMetaData {
         peppolHeader = new PeppolHeader();
     }
 
+    public MessageMetaDataImpl(MessageMetaDataImpl mmd) {
+        msgNo = mmd.getMsgNo();
+
+        accountId = mmd.getAccountId();
+        transferDirection = mmd.getTransferDirection();
+        received = mmd.getReceived();
+        delivered = mmd.getDelivered();
+
+        final PeppolHeader ph = new PeppolHeader();
+        peppolHeader = ph;
+
+        ph.setPeppolChannelId(mmd.getPeppolHeader().getPeppolChannelId());
+        ph.setProcessIdentifier(mmd.getPeppolHeader().getProcessIdentifier());
+        ph.setDocumentTypeIdentifier(mmd.getPeppolHeader().getPeppolDocumentTypeId());
+        ph.setSender(mmd.getPeppolHeader().getSender());
+        ph.setReceiver(mmd.getPeppolHeader().getReceiver());
+
+        receptionId = mmd.getReceptionId();
+        transmissionId = mmd.getTransmissionId();
+        sbdhInstanceIdentifier = mmd.getSbdhInstanceIdentifier();
+        payloadUri = mmd.getPayloadUri();
+        evidenceUri = mmd.getEvidenceUri();
+    }
+    
     @Override
     public AccountId getAccountId() {
         return accountId;
@@ -81,20 +105,20 @@ public class MessageMetaDataImpl implements TransmissionMetaData {
     }
 
 
-    public Long getMsgNo() {
+    public MessageNumber getMsgNo() {
         return msgNo;
     }
 
-    public void setMsgNo(Long msgNo) {
+    public void setMsgNo(MessageNumber msgNo) {
         this.msgNo = msgNo;
     }
 
 
-    public TransmissionId getTransmissionId() {
+    public TransmissionIdentifier getTransmissionId() {
         return transmissionId;
     }
 
-    public void setTransmissionId(TransmissionId transmissionId) {
+    public void setTransmissionId(TransmissionIdentifier transmissionId) {
         this.transmissionId = transmissionId;
     }
 
@@ -108,12 +132,12 @@ public class MessageMetaDataImpl implements TransmissionMetaData {
     }
 
     @Override
-    public URI getNativeEvidenceUri() {
-        return nativeEvidenceUri;
+    public URI getEvidenceUri() {
+        return evidenceUri;
     }
 
-    public void setNativeEvidenceUri(URI nativeEvidenceUri) {
-        this.nativeEvidenceUri = nativeEvidenceUri;
+    public void setEvidenceUri(URI nativeEvidenceUri) {
+        this.evidenceUri = nativeEvidenceUri;
     }
 
     @Override
@@ -148,7 +172,7 @@ public class MessageMetaDataImpl implements TransmissionMetaData {
         if (transmissionId != null ? !transmissionId.equals(that.transmissionId) : that.transmissionId != null)
             return false;
         if (payloadUri != null ? !payloadUri.equals(that.payloadUri) : that.payloadUri != null) return false;
-        if (nativeEvidenceUri != null ? !nativeEvidenceUri.equals(that.nativeEvidenceUri) : that.nativeEvidenceUri != null)
+        if (evidenceUri != null ? !evidenceUri.equals(that.evidenceUri) : that.evidenceUri != null)
             return false;
         return peppolHeader != null ? peppolHeader.equals(that.peppolHeader) : that.peppolHeader == null;
     }
@@ -162,7 +186,7 @@ public class MessageMetaDataImpl implements TransmissionMetaData {
         result = 31 * result + (delivered != null ? delivered.hashCode() : 0);
         result = 31 * result + (transmissionId != null ? transmissionId.hashCode() : 0);
         result = 31 * result + (payloadUri != null ? payloadUri.hashCode() : 0);
-        result = 31 * result + (nativeEvidenceUri != null ? nativeEvidenceUri.hashCode() : 0);
+        result = 31 * result + (evidenceUri != null ? evidenceUri.hashCode() : 0);
         result = 31 * result + (peppolHeader != null ? peppolHeader.hashCode() : 0);
         return result;
     }
@@ -179,9 +203,10 @@ public class MessageMetaDataImpl implements TransmissionMetaData {
         sb.append(", transmissionId='").append(transmissionId).append('\'');
         sb.append(", sbdhInstanceIdentifier=").append(sbdhInstanceIdentifier);
         sb.append(", payloadUri=").append(payloadUri);
-        sb.append(", nativeEvidenceUri=").append(nativeEvidenceUri);
+        sb.append(", nativeEvidenceUri=").append(evidenceUri);
         sb.append(", peppolHeader=").append(peppolHeader);
         sb.append('}');
         return sb.toString();
     }
+
 }

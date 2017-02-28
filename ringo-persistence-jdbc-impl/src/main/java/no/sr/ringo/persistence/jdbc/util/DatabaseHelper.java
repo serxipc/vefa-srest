@@ -28,9 +28,7 @@ import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.sr.ringo.account.*;
-import no.sr.ringo.message.MessageMetaDataImpl;
-import no.sr.ringo.message.MessageRepository;
-import no.sr.ringo.message.ReceptionId;
+import no.sr.ringo.message.*;
 import no.sr.ringo.peppol.ChannelProtocol;
 import no.sr.ringo.peppol.PeppolChannelId;
 import no.sr.ringo.persistence.guice.jdbc.JdbcTxManager;
@@ -57,7 +55,7 @@ import static no.sr.ringo.transport.TransferDirection.IN;
 import static no.sr.ringo.transport.TransferDirection.OUT;
 
 /**
- * Class providing helper methods to create messages and accounts for testing purposes.
+ * Class providing helper methods to of messages and accounts for testing purposes.
  * <p>
  * It can be either extended by other integration test or used in http tests
  *
@@ -146,6 +144,68 @@ public class DatabaseHelper {
 
         return createSampleMessage(invoiceDocumentType, processTypeId, "<test>\u00E5</test>", accountId, direction, senderValue, receiverValue, receptionId, delivered, new Date(), new PeppolChannelId("UnitTest"));
     }
+
+    public MessageNumber createSampleEntry(MessageMetaDataImpl tmd) {
+        if (tmd == null) {
+            throw new IllegalArgumentException("Missing required argument");
+        }
+
+        TransmissionMetaDataValidator.validate(tmd);
+
+        String sql = "insert into message"
+                //     1           2           3        4         5       6        7           8
+                + "(account_id, direction, received, delivered, sender, receiver, channel, message_uuid," +
+                //    9              10            11           12           13            14
+                " transmission_id, instance_id, document_id, process_id, payload_url, evidence_url) " +
+                " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        try (Connection con = jdbcTxManager.getConnection()) {
+
+            final PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            if (tmd.getAccountId() == null) {
+                ps.setNull(1, Types.INTEGER);
+            } else
+                ps.setInt(1, tmd.getAccountId().toInteger());
+
+            ps.setString(2, tmd.getTransferDirection().name());
+            ps.setTimestamp(3, new Timestamp(tmd.getReceived().getTime()));
+
+            if (tmd.getDelivered() != null) {
+                ps.setTimestamp(4, new Timestamp(tmd.getDelivered().getTime()));
+            } else
+                ps.setTimestamp(4, null);
+
+            ps.setString(5, tmd.getPeppolHeader().getSender().getIdentifier());
+            ps.setString(6, tmd.getPeppolHeader().getReceiver().getIdentifier());
+            ps.setString(7, tmd.getPeppolHeader().getPeppolChannelId() != null ?
+                    tmd.getPeppolHeader().getPeppolChannelId().stringValue() : null);
+            ps.setString(8, tmd.getReceptionId().stringValue());
+            ps.setString(9, tmd.getTransmissionId() != null ? tmd.getTransmissionId().getValue() : null);
+            ps.setString(10, tmd.getSbdhInstanceIdentifier() != null ?
+                    tmd.getSbdhInstanceIdentifier().getValue() : null);
+            ps.setString(11, tmd.getPeppolHeader().getPeppolDocumentTypeId().getIdentifier());
+            ps.setString(12, tmd.getPeppolHeader().getProcessIdentifier().getIdentifier());
+            ps.setString(13, tmd.getPayloadUri().toString());
+            ps.setString(14, tmd.getEvidenceUri() != null ?
+                    tmd.getEvidenceUri().toString() : null);
+
+            ps.executeUpdate();
+            if (con.getMetaData().supportsGetGeneratedKeys()) {
+                final ResultSet rs = ps.getGeneratedKeys();
+                if (rs != null && rs.next()) {
+                    final long generatedKey = rs.getLong(1);
+                    return MessageNumber.of(generatedKey);
+                }
+            } else {
+                throw new IllegalStateException("Dbms " + con.getMetaData().getDatabaseProductName() + " does not support auto generated keys");
+            }
+
+            return null;    // Should never happen
+
+        } catch (SQLException e) {
+            throw new IllegalStateException("Unable to of sample entry using; " + tmd.toString() + " and " + sql, e);
+        }
+    }
+
 
     /**
      * Helper method to delete rows in message table
@@ -592,30 +652,6 @@ public class DatabaseHelper {
 
         public OutboundMessageQueueState getState() {
             return status;
-        }
-    }
-
-    public class FaultMessageRow {
-        private final int messageNo;
-        private final String message;
-        private final Date ts;
-
-        public FaultMessageRow(int messageNo, String message, Date ts) {
-            this.messageNo = messageNo;
-            this.message = message;
-            this.ts = ts;
-        }
-
-        public int getMessageNo() {
-            return messageNo;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public Date getTs() {
-            return ts;
         }
     }
 }

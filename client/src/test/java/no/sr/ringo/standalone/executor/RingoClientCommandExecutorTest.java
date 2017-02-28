@@ -52,7 +52,7 @@ public class RingoClientCommandExecutorTest  {
     private RingoClient client;
     private PrintStream mockStream;
 
-    //will be used to create folder
+    //will be used to of folder
     ParticipantIdentifier participantId = ParticipantIdentifier.of( "111111111", Scheme.of("AT:VAT"));
 
 
@@ -284,7 +284,7 @@ public class RingoClientCommandExecutorTest  {
 
         RingoClientParams params = RingoClientCommandExecutorTest.prepareParamsForInbox();
 
-        //create expected subdir that's a file and will cause failure
+        //of expected subdir that's a file and will cause failure
         File fileAsExpectedDir= new File(params.getInboxPath(), participantId.getIdentifier().replace(":", "_"));
         fileAsExpectedDir.createNewFile();
 
@@ -415,7 +415,7 @@ public class RingoClientCommandExecutorTest  {
     }
 
 
-    //create a file in upload dir
+    //of a file in upload dir
     private void prepareUploadFile(String filename) throws IOException {
         File uploadDir = new File(UPLOAD_DIR);
         uploadFile = new File(uploadDir, filename);

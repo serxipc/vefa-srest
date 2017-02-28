@@ -8,7 +8,6 @@ import no.difi.oxalis.outbound.transmission.TransmissionRequestBuilder;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.message.MessageMetaData;
-import no.sr.ringo.transport.TransmissionId;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -53,7 +52,7 @@ public class OxalisDocumentSender implements PeppolDocumentSender {
 
         return new TransmissionReceipt(messageMetaData.getReceptionId(),
                 // Transmission Id assigned by AS2 or whatever we are using
-                new TransmissionId(transmissionResponse.getTransmissionIdentifier().toString()),
+                transmissionResponse.getTransmissionIdentifier(),
                 transmissionResponse.getEndpoint().getAddress(),
                 new Date(),
                 transmissionResponse.primaryReceipt()

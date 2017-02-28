@@ -73,7 +73,7 @@ public class PeppolDocumentIntegrationTest {
         Long message = databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.EHF_INVOICE.toVefa(),
                 PeppolProcessTypeIdAcronym.INVOICE_ONLY.toVefa(),
                 invoiceXml, 1, TransferDirection.IN, participantId.getIdentifier(), participantId.getIdentifier(), new ReceptionId(), new Date(), new Date(),new PeppolChannelId("test"));
-        return MessageNumber.create(message);
+        return MessageNumber.of(message);
     }
 
     private MessageNumber createMessageWithCreditNoteDocument() {
@@ -82,7 +82,7 @@ public class PeppolDocumentIntegrationTest {
         Long messageNumber = databaseHelper.createSampleMessage(PeppolDocumentTypeIdAcronym.CREDIT_NOTE.toVefa(),
                 PeppolProcessTypeIdAcronym.INVOICE_ONLY.toVefa(),
                 creditXml, 1, TransferDirection.IN, participantId.getIdentifier(), participantId.getIdentifier(), new ReceptionId(), new Date(), new Date(), new PeppolChannelId("test"));
-        return MessageNumber.create(messageNumber);
+        return MessageNumber.of(messageNumber);
     }
 
     private String invoiceAsXml() {

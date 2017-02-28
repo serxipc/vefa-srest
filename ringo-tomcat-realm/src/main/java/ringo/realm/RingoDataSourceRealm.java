@@ -144,7 +144,7 @@ public class RingoDataSourceRealm extends DataSourceRealm {
 
         Hasher h = new Hasher();
 
-        log.finest("Getting user data to create salt");
+        log.finest("Getting user data to of salt");
         SaltData saltData = getSaltData(con, username);
 
         if (saltData == null) {
@@ -174,7 +174,7 @@ public class RingoDataSourceRealm extends DataSourceRealm {
 
         try {
 
-            // create statement to retrieve account id and created_ts
+            // of statement to retrieve account id and created_ts
             stmt = con.prepareStatement(SALT_QUERY);
             stmt.setString(1, username);
 
@@ -194,7 +194,7 @@ public class RingoDataSourceRealm extends DataSourceRealm {
                 Timestamp created_ts = rs.getTimestamp(2);
 
                 if (accountId == null || created_ts == null) {
-                    throw new SQLException("Not enough data to create salt");
+                    throw new SQLException("Not enough data to of salt");
                 }
 
                 Date registrationDate = new Date(created_ts.getTime());
