@@ -11,10 +11,7 @@ import no.sr.ringo.message.*;
 import no.sr.ringo.persistence.DbmsTestHelper;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.ProtocolException;
+import org.apache.http.*;
 import org.apache.http.client.RedirectStrategy;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -50,6 +47,8 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
     PeppolMessageRepository peppolMessageRepository;
     private Long msgNo;
     private ReceptionId receptionId;
+
+    private String redirectLocation = null;
 
     /**
      * Retrieves messages from inbox
@@ -109,13 +108,16 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
             final String txt = EntityUtils.toString(response.getEntity());
 
             assertEquals(txt, DbmsTestHelper.PAYLOAD_DATA);
-            assertEquals(response.getStatusLine().getStatusCode(),200);
+            assertEquals(response.getStatusLine().getStatusCode(), 200);
         } finally {
             deleteSample();
         }
 
         final MessageMetaDataImpl messageMetaData = PersistenceObjectMother.sampleInboundTransmissionMetaData();
-        messageMetaData.setPayloadUri(URI.create("http://www.peppol.eu"));   // This is where we will be redirected
+
+        URI samplePayloadUri = URI.create("http://www.peppol.eu"); // This is where we will be redirected
+        messageMetaData.setPayloadUri(samplePayloadUri);
+
         final MessageNumber messageNumber = databaseHelper.createSampleEntry(messageMetaData);
 
         try {
@@ -123,9 +125,15 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
             final URI uri = URI.create(s);
             final HttpGet httpGet = new HttpGet(uri);
 
-            httpClient.setRedirectStrategy(new RedirectStrategy() {
+
+            // Prevents following redirects, since we would like to verify that we actually receive a 303
+            final RedirectStrategy redirectStrategy = new RedirectStrategy() {
+
                 @Override
                 public boolean isRedirected(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
+                    final Header locationHeader = httpResponse.getFirstHeader("Location");
+                    redirectLocation = locationHeader.getValue();
+
                     return false;
                 }
 
@@ -133,12 +141,14 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
                 public HttpUriRequest getRedirect(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
                     return null;
                 }
-            });
+            };
+            httpClient.setRedirectStrategy(redirectStrategy);
 
             final HttpResponse response = httpClient.execute(httpGet);
             assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_SEE_OTHER);
+            assertEquals(redirectLocation, samplePayloadUri.toString());
 
-        }   finally {
+        } finally {
             databaseHelper.deleteMessage(messageNumber.toLong());
         }
 
