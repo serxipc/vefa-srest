@@ -52,6 +52,12 @@
             <artifactId>ringo-test</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>no.difi.oxalis</groupId>
+                    <artifactId>oxalis-test-impl</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- oxalis -->

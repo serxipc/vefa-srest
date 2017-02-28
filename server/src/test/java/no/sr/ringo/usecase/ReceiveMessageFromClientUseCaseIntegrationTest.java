@@ -75,7 +75,7 @@ public class ReceiveMessageFromClientUseCaseIntegrationTest {
         DatabaseHelper.QueuedMessage queuedMessage = databaseHelper.getQueuedMessageByMsgNo(message.getMsgNo().toLong());
         assertNotNull(queuedMessage);
         assertNotNull(queuedMessage.getQueueId());
-        assertEquals(message.getMsgNo(), queuedMessage.getMsgNo());
+        assertEquals(message.getMsgNo().toLong(), queuedMessage.getMsgNo());
         assertEquals(OutboundMessageQueueState.QUEUED, queuedMessage.getState());
 
         MessageMetaData metaData = peppolMessageRepository.findMessageByMessageNo(message.getMsgNo());

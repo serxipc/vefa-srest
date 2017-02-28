@@ -81,7 +81,7 @@ public class QueueRepositoryImplIntegrationTest {
         OutboundMessageQueueId qid = OutboundMessageQueueId.valueOf(queueId.toString());
         DatabaseHelper.QueuedMessage queuedMessage = databaseHelper.getQueuedMessageByQueueId(qid);
         assertEquals(queueId, new OutboundMessageQueueId(queuedMessage.getQueueId()));
-        assertEquals(messageWithLocations.getMsgNo(), queuedMessage.getMsgNo());
+        assertEquals(messageWithLocations.getMsgNo().toLong(), queuedMessage.getMsgNo());
         assertEquals(OutboundMessageQueueState.QUEUED, queuedMessage.getState());
 
     }
