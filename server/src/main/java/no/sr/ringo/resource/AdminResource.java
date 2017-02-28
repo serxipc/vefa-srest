@@ -29,7 +29,7 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path("/admin")
 @RequestScoped
-public class AdminResource extends AbstractMessageResource {
+public class AdminResource extends AbstractMessageResource  {
 
     private static Logger logger = LoggerFactory.getLogger(AdminResource.class);
 
@@ -59,9 +59,7 @@ public class AdminResource extends AbstractMessageResource {
 
         MessagesQueryResponse messagesQueryResponse = fetchMessagesUseCase.init(this, uriInfo).messagesWithoutAccountId().getMessages();
 
-        String entity = String.format("<status><is-production-server>%s</is-production-server>%s</status>",
-                servletContext.getInitParameter("isProductionServer"),
-                messagesQueryResponse.asXml());
+        String entity = String.format("<status>%s</status>", messagesQueryResponse.asXml());
         return SrResponse.ok().entity(entity).build();
     }
 

@@ -12,7 +12,10 @@ import org.easymock.EasyMock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.net.URI;
+
 import static org.easymock.EasyMock.*;
+import static org.testng.Assert.assertTrue;
 
 /**
  * User: andy
@@ -26,7 +29,6 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
 
     private Account account;
     private PeppolDocument ehfInvoice;
-    private MyPeppolDocumentDecorator peppolDocumentDecorator;
     private PeppolMessageRepository mockPeppolMessageRepository;
 
     @BeforeMethod
@@ -38,7 +40,6 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
 
         account = ObjectMother.getTestAccount();
         ehfInvoice = createEhfInvoice();
-        peppolDocumentDecorator = new MyPeppolDocumentDecorator(ehfInvoice);
     }
 
 
@@ -46,19 +47,29 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
     public void testIfAMessageIsNotFoundTheExceptionIsLeftToPropagate() throws Exception {
         MessageNumber msgNo = MessageNumber.of("10");
 
-        final MessageMetaDataImpl messageMetaData = PersistenceObjectMother.sampleInboundTransmissionMetaData();
-
-        expect(mockPeppolMessageRepository.findMessageByMessageNo(account, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo));
-        
+        expect(mockDocumentRepository.getPeppolDocument(account, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo));
         replayAllMocks();
 
         fetchDocumentUseCase.execute(account, msgNo);
+
+        verifyAllMocks();
+    }
+
+    @Test(expectedExceptions = PeppolMessageNotFoundException.class)
+    public void testIfAMessageIsNotFoundTheExceptionIsLeftToPropagate2() throws Exception {
+        MessageNumber msgNo = MessageNumber.of("10");
+
+        expect(mockPeppolMessageRepository.findMessageByMessageNo(account, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo));
+        replayAllMocks();
+
+        fetchDocumentUseCase.find(account, msgNo);
+
         verifyAllMocks();
     }
 
 
     @Test
-    public void verifyThatFilePayloadUriIsHandled() throws Exception {
+    public void returnPeppolDocumentIfFileUri() throws Exception {
 
         // Creates the sample data to be returned etc.
         MessageNumber msgNo = MessageNumber.of("10");
@@ -72,7 +83,28 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
         
         replayAllMocks();
 
-        fetchDocumentUseCase.execute(account, msgNo);
+        final FetchDocumentResult fetchDocumentResult = fetchDocumentUseCase.find(account, msgNo);
+
+        assertTrue(fetchDocumentResult instanceof PeppolDocument);
+    }
+
+    @Test
+    public void returnDocumentReferenceIfNotFileScheme() throws Exception {
+
+        // Creates the sample data to be returned etc.
+        MessageNumber msgNo = MessageNumber.of("10");
+        final MessageMetaDataImpl messageMetaData = PersistenceObjectMother.sampleInboundTransmissionMetaData(msgNo, account.getAccountId());
+        // Ensures that we should expect a PeppolDocumentReference when invoking the use case
+        messageMetaData.setPayloadUri(URI.create("https://cloudservice/container/blob/document.xml"));
+
+        // First we expect an attempt to find the meta data
+        expect(mockPeppolMessageRepository.findMessageByMessageNo(account, msgNo)).andReturn(messageMetaData);
+
+        replayAllMocks();
+
+        final FetchDocumentResult fetchDocumentResult = fetchDocumentUseCase.find(account, msgNo);
+
+        assertTrue(fetchDocumentResult instanceof PeppolDocumentReference);
     }
 
 
@@ -89,15 +121,4 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
         replay(mockDocumentRepository, mockPeppolMessageRepository);
     }
 
-
-    /**
-     * PeppolDocumentDecorator stub useful for running tests.
-     */
-    private static class MyPeppolDocumentDecorator extends PeppolDocumentDecorator {
-
-        private MyPeppolDocumentDecorator(PeppolDocument peppolDocument) {
-            super(peppolDocument);
-        }
-
-    }
 }

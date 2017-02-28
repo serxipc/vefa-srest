@@ -1,6 +1,10 @@
 /* Created by steinar on 08.01.12 at 20:41 */
 package no.sr.ringo.resource;
 
+import no.sr.ringo.account.Account;
+import no.sr.ringo.document.FetchDocumentResult;
+import no.sr.ringo.document.FetchDocumentResultVisitorImpl;
+import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.message.*;
 import no.sr.ringo.response.SingleMessagesResponse;
 import org.apache.commons.lang.StringUtils;
@@ -130,5 +134,14 @@ public abstract class AbstractMessageResource implements UriLocationAware {
 
     protected boolean isEmpty(String value) {
         return StringUtils.isBlank(value);
+    }
+
+    Response fetchPayloadAndProduceResponse(FetchDocumentUseCase fetchDocumentUseCase, Account account, MessageNumber msgNo) {
+        // Retrieves either the document itself or a reference to where it is located
+        FetchDocumentResult fetchDocumentResult = fetchDocumentUseCase.find(account, msgNo);
+
+        // Uses the visitor pattern to produce a Response, which will either contain
+        // the xml text or an http 303 (see other) response.
+        return fetchDocumentResult.accept(new FetchDocumentResultVisitorImpl());
     }
 }

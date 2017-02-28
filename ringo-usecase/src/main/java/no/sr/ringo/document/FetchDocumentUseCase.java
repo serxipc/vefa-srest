@@ -26,14 +26,19 @@ public class FetchDocumentUseCase {
     }
 
     public PeppolDocument execute(Account account, MessageNumber msgNo) {
+        return documentRepository.getPeppolDocument(account, msgNo);
+    }
 
+    public FetchDocumentResult find(Account account, MessageNumber msgNo) {
+        
+        // Searches for the meta data
         final MessageMetaData messageMetaData = peppolMessageRepository.findMessageByMessageNo(account, msgNo);
 
+        // If the payload resides within the file system, simply return the contents
         if (messageMetaData.getPayloadUri().getScheme().startsWith("file")) {
             return documentRepository.getPeppolDocument(account, msgNo);
         } else {
-            throw new UnsupportedOperationException("Can only handle file urls for now");
+            return new PeppolDocumentReference(messageMetaData.getPayloadUri());
         }
-
     }
 }

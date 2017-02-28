@@ -5,7 +5,6 @@ import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.spi.container.ResourceFilters;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.document.FetchDocumentUseCase;
-import no.sr.ringo.document.PeppolDocument;
 import no.sr.ringo.message.*;
 import no.sr.ringo.response.InboxQueryResponse;
 import no.sr.ringo.response.SingleInboxResponse;
@@ -114,12 +113,10 @@ public class InboxResource extends AbstractMessageResource {
             msgNo = parseMsgNo(msgNoString);
         }
 
-        PeppolDocument xmlDocument = fetchDocumentUseCase.execute(account, msgNo);
-
-        return SrResponse.ok().entity(xmlDocument.getXml()).build();
-
+        return super.fetchPayloadAndProduceResponse(fetchDocumentUseCase, account, msgNo);
     }
 
+    
     @POST
     @Path("/{message_no}/read")
     @Produces(RingoMediaType.APPLICATION_XML)

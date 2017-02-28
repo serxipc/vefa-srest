@@ -1,20 +1,24 @@
 package no.sr.ringo.http;
 
+import no.difi.ringo.tools.PersistenceObjectMother;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.client.Inbox;
 import no.sr.ringo.client.Message;
 import no.sr.ringo.client.Messages;
 import no.sr.ringo.guice.ServerTestModuleFactory;
-import no.sr.ringo.message.MessageMetaData;
-import no.sr.ringo.message.MessageNumber;
-import no.sr.ringo.message.PeppolMessageRepository;
-import no.sr.ringo.message.ReceptionId;
+import no.sr.ringo.message.*;
 import no.sr.ringo.persistence.DbmsTestHelper;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.ProtocolException;
+import org.apache.http.client.RedirectStrategy;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,8 +99,7 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
     @Test(groups = {"integration"})
     public void testGetPayload() throws Exception {
 
-
-        try{
+        try {
             String s = PEPPOL_BASE_URL.toString() + "/messages/" + msgNo + "/xml-document";
             URI directoryLookupUri = new URI(s);
             HttpGet httpGet = new HttpGet(directoryLookupUri);
@@ -105,14 +108,39 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
 
             final String txt = EntityUtils.toString(response.getEntity());
 
-
-            System.out.println(txt);
-            
+            assertEquals(txt, DbmsTestHelper.PAYLOAD_DATA);
             assertEquals(response.getStatusLine().getStatusCode(),200);
         } finally {
             deleteSample();
         }
 
+        final MessageMetaDataImpl messageMetaData = PersistenceObjectMother.sampleInboundTransmissionMetaData();
+        messageMetaData.setPayloadUri(URI.create("http://www.peppol.eu"));   // This is where we will be redirected
+        final MessageNumber messageNumber = databaseHelper.createSampleEntry(messageMetaData);
+
+        try {
+            String s = PEPPOL_BASE_REST_URL.toString() + "/messages/" + messageNumber.toString() + "/xml-document";
+            final URI uri = URI.create(s);
+            final HttpGet httpGet = new HttpGet(uri);
+
+            httpClient.setRedirectStrategy(new RedirectStrategy() {
+                @Override
+                public boolean isRedirected(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
+                    return false;
+                }
+
+                @Override
+                public HttpUriRequest getRedirect(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
+                    return null;
+                }
+            });
+
+            final HttpResponse response = httpClient.execute(httpGet);
+            assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_SEE_OTHER);
+
+        }   finally {
+            databaseHelper.deleteMessage(messageNumber.toLong());
+        }
 
     }
 

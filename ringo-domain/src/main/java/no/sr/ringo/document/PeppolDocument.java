@@ -6,7 +6,7 @@ package no.sr.ringo.document;
  * Date: 10/3/12
  * Time: 10:20 AM
  */
-public interface PeppolDocument {
+public interface PeppolDocument extends FetchDocumentResult {
 
     public <T> T acceptVisitor(PeppolDocumentVisitor<T> visitor);
 

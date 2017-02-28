@@ -5,7 +5,6 @@ import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.spi.container.ResourceFilters;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.document.FetchDocumentUseCase;
-import no.sr.ringo.document.PeppolDocument;
 import no.sr.ringo.message.*;
 import no.sr.ringo.response.MessagesQueryResponse;
 import no.sr.ringo.usecase.ReceiveMessageFromClientUseCase;
@@ -80,6 +79,7 @@ public class MessagesResource extends AbstractMessageResource {
         }
 
         MessageMetaData messageMetaDataWithLocator = peppolMessageRepository.findMessageByMessageNo(account, msgNo);
+
         return createSingleMessageResponse(uriInfo, messageMetaDataWithLocator);
 
     }
@@ -102,9 +102,7 @@ public class MessagesResource extends AbstractMessageResource {
             msgNo = parseMsgNo(msgNoString);
         }
 
-        PeppolDocument xmlDocument = fetchDocumentUseCase.execute(account, msgNo);
-        return SrResponse.ok().entity(xmlDocument.getXml()).build();
-
+        return fetchPayloadAndProduceResponse(fetchDocumentUseCase, account, msgNo);
     }
 
 
@@ -115,7 +113,5 @@ public class MessagesResource extends AbstractMessageResource {
 
         Integer count = peppolMessageRepository.getInboxCount(account.getAccountId());
         return SrResponse.ok().entity(count.toString()).build();
-
     }
-
 }

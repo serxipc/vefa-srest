@@ -13,6 +13,11 @@ public class EhfCreditInvoice implements PeppolDocument {
         return visitor.visit(this);
     }
 
+    @Override
+    public <T> T accept(FetcdocumentResultVisitor<T> fetcdocumentResultVisitor) {
+        return fetcdocumentResultVisitor.visit(this);
+    }
+
     public String getXml() {
         return xml;
     }

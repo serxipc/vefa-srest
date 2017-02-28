@@ -7,7 +7,6 @@ import com.sun.jersey.multipart.FormDataParam;
 import com.sun.jersey.spi.container.ResourceFilters;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.document.FetchDocumentUseCase;
-import no.sr.ringo.document.PeppolDocument;
 import no.sr.ringo.message.*;
 import no.sr.ringo.response.OutboxPostResponse;
 import no.sr.ringo.response.OutboxQueryResponse;
@@ -115,9 +114,7 @@ public class OutboxResource extends AbstractMessageResource {
             msgNo = parseMsgNo(msgNoString);
         }
 
-        PeppolDocument xmlDocument = fetchDocumentUseCase.execute(account, msgNo);
-
-        return Response.ok().entity(xmlDocument.getXml()).build();
+        return super.fetchPayloadAndProduceResponse(fetchDocumentUseCase, account, msgNo);
     }
 
     /**

@@ -23,7 +23,7 @@ import java.io.Serializable;
 @Path("/register")
 @ResourceFilters(ClientVersionNumberResponseFilter.class)
 @RequestScoped
-public class RegisterResource extends AbstractMessageResource {
+public class RegisterResource  {
 
     private final RegisterUseCase registerUseCase;
 

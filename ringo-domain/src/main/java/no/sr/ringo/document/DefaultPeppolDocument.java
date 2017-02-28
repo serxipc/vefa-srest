@@ -19,4 +19,9 @@ public class DefaultPeppolDocument implements PeppolDocument {
     public String getXml() {
         return xml;
     }
+
+    @Override
+    public <T> T accept(FetcdocumentResultVisitor<T> fetcdocumentResultVisitor) {
+        return fetcdocumentResultVisitor.visit(this);
+    }
 }
