@@ -1,9 +1,6 @@
 package no.sr.ringo.guice;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.Provides;
+import com.google.inject.*;
 import com.google.inject.name.Names;
 import com.typesafe.config.Config;
 import no.sr.ringo.message.DefaultPayloadUriRewriter;
@@ -35,7 +32,9 @@ public class BlobStoreModule extends AbstractModule {
     }
 
     @Provides
+    @Singleton
     PayloadUriRewriter provideUriRewriter(Injector injector, Config config) {
+        
         if (config.hasPath("ringo.blob")) {
             String classPath = config.getString(RINGO_BLOB_CLASS_PATH);
 

@@ -50,7 +50,7 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
         expect(mockDocumentRepository.getPeppolDocument(account, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo));
         replayAllMocks();
 
-        fetchDocumentUseCase.execute(account, msgNo);
+        fetchDocumentUseCase.find(account, msgNo);
 
         verifyAllMocks();
     }

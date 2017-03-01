@@ -29,7 +29,8 @@ public class BlobStoreModuleTest {
 
         if (Files.exists(Paths.get(uri1))) {
 
-            // Signals to the BlobStoreModule that there is an implementation to load
+            // Signals to the BlobStoreModule that there is an implementation to load. All system
+            // properties are picked up by the type safe Config.
             System.setProperty(BlobStoreModule.RINGO_BLOB_CLASS_PATH, uri1.toString());
 
             final Injector injector = Guice.createInjector(
@@ -39,6 +40,7 @@ public class BlobStoreModuleTest {
 
                         }
 
+                        // Picks up configuration properties.
                         @Provides
                         Config providesConfig() {
                             ConfigFactory.invalidateCaches();

@@ -82,7 +82,7 @@ public class MessagesResourceMockTest {
     @Test
     public void testGetXmlDocument() throws Exception {
 
-        expect(mockFetchDocumentUseCase.execute(account, MessageNumber.of(1L))).andReturn(new DefaultPeppolDocument("An xml document"));
+        expect(mockFetchDocumentUseCase.find(account, MessageNumber.of(1L))).andReturn(new DefaultPeppolDocument("An xml document"));
         replayAllMocks();
 
         Response xmlResponse = messagesResource.getXmlDocument("1");
@@ -94,7 +94,7 @@ public class MessagesResourceMockTest {
     @Test(expectedExceptions = PeppolMessageNotFoundException.class)
     public void testMessageNotFoundException() throws Exception {
 
-        expect(mockFetchDocumentUseCase.execute(account, MessageNumber.of(1))).andThrow(new PeppolMessageNotFoundException(MessageNumber.of(1L)));
+        expect(mockFetchDocumentUseCase.find(account, MessageNumber.of(1))).andThrow(new PeppolMessageNotFoundException(MessageNumber.of(1L)));
         replayAllMocks();
 
         messagesResource.getXmlDocument("1");

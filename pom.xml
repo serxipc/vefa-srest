@@ -21,7 +21,7 @@
         <jersey.version>1.19.2</jersey.version>
         <guice.version>4.1.0</guice.version>
         <jetty.version>7.6.16.v20140903</jetty.version>
-        <oxalis.version>4.0.0-RC2-SNAPSHOT</oxalis.version>
+        <oxalis.version>4.0.0-RC2</oxalis.version>
         
         <vefa.peppol.groupId>no.difi.vefa</vefa.peppol.groupId>
         <vefa.peppol.version>0.9.7</vefa.peppol.version>
@@ -47,8 +47,6 @@
         <!-- defines versions all default scope for all dependencies used in all Ringo modules -->
 
         <dependencies>
-
-            
             <dependency>
                 <groupId>no.difi.vefa</groupId>
                 <artifactId>commons-bdxr</artifactId>
