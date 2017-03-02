@@ -32,7 +32,7 @@ import java.io.InputStream;
 @Path("/outbox")
 @ResourceFilters(ClientVersionNumberResponseFilter.class)
 @RequestScoped
-public class OutboxResource extends AbstractMessageResource {
+public class OutboxResource extends AbstractResource {
 
     private static Logger logger = LoggerFactory.getLogger(OutboxResource.class);
 
@@ -42,8 +42,13 @@ public class OutboxResource extends AbstractMessageResource {
     private final FetchDocumentUseCase fetchDocumentUseCase;
 
     @Inject
-    OutboxResource(ReceiveMessageFromClientUseCase receiveMessageFromClientUseCase, Account account, FetchMessagesUseCase fetchMessagesUseCase, FetchDocumentUseCase fetchDocumentUseCase) {
-        super();
+    OutboxResource(ReceiveMessageFromClientUseCase receiveMessageFromClientUseCase,
+                   Account account,
+                   FetchMessagesUseCase fetchMessagesUseCase,
+                   FetchDocumentUseCase fetchDocumentUseCase,
+                   UriLocationTool uriLocationTool) {
+        super(uriLocationTool);
+        
         this.receiveMessageFromClientUseCase = receiveMessageFromClientUseCase;
         this.account = account;
         this.fetchMessagesUseCase = fetchMessagesUseCase;
@@ -59,7 +64,7 @@ public class OutboxResource extends AbstractMessageResource {
     @Path("/")
     public Response getMessages(@Context UriInfo uriInfo) {
 
-        OutboxQueryResponse outboxQueryResponse = fetchMessagesUseCase.init(this, uriInfo)
+        OutboxQueryResponse outboxQueryResponse = fetchMessagesUseCase.init(this.getClass(), uriInfo)
                 .messagesFor(account.getAccountId())
                 .getOutbox();
         String entity = outboxQueryResponse.asXml();
@@ -187,7 +192,7 @@ public class OutboxResource extends AbstractMessageResource {
      */
     Response createOutboxPostMessageResponse(UriInfo uriInfo, MessageMetaData messageMetaData) {
 
-        final MessageWithLocations messageMetaDataWithLocations = decorateWithLocators(messageMetaData, uriInfo);
+        final MessageWithLocations messageMetaDataWithLocations = uriLocationTool.decorateWithLocators(messageMetaData, uriInfo,this.getClass());
 
         //Creates the response
         OutboxPostResponse messageResponse = new OutboxPostResponse(messageMetaDataWithLocations);
@@ -206,7 +211,7 @@ public class OutboxResource extends AbstractMessageResource {
      */
     Response createSingleOutboxResponse(UriInfo uriInfo, MessageMetaData messageMetaData) {
 
-        MessageWithLocations messageWithLocations = decorateWithLocators(messageMetaData,uriInfo);
+        MessageWithLocations messageWithLocations = uriLocationTool.decorateWithLocators(messageMetaData,uriInfo, this.getClass());
 
         //Creates the response
         SingleOutboxResponse messageResponse = new SingleOutboxResponse(messageWithLocations);

@@ -47,10 +47,10 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
     public void testIfAMessageIsNotFoundTheExceptionIsLeftToPropagate() throws Exception {
         MessageNumber msgNo = MessageNumber.of("10");
 
-        expect(mockDocumentRepository.getPeppolDocument(account, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo));
+        expect(mockPeppolMessageRepository.findMessageByMessageNo(account, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo));
         replayAllMocks();
 
-        fetchDocumentUseCase.find(account, msgNo);
+        fetchDocumentUseCase.findDocument(account, msgNo);
 
         verifyAllMocks();
     }
@@ -62,7 +62,7 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
         expect(mockPeppolMessageRepository.findMessageByMessageNo(account, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo));
         replayAllMocks();
 
-        fetchDocumentUseCase.find(account, msgNo);
+        fetchDocumentUseCase.findDocument(account, msgNo);
 
         verifyAllMocks();
     }
@@ -75,7 +75,7 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
         MessageNumber msgNo = MessageNumber.of("10");
         final MessageMetaDataImpl messageMetaData = PersistenceObjectMother.sampleInboundTransmissionMetaData(msgNo, account.getAccountId());
 
-        // First we expect an attempt to find the meta data
+        // First we expect an attempt to findDocument the meta data
         final PeppolDocument peppolDocument = EasyMock.createMock(PeppolDocument.class);
         expect(mockPeppolMessageRepository.findMessageByMessageNo(account, msgNo)).andReturn(messageMetaData);
         expect(mockDocumentRepository.getPeppolDocument(account, msgNo)).andReturn(peppolDocument);
@@ -83,7 +83,7 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
         
         replayAllMocks();
 
-        final FetchDocumentResult fetchDocumentResult = fetchDocumentUseCase.find(account, msgNo);
+        final FetchDocumentResult fetchDocumentResult = fetchDocumentUseCase.findDocument(account, msgNo);
 
         assertTrue(fetchDocumentResult instanceof PeppolDocument);
     }
@@ -97,12 +97,12 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
         // Ensures that we should expect a PeppolDocumentReference when invoking the use case
         messageMetaData.setPayloadUri(URI.create("https://cloudservice/container/blob/document.xml"));
 
-        // First we expect an attempt to find the meta data
+        // First we expect an attempt to findDocument the meta data
         expect(mockPeppolMessageRepository.findMessageByMessageNo(account, msgNo)).andReturn(messageMetaData);
 
         replayAllMocks();
 
-        final FetchDocumentResult fetchDocumentResult = fetchDocumentUseCase.find(account, msgNo);
+        final FetchDocumentResult fetchDocumentResult = fetchDocumentUseCase.findDocument(account, msgNo);
 
         assertTrue(fetchDocumentResult instanceof PeppolDocumentReference);
     }

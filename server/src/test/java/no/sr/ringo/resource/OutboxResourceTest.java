@@ -31,6 +31,7 @@ public class OutboxResourceTest {
     private FetchMessagesUseCase mockFetchMessageUseCase;
     private OutboxResource outboxResource;
     private FetchDocumentUseCase mockFetchDocumentUseCase;
+    private UriLocationTool mockUriLocationUtil;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -38,7 +39,13 @@ public class OutboxResourceTest {
         mockRingoAccount = EasyMock.createStrictMock(Account.class);
         mockFetchMessageUseCase = EasyMock.createStrictMock(FetchMessagesUseCase.class);
         mockFetchDocumentUseCase = EasyMock.createStrictMock(FetchDocumentUseCase.class);
-        outboxResource = new OutboxResource(null, mockRingoAccount, mockFetchMessageUseCase, mockFetchDocumentUseCase);
+        mockUriLocationUtil = EasyMock.createMock(UriLocationTool.class);
+        outboxResource = new OutboxResource(null,
+                mockRingoAccount,
+                mockFetchMessageUseCase,
+                mockFetchDocumentUseCase,
+                new UriLocationToolImpl()
+                );
     }
 
     @Test
@@ -73,7 +80,7 @@ public class OutboxResourceTest {
     public void testDownloadPeppolDocument() throws Exception {
         MessageNumber msgNo = MessageNumber.of(1L);
         PeppolDocument peppolDocument = new DefaultPeppolDocument("");
-        expect(mockFetchDocumentUseCase.find(mockRingoAccount, msgNo)).andStubReturn(peppolDocument);
+        expect(mockFetchDocumentUseCase.findDocument(mockRingoAccount, msgNo)).andStubReturn(peppolDocument);
         replayAllMocks();
 
         Response response = outboxResource.downloadPeppolDocument(msgNo.toString());
@@ -84,7 +91,7 @@ public class OutboxResourceTest {
     @Test(expectedExceptions = PeppolMessageNotFoundException.class)
     public void testDownloadPeppolDocumentException() throws Exception {
         MessageNumber msgNo = MessageNumber.of(1);
-        expect(mockFetchDocumentUseCase.find(mockRingoAccount, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo));
+        expect(mockFetchDocumentUseCase.findDocument(mockRingoAccount, msgNo)).andThrow(new PeppolMessageNotFoundException(msgNo));
         replayAllMocks();
 
         Response response = outboxResource.downloadPeppolDocument(msgNo.toString());
@@ -108,6 +115,6 @@ public class OutboxResourceTest {
     }
 
     private void replayAllMocks() {
-        replay(mockRingoAccount, mockFetchMessageUseCase, mockFetchDocumentUseCase);
+        replay(mockRingoAccount, mockFetchMessageUseCase, mockFetchDocumentUseCase, mockUriLocationUtil);
     }
 }

@@ -22,6 +22,7 @@ public class RingoAccountModule extends AbstractModule {
     protected void configure() {
         //makes the java.security.Principal object available through GUICE
         bind(Principal.class).toProvider(PrincipalProvider.class);
+
         //Makes the account provider available to objects, which do not have request scope.
         bind(RingoAccountProvider.class);
 

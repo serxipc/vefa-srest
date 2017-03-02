@@ -8,6 +8,7 @@ import no.sr.ringo.account.AccountId;
 import no.sr.ringo.document.DefaultPeppolDocument;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.resource.MessagesResource;
+import no.sr.ringo.resource.UriLocationToolImpl;
 import no.sr.ringo.usecase.ReceiveMessageFromClientUseCase;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -44,10 +45,10 @@ public class MessagesResourceMockTest {
         mockFetchDocumentUseCase = createStrictMock(FetchDocumentUseCase.class);
         mockReceiveMessageFromClientUseCase = createStrictMock(ReceiveMessageFromClientUseCase.class);
 
-        fetchMessagesUseCase = new FetchMessagesUseCase(mockPeppolMessageRepository);
+        fetchMessagesUseCase = new FetchMessagesUseCase(mockPeppolMessageRepository, new UriLocationToolImpl());
         account = ObjectMother.getTestAccount();
 
-        messagesResource = new MessagesResource(mockReceiveMessageFromClientUseCase, fetchMessagesUseCase, mockPeppolMessageRepository, mockFetchDocumentUseCase, account);
+        messagesResource = new MessagesResource(mockReceiveMessageFromClientUseCase, fetchMessagesUseCase, mockPeppolMessageRepository, mockFetchDocumentUseCase, account, new UriLocationToolImpl());
     }
 
 
@@ -82,7 +83,7 @@ public class MessagesResourceMockTest {
     @Test
     public void testGetXmlDocument() throws Exception {
 
-        expect(mockFetchDocumentUseCase.find(account, MessageNumber.of(1L))).andReturn(new DefaultPeppolDocument("An xml document"));
+        expect(mockFetchDocumentUseCase.findDocument(account, MessageNumber.of(1L))).andReturn(new DefaultPeppolDocument("An xml document"));
         replayAllMocks();
 
         Response xmlResponse = messagesResource.getXmlDocument("1");
@@ -94,7 +95,7 @@ public class MessagesResourceMockTest {
     @Test(expectedExceptions = PeppolMessageNotFoundException.class)
     public void testMessageNotFoundException() throws Exception {
 
-        expect(mockFetchDocumentUseCase.find(account, MessageNumber.of(1))).andThrow(new PeppolMessageNotFoundException(MessageNumber.of(1L)));
+        expect(mockFetchDocumentUseCase.findDocument(account, MessageNumber.of(1))).andThrow(new PeppolMessageNotFoundException(MessageNumber.of(1L)));
         replayAllMocks();
 
         messagesResource.getXmlDocument("1");

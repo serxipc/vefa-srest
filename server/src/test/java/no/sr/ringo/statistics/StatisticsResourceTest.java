@@ -8,6 +8,7 @@ import no.sr.ringo.message.statistics.OutboxStatistics;
 import no.sr.ringo.message.statistics.RingoAccountStatistics;
 import no.sr.ringo.message.statistics.RingoStatistics;
 import no.sr.ringo.resource.StatisticsResource;
+import no.sr.ringo.resource.UriLocationToolImpl;
 import org.easymock.EasyMock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -60,7 +61,7 @@ public class StatisticsResourceTest {
 
         replay(mockPeppolMessageRepository);
 
-        StatisticsResource statisticsResource = new StatisticsResource(testAccount, mockPeppolMessageRepository);
+        StatisticsResource statisticsResource = new StatisticsResource(testAccount, mockPeppolMessageRepository, new UriLocationToolImpl());
         final Response overview = statisticsResource.getOverview();
 
         final int status = overview.getStatus();

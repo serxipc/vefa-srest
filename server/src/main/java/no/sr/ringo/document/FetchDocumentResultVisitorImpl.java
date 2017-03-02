@@ -1,5 +1,8 @@
 package no.sr.ringo.document;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ws.rs.core.Response;
 
 /**
@@ -12,6 +15,7 @@ import javax.ws.rs.core.Response;
  */
 public class FetchDocumentResultVisitorImpl implements  FetcdocumentResultVisitor<Response> {
 
+    public static final Logger LOGGER = LoggerFactory.getLogger(FetchDocumentResultVisitorImpl.class);
 
     @Override
     public Response visit(PeppolDocument peppolDocument) {
@@ -21,6 +25,7 @@ public class FetchDocumentResultVisitorImpl implements  FetcdocumentResultVisito
     @Override
     public Response visit(PeppolDocumentReference peppolDocumentReference) {
         // Redirects to whatever URI is held in the PeppolDocumentReference
+        LOGGER.debug("Redirecting to {}", peppolDocumentReference.getPayloadUri().toString());
         return Response.seeOther(peppolDocumentReference.getPayloadUri()).build();
     }
 }

@@ -12,7 +12,7 @@ import java.net.URI;
  * Date: 2/21/12
  * Time: 12:35 PM
  */
-public interface UriLocationAware {
+public interface UriLocationTool {
 
     /**
      * Adds URLs to the message meta data for self and downloading the message.
@@ -21,7 +21,7 @@ public interface UriLocationAware {
      * @param uriInfo
      * @return
      */
-    MessageWithLocations decorateWithLocators(MessageMetaData messageMetaData, UriInfo uriInfo);
+    MessageWithLocations decorateWithLocators(MessageMetaData messageMetaData, UriInfo uriInfo, Class<? extends AbstractResource> resourceClass);
 
     /**
      * Adds a URL for navigating to the provided page index.
@@ -31,5 +31,5 @@ public interface UriLocationAware {
      * @param pageIndex the page index to use.
      * @return
      */
-    URI linkToResource(UriInfo uriInfo, SearchParams searchParams, int pageIndex);
+    URI linkToResource(UriInfo uriInfo, SearchParams searchParams, int pageIndex,Class<? extends AbstractResource> resourceClass);
 }

@@ -71,7 +71,7 @@ public class SrResponse {
      * @return
      */
     public static Response exception(PeppolMessageNotFoundException peppolMessageNotFound) {
-        log.warn("Unable to find message", peppolMessageNotFound);
+        log.warn("Unable to findDocument message", peppolMessageNotFound);
         return Response.noContent().build();
     }
 

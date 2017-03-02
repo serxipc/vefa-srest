@@ -23,7 +23,7 @@ import javax.ws.rs.core.UriInfo;
 @Path("/inbox")
 @ResourceFilters(ClientVersionNumberResponseFilter.class)
 @RequestScoped
-public class InboxResource extends AbstractMessageResource {
+public class InboxResource extends AbstractResource {
 
     private final Account account;
     private final PeppolMessageRepository peppolMessageRepository;
@@ -31,8 +31,12 @@ public class InboxResource extends AbstractMessageResource {
     private final FetchDocumentUseCase fetchDocumentUseCase;
 
     @Inject
-    public InboxResource(PeppolMessageRepository peppolMessageRepository, Account account, FetchMessagesUseCase fetchMessagesUseCase, FetchDocumentUseCase fetchDocumentUseCase) {
-        super();
+    public InboxResource(PeppolMessageRepository peppolMessageRepository,
+                         Account account,
+                         FetchMessagesUseCase fetchMessagesUseCase,
+                         FetchDocumentUseCase fetchDocumentUseCase,
+                         UriLocationTool uriLocationTool) {
+        super(uriLocationTool);
         this.peppolMessageRepository = peppolMessageRepository;
         this.account = account;
         this.fetchMessagesUseCase = fetchMessagesUseCase;
@@ -47,7 +51,7 @@ public class InboxResource extends AbstractMessageResource {
     @Path("/")
     public Response getMessages(@Context UriInfo uriInfo) {
 
-        InboxQueryResponse inboxQueryResponse = fetchMessagesUseCase.init(this, uriInfo)
+        InboxQueryResponse inboxQueryResponse = fetchMessagesUseCase.init(this.getClass(), uriInfo)
                 .messagesFor(account.getAccountId())
                 .getInbox();
 
@@ -129,7 +133,7 @@ public class InboxResource extends AbstractMessageResource {
             msgNo = parseMsgNo(msgNoString);
         }
 
-        MessageMetaData messageMetaDataWithLocators = null;
+        MessageMetaData messageMetaDataWithLocators;
         messageMetaDataWithLocators = peppolMessageRepository.findMessageByMessageNo(account, msgNo);
         if (!messageMetaDataWithLocators.getTransferDirection().equals(TransferDirection.IN)) {
             return SrResponse.status(Response.Status.NOT_FOUND, "Inbound message number " + msgNoString + " not found");
@@ -137,7 +141,7 @@ public class InboxResource extends AbstractMessageResource {
 
         peppolMessageRepository.markMessageAsRead(msgNo.toLong());
 
-        return createSingleMessageResponse(uriInfo, messageMetaDataWithLocators);
+        return createSingleMessageResponse(uriInfo, messageMetaDataWithLocators,this.getClass());
 
     }
 
@@ -149,10 +153,10 @@ public class InboxResource extends AbstractMessageResource {
      * @param messageMetaData the message containing the header and the xml document message.
      * @return a JAX-RS response holding the status code, 200 OK, and the peppol message as a xml entity.
      */
-    Response createSingleInboxResponse(UriInfo uriInfo, MessageMetaData messageMetaData) {
+    private Response createSingleInboxResponse(UriInfo uriInfo, MessageMetaData messageMetaData) {
 
         //Decorates the message with self and xml document uris
-        MessageWithLocations messageWithLocations = decorateWithLocators(messageMetaData, uriInfo);
+        MessageWithLocations messageWithLocations = uriLocationTool.decorateWithLocators(messageMetaData, uriInfo,this.getClass());
 
         //Creates the response
         SingleInboxResponse messageResponse = new SingleInboxResponse(messageWithLocations);
@@ -164,7 +168,4 @@ public class InboxResource extends AbstractMessageResource {
         return SrResponse.ok().entity(entity).build();
 
     }
-
-
-
 }

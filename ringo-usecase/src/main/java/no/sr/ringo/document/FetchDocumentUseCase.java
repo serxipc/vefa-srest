@@ -25,7 +25,7 @@ public class FetchDocumentUseCase {
         this.peppolMessageRepository = peppolMessageRepository;
     }
 
-    public FetchDocumentResult find(Account account, MessageNumber msgNo) {
+    public FetchDocumentResult findDocument(Account account, MessageNumber msgNo) {
         
         // Searches for the meta data
         final MessageMetaData messageMetaData = peppolMessageRepository.findMessageByMessageNo(account, msgNo);
@@ -34,7 +34,7 @@ public class FetchDocumentUseCase {
         if (messageMetaData.getPayloadUri().getScheme().startsWith("file")) {
             return documentRepository.getPeppolDocument(account, msgNo);
         } else {
-
+            // Otherwise, returns the URI of the payload, leaving it to the caller to deal with it.
             return new PeppolDocumentReference(messageMetaData.getPayloadUri());
         }
     }

@@ -8,6 +8,8 @@ import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.message.*;
 import no.sr.ringo.response.MessagesQueryResponse;
 import no.sr.ringo.usecase.ReceiveMessageFromClientUseCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -23,7 +25,9 @@ import javax.ws.rs.core.UriInfo;
 @Path("/messages")
 @ResourceFilters(ClientVersionNumberResponseFilter.class)
 @RequestScoped
-public class MessagesResource extends AbstractMessageResource {
+public class MessagesResource extends AbstractResource {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(MessagesResource.class);
 
     final PeppolMessageRepository peppolMessageRepository;
     private final FetchDocumentUseCase fetchDocumentUseCase;
@@ -32,8 +36,13 @@ public class MessagesResource extends AbstractMessageResource {
     final FetchMessagesUseCase fetchMessagesUseCase;
 
     @Inject
-    public MessagesResource(ReceiveMessageFromClientUseCase receiveMessageFromClientUseCase, FetchMessagesUseCase fetchMessagesUseCase, PeppolMessageRepository peppolMessageRepository,FetchDocumentUseCase fetchDocumentUseCase, Account account) {
-        super();
+    public MessagesResource(ReceiveMessageFromClientUseCase receiveMessageFromClientUseCase,
+                            FetchMessagesUseCase fetchMessagesUseCase,
+                            PeppolMessageRepository peppolMessageRepository,
+                            FetchDocumentUseCase fetchDocumentUseCase,
+                            Account account,
+                            UriLocationTool uriLocationTool) {
+        super(uriLocationTool);
         this.receiveMessageFromClientUseCase = receiveMessageFromClientUseCase;
         this.fetchMessagesUseCase = fetchMessagesUseCase;
         this.peppolMessageRepository = peppolMessageRepository;
@@ -49,7 +58,7 @@ public class MessagesResource extends AbstractMessageResource {
     @Path("/")
     public Response getMessages(@Context UriInfo uriInfo, @QueryParam("sent") String sent, @QueryParam("sender") String sender, @QueryParam("receiver") String receiver, @QueryParam("direction") String direction, @QueryParam("index") String index) {
 
-            MessagesQueryResponse messagesQueryResponse = fetchMessagesUseCase.init(this, uriInfo)
+            MessagesQueryResponse messagesQueryResponse = fetchMessagesUseCase.init(MessagesResource.class, uriInfo)
                     .messagesFor(account.getAccountId())
                     .getMessages(new SearchParams(direction, sender, receiver, sent, index));
             String entity = messagesQueryResponse.asXml();
@@ -80,7 +89,7 @@ public class MessagesResource extends AbstractMessageResource {
 
         MessageMetaData messageMetaDataWithLocator = peppolMessageRepository.findMessageByMessageNo(account, msgNo);
 
-        return createSingleMessageResponse(uriInfo, messageMetaDataWithLocator);
+        return createSingleMessageResponse(uriInfo, messageMetaDataWithLocator,this.getClass());
 
     }
 
@@ -102,6 +111,8 @@ public class MessagesResource extends AbstractMessageResource {
             msgNo = parseMsgNo(msgNoString);
         }
 
+        LOGGER.debug("Retrieving document " + msgNo + " for account " + account);
+        
         return fetchPayloadAndProduceResponse(fetchDocumentUseCase, account, msgNo);
     }
 

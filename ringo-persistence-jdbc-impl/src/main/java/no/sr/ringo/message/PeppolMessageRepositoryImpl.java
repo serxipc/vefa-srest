@@ -120,7 +120,9 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     @Override
     public MessageMetaData findMessageByMessageNo(Account account, MessageNumber messageNo) throws PeppolMessageNotFoundException {
         try {
+
             SqlHelper sql = SqlHelper.create(getDbmsPlatform()).findMessageByMessageNoAndAccountId();
+            
             PreparedStatement ps = sql.prepareStatement(jdbcTxManager.getConnection());
             ps.setLong(1, messageNo.toLong());
             ps.setInt(2, account.getAccountId().toInteger());

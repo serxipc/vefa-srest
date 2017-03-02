@@ -5,68 +5,27 @@ import no.sr.ringo.account.Account;
 import no.sr.ringo.document.FetchDocumentResult;
 import no.sr.ringo.document.FetchDocumentResultVisitorImpl;
 import no.sr.ringo.document.FetchDocumentUseCase;
-import no.sr.ringo.message.*;
+import no.sr.ringo.message.MessageMetaData;
+import no.sr.ringo.message.MessageNumber;
+import no.sr.ringo.message.MessageWithLocations;
 import no.sr.ringo.response.SingleMessagesResponse;
 import org.apache.commons.lang.StringUtils;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 
 /**
+ * Abstract REST resource.
+ *
  * @author Steinar Overbeck Cook steinar@sendregning.no
  */
-public abstract class AbstractMessageResource implements UriLocationAware {
+public abstract class AbstractResource  {
 
-    AbstractMessageResource() {
-    }
+    protected final UriLocationTool uriLocationTool;
 
-    @Override
-    public MessageWithLocations decorateWithLocators(MessageMetaData messageMetaData, UriInfo uriInfo) {
-
-        // Creates the link for viewing this message again http....../inbox|messages|outbox/{msgno}
-        URI self = computeUriForSelf(uriInfo, messageMetaData.getMsgNo());
-
-        // Creates the link for downloading the peppol message http....../inbox|messages|outbox/{msgno}/xml-document
-        URI documentUri = computeXmlDocumentUri(uriInfo, messageMetaData.getMsgNo());
-
-        //Creates the object which contains the links to self and the peppol document
-        return new MessageWithLocationsImpl(messageMetaData,self,documentUri);
-    }
-
-    @Override
-    public URI linkToResource(UriInfo uriInfo, SearchParams searchParams, int pageIndex) {
-        // https....../XXXbox
-        UriBuilder uriBuilder = getUriBuilderForResource(uriInfo, this.getClass());
-
-        // https....../XXXbox?
-        final UriBuilder resourceUriBuilder = uriBuilder.clone().queryParam("index", pageIndex);
-        searchParams.appendTo(resourceUriBuilder);
-
-        return resourceUriBuilder.build();
-    }
-
-    protected URI computeXmlDocumentUri(UriInfo uriInfo, MessageNumber msgNo) {
-        // https....../messages
-        UriBuilder uriBuilder = getUriBuilderForResource(uriInfo, MessagesResource.class);
-
-        // https....../messages/{msgno}/xml-document
-        URI documentUri = uriBuilder.clone().path("/{msgno}/xml-document").build(msgNo.toString());
-
-        return documentUri;
-    }
-
-    protected URI computeUriForSelf(UriInfo uriInfo, MessageNumber msgNo) {
-
-        // https....../outbox
-        UriBuilder uriBuilder = getUriBuilderForResource(uriInfo, this.getClass());
-
-        // https....../outbox/{msgno}
-        String messageNumberAsString = msgNo.toString();
-        URI self = uriBuilder.clone().path("/{msgno}").build(messageNumberAsString);
-
-        return self;
+    AbstractResource(UriLocationTool uriLocationTool) {
+        this.uriLocationTool = uriLocationTool;
     }
 
     /**
@@ -79,10 +38,10 @@ public abstract class AbstractMessageResource implements UriLocationAware {
      * @param messageMetaData the message containing the header and the xml document message.
      * @return a JAX-RS response holding the status code, 200 OK, and the peppol message as a xml entity.
      */
-    protected Response createSingleMessageResponse(UriInfo uriInfo, MessageMetaData messageMetaData) {
+    protected Response createSingleMessageResponse(UriInfo uriInfo, MessageMetaData messageMetaData,Class<? extends AbstractResource> resourceClass) {
 
         // Messages with locators.
-        MessageWithLocations messageWithLocations = decorateWithLocators(messageMetaData,uriInfo);
+        MessageWithLocations messageWithLocations = uriLocationTool.decorateWithLocators(messageMetaData,uriInfo, resourceClass);
 
         // Creates the response
         SingleMessagesResponse messageResponse = new SingleMessagesResponse(messageWithLocations);
@@ -95,7 +54,7 @@ public abstract class AbstractMessageResource implements UriLocationAware {
     }
 
     /**
-     * Tries to parse pageIndexinto integer
+     * Tries to parse pageIndex into integer
      * @param pageIndex
      * @return parsed index or 1 if parameter not specified
      */
@@ -126,7 +85,7 @@ public abstract class AbstractMessageResource implements UriLocationAware {
         }
     }
 
-    private UriBuilder getUriBuilderForResource(UriInfo uriInfo, Class<? extends AbstractMessageResource> resource) {
+    private UriBuilder getUriBuilderForResource(UriInfo uriInfo, Class<? extends AbstractResource> resource) {
         return uriInfo.getBaseUriBuilder()  // Gets the base URI of the application in the form of a UriBuilder
                 .path(resource)   // Appends the path from @Path-annotated class to the existing path
                 .scheme("https"); // Must use https (we are always behind a firewall)
@@ -136,9 +95,10 @@ public abstract class AbstractMessageResource implements UriLocationAware {
         return StringUtils.isBlank(value);
     }
 
-    Response fetchPayloadAndProduceResponse(FetchDocumentUseCase fetchDocumentUseCase, Account account, MessageNumber msgNo) {
+
+    static Response fetchPayloadAndProduceResponse(FetchDocumentUseCase fetchDocumentUseCase, Account account, MessageNumber msgNo) {
         // Retrieves either the document itself or a reference to where it is located
-        FetchDocumentResult fetchDocumentResult = fetchDocumentUseCase.find(account, msgNo);
+        FetchDocumentResult fetchDocumentResult = fetchDocumentUseCase.findDocument(account, msgNo);
 
         // Uses the visitor pattern to produce a Response, which will either contain
         // the xml text or an http 303 (see other) response.

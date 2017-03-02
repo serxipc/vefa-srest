@@ -3,10 +3,12 @@ package no.sr.ringo.message;
 import no.difi.oxalis.test.identifier.WellKnownParticipant;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
-import no.sr.ringo.resource.UriLocationAware;
+import no.sr.ringo.resource.MessagesResource;
+import no.sr.ringo.resource.UriLocationTool;
 import no.sr.ringo.response.MessagesQueryResponse;
 import no.sr.ringo.response.Navigation;
 import no.sr.ringo.transport.TransferDirection;
+import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -27,7 +29,7 @@ import static org.testng.Assert.*;
 public class FetchMessagesUseCaseTest {
     private PeppolMessageRepository mockPeppolMessageRepository;
     private UriInfo mockUriInfo;
-    private UriLocationAware mockLocationAware;
+    private UriLocationTool mockLocationAware;
     private URI OK_URI;
     private MessagesDataProvider mockMessagesDataProvider;
     private FetchMessagesUseCase useCase;
@@ -37,13 +39,14 @@ public class FetchMessagesUseCaseTest {
     public void setUp() throws Exception {
         mockPeppolMessageRepository = EasyMock.createStrictMock(PeppolMessageRepository.class);
         mockUriInfo = EasyMock.createStrictMock(UriInfo.class);
-        mockLocationAware = EasyMock.createStrictMock(UriLocationAware.class);
+        mockLocationAware = EasyMock.createStrictMock(UriLocationTool.class);
         mockMessagesDataProvider = EasyMock.createStrictMock(MessagesDataProvider.class);
         OK_URI = new URI("http://test");
         //set up the usecase with mocks
-        useCase = new FetchMessagesUseCase(mockPeppolMessageRepository);
+        useCase = new FetchMessagesUseCase(mockPeppolMessageRepository, mockLocationAware);
+        useCase.init(MessagesResource.class, null);
+        
         useCase.messagesDataProvider = mockMessagesDataProvider;
-        useCase.locationAware = mockLocationAware;
         account = account();
     }
 
@@ -53,13 +56,13 @@ public class FetchMessagesUseCaseTest {
 
         expect(mockMessagesDataProvider.getCount(searchParams)).andReturn(0);
 
-        replay(mockLocationAware, mockMessagesDataProvider);
+        replay( mockMessagesDataProvider);
 
         final Navigation navigation = useCase.getNavigation(searchParams);
         assertNull(navigation.getNext());
         assertNull(navigation.getPrevious());
 
-        verify(mockLocationAware, mockMessagesDataProvider);
+        verify(mockMessagesDataProvider);
     }
 
     @Test
@@ -67,9 +70,12 @@ public class FetchMessagesUseCaseTest {
         final SearchParams searchParams = new SearchParams("IN",WellKnownParticipant.DIFI_TEST.getIdentifier(),WellKnownParticipant.DIFI_TEST.getIdentifier(),"",null);
 
         expect(mockMessagesDataProvider.getCount(searchParams)).andReturn(26);
-        expect(mockLocationAware.linkToResource(null, searchParams, 2)).andReturn(OK_URI);
 
-        replay(mockLocationAware, mockMessagesDataProvider);
+        Capture<Class<MessagesResource>> classCapture = Capture.newInstance();
+        expect(mockLocationAware.linkToResource(null,
+                (searchParams), (2),MessagesResource.class)).andReturn(OK_URI);
+
+        replay(mockLocationAware, mockMessagesDataProvider, mockUriInfo);
 
         final Navigation navigation = useCase.getNavigation(searchParams);
 
@@ -84,15 +90,15 @@ public class FetchMessagesUseCaseTest {
         final SearchParams searchParams = new SearchParams("IN",WellKnownParticipant.DIFI_TEST.getIdentifier(),WellKnownParticipant.DIFI_TEST.getIdentifier(),"","2");
 
         expect(mockMessagesDataProvider.getCount(searchParams)).andReturn(48);
-        expect(mockLocationAware.linkToResource(null, searchParams, 1)).andReturn(OK_URI);
+        expect(mockLocationAware.linkToResource(null, searchParams, 1, MessagesResource.class)).andReturn(OK_URI);
 
-        replay(mockLocationAware,mockMessagesDataProvider);
+        replay(mockMessagesDataProvider, mockLocationAware);
 
         final Navigation navigation = useCase.getNavigation(searchParams);
         assertNull(navigation.getNext());
         assertEquals(navigation.getPrevious(),OK_URI);
 
-        verify(mockLocationAware, mockMessagesDataProvider);
+        verify( mockMessagesDataProvider, mockLocationAware);
     }
 
     @Test
@@ -100,15 +106,15 @@ public class FetchMessagesUseCaseTest {
         final SearchParams searchParams = new SearchParams("IN",WellKnownParticipant.DIFI_TEST.getIdentifier(),WellKnownParticipant.DIFI_TEST.getIdentifier(),"","2");
 
         expect(mockMessagesDataProvider.getCount(searchParams)).andReturn(50);
-        expect(mockLocationAware.linkToResource(null, searchParams, 1)).andReturn(OK_URI);
+        expect(mockLocationAware.linkToResource(null, searchParams, 1, MessagesResource.class)).andReturn(OK_URI);
 
-        replay(mockLocationAware,mockMessagesDataProvider);
+        replay(mockMessagesDataProvider, mockLocationAware);
 
         final Navigation navigation = useCase.getNavigation(searchParams);
         assertNull(navigation.getNext());
         assertEquals(navigation.getPrevious(),OK_URI);
 
-        verify(mockLocationAware, mockMessagesDataProvider);
+        verify( mockMessagesDataProvider, mockLocationAware);
     }
 
     @Test

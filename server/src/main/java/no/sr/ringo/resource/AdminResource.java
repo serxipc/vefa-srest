@@ -29,7 +29,7 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path("/admin")
 @RequestScoped
-public class AdminResource extends AbstractMessageResource  {
+public class AdminResource extends AbstractResource {
 
     private static Logger logger = LoggerFactory.getLogger(AdminResource.class);
 
@@ -41,8 +41,9 @@ public class AdminResource extends AbstractMessageResource  {
     @Inject
     public AdminResource(FetchMessagesUseCase fetchMessagesUseCase, Account account,
                          PeppolMessageRepository peppolMessageRepository,
-                         SendReportUseCase sendReportUseCase) {
-        super();
+                         SendReportUseCase sendReportUseCase,
+                         UriLocationTool uriLocationTool) {
+        super(uriLocationTool);
         this.fetchMessagesUseCase = fetchMessagesUseCase;
         this.account = account;
         this.peppolMessageRepository = peppolMessageRepository;
@@ -57,7 +58,7 @@ public class AdminResource extends AbstractMessageResource  {
     @Path("/status")
     public Response getStatus(@Context UriInfo uriInfo, @Context ServletContext servletContext) {
 
-        MessagesQueryResponse messagesQueryResponse = fetchMessagesUseCase.init(this, uriInfo).messagesWithoutAccountId().getMessages();
+        MessagesQueryResponse messagesQueryResponse = fetchMessagesUseCase.init(this.getClass(), uriInfo).messagesWithoutAccountId().getMessages();
 
         String entity = String.format("<status>%s</status>", messagesQueryResponse.asXml());
         return SrResponse.ok().entity(entity).build();

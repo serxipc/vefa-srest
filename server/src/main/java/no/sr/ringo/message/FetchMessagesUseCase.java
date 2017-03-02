@@ -3,7 +3,8 @@ package no.sr.ringo.message;
 import com.google.inject.Inject;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountId;
-import no.sr.ringo.resource.UriLocationAware;
+import no.sr.ringo.resource.AbstractResource;
+import no.sr.ringo.resource.UriLocationTool;
 import no.sr.ringo.response.InboxQueryResponse;
 import no.sr.ringo.response.MessagesQueryResponse;
 import no.sr.ringo.response.Navigation;
@@ -30,26 +31,27 @@ import java.util.List;
 public class FetchMessagesUseCase {
 
     private final PeppolMessageRepository peppolMessageRepository;
+    private final UriLocationTool uriLocationTool;
 
     MessagesDataProvider messagesDataProvider;
 
-    UriInfo uriInfo;
-    UriLocationAware locationAware;
+    private Class<? extends AbstractResource> resourceClass;
+    private UriInfo uriInfo;
 
     @Inject
-    FetchMessagesUseCase(PeppolMessageRepository peppolMessageRepository) {
+    FetchMessagesUseCase(PeppolMessageRepository peppolMessageRepository, UriLocationTool uriLocationTool) {
         this.peppolMessageRepository = peppolMessageRepository;
+        this.uriLocationTool = uriLocationTool;
     }
 
     /**
      * decorates the messages with the self and download document uris
      * @param uriInfo
-     * @param locationAware
      * @return
      */
-    public FetchMessagesUseCase init(UriLocationAware locationAware, UriInfo uriInfo) {
+    public FetchMessagesUseCase init(Class<? extends AbstractResource> resourceClass, UriInfo uriInfo) {
+        this.resourceClass = resourceClass;
         this.uriInfo = uriInfo;
-        this.locationAware = locationAware;
         return this;
     }
 
@@ -69,7 +71,8 @@ public class FetchMessagesUseCase {
 
         // add navigation links if possible
         if (searchParams != null) {
-            messagesQueryResponse.setNavigation(getNavigation(searchParams));
+            final Navigation navigation = getNavigation(searchParams);
+            messagesQueryResponse.setNavigation(navigation);
         }
 
         return messagesQueryResponse;
@@ -207,7 +210,7 @@ public class FetchMessagesUseCase {
         List<MessageWithLocations> messageWithLocationsList = new ArrayList<MessageWithLocations>();
         for (MessageMetaData message : messages) {
             //add the uris for self and download
-            messageWithLocationsList.add(locationAware.decorateWithLocators(message, uriInfo));
+            messageWithLocationsList.add(uriLocationTool.decorateWithLocators(message, uriInfo,resourceClass));
         }
         return messageWithLocationsList;
 
@@ -222,7 +225,7 @@ public class FetchMessagesUseCase {
     protected Navigation getNavigation(SearchParams searchParams) {
         final int messagesCount = messagesDataProvider.getCount(searchParams);
         final int currentPageIndex = searchParams.getPageIndex();
-        //find the maximum number of pages for the result set of this size
+        //findDocument the maximum number of pages for the result set of this size
         // e.g. ceil(51 - 1 / 25) + 1 ==> 3 pages
         // e.g. ceil(50 - 1 / 25) + 1 ==> 2 pages
         // e.g. ceil(25 - 1 / 25) + 1 ==> 1 pages
@@ -236,14 +239,14 @@ public class FetchMessagesUseCase {
             //if we are on a page which actually doesnt exist the previous should point to the last page.
             //else we should show the current page - 1
             int previousPageIndex = currentPageIndex > maxPageTotal ? maxPageTotal : currentPageIndex -1;
-            previous = locationAware.linkToResource(uriInfo, searchParams, previousPageIndex);
+            previous = uriLocationTool.linkToResource(uriInfo, searchParams, previousPageIndex, resourceClass);
         }
 
         //if we are on page < MAX we can have a next link
         if (currentPageIndex < maxPageTotal) {
             //if the current page index is somehow negative set it to the first page otherwise increment the page index
             int nextPageIndex = currentPageIndex < 0 ? 1 : currentPageIndex + 1;
-            next = locationAware.linkToResource(uriInfo, searchParams, nextPageIndex);
+            next = uriLocationTool.linkToResource(uriInfo, searchParams, nextPageIndex,resourceClass);
         }
 
         return new Navigation(previous, next);

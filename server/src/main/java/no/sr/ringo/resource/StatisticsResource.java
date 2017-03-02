@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response;
  */
 @Path("/statistics")
 @RequestScoped
-public class StatisticsResource extends AbstractMessageResource {
+public class StatisticsResource extends AbstractResource {
 
     private static Logger logger = LoggerFactory.getLogger(StatisticsResource.class);
 
@@ -28,8 +28,8 @@ public class StatisticsResource extends AbstractMessageResource {
     private final PeppolMessageRepository peppolMessageRepository;
 
     @Inject
-    public StatisticsResource(Account account, PeppolMessageRepository peppolMessageRepository) {
-        super();
+    public StatisticsResource(Account account, PeppolMessageRepository peppolMessageRepository, UriLocationTool uriLocationTool) {
+        super(uriLocationTool);
         this.account = account;
         this.peppolMessageRepository = peppolMessageRepository;
     }

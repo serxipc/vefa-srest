@@ -7,6 +7,8 @@ import no.sr.ringo.peppol.PeppolDocumentTypeId;
 import no.sr.ringo.persistence.guice.jdbc.JdbcTxManager;
 import no.sr.ringo.persistence.guice.jdbc.Repository;
 import no.sr.ringo.utils.SbdhUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -26,6 +28,7 @@ import static java.util.stream.Collectors.joining;
 @Repository
 public class DocumentRepositoryImpl implements DocumentRepository {
 
+    public static final Logger LOGGER = LoggerFactory.getLogger(DocumentRepositoryImpl.class);
     private final PeppolDocumentFactory documentFactory;
     private final JdbcTxManager jdbcTxManager;
 
@@ -101,7 +104,10 @@ public class DocumentRepositoryImpl implements DocumentRepository {
     private PreparedStatement prepareSelect(Account account, MessageNumber msgNo, Connection con) throws SQLException {
         // dumpDbmsMetaData(con);
 
-        PreparedStatement ps = con.prepareStatement("select document_id, payload_url from message where msg_no=? and account_id = ?");
+        final String sql = "select document_id, payload_url from message where msg_no=? and account_id = ?";
+        LOGGER.debug("Executing {} with params {} and {}" , sql, msgNo.toInt(), account.getAccountId().toInteger());
+
+        PreparedStatement ps = con.prepareStatement(sql);
         ps.setInt(1, msgNo.toInt());
         ps.setInt(2, account.getAccountId().toInteger());
         return ps;
