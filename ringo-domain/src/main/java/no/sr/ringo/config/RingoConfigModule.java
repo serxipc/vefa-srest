@@ -12,6 +12,8 @@ import javax.inject.Singleton;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static no.sr.ringo.config.RingoConfigProperty.HOME_DIR_PATH;
+
 /**
  * Loads the configuration and provides bindings for certain important stuff.
  *
@@ -38,7 +40,7 @@ public class RingoConfigModule extends AbstractModule{
      */
     @Provides
     @Singleton
-    @Named("ringo.home")
+    @Named(HOME_DIR_PATH)
     protected Path provideRingoHomeDir() {
         return RingoHomeDirectory.locateRingoHomeDir();
     }
@@ -61,6 +63,7 @@ public class RingoConfigModule extends AbstractModule{
         Config referenceConfig = ConfigFactory.defaultReference();
 
         ConfigFactory.invalidateCaches();   // Important for unit tests etc.
+
         return ConfigFactory.systemProperties()
                 .withFallback(ringoConf)
                 .withFallback(referenceConfig)
@@ -68,7 +71,7 @@ public class RingoConfigModule extends AbstractModule{
     }
 
     /**
-     * Intermediate Config used to of the final, sandwiched config.
+     * Intermediate Config used to load the final, sandwiched config.
      * Loads the default "ringo.conf" file from the RINGO_HOME directory.
      *
      * @param homePath the RINGO_HOME path
@@ -77,7 +80,7 @@ public class RingoConfigModule extends AbstractModule{
     @Provides
     @Singleton
     @Named("file")
-    protected Config loadConfigurationFile(@Named("ringo.home") Path homePath) {
+    protected Config loadConfigurationFile(@Named(HOME_DIR_PATH) Path homePath) {
         Path configPath = homePath.resolve("ringo.conf");
         LOGGER.info("Configuration file: {}", configPath);
 

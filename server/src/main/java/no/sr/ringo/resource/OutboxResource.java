@@ -12,6 +12,7 @@ import no.sr.ringo.response.OutboxPostResponse;
 import no.sr.ringo.response.OutboxQueryResponse;
 import no.sr.ringo.response.SingleOutboxResponse;
 import no.sr.ringo.usecase.ReceiveMessageFromClientUseCase;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,19 +41,22 @@ public class OutboxResource extends AbstractResource {
     private final ReceiveMessageFromClientUseCase receiveMessageFromClientUseCase;
     private final FetchMessagesUseCase fetchMessagesUseCase;
     private final FetchDocumentUseCase fetchDocumentUseCase;
+    private final PayloadResponseHelper payloadResponseHelper;
 
     @Inject
     OutboxResource(ReceiveMessageFromClientUseCase receiveMessageFromClientUseCase,
                    Account account,
                    FetchMessagesUseCase fetchMessagesUseCase,
                    FetchDocumentUseCase fetchDocumentUseCase,
-                   UriLocationTool uriLocationTool) {
+                   UriLocationTool uriLocationTool,
+                   PayloadResponseHelper payloadResponseHelper) {
         super(uriLocationTool);
         
         this.receiveMessageFromClientUseCase = receiveMessageFromClientUseCase;
         this.account = account;
         this.fetchMessagesUseCase = fetchMessagesUseCase;
         this.fetchDocumentUseCase = fetchDocumentUseCase;
+        this.payloadResponseHelper = payloadResponseHelper;
     }
 
 
@@ -90,7 +94,7 @@ public class OutboxResource extends AbstractResource {
 
         MessageNumber msgNo = null;
 
-        if (isEmpty(msgNoString)) {
+        if (StringUtils.isBlank(msgNoString)) {
             return SrResponse.status(Response.Status.BAD_REQUEST, "No message number given");
         } else {
             msgNo = parseMsgNo(msgNoString);
@@ -113,13 +117,13 @@ public class OutboxResource extends AbstractResource {
 
         MessageNumber msgNo = null;
 
-        if (isEmpty(msgNoString)) {
+        if (StringUtils.isBlank(msgNoString)) {
             return SrResponse.status(Response.Status.BAD_REQUEST, "No message number given");
         } else {
             msgNo = parseMsgNo(msgNoString);
         }
 
-        return super.fetchPayloadAndProduceResponse(fetchDocumentUseCase, account, msgNo);
+        return payloadResponseHelper.fetchPayloadAndProduceResponse(fetchDocumentUseCase, account, msgNo);
     }
 
     /**

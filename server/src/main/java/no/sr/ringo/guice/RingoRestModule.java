@@ -1,9 +1,12 @@
 package no.sr.ringo.guice;
 
+import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import no.sr.ringo.document.FetchDocumentResultVisitor;
+import no.sr.ringo.document.FetchDocumentResultVisitorImpl;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.message.FetchMessagesUseCase;
 import no.sr.ringo.peppol.DummySender;
@@ -11,6 +14,7 @@ import no.sr.ringo.peppol.PeppolDocumentSender;
 import no.sr.ringo.resource.*;
 import no.sr.ringo.usecase.ReceiveMessageFromClientUseCase;
 
+import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +49,7 @@ public class RingoRestModule extends JerseyServletModule {
         bindExceptionHandlers();
 
         // Serves everything under inbox, outbox, messages, events etc using (JAX-RS)
-        serveRegex("(^\\/(?:register|directory|inbox|outbox|messages|admin|statistics|notify)(?!.*\\.ico.*).*$)").with(GuiceContainer.class, initalisationParams);
+        serveRegex("(^\\/(?:register|inbox|outbox|messages|admin|statistics|notify)(?!.*\\.ico.*).*$)").with(GuiceContainer.class, initalisationParams);
 
     }
 
@@ -72,6 +76,11 @@ public class RingoRestModule extends JerseyServletModule {
     private void bindJerseyResources() {
 //        bind(PayloadUriRewriter.class).to(DefaultPayloadUriRewriter.class);     // Rewrites the payload URI
         bind(UriLocationTool.class).to(UriLocationToolImpl.class);
+
+        bind(new TypeLiteral<FetchDocumentResultVisitor<Response>>(){}).to(FetchDocumentResultVisitorImpl.class);
+        
+        bind(PayloadResponseHelper.class);
+
         bind(OutboxResource.class);
         bind(InboxResource.class);
         bind(MessagesResource.class);

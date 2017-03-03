@@ -21,13 +21,17 @@ import java.util.List;
 public final class RingoConfigProperty {
 
 
+    public static final String HOME_DIR_PATH = "ringo.home";
     public static final String PAYLOAD_BASE_PATH = "ringo.payload.basedir";
+    public static final String PLUGIN_PATH = "ringo.plugin.path";
+
     public static final String JDBC_CONNECTION_URI= "ringo.jdbc.connection.uri";
     public static final String JDBC_DRIVER_CLASS = "ringo.jdbc.driver.class";
     public static final String JDBC_CLASS_PATH = "ringo.jdbc.class.path";
     public static final String JDBC_USER = "ringo.jdbc.user";
     public static final String JDBC_PASSWORD = "ringo.jdbc.password";
     public static final String JDBC_VALIDATION_QUERY = "ringo.jdbc.validation.query";
+    public static final String BLOB_SERVICE_URI_REWRITER = "ringo.blob.uri.handler";
 
     private RingoConfigProperty() { // restricts instantiation
     }

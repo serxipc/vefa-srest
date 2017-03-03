@@ -32,6 +32,7 @@ public class MessagesResource extends AbstractResource {
     final PeppolMessageRepository peppolMessageRepository;
     private final FetchDocumentUseCase fetchDocumentUseCase;
     final Account account;
+    private final PayloadResponseHelper payloadResponseHelper;
     final ReceiveMessageFromClientUseCase receiveMessageFromClientUseCase;
     final FetchMessagesUseCase fetchMessagesUseCase;
 
@@ -41,13 +42,15 @@ public class MessagesResource extends AbstractResource {
                             PeppolMessageRepository peppolMessageRepository,
                             FetchDocumentUseCase fetchDocumentUseCase,
                             Account account,
-                            UriLocationTool uriLocationTool) {
+                            UriLocationTool uriLocationTool,
+                            PayloadResponseHelper payloadResponseHelper) {
         super(uriLocationTool);
         this.receiveMessageFromClientUseCase = receiveMessageFromClientUseCase;
         this.fetchMessagesUseCase = fetchMessagesUseCase;
         this.peppolMessageRepository = peppolMessageRepository;
         this.fetchDocumentUseCase = fetchDocumentUseCase;
         this.account = account;
+        this.payloadResponseHelper = payloadResponseHelper;
     }
 
     /**
@@ -112,8 +115,10 @@ public class MessagesResource extends AbstractResource {
         }
 
         LOGGER.debug("Retrieving document " + msgNo + " for account " + account);
-        
-        return fetchPayloadAndProduceResponse(fetchDocumentUseCase, account, msgNo);
+
+        // The actual retrieval of the payload is delegated as the payload URI might need to be rewritten and
+        // the caller redirected.
+        return payloadResponseHelper.fetchPayloadAndProduceResponse(fetchDocumentUseCase, account, msgNo);
     }
 
 

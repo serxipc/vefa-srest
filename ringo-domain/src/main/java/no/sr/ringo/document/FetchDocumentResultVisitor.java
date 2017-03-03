@@ -7,7 +7,7 @@ package no.sr.ringo.document;
  *         Date: 28.02.2017
  *         Time: 18.05
  */
-public interface FetcdocumentResultVisitor<T> {
+public interface FetchDocumentResultVisitor<T> {
 
     /**
      * Visits a {@link PeppolDocument}, i.e. an XML content and produces some result (typically a string
@@ -19,13 +19,13 @@ public interface FetcdocumentResultVisitor<T> {
     T visit(PeppolDocument peppolDocument);
 
     /**
-     * Visits a {@link PeppolDocumentReference}, i.e. an object holding a URI to the PEPPOL payload
+     * Visits a {@link PayloadReference}, i.e. an object holding a URI to the PEPPOL payload
      * containing the XML text
      *
-     * @param peppolDocumentReference the reference to visit
+     * @param payloadReference the reference to visit
      * @return an instance of whatever result the visitor implementations chooses.
      */
 
-    T visit(PeppolDocumentReference peppolDocumentReference);
+    T visit(PayloadReference payloadReference);
 
 }

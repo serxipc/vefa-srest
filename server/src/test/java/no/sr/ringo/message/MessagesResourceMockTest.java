@@ -6,8 +6,10 @@ import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountId;
 import no.sr.ringo.document.DefaultPeppolDocument;
+import no.sr.ringo.document.FetchDocumentResultVisitorImpl;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.resource.MessagesResource;
+import no.sr.ringo.resource.PayloadResponseHelper;
 import no.sr.ringo.resource.UriLocationToolImpl;
 import no.sr.ringo.usecase.ReceiveMessageFromClientUseCase;
 import org.testng.annotations.BeforeMethod;
@@ -48,7 +50,12 @@ public class MessagesResourceMockTest {
         fetchMessagesUseCase = new FetchMessagesUseCase(mockPeppolMessageRepository, new UriLocationToolImpl());
         account = ObjectMother.getTestAccount();
 
-        messagesResource = new MessagesResource(mockReceiveMessageFromClientUseCase, fetchMessagesUseCase, mockPeppolMessageRepository, mockFetchDocumentUseCase, account, new UriLocationToolImpl());
+        messagesResource = new MessagesResource(mockReceiveMessageFromClientUseCase, fetchMessagesUseCase,
+                mockPeppolMessageRepository,
+                mockFetchDocumentUseCase,
+                account,
+                new UriLocationToolImpl(),
+                new PayloadResponseHelper(new FetchDocumentResultVisitorImpl(new DefaultPayloadUriRewriter())));
     }
 
 

@@ -14,8 +14,8 @@ public class EhfInvoice implements PeppolDocument {
     }
 
     @Override
-    public <T> T accept(FetcdocumentResultVisitor<T> fetcdocumentResultVisitor) {
-        return fetcdocumentResultVisitor.visit(this);
+    public <T> T accept(FetchDocumentResultVisitor<T> fetchDocumentResultVisitor) {
+        return fetchDocumentResultVisitor.visit(this);
     }
 
 

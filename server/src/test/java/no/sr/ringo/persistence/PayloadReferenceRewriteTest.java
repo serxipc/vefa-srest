@@ -11,7 +11,7 @@ import java.net.URI;
  *         Date: 19.02.2017
  *         Time: 15.58
  */
-public class PayloadUriRewriteTest {
+public class PayloadReferenceRewriteTest {
 
 
     @Test

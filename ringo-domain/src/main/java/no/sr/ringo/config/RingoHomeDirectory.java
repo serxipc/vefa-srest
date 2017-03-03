@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 public class RingoHomeDirectory {
 
     public static final Logger log = LoggerFactory.getLogger(RingoHomeDirectory.class);
-    public static final String RINGO_HOME_PROPERTY_NAME = "ringo.home";
+    public static final String RINGO_HOME_PROPERTY_NAME = RingoConfigProperty.HOME_DIR_PATH;
     public static final String RINGO_HOME_ENV_NAME = "RINGO_HOME";
     public static final String RELATIVE_DIR_NAME = ".ringo";
 
@@ -75,7 +75,7 @@ public class RingoHomeDirectory {
     protected static Path locateRingoDirFromJavaSystemProperty() {
         String ringoHome = System.getProperty(RINGO_HOME_PROPERTY_NAME);
         if (ringoHome != null && ringoHome.trim().length() > 0) {
-            log.info("Using RINGO_HOME specified with Java System property -D" + RINGO_HOME_PROPERTY_NAME + ": " + ringoHome);
+            log.info("Using RINGO_HOME specified with Java System property -D" + RINGO_HOME_PROPERTY_NAME + "=" + ringoHome);
             return Paths.get(ringoHome);
         } else
             return null;

@@ -3,6 +3,7 @@ package no.sr.ringo.resource;
 import com.sun.jersey.api.uri.UriBuilderImpl;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.document.DefaultPeppolDocument;
+import no.sr.ringo.document.FetchDocumentResultVisitorImpl;
 import no.sr.ringo.document.FetchDocumentUseCase;
 import no.sr.ringo.document.PeppolDocument;
 import no.sr.ringo.message.*;
@@ -44,7 +45,8 @@ public class OutboxResourceTest {
                 mockRingoAccount,
                 mockFetchMessageUseCase,
                 mockFetchDocumentUseCase,
-                new UriLocationToolImpl()
+                new UriLocationToolImpl(),
+                new PayloadResponseHelper(new FetchDocumentResultVisitorImpl(new DefaultPayloadUriRewriter()))
                 );
     }
 

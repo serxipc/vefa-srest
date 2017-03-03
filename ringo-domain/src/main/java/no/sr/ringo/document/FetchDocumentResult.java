@@ -7,5 +7,5 @@ package no.sr.ringo.document;
  */
 public interface FetchDocumentResult {
 
-    <T> T accept(FetcdocumentResultVisitor<T> frv);
+    <T> T accept(FetchDocumentResultVisitor<T> frv);
 }

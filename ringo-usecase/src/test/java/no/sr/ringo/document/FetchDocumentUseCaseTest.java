@@ -94,7 +94,7 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
         // Creates the sample data to be returned etc.
         MessageNumber msgNo = MessageNumber.of("10");
         final MessageMetaDataImpl messageMetaData = PersistenceObjectMother.sampleInboundTransmissionMetaData(msgNo, account.getAccountId());
-        // Ensures that we should expect a PeppolDocumentReference when invoking the use case
+        // Ensures that we should expect a PayloadReference when invoking the use case
         messageMetaData.setPayloadUri(URI.create("https://cloudservice/container/blob/document.xml"));
 
         // First we expect an attempt to findDocument the meta data
@@ -104,7 +104,7 @@ public class FetchDocumentUseCaseTest extends PeppolDocumentTest {
 
         final FetchDocumentResult fetchDocumentResult = fetchDocumentUseCase.findDocument(account, msgNo);
 
-        assertTrue(fetchDocumentResult instanceof PeppolDocumentReference);
+        assertTrue(fetchDocumentResult instanceof PayloadReference);
     }
 
 

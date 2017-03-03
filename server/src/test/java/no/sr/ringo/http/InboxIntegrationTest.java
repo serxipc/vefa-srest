@@ -1,22 +1,18 @@
 package no.sr.ringo.http;
 
-import no.difi.ringo.tools.PersistenceObjectMother;
 import no.sr.ringo.ObjectMother;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.client.Inbox;
 import no.sr.ringo.client.Message;
 import no.sr.ringo.client.Messages;
 import no.sr.ringo.guice.ServerTestModuleFactory;
-import no.sr.ringo.message.*;
+import no.sr.ringo.message.MessageMetaData;
+import no.sr.ringo.message.MessageNumber;
+import no.sr.ringo.message.PeppolMessageRepository;
+import no.sr.ringo.message.ReceptionId;
 import no.sr.ringo.persistence.DbmsTestHelper;
 import no.sr.ringo.persistence.jdbc.util.DatabaseHelper;
 import no.sr.ringo.transport.TransferDirection;
-import org.apache.http.*;
-import org.apache.http.client.RedirectStrategy;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -26,11 +22,11 @@ import org.testng.annotations.Test;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Steinar Overbeck Cook steinar@sendregning.no
@@ -89,70 +85,6 @@ public class InboxIntegrationTest extends AbstractHttpClientServerTest {
     }
 
 
-    /**
-     * Inserts a sample entry into the database and verifies that
-     * the payload is handled correctly
-     *
-     * @throws Exception
-     */
-    @Test(groups = {"integration"})
-    public void testGetPayload() throws Exception {
-
-        try {
-            String s = PEPPOL_BASE_URL.toString() + "/messages/" + msgNo + "/xml-document";
-            URI directoryLookupUri = new URI(s);
-            HttpGet httpGet = new HttpGet(directoryLookupUri);
-
-            HttpResponse response = httpClient.execute(httpGet);
-
-            final String txt = EntityUtils.toString(response.getEntity());
-
-            assertEquals(txt, DbmsTestHelper.PAYLOAD_DATA);
-            assertEquals(response.getStatusLine().getStatusCode(), 200);
-        } finally {
-            deleteSample();
-        }
-
-        final MessageMetaDataImpl messageMetaData = PersistenceObjectMother.sampleInboundTransmissionMetaData();
-
-        URI samplePayloadUri = URI.create("http://www.peppol.eu"); // This is where we will be redirected
-        messageMetaData.setPayloadUri(samplePayloadUri);
-
-        final MessageNumber messageNumber = databaseHelper.createSampleEntry(messageMetaData);
-
-        try {
-            String s = PEPPOL_BASE_REST_URL.toString() + "/messages/" + messageNumber.toString() + "/xml-document";
-            final URI uri = URI.create(s);
-            final HttpGet httpGet = new HttpGet(uri);
-
-
-            // Prevents following redirects, since we would like to verify that we actually receive a 303
-            final RedirectStrategy redirectStrategy = new RedirectStrategy() {
-
-                @Override
-                public boolean isRedirected(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
-                    final Header locationHeader = httpResponse.getFirstHeader("Location");
-                    redirectLocation = locationHeader.getValue();
-
-                    return false;
-                }
-
-                @Override
-                public HttpUriRequest getRedirect(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
-                    return null;
-                }
-            };
-            httpClient.setRedirectStrategy(redirectStrategy);
-
-            final HttpResponse response = httpClient.execute(httpGet);
-            assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_SEE_OTHER);
-            assertEquals(redirectLocation, samplePayloadUri.toString());
-
-        } finally {
-            databaseHelper.deleteMessage(messageNumber.toLong());
-        }
-
-    }
 
     @BeforeMethod(groups = {"integration"})
     public void insertSample() throws SQLException {

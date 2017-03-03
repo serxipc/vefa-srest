@@ -29,18 +29,21 @@ public class InboxResource extends AbstractResource {
     private final PeppolMessageRepository peppolMessageRepository;
     private final FetchMessagesUseCase fetchMessagesUseCase;
     private final FetchDocumentUseCase fetchDocumentUseCase;
+    private final PayloadResponseHelper payloadResponseHelper;
 
     @Inject
     public InboxResource(PeppolMessageRepository peppolMessageRepository,
                          Account account,
                          FetchMessagesUseCase fetchMessagesUseCase,
                          FetchDocumentUseCase fetchDocumentUseCase,
-                         UriLocationTool uriLocationTool) {
+                         UriLocationTool uriLocationTool,
+                         PayloadResponseHelper payloadResponseHelper) {
         super(uriLocationTool);
         this.peppolMessageRepository = peppolMessageRepository;
         this.account = account;
         this.fetchMessagesUseCase = fetchMessagesUseCase;
         this.fetchDocumentUseCase = fetchDocumentUseCase;
+        this.payloadResponseHelper = payloadResponseHelper;
     }
 
     /**
@@ -117,7 +120,7 @@ public class InboxResource extends AbstractResource {
             msgNo = parseMsgNo(msgNoString);
         }
 
-        return super.fetchPayloadAndProduceResponse(fetchDocumentUseCase, account, msgNo);
+        return payloadResponseHelper.fetchPayloadAndProduceResponse(fetchDocumentUseCase, account, msgNo);
     }
 
     

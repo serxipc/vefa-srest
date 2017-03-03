@@ -25,17 +25,32 @@ public class FetchDocumentUseCase {
         this.peppolMessageRepository = peppolMessageRepository;
     }
 
+    /**
+     * Retrieves the message meta data for the given message identifier and provides an abstraction of the result
+     * in the form of a {@link FetchDocumentResult}, which may hold either a) the text of the payload or b) the
+     * URI of the payload.
+     * <p>
+     * If the URI scheme is {@code file} a {@link PeppolDocument}, which implements {@link FetchDocumentResult} is returned
+     * otherwise a {@link PayloadReference} is returned.
+     *
+     * @param account the account owning the message
+     * @param msgNo   the identification of the message
+     * @return either a {@link PeppolDocument} or a {@link PayloadReference}, both being instances of
+     * {@link FetchDocumentResult}
+     */
     public FetchDocumentResult findDocument(Account account, MessageNumber msgNo) {
-        
+
         // Searches for the meta data
         final MessageMetaData messageMetaData = peppolMessageRepository.findMessageByMessageNo(account, msgNo);
 
-        // If the payload resides within the file system, simply return the contents
+        // If the payload resides within the file system, simply return the contents represented by
+        // an instance of PeppolDocument
         if (messageMetaData.getPayloadUri().getScheme().startsWith("file")) {
             return documentRepository.getPeppolDocument(account, msgNo);
         } else {
+
             // Otherwise, returns the URI of the payload, leaving it to the caller to deal with it.
-            return new PeppolDocumentReference(messageMetaData.getPayloadUri());
+            return new PayloadReference(messageMetaData.getPayloadUri());
         }
     }
 }

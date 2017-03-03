@@ -1,17 +1,17 @@
 package no.sr.ringo.guice;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Provides;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
+import no.sr.ringo.config.RingoConfigModule;
+import no.sr.ringo.config.RingoConfigProperty;
 import no.sr.ringo.message.PayloadUriRewriter;
+import no.sr.ringo.plugin.PluginModule;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.fail;
 
 /**
  * @author steinar
@@ -20,48 +20,52 @@ import java.nio.file.Paths;
  */
 public class BlobStoreModuleTest {
 
-
-    @Test
-    public void testProvideUriRewriter() throws Exception {
-
-        // Causes our plugin to be loaded
-        final URI uri1 = URI.create("file:///Users/steinar/src/spiralis/azureblob/target/azure-blob-1.0-SNAPSHOT.jar");
-
-        if (Files.exists(Paths.get(uri1))) {
-
-            // Signals to the BlobStoreModule that there is an implementation to load. All system
-            // properties are picked up by the type safe Config.
-            System.setProperty(BlobStoreModule.RINGO_BLOB_CLASS_PATH, uri1.toString());
-
-            final Injector injector = Guice.createInjector(
-                    new AbstractModule() {
-                        @Override
-                        protected void configure() {
-
-                        }
-
-                        // Picks up configuration properties.
-                        @Provides
-                        Config providesConfig() {
-                            ConfigFactory.invalidateCaches();
-                            final Config config = ConfigFactory.systemProperties().withFallback(ConfigFactory.defaultReference());
-                            return config;
-
-                        }
-                    },
-
-                    new BlobStoreModule()
-            );
-
-            final PayloadUriRewriter payloadUriRewriter = injector.getInstance(PayloadUriRewriter.class);
-            System.out.println(payloadUriRewriter.getClass().getName());
-
-            final URI uri = URI.create("http://hmaptestdata01.blob.core.windows.net/invoice-out/sample-invoice-doc.xml");
-            final URI rewriten = payloadUriRewriter.rewrite(uri, null);
-            System.out.println(rewriten);
-        } else
-            System.out.println("Experimental test not executed");
+    @BeforeMethod
+    public void setUp() throws Exception {
+        // Ensures that we do not load our own installation of ringo.conf
+        System.setProperty(RingoConfigProperty.HOME_DIR_PATH, System.getProperty("java.io.tmpdir"));
     }
 
+    @AfterMethod
+    public void tearDown() throws Exception {
+        System.getProperties().remove(RingoConfigProperty.HOME_DIR_PATH);
+        assertNull(System.getProperty(RingoConfigProperty.HOME_DIR_PATH));
 
+        System.clearProperty(RingoConfigProperty.BLOB_SERVICE_URI_REWRITER);
+    }
+
+    @Test
+    public void testProvidesDefaultUriRewriter() throws Exception {
+
+        System.setProperty(RingoConfigProperty.BLOB_SERVICE_URI_REWRITER, "default");
+        final Injector injector = Guice.createInjector(
+                new RingoConfigModule(),
+                new PluginModule(),
+                new BlobStoreModule()
+        );
+
+        final PayloadUriRewriter payloadUriRewriter = injector.getInstance(PayloadUriRewriter.class);
+
+    }
+
+    /**
+     * Verifies that we can specify "plugin" has the value for BLOB_SERVICE_URI_REWRITER and have our fake
+     * URI rewriter loaded.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testDummyRewriterIsLoadIfPropertySetToPlugin() throws Exception {
+
+        System.setProperty(RingoConfigProperty.BLOB_SERVICE_URI_REWRITER, "plugin");
+
+        final Injector injector = Guice.createInjector(new RingoConfigModule(), new BlobStoreModule(), new PluginModule());
+        try {
+            final PayloadUriRewriter payloadUriRewriter = injector.getInstance(PayloadUriRewriter.class);
+            fail("Specifying 'plugin' should have failed, as we have no plugin in the test env");
+        } catch (Exception e) {
+            //
+        }
+
+    }
 }

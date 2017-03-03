@@ -5,6 +5,7 @@ import com.google.inject.Module;
 import com.google.inject.servlet.RequestScoped;
 import no.difi.ringo.UnitTestConfigModule;
 import no.sr.ringo.persistence.jdbc.RingoRepositoryModule;
+import no.sr.ringo.plugin.PluginModule;
 import no.sr.ringo.security.CredentialHandler;
 import no.sr.ringo.security.SecretKeyCredentialHandler;
 import org.slf4j.Logger;
@@ -61,6 +62,8 @@ public class ServerTestModuleFactory implements IModuleFactory {
             binder.install(new RingoServiceModule());
 
             binder.install(new BlobStoreModule());
+
+            binder.install(new PluginModule());
         }
 
      

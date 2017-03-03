@@ -7,6 +7,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import no.sr.ringo.common.PropertyHelper;
 import no.sr.ringo.config.RingoConfigModule;
 import no.sr.ringo.persistence.jdbc.RingoRepositoryModule;
+import no.sr.ringo.plugin.PluginModule;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -57,6 +58,7 @@ public class RingoGuiceContextListener extends GuiceServletContextListener {
 
                 new RingoConfigModule() ,
 
+                new PluginModule(),     // Support for plugins
                 new BlobStoreModule()   // Provides the PayloadUriRewriter instance to be used
         );
     }

@@ -3,10 +3,12 @@ package no.difi.ringo;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
+import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -37,6 +39,18 @@ public class UnitTestConfigModule extends AbstractModule {
         // jdbcPathString = Optional.of(getJdbcPath());
 
     }
+
+    /**
+     * Provides the Path of the RINGO_HOME directory
+     * @return
+     */
+    @Provides
+    @Singleton
+    @Named(HOME_DIR_PATH)
+    protected Path provideRingoHomeDir() {
+        return Paths.get(System.getProperty("java.io.tmpdir"));
+    }
+
 
     URI createJdbcUri() {
         URI jdbcUri;

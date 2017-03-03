@@ -1,15 +1,15 @@
 package no.sr.ringo.http;
 
-import no.sr.ringo.common.RingoConstants;
+import no.sr.ringo.guice.ServerTestModuleFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 
 import java.net.URI;
@@ -18,6 +18,7 @@ import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 
+@Guice(moduleFactory = ServerTestModuleFactory.class)
 public class NotificationHttpTest extends AbstractHttpClientServerTest {
 
     static final Logger log = LoggerFactory.getLogger(NotificationHttpTest.class);
@@ -55,5 +56,4 @@ public class NotificationHttpTest extends AbstractHttpClientServerTest {
         log.info(EntityUtils.toString(httpResponse.getEntity()));
         assertEquals(httpResponse.getStatusLine().getStatusCode(), 200);
     }
-
 }
