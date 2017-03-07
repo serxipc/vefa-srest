@@ -5,9 +5,10 @@ import no.difi.oxalis.api.outbound.TransmissionResponse;
 import no.difi.oxalis.api.outbound.Transmitter;
 import no.difi.oxalis.outbound.OxalisOutboundComponent;
 import no.difi.oxalis.outbound.transmission.TransmissionRequestBuilder;
-import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.common.RingoConstants;
 import no.sr.ringo.message.MessageMetaData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -16,6 +17,7 @@ import java.util.Date;
 
 public class OxalisDocumentSender implements PeppolDocumentSender {
 
+    public static final Logger LOGGER = LoggerFactory.getLogger(OxalisDocumentSender.class);
 
     private final OxalisOutboundComponent oxalisOutboundModule;
 
@@ -42,13 +44,14 @@ public class OxalisDocumentSender implements PeppolDocumentSender {
         TransmissionResponse transmissionResponse = transmitter.transmit(transmissionRequest);
 
         // Write the transmission id and where the message was delivered
-        System.out.printf("Message sent to %s using %s was assigned transmissionId : %s\n",
+        final String msg = String.format("Message sent to %s using %s was assigned transmissionId : %s\n",
                 transmissionRequest.getEndpoint().getAddress().toString(),
                 transmissionRequest.getEndpoint().getTransportProfile().getValue(),
                 transmissionResponse.getTransmissionIdentifier()
         );
 
-        Receipt receipt = transmissionResponse.primaryReceipt();
+        LOGGER.info(msg);
+
 
         return new TransmissionReceipt(messageMetaData.getReceptionId(),
                 // Transmission Id assigned by AS2 or whatever we are using

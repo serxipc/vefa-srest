@@ -265,20 +265,20 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     }
 
     @Override
-    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, ReceptionId receptionId, Date delivered, Receipt receipt) {
+    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, URI remoteAP, ReceptionId receptionId, TransmissionIdentifier transmissionIdentifier, Date delivered, Receipt receipt) {
 
         // Persists the evidence, after which the DBMS is updated
         persistOutboundEvidence(receptionId, delivered, receipt);
 
         Connection con;
-        String sql = "update message set delivered = ?, ap_name = ?, message_uuid = ? where msg_no = ?";
+        String sql = "update message set delivered = ?, remote_host = ?, transmission_id = ? where msg_no = ?";
         try {
             con = jdbcTxManager.getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setTimestamp(1, new Timestamp(delivered.getTime()));
-            ps.setString(2, remoteAP);
-            ps.setString(3, receptionId.stringValue());
-            ps.setLong(4, msgNo.toInt());
+            ps.setString(2, remoteAP != null ? remoteAP.toString() : null);
+            ps.setString(3, transmissionIdentifier.getValue());
+            ps.setLong(4, msgNo.toLong());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new IllegalStateException(sql + " failed " + e, e);
@@ -293,7 +293,9 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
     @Override
     public Long copyOutboundMessageToInbound(Long outMsgNo, ReceptionId re) {
         Connection con;
-        String sql = "insert into message (account_id, direction, received, sender, receiver, channel, message_uuid, document_id, process_id, payload_url) (select account_id, 'IN', received, sender, receiver, channel, ?, document_id, process_id, payload_url from message where msg_no = ?);";
+        String sql = "insert into message (account_id, direction, received, sender, receiver, channel, message_uuid, transmission_id, instance_id, document_id, process_id, remote_host, ap_name, payload_url, evidence_url) " +
+                //                                                               1                                                                   2
+                " (select account_id, 'IN', received, sender, receiver, channel, ?, transmission_id, instance_id, document_id, process_id, remote_host, ap_name, payload_url, evidence_url from message where msg_no = ?);";
         try {
             con = jdbcTxManager.getConnection();
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);

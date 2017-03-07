@@ -6,7 +6,6 @@ import joptsimple.OptionSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -57,7 +56,7 @@ public class CommandLineParser {
             }
         }
 
-        return new ParserResult(type, queueId,  production.value(optionSet));
+        return new ParserResult(type, queueId);
     }
 
     private static OptionParser getOptionParser() {
@@ -65,8 +64,6 @@ public class CommandLineParser {
         queueId = optionParser.accepts("q", "queueId to process").withRequiredArg().ofType(Integer.class);
         processingType = optionParser.accepts("t", "Processing type: ALL or SINGLE").withRequiredArg().ofType(String.class).required();
 
-
-        production = optionParser.accepts("s", "Production server").withRequiredArg().ofType(Boolean.class).required();
         return optionParser;
     }
 

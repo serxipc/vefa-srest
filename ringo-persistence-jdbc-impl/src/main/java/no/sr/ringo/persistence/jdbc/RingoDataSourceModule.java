@@ -11,7 +11,7 @@ import javax.sql.DataSource;
  *         Date: 30.01.2017
  *         Time: 09.34
  */
-public class RingoDataSourceModule extends AbstractModule{
+public class RingoDataSourceModule extends AbstractModule {
 
 
     @Override

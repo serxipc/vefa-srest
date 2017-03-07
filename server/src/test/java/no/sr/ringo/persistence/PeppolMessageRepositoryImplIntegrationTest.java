@@ -284,11 +284,13 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         //update the message
         Date date = cal.getTime();
         Receipt receipt = Receipt.of("Native evidence bytes".getBytes());
-        
-        peppolMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(MessageNumber.of(messageOut), null, receptionId, date, receipt);
+
+        final TransmissionIdentifier transmissionIdentifier = TransmissionIdentifier.generateUUID();
+        peppolMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(MessageNumber.of(messageOut), null, receptionId, transmissionIdentifier, date, receipt);
 
         MessageMetaData messageOutbound = peppolMessageRepository.findMessageByMessageNo(account, MessageNumber.of(messageOut));
-
+        assertEquals(messageOutbound.getTransmissionId(), transmissionIdentifier);
+        
         assertEquals(receptionId, messageOutbound.getReceptionId());
         Calendar c2 = Calendar.getInstance();
         c2.setTime(messageOutbound.getDelivered());
@@ -311,6 +313,7 @@ public class PeppolMessageRepositoryImplIntegrationTest {
         assertEquals(messageOutbound.getPeppolHeader().getPeppolDocumentTypeId(), messageInbound.getPeppolHeader().getPeppolDocumentTypeId());
         assertEquals(messageOutbound.getPeppolHeader().getProcessIdentifier(), messageInbound.getPeppolHeader().getProcessIdentifier());
         assertEquals(receptionid, messageInbound.getReceptionId());
+        assertEquals(messageInbound.getTransmissionId(), transmissionIdentifier);
         assertEquals(messageOutbound.getReceived(), messageInbound.getReceived());
 
         // Verifies the contents of the evidence

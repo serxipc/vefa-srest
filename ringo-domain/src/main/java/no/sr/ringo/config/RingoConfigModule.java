@@ -3,6 +3,7 @@ package no.sr.ringo.config;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
+import com.google.inject.name.Names;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.slf4j.Logger;
@@ -11,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Singleton;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import static no.sr.ringo.config.RingoConfigProperty.HOME_DIR_PATH;
 
@@ -27,12 +30,69 @@ public class RingoConfigModule extends AbstractModule{
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RingoConfigModule.class);
+    private Config effectiveConfig;
+    private final Path ringoHomeDir;
+
+
+    public RingoConfigModule() {
+        ringoHomeDir = RingoHomeDirectory.locateRingoHomeDir();
+    }
 
     @Override
     protected void configure() {
-        // No action for now
+        effectiveConfig = loadConfig();
+        bindConfigNamesAndValues();
     }
 
+    private void bindConfigNamesAndValues() {
+
+        List<String> settingsNotBound = new ArrayList<>();
+        for (String propName : RingoConfigProperty.getPropertyNames()) {
+            if (effectiveConfig.hasPath(propName)) {
+                String value = effectiveConfig.getString(propName);
+                LOGGER.debug("Binding {} to value \"{}\"", propName, value);
+                bind(String.class).annotatedWith(Names.named(propName)).toInstance(value);
+            } else
+                settingsNotBound.add(propName);
+        }
+
+        for (String propName : settingsNotBound) {
+            LOGGER.warn("No configuration value found for setting {}", propName);
+        }
+    }
+
+    private Config loadConfig() {
+        // Loads the external configuration
+        final Config externalConfigFile = loadExternalConfigurationFile(ringoHomeDir);
+        // Merges external config with values from System properties.
+        final Config mergedConfig = mergeConfiguration(externalConfigFile);
+
+        return mergedConfig;
+    }
+
+    static protected Config mergeConfiguration(Config externalConfig) {
+
+        ConfigFactory.invalidateCaches();
+        final Config defaultReferenceConfig = ConfigFactory.load("ringo-reference.conf");
+        //Config defaultReferenceConfig = ConfigFactory.defaultReference();   // Loads the reference.conf instances from class path
+
+        // Loads and merges configuration in priority order
+        final Config systemProperties = ConfigFactory.systemProperties();
+        Config effectiveMergedconfig = systemProperties     // System properties overrides everything
+                .withFallback(externalConfig)                               // The external configuration file
+                .withFallback(defaultReferenceConfig)                       // The ringo-reference.conf files on class path
+                .withFallback((defaultReferenceConfig.getConfig("defaults")));   // Finally, set default fall back values
+
+        final Config resolved = effectiveMergedconfig.resolve();    // Resolves and substitutes any variables
+
+        return resolved;
+    }
+
+
+    @Provides
+    protected Config providesEffectiveConfig() {
+        return effectiveConfig;
+    }
 
     /**
      * Provides the Path of the RINGO_HOME directory
@@ -42,33 +102,10 @@ public class RingoConfigModule extends AbstractModule{
     @Singleton
     @Named(HOME_DIR_PATH)
     protected Path provideRingoHomeDir() {
-        return RingoHomeDirectory.locateRingoHomeDir();
+        return ringoHomeDir;
     }
 
 
-    /**
-     * Laods and merges configurations params from:
-     * <ol>
-     *     <li>System.getProperties() (including properties set with -D)</li>
-     *     <li>ringo.conf</li>
-     *     <li>reference.conf</li>
-     *     <li>defaults.conf</li>
-     * </ol>
-     * @param ringoConf
-     * @return complete Configuration for Ringo
-     */
-    @Provides
-    @Singleton
-    protected Config loadConfiguration(@Named("file") Config ringoConf) {
-        Config referenceConfig = ConfigFactory.defaultReference();
-
-        ConfigFactory.invalidateCaches();   // Important for unit tests etc.
-
-        return ConfigFactory.systemProperties()
-                .withFallback(ringoConf)
-                .withFallback(referenceConfig)
-                .withFallback(referenceConfig.getConfig("defaults"));
-    }
 
     /**
      * Intermediate Config used to load the final, sandwiched config.
@@ -77,10 +114,7 @@ public class RingoConfigModule extends AbstractModule{
      * @param homePath the RINGO_HOME path
      * @return
      */
-    @Provides
-    @Singleton
-    @Named("file")
-    protected Config loadConfigurationFile(@Named(HOME_DIR_PATH) Path homePath) {
+    static protected Config loadExternalConfigurationFile(Path homePath) {
         Path configPath = homePath.resolve("ringo.conf");
         LOGGER.info("Configuration file: {}", configPath);
 
@@ -94,4 +128,5 @@ public class RingoConfigModule extends AbstractModule{
     protected Path provideBaseDirPath(Config config) {
         return Paths.get(config.getString(RingoConfigProperty.PAYLOAD_BASE_PATH));
     }
+
 }

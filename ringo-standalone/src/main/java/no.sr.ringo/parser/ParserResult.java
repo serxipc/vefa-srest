@@ -11,12 +11,10 @@ public class ParserResult {
 
     private final PROCESSING_TYPE processingType;
     private final Integer msgNo;
-    private final boolean production;
 
-    public ParserResult(PROCESSING_TYPE processing_type,  Integer msgNo,  boolean production) {
+    public ParserResult(PROCESSING_TYPE processing_type,  Integer msgNo) {
         this.processingType = processing_type;
         this.msgNo = msgNo;
-        this.production = production;
     }
 
     public PROCESSING_TYPE getProcessingType() {
@@ -29,33 +27,29 @@ public class ParserResult {
     }
 
     @Override
-    public String toString() {
-        return "ParserResult{" +
-                "processingType=" + processingType +
-                ", msgNo=" + msgNo +
-                ", production=" + production +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         ParserResult that = (ParserResult) o;
 
-        if (production != that.production) return false;
-        if (msgNo != null ? !msgNo.equals(that.msgNo) : that.msgNo != null) return false;
         if (processingType != that.processingType) return false;
-
-        return true;
+        return msgNo != null ? msgNo.equals(that.msgNo) : that.msgNo == null;
     }
 
     @Override
     public int hashCode() {
-        int result = processingType != null ? processingType.hashCode() : 0;
+        int result = processingType.hashCode();
         result = 31 * result + (msgNo != null ? msgNo.hashCode() : 0);
-        result = 31 * result + (production ? 1 : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ParserResult{");
+        sb.append("processingType=").append(processingType);
+        sb.append(", msgNo=").append(msgNo);
+        sb.append('}');
+        return sb.toString();
     }
 }

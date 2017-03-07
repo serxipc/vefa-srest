@@ -24,8 +24,8 @@ public class Main {
 
     /**
      * Example usage:
-     *  -h localhost -u<dbUser> -p<dbPass> -d oxalis_test -t single -m 911 -k /path/to/keystore.jks
-     *  -h localhost -u<dbUser> -p<dbPass> -d oxalis_test -t all -k /path/to/keystore.jks
+     *  -t single
+     *  -t all
      */
     public static void main(String[] args) throws Exception {
 
@@ -69,7 +69,6 @@ public class Main {
         return Guice.createInjector(
                     new RingoServiceModule(),
                     new OxalisOutboundModule(),
-
                     new RingoConfigModule(),
                     new RingoDataSourceModule(),
                     new RingoRepositoryModule()

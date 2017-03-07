@@ -32,14 +32,14 @@ public interface PeppolDocumentSender {
 
         private final ReceptionId receptionId;
         private final TransmissionIdentifier transmissionId;
-        private final String remoteAccessPoint;
+        private final URI remoteAccessPoint;
         private final Date date;
         private final Receipt receipt;
 
         public TransmissionReceipt(ReceptionId receptionId, TransmissionIdentifier transmissionId, URI remoteAccessPoint, Date date, Receipt receipt) {
             this.receptionId = receptionId;
             this.transmissionId = transmissionId;
-            this.remoteAccessPoint = remoteAccessPoint != null ? remoteAccessPoint.toString() : "n/a";
+            this.remoteAccessPoint = remoteAccessPoint;
             this.date = date;
             this.receipt = receipt;
         }
@@ -48,7 +48,7 @@ public interface PeppolDocumentSender {
             return receptionId;
         }
 
-        public String getRemoteAccessPoint() {
+        public URI getRemoteAccessPoint() {
             return remoteAccessPoint;
         }
 

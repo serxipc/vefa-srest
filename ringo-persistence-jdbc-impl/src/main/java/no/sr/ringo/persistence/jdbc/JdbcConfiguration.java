@@ -15,7 +15,7 @@ public class JdbcConfiguration {
 
     URI jdbcConnectionUri;
 
-    Optional<String> jdbcDriverClassPath;
+    Optional<String> jdbcDriverClassPath = Optional.empty();
 
     String jdbcDriverClassName;
 
@@ -23,23 +23,24 @@ public class JdbcConfiguration {
 
     String jdbcPassword;
 
-    Optional<String> validationQuery;
+    Optional<String> validationQuery = Optional.empty();
 
 
     @Inject
-    public JdbcConfiguration(@Named(JDBC_CONNECTION_URI)    URI     jdbcConnectionUri,
-                             @Named(JDBC_CLASS_PATH)        Optional<String>  jdbcDriverClassPath,
+    JdbcConfiguration(@Named(JDBC_CONNECTION_URI)           String  jdbcConnectionUri,
+                             @Named(JDBC_CLASS_PATH)        String  jdbcDriverClassPath,
                              @Named(JDBC_DRIVER_CLASS)      String  jdbcDriverClassName,
                              @Named(JDBC_USER)              String  jdbcUsername,
                              @Named(JDBC_PASSWORD)          String  jdbcPassword,
-                             @Named(JDBC_VALIDATION_QUERY)  Optional<String> validationQuery) {
+                             @Named(JDBC_VALIDATION_QUERY)  String validationQuery) {
 
-        this.jdbcConnectionUri = jdbcConnectionUri;
-        this.jdbcDriverClassPath = jdbcDriverClassPath;
+
+        this.jdbcConnectionUri = URI.create(jdbcConnectionUri);
+        this.jdbcDriverClassPath = jdbcDriverClassPath != null && jdbcDriverClassPath.trim().length() > 0 ? Optional.of(jdbcDriverClassPath) : Optional.empty();
         this.jdbcDriverClassName = jdbcDriverClassName;
         this.jdbcUsername = jdbcUsername;
         this.jdbcPassword = jdbcPassword;
-        this.validationQuery = validationQuery;
+        this.validationQuery = validationQuery != null && validationQuery.trim().length() > 0 ? Optional.of(validationQuery) : Optional.empty();
     }
 
     public URI getJdbcConnectionUri() {

@@ -55,7 +55,7 @@ public class RingoDataSourceFactoryDbcpImpl {
     private volatile DataSource dataSource;
 
     @Inject
-    public RingoDataSourceFactoryDbcpImpl(JdbcConfiguration configuration) {
+    RingoDataSourceFactoryDbcpImpl(JdbcConfiguration configuration) {
         this.configuration = configuration;
         log.info("DataSource being connected to " + configuration.getJdbcConnectionUri().toString());
 

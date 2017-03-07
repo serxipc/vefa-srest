@@ -178,6 +178,7 @@ public class SendQueuedMessagesUseCase {
                 messageMetaData.getMsgNo(),
                 transmissionReceipt.getRemoteAccessPoint(),
                 transmissionReceipt.getReceptionId(),
+                transmissionReceipt.getTransmissionId(),
                 transmissionReceipt.getDate(),
                 transmissionReceipt.getReceipt()
                 );
@@ -202,7 +203,7 @@ public class SendQueuedMessagesUseCase {
         QueuedOutboundMessageError error = new QueuedOutboundMessageError(queuedOutboundMessage.getOutboundQueueId(), "Error processing queue element", message, stackTrace);
         queueRepository.logOutboundError(error);
 
-        logger.error(String.format("Unable to process queue item %d with messageNo %d sent; %s", queuedOutboundMessage.getOutboundQueueId().toInt(), queuedOutboundMessage.getMessageNumber().toInt(), message), e);
+        logger.error( String.format("Unable to process queue item %d with messageNo %d sent; %s", queuedOutboundMessage.getOutboundQueueId().toInt(), queuedOutboundMessage.getMessageNumber().toInt(), message), e);
 
         MessageNumber messageNumber = queuedOutboundMessage.getMessageNumber();
 

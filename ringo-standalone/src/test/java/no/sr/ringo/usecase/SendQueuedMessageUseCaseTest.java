@@ -81,6 +81,7 @@ public class SendQueuedMessageUseCaseTest {
                 EasyMock.eq(msgNo),
                 eq(receipt.getRemoteAccessPoint()),
                 eq(receipt.getReceptionId()),
+                eq(receipt.getTransmissionId()),
                 eq(receipt.getDate()),
                 eq(receipt1)
                 );
@@ -161,7 +162,7 @@ public class SendQueuedMessageUseCaseTest {
                 receipt));
 
         // update message to delivered
-        mockMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(EasyMock.eq(msgNo), EasyMock.eq("http://ringo.domain.com/"), EasyMock.eq(receptionId), isA(Date.class), EasyMock.eq(receipt)
+        mockMessageRepository.updateOutBoundMessageDeliveryDateAndUuid(EasyMock.eq(msgNo), EasyMock.eq(URI.create("http://ringo.domain.com/")), EasyMock.eq(receptionId), EasyMock.eq(TransmissionIdentifier.of("test")), isA(Date.class), EasyMock.eq(receipt)
                 );
         expectLastCall();
 

@@ -1,10 +1,12 @@
 package no.sr.ringo.message;
 
+import no.difi.oxalis.api.model.TransmissionIdentifier;
 import no.difi.vefa.peppol.common.model.Receipt;
 import no.sr.ringo.account.Account;
 import no.sr.ringo.account.AccountId;
 import no.sr.ringo.message.statistics.RingoStatistics;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
@@ -116,7 +118,7 @@ public interface PeppolMessageRepository {
      * REM evidence is persisted.
      *
      */
-    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, String remoteAP, ReceptionId receptionId, Date delivered, Receipt receipt);
+    public void updateOutBoundMessageDeliveryDateAndUuid(MessageNumber msgNo, URI remoteAP, ReceptionId receptionId, TransmissionIdentifier transmissionIdentifier, Date delivered, Receipt receipt);
 
     /**
      * Creates inbound message as copy of outbound one with delivered being null
