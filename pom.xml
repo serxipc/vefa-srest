@@ -4,7 +4,7 @@
 
     <groupId>no.difi.ringo</groupId>
     <artifactId>ringo</artifactId>
-    <version>1.1.28</version>
+    <version>1.1.29-SNAPSHOT</version>
 
     <url>https://github.com/difi/vefa-srest</url>
 
@@ -16,7 +16,7 @@
         <connection>scm:git:git@github.com:difi/vefa-srest.git</connection>
         <url>scm:git:git@github.com:difi/vefa-srest.git</url>
         <developerConnection>scm:git:git@github.com:difi/vefa-srest.git</developerConnection>
-        <tag>ringo-1.1.28</tag>
+        <tag>HEAD</tag>
     </scm>
     
     <properties>
