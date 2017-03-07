@@ -208,6 +208,7 @@ public class SendQueuedMessagesUseCase {
         MessageNumber messageNumber = queuedOutboundMessage.getMessageNumber();
 
         Account account = accountRepository.findAccountAsOwnerOfMessage( MessageNumber.of(messageNumber.toLong()));
+        
         emailService.sendProcessingErrorNotification(account, message, queuedOutboundMessage.getMessageNumber());
 
     }
