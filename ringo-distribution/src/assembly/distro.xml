@@ -40,11 +40,10 @@
         <moduleSet>
             <useAllReactorProjects>true</useAllReactorProjects>
             <includes>
-                <include>no.difi.ringo:ringo-standalone</include>
+                <include>no.difi.ringo:ringo-standalone:*</include>
             </includes>
             <binaries>
-                <!-- The value is taken from the id element of the ringo-standalone assembly descriptor -->
-                <attachmentClassifier>jar-with-dependencies-compiled-scope</attachmentClassifier>
+                <!-- The value is taken from the "id" element of the ringo-standalone assembly descriptor -->
                 <includeDependencies>false</includeDependencies>
                 <outputDirectory>bin</outputDirectory>
                 <unpack>false</unpack>
@@ -52,7 +51,7 @@
         </moduleSet>
 
         <!-- Includes the Ringo REST client -->
-        <moduleSet>
+        <moduleSet>                                      
             <useAllReactorProjects>true</useAllReactorProjects>
             <includes>
                 <include>no.difi.ringo:ringo-client</include>
