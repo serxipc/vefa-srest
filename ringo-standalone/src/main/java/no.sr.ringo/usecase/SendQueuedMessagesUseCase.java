@@ -26,6 +26,8 @@ import java.util.Map;
  */
 public class SendQueuedMessagesUseCase {
 
+    public static final Logger LOGGER = LoggerFactory.getLogger(SendQueuedMessagesUseCase.class);
+
     private PeppolDocumentSender documentSender;
     private final PeppolMessageRepository messageRepository;
     private final QueueRepository queueRepository;
@@ -73,8 +75,10 @@ public class SendQueuedMessagesUseCase {
                     } else {
                         failed.put(queuedOutboundMessage.getOutboundQueueId(), singleProcessingResult.getErrorMessage());
                     }
+
                     if ((System.currentTimeMillis() - startTime) > maxSendDuration) {
                         sendNextBatch = false;
+                        LOGGER.debug("Breaking execution after {}ms", maxSendDuration);
                         break;
                     }
                 }

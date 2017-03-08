@@ -24,7 +24,7 @@ public class Main {
 
     /**
      * Example usage:
-     *  -t single
+     *  -t single -q 45678
      *  -t all
      */
     public static void main(String[] args) throws Exception {
