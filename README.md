@@ -56,7 +56,7 @@ Brief refactoring plan (remember to x out finished items).
 - [ ] Make sure the client version detection works and alerts are logged (for Ringo Client)
 - [ ] Verify inbound messages belonging to us (receiver connected to account)
 - [ ] Verify outbound messages parameters actually matching what's specified in the document
-- [ ] Validate messages both inbound and outbound
+- [ ] Validate messages both inbound and outbound, should be pluggable
 - [ ] Hardcoded ADMIN_USERNAME ("sr-admin") should be changed (used when logging in as other users)
 
 ### Other changes (unordered)
@@ -73,6 +73,8 @@ Brief refactoring plan (remember to x out finished items).
 - [ ] Upgrade old 6.x Tomcat (https://tomcat.apache.org/migration.html) or JEE7 (WildFly?)
 - [ ] References to ringo.domain.com should point to the production server (scripts and download urls)
 - [ ] References to ringo-test.domain.com should point to the test server (scripts and download urls)
+- [ ] Consider upgrading to the latest and greates version of Jetty
+- [ ] Consuder upgrading to later version of Jersey
 
 ### Refactor code to really use JSE8 features (and standard JEE7 specs - just one single dependency)
 - [ ] Replace JodaTime with JSE8 LocalData, LocalTime variants
@@ -101,6 +103,6 @@ Brief refactoring plan (remember to x out finished items).
 ### Notes from refactoring and integration with Oxalis
 - [ ] Organisation numbers should be validated. Determine the extent of such validation.
 - [ ] Allow for external configuration of logging. This should happen in RingoGuiceContextListener
-- [ ] Refactor package names in accordance with domain
-- [X] Duplicate class/interface MessageMetaData
+- [ ] Refactor package names in accordance with domains
+- [X] Duplicate class/interface MessageMetaData needs to be refactored
 
