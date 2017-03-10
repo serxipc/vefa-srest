@@ -50,6 +50,8 @@ public class BlobStoreModule extends AbstractModule {
     protected PayloadUriRewriter provideUriRewriter(Injector injector, Config config) {
         final String implementationToUse = config.getString(RingoConfigProperty.BLOB_SERVICE_URI_REWRITER);
         LOGGER.debug("Loading PayloadUriRewriter '{}'", implementationToUse);
+
+        // Returns either "default" as bound above or "plugin" if overridden in config file.
         return injector.getInstance(Key.get(PayloadUriRewriter.class, Names.named(implementationToUse)));
     }
 

@@ -3,8 +3,8 @@ vefa-srest a.k.a. "Ringo" - REST based API for Oxalis based PEPPOL access points
 
 "vefa-srest" is the REST API for Oxalis
 
-[TOC levels=2,3]: # "Table of Contents"
-# Table of Contents
+#
+
 - [Prerequisites](#prerequisites)
 - [Compiling the code](#compiling-the-code)
 - [Installation of artifacts for the REST interface](#installation-of-artifacts-for-the-rest-interface)
@@ -24,11 +24,11 @@ with Oxalis installed.
 
 The code may be compiled using the following commands:
 
-| Command             | Comment                                                                                 |
-|:--------------------|:----------------------------------------------------------------------------------------|
-| `mvn clean test`    | unit tests                                                                              |
-| `mvn clean verify`  | integration tests (needs database and network)                                          |
-| `mvn clean install` | builds runnable artifacts for production in `server/target/ringo-server-${version}.war` |
+|  Command              |  Comment                                                                                  |
+|:----------------------|:------------------------------------------------------------------------------------------|
+|  `mvn clean test`     |  unit tests                                                                               |
+|  `mvn clean verify`   |  integration tests (needs database and network)                                           |
+|  `mvn clean install`  |  builds runnable artifacts for production in `server/target/ringo-server-${version}.war`  |
 
 This installation guide assumes that you have a binary distribution,
 which you have either built using the maven commands listed above or
@@ -40,56 +40,99 @@ downloaded.
 1. Unpack the contents of the binary distribution in a separate
    directory:
 
-```
-  mkdir ~/opt/ringo-distribution-${version}
-    cd ~/opt/ringo-distribution-${version}
-    unzip ringo-distribution-${version}-bin.zip 
-```
+   ```shell
+   mkdir ~/opt/ringo-distribution-${version}
+   cd ~/opt/ringo-distribution-${version}
+   unzip ringo-distribution-${version}-bin.zip 
+   ```
 
-1. Copy `war/ringo-server-${version}.war` to
+2. Copy `war/ringo-server-${version}.war` to
    `$TOMCAT_HOME/webapps/vefa-srest.war`
-2. Start Tomcat using `${TOMCAT_HOME}/bin/startup.sh`
-3. Make sure there are no errors in `$TOMCAT_HOME/logs/catalina.out`
-4. Verify REST response using a browser or command line _curl_:
 
-```
-curl -i http://localhost:8080/vefa-srest/statistics -u username:password
-```
+3. Create and edit the configuration file `~/.ringo/ringo.conf`:
 
-1. Stop Tomcat: `${TOMCAT_HOME}/bin/shutdown.sh`
-2. Tweak `${TOMCAT_HOME}/conf/server.xml` to optimize further,  
+   ```
+   # ringo.conf
+   
+   # Where to store uploaded outbound files
+   ringo.payload.basedir = /var/peppol
+   
+   
+   # Uncomment to use a plugin for rewriting URIs
+   # ringo.blob.uri.handler = plugin
+   
+   # Directory in which our plugins are located
+   ringo.plugin.path = ringo-plugin
+   
+   # Includes the JDBC configuration from a separate shared file 
+   include "/Users/steinar/.spiralis/jdbc.conf"    
+   ```
+
+
+4. Here is a sample `jdbc.conf` file for your convenience.
+   Please consult [Replacing the SQL DBMS](#replacing-the-sql-dbms) if you intend to use a different DBMS than the one
+   supplied with the distribution:
+
+   ```
+   // Default configuration uses H2, which should be on the classpath as it is supplied as part of the 
+   // software distribution
+   jdbc {
+   	connection.uri : "jdbc:h2:~/.oxalis/ap;AUTO_SERVER=TRUE"
+   	driver.class {
+   	    path : ""
+   	    name : "org.h2.Driver"
+   	}
+   	user: "SA"
+   	password : ""
+   	validation.query : "select now()"
+   }
+   ```
+
+7. Start Tomcat using `${TOMCAT_HOME}/bin/startup.sh`
+
+8. Make sure there are no errors in `$TOMCAT_HOME/logs/catalina.out`
+
+9. Verify REST response using a browser or command line _curl_:
+
+   ```
+   curl -i http://localhost:8080/vefa-srest/statistics -u username:password
+   ```
+
+10. Stop Tomcat: `${TOMCAT_HOME}/bin/shutdown.sh`
+
+11. Tweak `${TOMCAT_HOME}/conf/server.xml` to optimize further,  
    turn off 8443 redirects, turn off "https", "ajp" etc
 
-```
-<Connector port="8080" protocol="HTTP/1.1"
-            connectionTimeout="20000" />
-            <!--
-            redirectPort="8443" />
-            -->
-```
+   ```
+   <Connector port="8080" protocol="HTTP/1.1"
+           connectionTimeout="20000" />
+           <!--
+           redirectPort="8443" />
+           -->
+   ```
 
-1. If you are going to use a DBMS of your own choice, you must modify
-   the security realm. Please consult the section
-   [Replacing the SQL DBMS](#replacing-the-sql-dbms) for detailed
-   instructions on how to do this.
+12. If you are going to use a DBMS of your own choice, you must modify
+    the security realm. Please consult the section
+    [Replacing the SQL DBMS](#replacing-the-sql-dbms) for detailed
+    instructions on how to do this.
 
-2. Start Tomcat again
+13. Start Tomcat again
 
-3. Execute the client and enqueue the eligible documents for
-   transmission:
+14. Execute the client and enqueue the eligible documents for
+    transmission:
 
-```
-bin/upload sr ringo1 c:/temp/ringo/outbox c:/temp/ringo/archive CH1
-```
+    ```
+    bin/upload sr ringo1 c:/temp/ringo/outbox c:/temp/ringo/archive CH1
+    ```
 
-1. Execute the vefa-srest standalone client, which will fetch all enqued
-   outbound messages and transmit them:
+15. Execute the vefa-srest standalone client, which will fetch all enqued
+    outbound messages and transmit them:
 
-```
+    ```
 java -jar target\ringo-standalone.jar -d oxalis_test -h localhost \
-  -k /C:/Users/soc/Dropbox/DIFI/oxalis/difi-test-cert-ok-2015/difi-keystore.jks \
-  -p vable -t ALL -u skrue -s true
-```
+-k /C:/Users/soc/Dropbox/DIFI/oxalis/difi-test-cert-ok-2015/difi-keystore.jks \
+-p vable -t ALL -u skrue -s true
+    ```
 
 
 ## Configuration of BASIC authentication
@@ -132,12 +175,16 @@ The standard distribution comes preconfigured with support for H2.
 If you wish to use a different database:
 
 1. Copy the the .jar-file of the driver to `$TOMCAT_HOME/lib`
+
 2. Modify the contents of
    `$TOMCAT_HOME/conf/Catalina/localhost/vefa-srest.xml` to make the
    security realm of Tomcat point to your database:
 
-    ```
+   ```
+      ```
+
 <!--  Establishes a JNDI DataSource made available in java:comp/env as jdbc/oxalis -->
+
         <Resource name="jdbc/oxalis"
                   auth="Container"
                   type="javax.sql.DataSource"
@@ -154,8 +201,8 @@ If you wish to use a different database:
                   validationQuery="select now()"
         />
     ```
-    
+
 3. Verify the contents of the table `account`. Hint: look at the
    database creation script found in your Oxalis distribution.
 4. Restart Tomcat and you should be able to login using for example
-   username "sr" with password "ringo1".
+   username `sr` with password `ringo1`.
