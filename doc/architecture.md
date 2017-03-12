@@ -8,7 +8,6 @@ This document gives an overview of the architecture of the vefa-srest component.
 - [Transmission of received messages](#transmission-of-received-messages)
 
 
-
 ## The database
 
 ## Transmission of received messages

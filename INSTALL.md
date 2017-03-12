@@ -3,13 +3,14 @@ vefa-srest a.k.a. "Ringo" - REST based API for Oxalis based PEPPOL access points
 
 "vefa-srest" is the REST API for Oxalis
 
-#
-
+[TOC]: #
+# Table of Contents
 - [Prerequisites](#prerequisites)
 - [Compiling the code](#compiling-the-code)
 - [Installation of artifacts for the REST interface](#installation-of-artifacts-for-the-rest-interface)
 - [Configuration of BASIC authentication](#configuration-of-basic-authentication)
 - [Replacing the SQL DBMS](#replacing-the-sql-dbms)
+
 
 ***
 
@@ -24,11 +25,11 @@ with Oxalis installed.
 
 The code may be compiled using the following commands:
 
-|  Command              |  Comment                                                                                  |
-|:----------------------|:------------------------------------------------------------------------------------------|
-|  `mvn clean test`     |  unit tests                                                                               |
-|  `mvn clean verify`   |  integration tests (needs database and network)                                           |
-|  `mvn clean install`  |  builds runnable artifacts for production in `server/target/ringo-server-${version}.war`  |
+| Command             | Comment                                                                                 |
+|:--------------------|:----------------------------------------------------------------------------------------|
+| `mvn clean test`    | unit tests                                                                              |
+| `mvn clean verify`  | integration tests (needs database and network)                                          |
+| `mvn clean install` | builds runnable artifacts for production in `server/target/ringo-server-${version}.war` |
 
 This installation guide assumes that you have a binary distribution,
 which you have either built using the maven commands listed above or
@@ -68,7 +69,6 @@ downloaded.
    include "/Users/steinar/.spiralis/jdbc.conf"    
    ```
 
-
 4. Here is a sample `jdbc.conf` file for your convenience.
    Please consult [Replacing the SQL DBMS](#replacing-the-sql-dbms) if you intend to use a different DBMS than the one
    supplied with the distribution:
@@ -88,19 +88,19 @@ downloaded.
    }
    ```
 
-7. Start Tomcat using `${TOMCAT_HOME}/bin/startup.sh`
+5. Start Tomcat using `${TOMCAT_HOME}/bin/startup.sh`
 
-8. Make sure there are no errors in `$TOMCAT_HOME/logs/catalina.out`
+6. Make sure there are no errors in `$TOMCAT_HOME/logs/catalina.out`
 
-9. Verify REST response using a browser or command line _curl_:
+7. Verify REST response using a browser or command line _curl_:
 
    ```
    curl -i http://localhost:8080/vefa-srest/statistics -u username:password
    ```
 
-10. Stop Tomcat: `${TOMCAT_HOME}/bin/shutdown.sh`
+8. Stop Tomcat: `${TOMCAT_HOME}/bin/shutdown.sh`
 
-11. Tweak `${TOMCAT_HOME}/conf/server.xml` to optimize further,  
+9. Tweak `${TOMCAT_HOME}/conf/server.xml` to optimize further,  
    turn off 8443 redirects, turn off "https", "ajp" etc
 
    ```
@@ -111,25 +111,25 @@ downloaded.
            -->
    ```
 
-12. If you are going to use a DBMS of your own choice, you must modify
+10. If you are going to use a DBMS of your own choice, you must modify
     the security realm. Please consult the section
     [Replacing the SQL DBMS](#replacing-the-sql-dbms) for detailed
     instructions on how to do this.
 
-13. Start Tomcat again
+11. Start Tomcat again
 
-14. Execute the client and enqueue the eligible documents for
+12. Execute the client and enqueue the eligible documents for
     transmission:
 
     ```
     bin/upload sr ringo1 c:/temp/ringo/outbox c:/temp/ringo/archive CH1
     ```
 
-15. Execute the vefa-srest standalone client, which will fetch all enqued
+13. Execute the vefa-srest standalone client, which will fetch all enqued
     outbound messages and transmit them:
 
     ```
-java -jar target\ringo-standalone.jar -d oxalis_test -h localhost \
+    java -jar target\ringo-standalone.jar -d oxalis_test -h localhost \
 -k /C:/Users/soc/Dropbox/DIFI/oxalis/difi-test-cert-ok-2015/difi-keystore.jks \
 -p vable -t ALL -u skrue -s true
     ```
@@ -181,7 +181,8 @@ If you wish to use a different database:
    security realm of Tomcat point to your database:
 
    ```
-      ```
+   
+   ```
 
 <!--  Establishes a JNDI DataSource made available in java:comp/env as jdbc/oxalis -->
 
@@ -202,7 +203,7 @@ If you wish to use a different database:
         />
     ```
 
-3. Verify the contents of the table `account`. Hint: look at the
+1. Verify the contents of the table `account`. Hint: look at the
    database creation script found in your Oxalis distribution.
-4. Restart Tomcat and you should be able to login using for example
+2. Restart Tomcat and you should be able to login using for example
    username `sr` with password `ringo1`.
