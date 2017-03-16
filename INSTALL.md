@@ -38,7 +38,14 @@ downloaded.
 
 ## Installation of artifacts for the REST interface
 
-1. Unpack the contents of the binary distribution in a separate
+1. Create a home directory for Ringo, we recommend `~/.ringo` and create an environment variable referencing the
+   the directory:
+
+   ```
+   export RINGO_HOME=~/.ringo
+   ```
+
+2. Unpack the contents of the binary distribution in a separate
    directory:
 
    ```shell
@@ -47,10 +54,10 @@ downloaded.
    unzip ringo-distribution-${version}-bin.zip 
    ```
 
-2. Copy `war/ringo-server-${version}.war` to
+3. Copy `war/ringo-server-${version}.war` to
    `$TOMCAT_HOME/webapps/vefa-srest.war`
 
-3. Create and edit the configuration file `~/.ringo/ringo.conf`:
+4. Create and edit the configuration file `~/.ringo/ringo.conf`:
 
    ```
    # ringo.conf - example file, edit to your liking
@@ -69,7 +76,7 @@ downloaded.
    include "/Users/steinar/.spiralis/jdbc.conf"    
    ```
 
-4. Here is a sample `jdbc.conf` file for your convenience.
+5. Here is a sample `jdbc.conf` file for your convenience.
    Please consult [Replacing the SQL DBMS](#replacing-the-sql-dbms) if you intend to use a different DBMS than the one
    supplied (H2) with the distribution:
 
@@ -87,24 +94,25 @@ downloaded.
    	validation.query : "select now()"
    }
    ```
-5. Create the database and populate the scheme by running the SQL script, which is appropriate for your kind of DBMS.
+   
+6. Create the database and populate the scheme by running the SQL script, which is appropriate for your kind of DBMS.
    For H2, use [create-ringo-dbms-h2.sql](ringo-persistence-jdbc-impl/src/main/resources/create-ringo-dbms-h2.sql).
 
    Note: consult the documentation for H2 to install the DBMS before you run the SQL scripts.
 
-6. Start Tomcat using `${TOMCAT_HOME}/bin/startup.sh`
+7. Start Tomcat using `${TOMCAT_HOME}/bin/startup.sh`
 
-7. Make sure there are no errors in `$TOMCAT_HOME/logs/catalina.out`
+8. Make sure there are no errors in `$TOMCAT_HOME/logs/catalina.out`
 
-8. Verify REST response using a browser or command line _curl_:
+9. Verify REST response using a browser or command line _curl_:
 
    ```
    curl -i http://localhost:8080/vefa-srest/statistics -u username:password
    ```
 
-9. Stop Tomcat: `${TOMCAT_HOME}/bin/shutdown.sh`
+10. Stop Tomcat: `${TOMCAT_HOME}/bin/shutdown.sh`
 
-10. Tweak `${TOMCAT_HOME}/conf/server.xml` to optimize further,  
+11. Tweak `${TOMCAT_HOME}/conf/server.xml` to optimize further,  
    turn off 8443 redirects, turn off "https", "ajp" etc
 
    ```
@@ -115,21 +123,21 @@ downloaded.
            -->
    ```
 
-11. If you are going to use a DBMS of your own choice, you must modify
+12. If you are going to use a DBMS of your own choice, you must modify
     the security realm. Please consult the section
     [Replacing the SQL DBMS](#replacing-the-sql-dbms) for detailed
     instructions on how to do this.
 
-12. Start Tomcat again
+13. Start Tomcat again
 
-13. Execute the client and enqueue the eligible documents for
+14. Execute the client and enqueue the eligible documents for
     transmission:
 
     ```
     bin/upload sr ringo1 c:/temp/ringo/outbox c:/temp/ringo/archive CH1
     ```
 
-14. Execute the vefa-srest standalone client, which will fetch all enqued
+15. Execute the vefa-srest standalone client, which will fetch all enqued
     outbound messages and transmit them:
 
     ```
@@ -178,7 +186,7 @@ The standard distribution comes preconfigured with support for H2.
 
 If you wish to use a different database:
 
-1. Copy the the .jar-file of the driver to `$TOMCAT_HOME/lib`
+1. Copy the the .jar-file of the JDBC driver to `$TOMCAT_HOME/lib`
 
 2. Modify the contents of
    `$TOMCAT_HOME/conf/Catalina/localhost/vefa-srest.xml` to make the
