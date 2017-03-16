@@ -161,9 +161,9 @@ This command will generate a hashed password for cleartext "ringo1".
 Basically the hashed password will be different every time you execute
 it:
 
-    ```
+```
     bin/digest.sh -a PBKDF2WithHmacSHA1 -h org.apache.catalina.realm.SecretKeyCredentialHandler ringo1
-    ```
+```
 
 The output looks like this: ```
 ringo1:197ce6e3955f4d4c24e8e35ae15be74f6cd5e5bfe7a19bc8201cfaad7629fdec$20000$bb48ce2c6e389b5eb2fdbb07671d8fb516aeaed5

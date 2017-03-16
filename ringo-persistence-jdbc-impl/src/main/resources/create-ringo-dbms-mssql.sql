@@ -27,7 +27,6 @@ CREATE TABLE customer (
   org_no varchar(16) DEFAULT NULL,
   PRIMARY KEY (id)
 ) ;
-grant SELECT , INSERT , UPDATE , DELETE on customer  to skrue;
 
 /** Each customer can have multiple accounts, details here is used for JAAS authentication etc */
 CREATE TABLE account (
@@ -43,7 +42,6 @@ CREATE TABLE account (
   constraint account_unique_name  UNIQUE(username),
   CONSTRAINT account_ibfk_1 FOREIGN KEY (customer_id) REFERENCES customer (id)
 ) ;
-grant SELECT , INSERT , UPDATE , DELETE on account  to skrue;
 
 /** The JAAS security roles for the accounts */
 CREATE TABLE account_role (
@@ -53,7 +51,6 @@ CREATE TABLE account_role (
   constraint unique_roles check(role_name in ('client','admin')),
   CONSTRAINT account_role_ibfk_1 FOREIGN KEY (username) REFERENCES account (username) ON DELETE CASCADE
 ) ;
-grant SELECT , INSERT , UPDATE , DELETE on account_role to skrue;
 
 /** Which PEPPOL participantid belong to which account */
 CREATE TABLE account_receiver (
@@ -64,7 +61,6 @@ CREATE TABLE account_receiver (
   constraint account_receiver_unique_participant_id UNIQUE (participant_id),
   CONSTRAINT account_receiver_ibfk_1 FOREIGN KEY (account_id) REFERENCES account (id) ON DELETE CASCADE
 ) ;
-grant SELECT , INSERT , UPDATE , DELETE on account_receiver to skrue;
 
 /** Holds the message metadata and references to the payload and associated evidence files */
 CREATE TABLE message (
@@ -91,7 +87,6 @@ CREATE TABLE message (
   CONSTRAINT direction_enum check(direction in ('IN','OUT')),
   CONSTRAINT message_ibfk_1 FOREIGN KEY (account_id) REFERENCES account (id)
 ) ;
-grant SELECT , INSERT , UPDATE , DELETE on message to skrue;
 
 
 /** The oubound queue implementation */
@@ -103,7 +98,6 @@ CREATE TABLE outbound_message_queue (
   CONSTRAINT unique_state check(state in ('QUEUED','IN_PROGRESS','EXTERNAL','OK','AOD','CBU','CBO')),
   CONSTRAINT outbound_message_queue_ibfk_1 FOREIGN KEY (msg_no) REFERENCES message (msg_no) ON DELETE CASCADE
 ) ;
-grant SELECT , INSERT , UPDATE , DELETE on outbound_message_queue to skrue;
 
 /** The oubound error queue implementation */
 CREATE TABLE outbound_message_queue_error (
@@ -116,7 +110,6 @@ CREATE TABLE outbound_message_queue_error (
   PRIMARY KEY (id),
   CONSTRAINT outbound_message_queue_error_ibfk_1 FOREIGN KEY (queue_id) REFERENCES outbound_message_queue (id) ON DELETE CASCADE
 ) ;
-grant SELECT , INSERT , UPDATE , DELETE on outbound_message_queue_error to skrue;
 
 
 
