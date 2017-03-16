@@ -53,7 +53,7 @@ downloaded.
 3. Create and edit the configuration file `~/.ringo/ringo.conf`:
 
    ```
-   # ringo.conf
+   # ringo.conf - example file, edit to your liking
    
    # Where to store uploaded outbound files
    ringo.payload.basedir = /var/peppol
