@@ -18,7 +18,17 @@
                 <include>*.sh</include>
             </includes>
         </fileSet>
+
+        <!-- Includes the SQL scripts as part of the distribution -->
+        <fileSet>
+            <directory>../ringo-persistence-jdbc-impl/src/main/resources</directory>
+            <outputDirectory>sql</outputDirectory>
+            <includes>
+                <include>*.sql</include>
+            </includes>
+        </fileSet>
     </fileSets>
+
 
     <moduleSets>
         <moduleSet>

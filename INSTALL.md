@@ -87,7 +87,8 @@ downloaded.
    	validation.query : "select now()"
    }
    ```
-5. Create the database and populate the scheme by running the script [create-ringo-dbms-h2](ringo-persistence-jdbc-impl/src/main/resources/create-ringo-dbms-h2.sql).
+5. Create the database and populate the scheme by running the SQL script, which is appropriate for your kind of DBMS.
+   For H2, use [create-ringo-dbms-h2.sql](ringo-persistence-jdbc-impl/src/main/resources/create-ringo-dbms-h2.sql).
 
    Note: consult the documentation for H2 to install the DBMS before you run the SQL scripts.
 
