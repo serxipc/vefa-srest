@@ -51,7 +51,7 @@ Brief refactoring plan (remember to x out finished items).
 - [x] Tag last versjon with UNIT4 features as "vefa-srest-1.0"
 
 ### Defects and features that should be fixed
-- [ ] PeppolDocumentSender (and implementations) can be found in both oxalis and peppol packages
+- [X] PeppolDocumentSender (and implementations) can be found in both oxalis and peppol packages
 - [ ] SMP lookups constructs the ProfileID from DocumentID/CustomizatonID (should use the real SMP value)
 - [ ] Make sure the client version detection works and alerts are logged (for Ringo Client)
 - [ ] Verify inbound messages belonging to us (receiver connected to account)
@@ -95,6 +95,9 @@ Brief refactoring plan (remember to x out finished items).
 - [ ] ? Add some kind of GUI mode to Ringo Client (swing / javafx / web)
 - [ ] ? Does it make sense to add GUI mode to Ringo Standalone
 - [ ] ? Add the REST version of the validator as a module (and use it in code)
+- [ ] Transmission evidence resource
+- [ ] Configurable JNDI name for JDBC access
+- [ ] Include the SQL scripts in the binary distribution.
 
 ### Notes from meeting June 14th, 2016
 - [x] Added Oxalis-Persistence module (MessageRepository installed in Oxalis, will persist into Ringo database tables)
@@ -102,7 +105,7 @@ Brief refactoring plan (remember to x out finished items).
 
 ### Notes from refactoring and integration with Oxalis
 - [ ] Organisation numbers should be validated. Determine the extent of such validation.
-- [ ] Allow for external configuration of logging. This should happen in RingoGuiceContextListener
+- [X] Allow for external configuration of logging. This should happen in RingoGuiceContextListener
 - [ ] Refactor package names in accordance with domains
 - [X] Duplicate class/interface MessageMetaData needs to be refactored
 

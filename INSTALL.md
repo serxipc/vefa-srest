@@ -71,7 +71,7 @@ downloaded.
 
 4. Here is a sample `jdbc.conf` file for your convenience.
    Please consult [Replacing the SQL DBMS](#replacing-the-sql-dbms) if you intend to use a different DBMS than the one
-   supplied with the distribution:
+   supplied (H2) with the distribution:
 
    ```
    // Default configuration uses H2, which should be on the classpath as it is supplied as part of the 
@@ -87,20 +87,23 @@ downloaded.
    	validation.query : "select now()"
    }
    ```
+5. Create the database and populate the scheme by running the script [create-ringo-dbms-h2](ringo-persistence-jdbc-impl/src/main/resources/create-ringo-dbms-h2.sql).
 
-5. Start Tomcat using `${TOMCAT_HOME}/bin/startup.sh`
+   Note: consult the documentation for H2 to install the DBMS before you run the SQL scripts.
 
-6. Make sure there are no errors in `$TOMCAT_HOME/logs/catalina.out`
+6. Start Tomcat using `${TOMCAT_HOME}/bin/startup.sh`
 
-7. Verify REST response using a browser or command line _curl_:
+7. Make sure there are no errors in `$TOMCAT_HOME/logs/catalina.out`
+
+8. Verify REST response using a browser or command line _curl_:
 
    ```
    curl -i http://localhost:8080/vefa-srest/statistics -u username:password
    ```
 
-8. Stop Tomcat: `${TOMCAT_HOME}/bin/shutdown.sh`
+9. Stop Tomcat: `${TOMCAT_HOME}/bin/shutdown.sh`
 
-9. Tweak `${TOMCAT_HOME}/conf/server.xml` to optimize further,  
+10. Tweak `${TOMCAT_HOME}/conf/server.xml` to optimize further,  
    turn off 8443 redirects, turn off "https", "ajp" etc
 
    ```
@@ -111,21 +114,21 @@ downloaded.
            -->
    ```
 
-10. If you are going to use a DBMS of your own choice, you must modify
+11. If you are going to use a DBMS of your own choice, you must modify
     the security realm. Please consult the section
     [Replacing the SQL DBMS](#replacing-the-sql-dbms) for detailed
     instructions on how to do this.
 
-11. Start Tomcat again
+12. Start Tomcat again
 
-12. Execute the client and enqueue the eligible documents for
+13. Execute the client and enqueue the eligible documents for
     transmission:
 
     ```
     bin/upload sr ringo1 c:/temp/ringo/outbox c:/temp/ringo/archive CH1
     ```
 
-13. Execute the vefa-srest standalone client, which will fetch all enqued
+14. Execute the vefa-srest standalone client, which will fetch all enqued
     outbound messages and transmit them:
 
     ```
