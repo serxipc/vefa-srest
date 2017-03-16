@@ -9,12 +9,6 @@ drop table if exists account_receiver;
 drop table if exists account_role;
 drop table if exists account;
 drop table if exists customer;
-drop table if exists raw_stats;
-
-drop user if exists skrue;
-
-/* Creates the user for the application itself, not meant to be used for login by customers etc. */
-create user skrue with PASSWORD='Vable2016!';
 
 /** Customer paying for the connection */
 CREATE TABLE customer (
