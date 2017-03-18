@@ -424,6 +424,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             final String sql = selectSql + whereClause + groupBy + orderBy;
 
             log.debug("Executing:\n{}", sql);
+            
             PreparedStatement ps = con.prepareStatement(sql);
             //if we have an account id it needs to be provided to the statement
             if (accountId != null) {
