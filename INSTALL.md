@@ -140,11 +140,11 @@ downloaded.
 15. Execute the vefa-srest standalone client, which will fetch all enqued
     outbound messages and transmit them:
 
-    ```
+```
     java -jar target\ringo-standalone.jar -d oxalis_test -h localhost \
--k /C:/Users/soc/Dropbox/DIFI/oxalis/difi-test-cert-ok-2015/difi-keystore.jks \
--p vable -t ALL -u skrue -s true
-    ```
+    -k /C:/Users/soc/Dropbox/DIFI/oxalis/difi-test-cert-ok-2015/difi-keystore.jks \
+    -p vable -t ALL -u skrue -s true
+```
 
 
 ## Configuration of BASIC authentication

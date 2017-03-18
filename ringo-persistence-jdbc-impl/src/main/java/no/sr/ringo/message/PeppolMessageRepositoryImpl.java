@@ -375,78 +375,50 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
 
         try {
             Connection con = jdbcTxManager.getConnection();
+            final String selectSql =
 
-            //If an accountId is provided the where clause should
-            //restrict the result set to that where clause
-            final String limitAccountClause;
-            if (accountId != null) {
-                limitAccountClause = "    and account_id = ? \n";
-            } else {
-                limitAccountClause = "";
-            }
+                    "-- Provides statistics for a given account.  \n" +
+                    "select\n" +
+                    "    account.id,\n" +
+                    "    account.name,\n" +
+                    "    customer.contact_email,\n" +
+                    "    -- total number of messages received regardless of direction\n" +
+                    "    count(*) as \"total\",\n" +
+                    "    -- total number of outbound messages\n" +
+                    "    sum(case when message.direction = 'OUT' then 1 else 0 end) as \"out\",\n" +
+                    "    -- number of outbound messages not delivered\n" +
+                    "    sum(case when message.direction = 'OUT' and message.delivered is null then 1 else 0 end ) as \"undelivered out\",\n" +
+                    "    -- timestamp of last outbound transmission\n" +
+                    "    max(case when message.direction = 'OUT' then message.delivered else null end) \"last sent\",\n" +
+                    "    -- timestamp of last outbound message received\n" +
+                    "    max(case when message.direction = 'OUT' then message.received else null end) \"last received out\",\n" +
+                    "    -- total number of inbound messages\n" +
+                    "    sum(case when message.direction = 'IN' then 1 else 0 end) as \"in\",\n" +
+                    "    -- total number of inbound messages not delivered to end user \n" +
+                    "    sum(case when message.direction = 'IN' and message.delivered is null then 1 else 0 end ) as \"undelivered in\",\n" +
+                    "    -- timestamp of last inbound message delivered\n" +
+                    "    max(case when message.direction = 'IN' then message.delivered else null end) \"last downloaded\",\n" +
+                    "    -- timestamp of last inbound reception\n" +
+                    "    max(case when message.direction = 'IN' then message.received else null end) \"last received in\",\n" +
+                    "    -- timestamp of oldest inbound message not delivered\n" +
+                    "    min(case when message.direction = 'IN' and message.delivered is null then message.received else null end) \"oldest undelivered in\"\n" +
+                    "from\n" +
+                    "    account\n" +
+                    "    left outer join message on account.id = message.account_id\n" +
+                    "    left outer join customer on customer.id = account.customer_id"
+                    ;
 
-            final String selectSql = "SELECT " +
-                    "    SUM(message.msg_no IS NOT NULL) AS 'total', " +
-                    "    SUM(message.msg_no IS NOT NULL " +
-                    "        AND message.direction='OUT') AS 'out', " +
-                    "    SUM(msg_no IS NOT NULL " +
-                    "        AND message.direction='OUT' " +
-                    "        AND message.delivered IS NULL) AS 'undelivered out', " +
-                    "    outLatest.delivered AS 'last sent', " +
-                    "    outLatest.received AS 'last received out', " +
-                    "    SUM(message.msg_no IS NOT NULL " +
-                    "        AND message.direction='IN' ) AS 'in', " +
-                    "    SUM(message.msg_no IS NOT NULL " +
-                    "        AND message.direction='IN' " +
-                    "        AND message.delivered IS NULL) AS 'undelivered in', " +
-                    "    inLatest.delivered AS 'last downloaded', " +
-                    "    inLatest.received AS 'last received in', " +
-                    "    inOldestUndelivered.received AS 'oldest undelivered in', " +
-                    "    a.id , " +
-                    "    a.name,  " +
-                    "    c.contact_email " +
-                    "FROM " +
-                    "    account a " +
-                    "LEFT OUTER JOIN message  " +
-                    "ON " +
-                    "    message.account_id = a.id " +
-                    "LEFT OUTER JOIN customer c " +
-                    "ON " +
-                    "    c.id = a.customer_id " +
-                    "LEFT OUTER JOIN ( " +
-                    "    select account_id, max(delivered) as delivered, max(received) as received from message " +
-                    "    where direction = 'IN' " +
-                    limitAccountClause +
-                    "    group by account_id " +
-                    ") as inLatest " +
-                    "ON a.id = inLatest.account_id " +
-                    "LEFT OUTER JOIN (  \n" +
-                    "    select account_id, min(received) as received from message  \n" +
-                    "    where direction = 'IN'  \n" +
-                    "    and delivered is null\n" +
-                    limitAccountClause +
-                    "   group by account_id  \n" +
-                    ") as inOldestUndelivered  \n" +
-                    "ON a.id = inOldestUndelivered.account_id  \n " +
-                    "LEFT OUTER JOIN ( " +
-                    "    select account_id, max(delivered) as delivered, max(received) as received from message " +
-                    "    where direction = 'OUT' " +
-                    limitAccountClause +
-                    "    group by account_id " +
-                    ") as outLatest " +
-                    "ON a.id = outLatest.account_id ";
-
-            //If an accountId is provided the where clause should
-            //restrict the result set to that where clause
+            // If an accountId is provided the where clause should
+            // restrict the result set to that where clause
             final String whereClause;
             if (accountId != null) {
-                whereClause = " where a.id = ? ";
+                whereClause = " where account.id = ? ";
             } else {
                 whereClause = "";
             }
 
-            final String groupBy = "GROUP BY a.Id, a.name ";
-            final String orderBy = "ORDER BY a.name ASC; ";
+            final String groupBy = "\nGROUP BY account.id, account.name, customer.contact_email ";
+            final String orderBy = "\nORDER BY account.name ASC; ";
 
             //generates the sqlStatement
             final String sql = selectSql + whereClause + groupBy + orderBy;
@@ -456,9 +428,6 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             //if we have an account id it needs to be provided to the statement
             if (accountId != null) {
                 ps.setInt(1, accountId.toInteger());
-                ps.setInt(2, accountId.toInteger());
-                ps.setInt(3, accountId.toInteger());
-                ps.setInt(4, accountId.toInteger());
             }
 
             //executes the sql and iterates the result set creating statistics for each account
