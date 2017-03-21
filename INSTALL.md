@@ -21,6 +21,9 @@ vefa-srest a.k.a. "Ringo" - REST based API for Oxalis based PEPPOL access points
 ## Prerequisites
 
 - Oxalis version 4.x has been installed and verified.
+- You have a copy of the JDBC driver for you DBMS
+- Java JDK 1.8
+- Maven version 3.x
 
 These installation instructions assumes that you are using Tomcat 9.x with Oxalis installed.
 
@@ -30,6 +33,8 @@ There is currently no binary distribution available.
 
 The source code may be compiled and packaged using the following command:
 
+    git clone https://github.com/difi/vefa-srest.git 
+    cd vefa-srest
     mvn -Dmaven.test.skip clean verify  
 
 Once this command has completed, you will find a complete binary distribution in the following
