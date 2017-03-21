@@ -14,11 +14,15 @@ Ringo was originally developed by Steinar Overbeck Cook, [SendRegning](http://ww
 taken over by Unit4 in 2012. Unit4 has kindly donated the software to
 the Norwegian agency for Public Management and eGovernment (Difi), which now looks after the software.
 
+_Ringo_ was developed to be used with the MySQL database. It has been confirmed to work with H2
+and Microsoft SQL Server as well. If you would like to use a different database, please
+contribute and send us a pull request.
+
 ## Installation
 
 Please refer to the [Installation guide](/INSTALL.md)
 
-## Possible problems and how to solve them
+## Troubleshooting
 
 * Receivers PEPPOL certificate expired
 * Invalid SSL certificate

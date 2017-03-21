@@ -573,7 +573,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
         }
 
         public SqlHelper inboxCount() {
-            sql = "select count(*) from message where account_id=? and direction= ? and delivered is null and message_uuid is not null and message_uuid != ''";
+            sql = "select count(*) from message where account_id=? and direction= ? and delivered is null";
             return this;
         }
 
@@ -585,9 +585,9 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             if (no.sr.ringo.transport.TransferDirection.IN.equals(transferDirection)) {
                 // Delivered must be null and uuid must not be null for valid undelivered incoming messages
                 sql = selectMessage() +
-                        "where delivered is null and message_uuid is not null and message_uuid != '' and account_id=? and direction=? order by msg_no " + limitCondition;
+                        "where delivered is null and message_uuid is not null and account_id=? and direction=? order by msg_no " + limitCondition;
             } else {
-                // Delivered must be null and uuid must be null for valid undelivered outgoing messages
+                // Delivered must be null for valid undelivered outgoing messages
                 sql = selectMessage() +
                         "where delivered is null " +
                         "and account_id=? and direction=? " +
