@@ -24,28 +24,29 @@ Please refer to the [Installation guide](/INSTALL.md)
 
 ## Troubleshooting
 
-When sending messages fail for some reason inspect the error that was logged in the outbound_message_queue_error table.
-Typical exception messages show below and steps needed to rectify the issue described.
+When messages transmission fails, inspect the error that was logged in the  
+`outbound_message_queue_error` table. Typical exception messages are shown below together with
+brief guide on the steps needed to rectify the issue.
 
 ### Receivers PEPPOL certificate expired
 Typical exception and error message shown below.
-```
-java.lang.RuntimeException: Failed to get valid certificate from Endpoint data
-Caused by: java.security.cert.CertificateExpiredException: NotAfter: Fri Mar 17 00:59:59 CET 2017
-```
-1. When this happens, notify the receiving accesspoint directly. 
+
+    java.lang.RuntimeException: Failed to get valid certificate from Endpoint data
+    Caused by: java.security.cert.CertificateExpiredException: NotAfter: Fri Mar 17 00:59:59 CET 2017
+
+1. When this happens, notify the receiving accesspoint directly.
 1. Contact information can be found in ELMA.
 1. Message can be resent when the receiving ap has renewed with PEPPOL and updated their certificate in the SMP.
 
 ### Invalid HTTPS certificate
 Typical exception will have traces of javax.net.ssl in them and example error message shown below.
-```
-java.lang.IllegalStateException: Unexpected error during execution of http POST to https://ap.somewhere.no/oxalis/as2
-Caused by: javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
-Caused by: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
-Caused by: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
-```
-1. When this happens, notify the receiving accesspoint directly. 
+
+    java.lang.IllegalStateException: Unexpected error during execution of http POST to https://ap.somewhere.no/oxalis/as2
+    Caused by: javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+    Caused by: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+    Caused by: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+
+1. When this happens, notify the receiving accesspoint directly.
 1. Contact information can be found in ELMA.
 1. Message can be resent when the receiving ap has fixed their certificate issues (in this case incomplete chain)
 
