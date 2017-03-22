@@ -4,8 +4,8 @@ Ringo - the PEPPOL Access Point back end
 
 [TOC levels=2-5]: # "### Table of contents"
 ### Table of contents
-- [Installation](#Installation)
-- [Possible problems and how to solve them](#Troubleshooting)
+- [Installation](#installation)
+- [Possible problems and how to solve them](#troubleshooting)
 
 This repository contains, "Ringo", a REST-based system for managing the "back-end" for a PEPPOL Access Point running
 [Oxalis](https://github.com/difi/oxalis).
