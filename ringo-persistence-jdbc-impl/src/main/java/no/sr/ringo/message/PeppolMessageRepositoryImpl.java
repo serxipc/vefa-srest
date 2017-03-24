@@ -418,7 +418,7 @@ public class PeppolMessageRepositoryImpl implements PeppolMessageRepository {
             }
 
             final String groupBy = "\nGROUP BY account.id, account.name, customer.contact_email ";
-            final String orderBy = "\nORDER BY account.name ASC; ";
+            final String orderBy = "\nORDER BY account.name ASC";
 
             //generates the sqlStatement
             final String sql = selectSql + whereClause + groupBy + orderBy;
