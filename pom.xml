@@ -522,6 +522,16 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+
+        <!-- Until further notice, there is no public binary repository, so we simply -->
+        <!-- copy the artifacts into a local directory -->
+        <repository>
+            <id>localfs</id>
+            <url>file://${user.home}/.m2/distro</url>
+        </repository>
+    </distributionManagement>
+
     <repositories>
         <repository>
             <id>jitpack.io</id>
