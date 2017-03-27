@@ -9,23 +9,23 @@ package no.sr.ringo.peppol;
  * </p>
  * <p>
  * <table border="1">
- *     <tr>
- *         <th>Acronym name</th><th>Local name</th>
- *     </tr>
- *     <tr>
- *         <td>INVOICE</td><td>Invoice</td>
- *     </tr>
- *     <tr>
- *         <td>CREDIT_NOTE</td><td>CreditNote</td>
- *     </tr>
- *     <tr>
- *         <td>ORDER</td><td>Order</td>
- *     </tr>
- *     <tr>
- *         <td>UNKNOWN</td><td>*</td>
- *     </tr>
+ * <tr>
+ * <th>Acronym name</th><th>Local name</th>
+ * </tr>
+ * <tr>
+ * <td>INVOICE</td><td>Invoice</td>
+ * </tr>
+ * <tr>
+ * <td>CREDIT_NOTE</td><td>CreditNote</td>
+ * </tr>
+ * <tr>
+ * <td>ORDER</td><td>Order</td>
+ * </tr>
+ * <tr>
+ * <td>UNKNOWN</td><td>*</td>
+ * </tr>
  * </table>
- *<p>Package protected to prevent use outside of this package.</p>
+ * <p>Package protected to prevent use outside of this package.</p>
  *
  * @author Steinar Overbeck Cook
  *         <p/>
@@ -33,26 +33,30 @@ package no.sr.ringo.peppol;
  *         User: steinar
  *         Date: 04.12.11
  *         Time: 18:52
- *
- *         @deprecated use the constructor of {@link DocumentTypeIdentifier}
+ * @deprecated use the constructor of {@link DocumentTypeIdentifier}
  */
 enum PeppolDocumentIdAcronym {
-    /** PEPPOL 4A invoice */
+    /**
+     * PEPPOL 4A invoice
+     */
     INVOICE(LocalName.Invoice),
-    /** PEPPOL 6A credit invoice */
+    /**
+     * PEPPOL 6A credit invoice
+     */
     CREDIT_NOTE(LocalName.CreditNote),
-    /** PEPPOL 3A Order */
+    /**
+     * PEPPOL 3A Order
+     */
     ORDER(LocalName.Order),
 
-    UNKNOWN(LocalName.valueOf("UNKNOWN") );
+    UNKNOWN(LocalName.valueOf("UNKNOWN"));
 
     private final LocalName localName;
 
     /**
-     *
      * @param localName
      */
-        private PeppolDocumentIdAcronym(LocalName localName) {
+    private PeppolDocumentIdAcronym(LocalName localName) {
         this.localName = localName;
     }
 
