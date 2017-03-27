@@ -37,7 +37,7 @@ import java.util.Optional;
  * If no custom implementations are found using the service locator, the built-in {@code SimpleMessageRepository} will be used.
  * <p>
  * Remember to use an empty constructor in your own implementation.
- * <p>
+ * </p>
  * <p>Implementations are required to be thread safe.</p>
  *
  * @author Steinar Overbeck Cook
@@ -70,8 +70,8 @@ public interface MessageRepository {
     /**
      * Finds a transmission by it's {@link ReceptionId}
      *
-     * @param receptionId
-     * @return
+     * @param receptionId the unique id of the reception for which {@link TransmissionMetaData} should be found
+     * @return list of {@link TransmissionMetaData} associated with the supplied {@link ReceptionId}
      */
     List<TransmissionMetaData> findByReceptionId(ReceptionId receptionId);
 

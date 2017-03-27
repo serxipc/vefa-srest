@@ -27,7 +27,9 @@ public class RingoStatistics {
 
     /**
      * Finds the statistics for a given account from the list of available accounts
-     * Usefull for testing
+     * Useful for testing
+     * @param id account to find data for
+     * @return instance of RingoAccountStatistics
      */
     public RingoAccountStatistics findByAccountId(AccountId id) {
         //This obviously can be improved if needed

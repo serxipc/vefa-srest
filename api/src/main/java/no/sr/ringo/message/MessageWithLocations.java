@@ -11,13 +11,13 @@ public interface MessageWithLocations extends MessageMetaData {
 
     /**
      * Gets the URI corresponding to this resource
-     * @return
+     * @return URI of the resource itself
      */
     URI getSelfURI();
 
     /**
      * Gets the URI corresponding to the PEPPOL XML Document
-     * @return
+     * @return URI of the XML document (payload)
      */
     URI getXmlDocumentURI();
 

@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
  * </pre>
  * Which is to be interpreted like this:
  * <table border="1">
+ *     <caption>How to interpret the contents of a document type identifier</caption>
  *     <tr>
  *         <td>Root name space</td>
  *         <td>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2</td>
@@ -64,7 +65,7 @@ public class PeppolDocumentTypeId {
     /**
      * Returns this as an instance of the new {@link DocumentTypeIdentifier} from the vefa-peppol project.
      *
-     * @return
+     * @return the corresponding Vefa type
      */
     public DocumentTypeIdentifier toVefa(){
         return DocumentTypeIdentifier.of(stringValue());

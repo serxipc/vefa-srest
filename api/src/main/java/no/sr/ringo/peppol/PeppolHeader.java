@@ -15,6 +15,25 @@ public class PeppolHeader {
     private DocumentTypeIdentifier peppolDocumentTypeId;
     private ProcessIdentifier profileId;
 
+    /**
+     * Creates a valid peppol header for the provided details
+     *
+     * @param peppolDocumentTypeId the document type identifier
+     *                             @param processIdentifier the process identifier
+     * @param sender the senders ISO6523 id
+     * @param receiver the receivers ISO6523 id
+     * @return instance of {@link PeppolHeader}
+     */
+    public static PeppolHeader forDocumentType(DocumentTypeIdentifier peppolDocumentTypeId, ProcessIdentifier processIdentifier, ParticipantIdentifier sender, ParticipantIdentifier receiver) {
+        PeppolHeader result = new PeppolHeader();
+        result.setDocumentTypeIdentifier(peppolDocumentTypeId);
+        result.setProcessIdentifier(processIdentifier);
+        result.setPeppolChannelId(new PeppolChannelId(ChannelProtocol.SREST.name()));
+        result.setReceiver(receiver);
+        result.setSender(sender);
+        return result;
+    }
+
     public ParticipantIdentifier getSender() {
         return sender;
     }
@@ -59,23 +78,6 @@ public class PeppolHeader {
         if (peppolChannel == null || receiver == null || sender == null || peppolDocumentTypeId == null || profileId == null) {
             throw new InvalidPeppolHeaderException(this);
         }
-    }
-
-    /**
-     * Creates a valid peppol header for the provided details
-     * @return
-     * @param peppolDocumentTypeId
-     * @param sender
-     * @param receiver
-     */
-    public static PeppolHeader forDocumentType(DocumentTypeIdentifier peppolDocumentTypeId, ProcessIdentifier processIdentifier, ParticipantIdentifier sender, ParticipantIdentifier receiver) {
-        PeppolHeader result = new PeppolHeader();
-        result.setDocumentTypeIdentifier(peppolDocumentTypeId);
-        result.setProcessIdentifier(processIdentifier);
-        result.setPeppolChannelId(new PeppolChannelId(ChannelProtocol.SREST.name()));
-        result.setReceiver(receiver);
-        result.setSender(sender);
-        return result;
     }
 
     @Override

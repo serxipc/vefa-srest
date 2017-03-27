@@ -1,15 +1,15 @@
 package no.sr.ringo.peppol;
 
 import no.sr.ringo.cenbiimeta.ProfileId;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Represents a PEPPOL Customization Identifier contained within a PEPPOL Document Identifier.
- *
  * <h1>The pattern for decoding BIS v1 customization identifiers</h1>
  * <pre>
- *     &lt;transactionId>:#&lt;extensionId>[#&lt;extensionId>]
+ *     &lt;transactionId&gt;:#&lt;extensionId&gt;[#&lt;extensionId&gt;]
  *
  *     Example :
  *     urn:www.cenbii.eu:transaction:biicoretrdm001:ver1.0:#urn:www.peppol.eu:bis:peppol3a:ver1.0
@@ -18,14 +18,14 @@ import java.util.regex.Pattern;
  * </pre>
  * I.e. a string followed by ":#" followed by another string, followed by optional strings starting with "#".
  * <p>
- *     The first part represents the CEN/BII transaction identity (transaction data model),
- *     the second extension is the identity of the PEPPOL customization of that very transaction model,
- *     while the next optional extensions are the extension of the PEPPOL extension.
+ * The first part represents the CEN/BII transaction identity (transaction data model),
+ * the second extension is the identity of the PEPPOL customization of that very transaction model,
+ * while the next optional extensions are the extension of the PEPPOL extension.
  * </p>
  *
  * <h1>The pattern for decoding BIS v2 customization identifiers</h1>
  * <pre>
- *     urn:www.cenbii.eu:transaction:&lt;bii_Transaction>:&lt;version>:(restrictive|extended|partly):&lt;customization>:<version>
+ *     urn:www.cenbii.eu:transaction:&lt;bii_Transaction&gt;:&lt;version&gt;:(restrictive|extended|partly):&lt;customization&gt;:&lt;version&gt;
  *
  *     Example :
  *     urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol3a:ver2.0
@@ -43,9 +43,8 @@ import java.util.regex.Pattern;
  *
  * @author Steinar Overbeck Cook steinar@sendregning.no
  * @author Thore Johnsen thore@sendregning.no
- *
- * @see "PEPPOL Policy for use of identifiers v3.0" (2014-02-03)
- * @see "CWA16558-Annex-C-BII-Guideline-ConformanceAndCustomizations-V1_0_0" (2012-12-06)
+ * @see "PEPPOL Policy for use of identifiers v3.0 (2014-02-03)"
+ * @see "CWA16558-Annex-C-BII-Guideline-ConformanceAndCustomizations-V1_0_0 (2012-12-06)"
  */
 public class CustomizationIdentifier {
 
@@ -73,6 +72,7 @@ public class CustomizationIdentifier {
 
     /**
      * Parses the supplied string as a PEPPOL Customization identifier
+     *
      * @param s the string to be parsed
      * @return instantiated CustomizationIdentifier
      */
@@ -82,14 +82,15 @@ public class CustomizationIdentifier {
 
         Matcher matcher = customizationIdentifierPattern.matcher(s);
 
-        if (matcher.find() && matcher.groupCount() == 3){
+        if (matcher.find() && matcher.groupCount() == 3) {
             String transactionId = matcher.group(1);
             TransactionIdentifier transactionIdentifier = TransactionIdentifier.valueFor(transactionId);
             String customizationPart = matcher.group(2) + matcher.group(3);
             result = new CustomizationIdentifier(transactionIdentifier, customizationPart);
         } else {
             // allow for a single urn: - it's just a string ....
-            if (!s.startsWith("urn:")) throw new IllegalArgumentException(s + " not recognized as customization identifier");
+            if (!s.startsWith("urn:"))
+                throw new IllegalArgumentException(s + " not recognized as customization identifier");
             result = new CustomizationIdentifier(TransactionIdentifier.valueFor(s), s);
         }
 
@@ -100,6 +101,8 @@ public class CustomizationIdentifier {
     /**
      * Returns the complete extensions string (the part after the transactionId).
      * Complete with :extends: (BIS v2 style) or :# (BIS v1 style)
+     *
+     * @return extension as string
      */
     public String getFullExtensionIdentifier() {
         return extensions;
@@ -108,6 +111,7 @@ public class CustomizationIdentifier {
     /**
      * Returns the first extension string without the extension modifier,
      * ie without the :extends: (BIS v2 style) or :# (BIS v1 style)
+     * @return PEPPOL {@link ProfileId}
      */
     public ProfileId getPeppolExtensionIdentifier() {
         String firstExtension;

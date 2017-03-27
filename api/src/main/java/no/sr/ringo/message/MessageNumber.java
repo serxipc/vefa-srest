@@ -41,7 +41,7 @@ public class MessageNumber implements Serializable, Comparable<MessageNumber> {
         this.messageNo = messageNo;
     }
 
-    public static MessageNumber of(Long messageNo){
+    public static MessageNumber of(Long messageNo) {
         if (messageNo == null) {
             throw new IllegalArgumentException("Message number cannot be null");
         } else if (messageNo < 1) {
@@ -52,11 +52,14 @@ public class MessageNumber implements Serializable, Comparable<MessageNumber> {
 
 
     /**
+     * Static constructor.
      *
+     * @param messageNo the integer to use as the value.
+     * @return newly created value object
      * @deprecated use the Long constructor
      */
     @Deprecated
-    public static MessageNumber of(Integer messageNo){
+    public static MessageNumber of(Integer messageNo) {
         if (messageNo == null) {
             throw new IllegalArgumentException("Message number cannot be null");
         } else if (messageNo < 1) {
@@ -79,10 +82,14 @@ public class MessageNumber implements Serializable, Comparable<MessageNumber> {
     public String getValue() {
         return messageNo == null ? "" : messageNo.toString();
     }
-    public Integer toInt(){
+
+    public Integer toInt() {
         return messageNo.intValue();
     }
-    public Long toLong() { return messageNo; }
+
+    public Long toLong() {
+        return messageNo;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -107,7 +114,7 @@ public class MessageNumber implements Serializable, Comparable<MessageNumber> {
     }
 
     public int compareTo(MessageNumber o) {
-        if(o == null){
+        if (o == null) {
             return -1;
         }
         return this.messageNo.compareTo(o.messageNo);

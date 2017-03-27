@@ -74,7 +74,7 @@ public class MessagesQueryResponse implements MessageQueryRestResponse {
 
     /**
      * The Response as XML.
-     * @return
+     * @return string representation of xml
      */
     public String asXml() {
         StringBuilder xml = new StringBuilder();
@@ -88,7 +88,7 @@ public class MessagesQueryResponse implements MessageQueryRestResponse {
 
     /**
      * Helper method for adding the navigation
-     * @param xml
+     * @param xml the {@link StringBuilder} instance
      */
     protected void navigationAsXml(StringBuilder xml) {
         if (navigation == null) {
@@ -108,7 +108,7 @@ public class MessagesQueryResponse implements MessageQueryRestResponse {
 
     /**
      * Helper method generating xml from messages
-     * @param xml
+     * @param xml {@link StringBuilder} instance
      */
     protected void messagesAsXml(StringBuilder xml) {
         for (MessageWithLocations current : messageList) {
