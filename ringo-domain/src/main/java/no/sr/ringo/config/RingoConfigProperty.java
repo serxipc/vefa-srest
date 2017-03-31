@@ -24,6 +24,7 @@ public final class RingoConfigProperty {
     public static final String HOME_DIR_PATH = "ringo.home";
     public static final String PAYLOAD_BASE_PATH = "ringo.payload.basedir";
     public static final String PLUGIN_PATH = "ringo.plugin.path";
+    public static final String REMOVE_SBDH = "ringo.payload.removesbdh";
 
     public static final String JDBC_CONNECTION_URI= "jdbc.connection.uri";
     public static final String JDBC_DRIVER_CLASS = "jdbc.driver.class.name";
