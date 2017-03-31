@@ -35,11 +35,6 @@ public class SingleMessagesResponse implements RestResponse {
         return message;
     }
 
-    /**
-     * Adds the contents of a Message to the StringBuilder.
-     * @param xml
-     * @param current
-     */
     protected static void singleMessageAsXml(StringBuilder xml, MessageWithLocations current) {
         xml.append("<message>\n");
         xml.append("        <self>" + RingoUtils.toXml(current.getSelfURI()) + "</self>\n");

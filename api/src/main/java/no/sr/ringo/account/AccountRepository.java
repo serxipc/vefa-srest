@@ -1,7 +1,7 @@
 /*
  * Copyright 2010-2017 Norwegian Agency for Public Management and eGovernment (Difi)
  *
- * Licensed under the EUPL, Version 1.1 or – as soon they
+ * Licensed under the EUPL, Version 1.1 or, as soon they
  * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
  *
@@ -37,9 +37,9 @@ public interface AccountRepository {
     /**
      * Locates an account, which you expect to exist by the username.
      *
-     * @param username
+     * @param username the search key
      * @return a reference to the account if found, null otherwise
-     *
+     * @throws SrAccountNotFoundException if the account could not be found
      * @see #accountExists(UserName) to figure out whether an account exists or not.
      */
     Account findAccountByUsername(final UserName username) throws SrAccountNotFoundException;
@@ -47,34 +47,46 @@ public interface AccountRepository {
     /**
      * Creates an account with the provided details. if the account already
      * exists it will be retrieved from the database based on the participant id
-     *
+     * <p>
      * Default client role will be added
-     *
+     * <p>
      * If participantId is not null, account_receiver entry will also be created
-     * @param account
+     *
+     * @param account       holds the data for the account to be crated
      * @param participantId if not null will be used in account_receiver
-     * @return
+     * @return instance of {@link Account} created
      */
     Account createAccount(final Account account, final ParticipantIdentifier participantId);
 
     /**
      * Persists new customer
-     * @return
+     *
+     * @param name          of customer
+     * @param email         of customer
+     * @param phone         number to contact customer
+     * @param country       of customer
+     * @param contactPerson of customer
+     * @param address1      of customer
+     * @param address2      of customer
+     * @param zip           of customer
+     * @param city          of customer
+     *                      @param orgNo organisation number of customer with ISO6523 ICD prefix
+     * @return instance of {@link Customer} created
      */
     Customer createCustomer(final String name, final String email, final String phone, final String country, final String contactPerson, final String address1, final String address2, final String zip, final String city, final String orgNo);
 
     /**
      * Deletes the account with the given id
-     * @param accountId
+     *
+     * @param accountId the unique key of the account to be deleted.
      */
     void deleteAccount(AccountId accountId);
 
     /**
      * Inspects the repository to see if an account identified by username exists or not.
      *
-     * @param username
+     * @param username the key for the search
      * @return true if account exists, false otherwise.
-     *
      * @see #findAccountByUsername(UserName)
      */
     boolean accountExists(final UserName username);

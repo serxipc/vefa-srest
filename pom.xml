@@ -4,7 +4,7 @@
 
     <groupId>no.difi.ringo</groupId>
     <artifactId>ringo</artifactId>
-    <version>1.1.29-SNAPSHOT</version>
+    <version>1.1.30-SNAPSHOT</version>
 
     <url>https://github.com/difi/vefa-srest</url>
 
@@ -490,7 +490,13 @@
         <plugins>
 
             <!-- these plugins are activated for every module, see pluginManagement for versions -->
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -522,12 +528,23 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+
+        <!-- Until further notice, there is no public binary repository, so we simply -->
+        <!-- copy the artifacts into a local directory -->
+        <repository>
+            <id>localfs</id>
+            <url>file://${user.home}/.m2/distro</url>
+        </repository>
+    </distributionManagement>
+
+<!--
     <repositories>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
-
+-->
 
 </project>

@@ -33,8 +33,14 @@ There is currently no binary distribution available.
 
 The source code may be compiled and packaged using the following command:
 
+    # Clones the repository to your local machine
     git clone https://github.com/difi/vefa-srest.git 
     cd vefa-srest
+    
+    # Checks out an officially tagged release, replace version number with latest and greatest
+    git checkout ringo-1.1.28 -b 1.1.28 
+    
+    # Builds the software
     mvn -Dmaven.test.skip clean verify  
 
 Once this command has completed, you will find a complete binary distribution in the following
@@ -166,8 +172,13 @@ recommended choice and has been thoroughly tested.
    transmit them:
 
 ```
-    java -jar target\ringo-standalone.jar -t ALL -s true
+    java -jar target/ringo-standalone.jar -t ALL -s true
+    
+    # Use this command if you wish to configure logging
+    java -Dlogback.configurationFile=/path/to/config.xml -jar target/ringo-standalone.jar -t ALL -s true 
 ```
+
+
 
 ## Verifying the installation
 

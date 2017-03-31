@@ -6,7 +6,7 @@ import java.util.Date;
  * Represents a Ringo user account
  *
  * @author Steinar Overbeck Cook
- *         <p/>
+ * 
  *         Created by
  *         User: steinar
  *         Date: 31.12.11
@@ -15,7 +15,9 @@ import java.util.Date;
 public class Account {
 
     private final AccountId accountId;
-    /** Foreign key referencing the Customer to which this account belongs */
+    /**
+     * Foreign key referencing the Customer to which this account belongs
+     */
     private final CustomerId customerId;
     private final String name;
     private final UserName username;
@@ -57,12 +59,20 @@ public class Account {
         return customerId;
     }
 
-    /** The name of the account, may hold anything */
+    /**
+     * The name of the account, may hold anything
+     *
+     * @return value of {@code name} property
+     */
     public String getName() {
         return name;
     }
 
-    /** The user name used for authentication together with the password */
+    /**
+     * The user name used for authentication together with the password
+     *
+     * @return value of property {@code username}
+     */
     public UserName getUsername() {
         return username;
     }

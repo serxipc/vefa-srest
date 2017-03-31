@@ -34,7 +34,8 @@ public class RingoAccountStatistics {
 
     /**
      * The id of the ringo Account
-     * @return
+     *
+     * @return value of property
      */
     public AccountId getRingoAccountId() {
         return accountId;
@@ -42,7 +43,8 @@ public class RingoAccountStatistics {
 
     /**
      * The name of the account
-     * @return
+     *
+     * @return value of property
      */
     public String getAccountName() {
         return accountName;
@@ -50,7 +52,8 @@ public class RingoAccountStatistics {
 
     /**
      * The registered contact email for the customer
-     * @return
+     *
+     * @return value of property
      */
     public String getContactEmail() {
         return contactEmail;
@@ -58,7 +61,8 @@ public class RingoAccountStatistics {
 
     /**
      * The total number of messages
-     * @return
+     *
+     * @return value of property
      */
     public int getTotal() {
         return total;
@@ -66,7 +70,8 @@ public class RingoAccountStatistics {
 
     /**
      * The total number of messages inbound
-     * @return
+     *
+     * @return value of property
      */
     public int getIn() {
         return inboxStatistics.total;
@@ -74,7 +79,8 @@ public class RingoAccountStatistics {
 
     /**
      * The number of messages inbound that are not downloaded
-     * @return
+     *
+     * @return value of property
      */
     public int getUndeliveredIn() {
         return inboxStatistics.undelivered;
@@ -82,7 +88,8 @@ public class RingoAccountStatistics {
 
     /**
      * The last time a file was downloaded from the inbox.
-     * @return
+     *
+     * @return value of property
      */
     public Date getLastDownloaded() {
         return inboxStatistics.delivered;
@@ -90,7 +97,8 @@ public class RingoAccountStatistics {
 
     /**
      * The last time a file was received via PEPPOL.
-     * @return
+     *
+     * @return value of property
      */
     public Date getLastReceived() {
         return inboxStatistics.received;
@@ -102,7 +110,8 @@ public class RingoAccountStatistics {
 
     /**
      * The total number of messages sent
-     * @return
+     *
+     * @return value of property
      */
     public int getOut() {
         return outboxStatistics.total;
@@ -111,7 +120,8 @@ public class RingoAccountStatistics {
     /**
      * The number of undelivered outbound messages i.e. the number of
      * messages waiting to be sent via peppol
-     * @return
+     *
+     * @return value of property
      */
     public int getUndeliveredOut() {
         return outboxStatistics.undelivered;
@@ -119,7 +129,8 @@ public class RingoAccountStatistics {
 
     /**
      * The last time a message was sent from the outbox via peppol
-     * @return
+     *
+     * @return value of property
      */
     public Date getLastSent() {
         return outboxStatistics.delivered;
@@ -128,7 +139,8 @@ public class RingoAccountStatistics {
     /**
      * The last time a message was uploaded to the accesspoint
      * via SREST
-     * @return
+     *
+     * @return value of property
      */
     public Date getLastUploaded() {
         return outboxStatistics.received;
@@ -159,8 +171,10 @@ public class RingoAccountStatistics {
         if (accountId != null ? !accountId.equals(that.accountId) : that.accountId != null) return false;
         if (accountName != null ? !accountName.equals(that.accountName) : that.accountName != null) return false;
         if (contactEmail != null ? !contactEmail.equals(that.contactEmail) : that.contactEmail != null) return false;
-        if (inboxStatistics != null ? !inboxStatistics.equals(that.inboxStatistics) : that.inboxStatistics != null) return false;
-        if (outboxStatistics != null ? !outboxStatistics.equals(that.outboxStatistics) : that.outboxStatistics != null) return false;
+        if (inboxStatistics != null ? !inboxStatistics.equals(that.inboxStatistics) : that.inboxStatistics != null)
+            return false;
+        if (outboxStatistics != null ? !outboxStatistics.equals(that.outboxStatistics) : that.outboxStatistics != null)
+            return false;
 
         return true;
     }

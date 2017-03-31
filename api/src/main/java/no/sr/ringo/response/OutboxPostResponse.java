@@ -33,7 +33,7 @@ public class OutboxPostResponse extends SingleMessagesResponse {
      * Jersey is able to automatically set the content length but only if
      * the entity used is a byte[] :)
      *
-     * @return
+     * @return byte array
      */
     public byte[] asEntity() {
         try {

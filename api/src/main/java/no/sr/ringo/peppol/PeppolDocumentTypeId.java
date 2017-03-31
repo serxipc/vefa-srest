@@ -7,12 +7,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Represents a PEPPOL document type identificator, which is a string which looks something like this:
+ * Represents a PEPPOL document type identifier, which is a string which looks something like this:
  * <pre>
  * urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.difi.no:ehf:faktura:ver1::2.0
  * </pre>
  * Which is to be interpreted like this:
  * <table border="1">
+ *     <caption>How to interpret the contents of a document type identifier</caption>
  *     <tr>
  *         <td>Root name space</td>
  *         <td>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2</td>
@@ -30,7 +31,7 @@ import java.util.regex.Pattern;
  *         <td>2.0</td>
  *     </tr>
  * </table>
- * @deprecated use DocumentTypeIdentifier
+ * @deprecated use DocumentTypeIdentifier from the vefa-peppol project.
  */
 
 public class PeppolDocumentTypeId {
@@ -61,6 +62,11 @@ public class PeppolDocumentTypeId {
         this.version = version;
     }
 
+    /**
+     * Returns this as an instance of the new {@link DocumentTypeIdentifier} from the vefa-peppol project.
+     *
+     * @return the corresponding Vefa type
+     */
     public DocumentTypeIdentifier toVefa(){
         return DocumentTypeIdentifier.of(stringValue());
     }

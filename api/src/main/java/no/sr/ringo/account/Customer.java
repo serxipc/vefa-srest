@@ -173,7 +173,7 @@ public class Customer {
     }
 
     /**
-     * Returns both address lines concatenated if they exist
+     * @return  both address lines concatenated if they exist
      */
     public String getAddress() {
         StringBuffer result = new StringBuffer();

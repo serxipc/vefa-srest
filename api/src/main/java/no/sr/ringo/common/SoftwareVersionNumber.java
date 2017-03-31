@@ -20,9 +20,9 @@ public class SoftwareVersionNumber {
      */
     Pattern versionNumberPattern = Pattern.compile(
             "(\\d+)"                    // Major revision number
-            + "(?:\\.(\\d+))"           // Minor revision number
-            + "(?:(?:\\.(\\d+))?"       // Incremental revision number  (optional)
-            +"(?:\\-(\\w*))?)?");       // Qualifier (optional)
+                    + "(?:\\.(\\d+))"           // Minor revision number
+                    + "(?:(?:\\.(\\d+))?"       // Incremental revision number  (optional)
+                    + "(?:\\-(\\w*))?)?");       // Qualifier (optional)
 
 
     public SoftwareVersionNumber(String versionNumber) {
@@ -48,7 +48,11 @@ public class SoftwareVersionNumber {
         return minorRevision;
     }
 
-    /** Optional incremental revision number, i.e. this could possibly return null */
+    /**
+     * Optional incremental revision number, i.e. this could possibly return null
+     *
+     * @return incremental revision number
+     */
     public Integer getIncrementalRevision() {
         return incrementalRevision;
     }
@@ -59,11 +63,11 @@ public class SoftwareVersionNumber {
 
     /**
      * Checks if version is up to date comparing minor and major revisions only.
-     *
+     * <p>
      * Example usage boolean outOfDate = serverVersion.isOutOfDate(clientVersion);
-     *
-     * @param another
-     * @return
+     * </p>
+     * @param another the other version number to check against
+     * @return true if the "another" version number is out of date.
      */
     public boolean isOutOfDate(SoftwareVersionNumber another) {
         return another.majorRevision != majorRevision || minorRevision != another.minorRevision;

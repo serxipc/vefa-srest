@@ -140,7 +140,7 @@ public enum SchemeId {
      * Tries to find the Party id from the ISO652 code
      * e.g. "9919" --&gt; AT_KUR
      *
-     * @param code
+     * @param code the ISO623 ICD
      * @return the scheme id if found null otherwise.
      */
     public static SchemeId fromISO6523(String code) {
@@ -172,8 +172,8 @@ public enum SchemeId {
      * <p>
      * e.g. 987654321MVA is valid as is NO987654321MVA
      *
-     * @param organisationId
-     * @return
+     * @param organisationId the org. no. to format
+     * @return formatted version of the organisation number
      */
     public String formatOrganisationId(String organisationId) {
         return organisationId;
