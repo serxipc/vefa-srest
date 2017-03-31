@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -20,6 +22,7 @@ import java.sql.*;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
+import static no.sr.ringo.config.RingoConfigProperty.REMOVE_SBDH;
 
 /**
  * Repository for managing the payload documents.
@@ -32,6 +35,10 @@ public class DocumentRepositoryImpl implements DocumentRepository {
     private final PeppolDocumentFactory documentFactory;
     private final JdbcTxManager jdbcTxManager;
 
+    @Inject
+    @Named(REMOVE_SBDH)
+    private String removeSbdh;
+    
     @Inject
     public DocumentRepositoryImpl(PeppolDocumentFactory documentFactory,JdbcTxManager jdbcTxManager) {
         this.documentFactory = documentFactory;
@@ -82,8 +89,10 @@ public class DocumentRepositoryImpl implements DocumentRepository {
         try (
             Stream<String> stringStream = Files.lines(Paths.get(URI.create(payloadUrl)), Charset.forName("UTF-8"))){
             xmlMessage = stringStream.collect(joining(System.lineSeparator()));
-            // Removes the SBDH if there is one.
-            xmlMessage = SbdhUtils.removeSbdhEnvelope(xmlMessage);
+            // Removes the SBDH if there is one and configuration specifies this.
+            if(Boolean.valueOf(removeSbdh)) {
+            	xmlMessage = SbdhUtils.removeSbdhEnvelope(xmlMessage);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
