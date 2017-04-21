@@ -163,7 +163,7 @@ public class QueueRepositoryImpl implements QueueRepository {
     @Override
     public OutboundMessageQueueErrorId logOutboundError(QueuedOutboundMessageError error) {
         Connection con = null;
-        String sql = "insert into outbound_message_queue_error (queue_id, details, message, stacktrace) values (?, ?, ?, ?);";
+        String sql = "insert into outbound_message_queue_error (queue_id, details, message, stacktrace) values (?, ?, ?, ?)";
 
         try {
             con = jdbcTxManager.getConnection();
