@@ -1,0 +1,32 @@
+# Java Classes
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Maven Build Artifacts
+target/
+classes/
+
+# OSX files
+.DS_Store
+
+# IDEA Directory-based project format
+.idea/
+
+# IDEA File-based project format
+*.ipr
+*.iml
+*.iws
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# eclipse files
+.project
+.factorypath
+.classpath
+.settings/
+.apt_generated/
