@@ -25,8 +25,13 @@ classes/
 hs_err_pid*
 
 # eclipse files
+<<<<<<< HEAD
 .project
 .factorypath
 .classpath
 .settings/
 .apt_generated/
+=======
+/.project
+.settings/
+>>>>>>> branch 'master' of https://github.com/serxipc/vefa-srest
